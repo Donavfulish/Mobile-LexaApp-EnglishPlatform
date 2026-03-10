@@ -2,6 +2,7 @@ package com.home.lexa
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.home.lexa.ui.home.HomeFragment
 import com.home.lexa.ui.intro.IntroFragment
 
 class MainActivity : AppCompatActivity() {
@@ -12,7 +13,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, IntroFragment())
+                .replace(R.id.fragmentContainer, HomeFragment())
                 .commit()
         }
     }

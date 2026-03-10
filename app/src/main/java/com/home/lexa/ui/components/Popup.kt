@@ -9,7 +9,10 @@ import android.view.Window
 import com.home.lexa.databinding.ViewPopupBinding
 
 
-class Popup(context: Context) : Dialog(context) {
+class Popup @JvmOverloads constructor(
+    context: Context,
+    themeResId: Int = 0
+) : Dialog(context, themeResId) {
 
     private lateinit var binding: ViewPopupBinding
 

@@ -36,4 +36,25 @@
         android:layout_height="150dp"
         android:layout_margin="16dp" />
 
+    <com.home.lexa.ui.components.ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:layout_margin="32dp"
+        />
+
+    <com.home.lexa.ui.components.Tag
+        android:id="@+id/tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="42dp"
+        android:layout_gravity="center"
+        />
+
+    <com.home.lexa.ui.components.HeaderSection
+        android:id="@+id/headerSection"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"/>
+
 </LinearLayout>

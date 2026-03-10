@@ -3,8 +3,10 @@ package com.home.lexa.ui.home
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.lifecycleScope
+import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentHomeBinding
+import com.home.lexa.ui.components.Popup
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlinx.coroutines.launch
 
@@ -13,9 +15,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     // Koin tự động tiêm ViewModel vào đây cực gọn
     private val viewModel: HomeViewModel by viewModel()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun setupViews() {
         // 1. Tương tác với Custom Component LexaButton
         binding.btnLoadCourses.setText("Tải danh sách khóa học")
 
@@ -29,13 +29,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 binding.txtStatus.text = stateText
             }
         }
-    }
 
-    override fun setupViews() {
-        TODO("Not yet implemented")
+        binding.progressBar.setProgress(80);
+        binding.tag.setTagData("Ngày 04", "#6A65E9", true)
+        binding.smallRing.setProgress(40)
+        binding.headerSection.setHeaderData("Danh sách khóa học", R.drawable.ic_language)
+        binding.cardKhoaHoc.setCardData(R.drawable.ic_language, R.drawable.ic_language, "ccccc")
+
     }
 
     override fun observeData() {
-        TODO("Not yet implemented")
+        //
     }
 }

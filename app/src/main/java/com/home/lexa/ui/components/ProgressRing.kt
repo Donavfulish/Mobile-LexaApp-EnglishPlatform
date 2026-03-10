@@ -14,7 +14,6 @@ class ProgressRing @JvmOverloads constructor(
 
     private val binding = ViewProgressRingBinding.inflate(LayoutInflater.from(context), this, true)
 
-
     fun setProgress(percentage: Int) {
         val validPercentage = percentage.coerceIn(0, 100)
         binding.tvPercentage.text = validPercentage.toString()
