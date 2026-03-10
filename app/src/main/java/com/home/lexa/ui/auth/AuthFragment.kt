@@ -25,6 +25,16 @@ class AuthFragment : BaseFragment<FragmentAuthBinding>(FragmentAuthBinding::infl
                 Toast.makeText(requireContext(), "Tắt", Toast.LENGTH_SHORT).show()
             }
         }
+
+        binding.dropdownLevel.setSelection("C1")
+        binding.dropdownType.setSelection("Tính từ")
+
+        binding.dropdownLevel.setUpOptions(listOf("A1", "A2", "B1", "B2", "C1", "C2"))
+        binding.dropdownType.setUpOptions(listOf("Tính từ", "Động từ", "Danh từ", "Trạng từ"))
+
+        binding.dropdownLevel.onItemSelected={selected ->
+            // Xử lý khi người dùng chọn một mục trong dropdownLevel
+        }
     }
 
     override fun observeData() {
