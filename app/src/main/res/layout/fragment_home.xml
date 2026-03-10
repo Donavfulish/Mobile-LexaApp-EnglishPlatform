@@ -19,4 +19,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <com.home.lexa.ui.components.StatsBox
+        android:id="@+id/cardKhoaHoc"
+        android:layout_width="140dp"
+        android:layout_height="150dp"
+        android:layout_margin="16dp" />
 </LinearLayout>
