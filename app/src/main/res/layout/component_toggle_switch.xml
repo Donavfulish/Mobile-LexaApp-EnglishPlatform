@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <View
+        android:id="@+id/switchTrack"
+        android:layout_width="48dp"
+        android:layout_height="24dp"
+        android:background="@drawable/switch_track"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/switchThumb"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:elevation="2dp"
+        android:background="@drawable/switch_thumb"
+        app:layout_constraintBottom_toBottomOf="@id/switchTrack"
+        app:layout_constraintStart_toStartOf="@id/switchTrack"
+        app:layout_constraintTop_toTopOf="@id/switchTrack"
+        android:layout_marginStart="2dp" />
+
+</merge>

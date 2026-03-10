@@ -17,6 +17,14 @@ class AuthFragment : BaseFragment<FragmentAuthBinding>(FragmentAuthBinding::infl
         binding.loginBtn.setOnClickListener{
             Toast.makeText(requireContext(), "Đăng nhập", Toast.LENGTH_SHORT).show()
         }
+
+        binding.toggleNotification.onCheckedChangeListener = {isChecked->
+            if (isChecked) {
+                Toast.makeText(requireContext(), "Bật", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Tắt", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun observeData() {
