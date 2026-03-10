@@ -43,8 +43,8 @@ class IntroFragment : BaseFragment<FragmentIntroBinding>(FragmentIntroBinding::i
             binding.textInput.setInputHeight(120)
             binding.textInput.setPlaceHolderText("Nhập tên khóa học...")
 
-
-
+            binding.searchbar.setPlaceHolderText("Tìm kiếm bộ từ vựng...")
+            binding.searchbar.setSuggestions(listOf("Apple", "Banana", "Orange"))
             // ----------------------------
         }
     }
