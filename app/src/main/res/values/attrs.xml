@@ -1,0 +1,5 @@
+<resources>
+    <declare-styleable name="DropdownInput">
+        <attr name="dropdownTitle" format="string" />
+    </declare-styleable>
+</resources>
