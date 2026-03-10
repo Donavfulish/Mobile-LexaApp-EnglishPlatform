@@ -49,9 +49,9 @@ class PrimaryButton @JvmOverloads constructor(
         }
     }
 
-    fun setOnPrimaryButtonClickListener(onClick: () -> Unit) {
-        binding.root.setOnClickListener {
-            onClick.invoke()
+    fun setOnClickAction(action: () -> Unit) {
+        binding.primaryBtn.setOnClickListener {
+            action.invoke()
         }
     }
 }

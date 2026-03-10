@@ -22,8 +22,6 @@
             app:cornerRadius="12dp"
             android:backgroundTint="@color/lexa_primary"
 
-            app:strokeWidth="2dp"
-            app:strokeColor="@color/black"
         />
 
 

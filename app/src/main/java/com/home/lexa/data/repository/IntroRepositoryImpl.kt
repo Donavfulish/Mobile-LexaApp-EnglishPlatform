@@ -10,7 +10,7 @@ class IntroRepositoryImpl : IntroRepository {
         return IntroData(
             title = "Chào mừng trở lại!",
             description = "Đăng nhập để tiếp tục học tập cùng chúng tôi",
-            buttonText = "Tiếp tục ngay"
+            buttonText = "Chuyển sang trang..."
         )
     }
 }

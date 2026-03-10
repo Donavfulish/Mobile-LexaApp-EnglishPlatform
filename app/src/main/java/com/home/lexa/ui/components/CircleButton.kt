@@ -39,9 +39,9 @@ class CircleButton @JvmOverloads constructor(
     }
 
 
-    fun setOnPrimaryButtonClickListener(onClick: () -> Unit) {
-        binding.root.setOnClickListener {
-            onClick.invoke()
+    fun setOnClickAction(action: () -> Unit) {
+        binding.circleBtn.setOnClickListener {
+            action.invoke()
         }
     }
 }

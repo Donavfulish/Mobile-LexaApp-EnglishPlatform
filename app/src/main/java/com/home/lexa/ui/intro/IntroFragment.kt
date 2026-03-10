@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.Toast
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentIntroBinding
+import com.home.lexa.ui.components.PrimaryButton
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class IntroFragment : BaseFragment<FragmentIntroBinding>(FragmentIntroBinding::inflate) {
@@ -19,6 +20,15 @@ class IntroFragment : BaseFragment<FragmentIntroBinding>(FragmentIntroBinding::i
             // Xử lý navigate sang LoginFragment ở đây
         }
 
+        val newButton = PrimaryButton(requireContext())
+        newButton.id = View.generateViewId()
+        newButton.setText("Hello", null)
+        newButton.setOnClickAction {
+            Toast.makeText(requireContext(), "Chào thế giới nhé", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.topBar.insertCustomeView(newButton)
+
         // 2. Gọi API lấy dữ liệu khi mở màn hình
         viewModel.loadIntro()
     }
@@ -33,7 +43,7 @@ class IntroFragment : BaseFragment<FragmentIntroBinding>(FragmentIntroBinding::i
         viewModel.introData.observe(viewLifecycleOwner) { data ->
             binding.tvIntroTitle.text = data.title
             binding.tvIntroDesc.text = data.description
-            binding.btnNext.setText(data.buttonText)
+            binding.btnNext.setText(data.buttonText, null)
         }
     }
 }
