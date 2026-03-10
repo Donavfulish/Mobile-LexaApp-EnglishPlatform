@@ -30,4 +30,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             }
         }
     }
+
+    override fun setupViews() {
+        TODO("Not yet implemented")
+    }
+
+    override fun observeData() {
+        TODO("Not yet implemented")
+    }
 }
