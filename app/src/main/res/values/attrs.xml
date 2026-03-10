@@ -2,4 +2,9 @@
     <declare-styleable name="DropdownInput">
         <attr name="dropdownTitle" format="string" />
     </declare-styleable>
+    <declare-styleable name="SettingMenuItem">
+        <attr name="menuIcon" format="reference" />
+        <attr name="menuTitle" format="string" />
+        <attr name="menuValue" format="string" /> <attr name="showValue" format="boolean" />
+    </declare-styleable>
 </resources>

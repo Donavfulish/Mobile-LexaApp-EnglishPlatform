@@ -35,6 +35,10 @@ class AuthFragment : BaseFragment<FragmentAuthBinding>(FragmentAuthBinding::infl
         binding.dropdownLevel.onItemSelected={selected ->
             // Xử lý khi người dùng chọn một mục trong dropdownLevel
         }
+
+        binding.menuLanguage.setOnClickListener{
+            //
+        }
     }
 
     override fun observeData() {
