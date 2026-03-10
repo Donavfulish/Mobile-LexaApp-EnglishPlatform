@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:parentTag="android.widget.FrameLayout">
+
+    <com.chaos.view.PinView
+        android:id="@+id/pinview"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:cursorVisible="true"
+        android:inputType="number"
+
+        android:itemBackground="@android:color/transparent"
+        app:itemBackground="@android:color/transparent"
+
+        android:textSize="22sp"
+        app:itemCount="6"
+        app:itemHeight="50dp"
+        app:itemRadius="8dp"
+        app:itemSpacing="8dp"
+        app:itemWidth="44dp"
+
+        app:lineColor="#BDBDBD"
+        app:lineWidth="2dp"
+        app:viewType="rectangle"
+
+        android:focusableInTouchMode="true" />
+</merge>
