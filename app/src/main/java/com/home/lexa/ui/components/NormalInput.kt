@@ -1,11 +1,15 @@
 package com.home.lexa.ui.components
 
 import android.content.Context
+import android.graphics.PorterDuff
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import androidx.annotation.ColorInt
+import androidx.compose.ui.graphics.Color
+import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
 import com.home.lexa.databinding.NormalInputBinding
 import com.home.lexa.databinding.ViewLexaButtonBinding
@@ -34,13 +38,16 @@ class NormalInput @JvmOverloads constructor(
         binding.etInput.hint = text
     }
 
-    // Cài đặt icon đầu ô Input (resId: id của drawable resource)
-    fun setIcon(resId: Int?) {
+    // Cài đặt icon đầu ô Input (resId: id của drawable resource, colorHex: "#123456")
+    fun setIcon(resId: Int?, colorHex: String? = "#575E6B") {
         if (resId == null || resId == -1) {
             // Nếu không có icon hoặc id không hợp lệ, ẩn ImageView đi để EditText tràn ra
             binding.ivIcon.visibility = View.GONE
         } else {
             binding.ivIcon.setImageResource(resId)
+
+            binding.ivIcon.setColorFilter(colorHex!!.toColorInt(), PorterDuff.Mode.SRC_IN)
+
             binding.ivIcon.visibility = View.VISIBLE
         }
     }
@@ -71,9 +78,9 @@ class NormalInput @JvmOverloads constructor(
     }
 
     // Hàm nhận function (callback) xử lý click
-    fun setOnLexaClickListener(onClick: () -> Unit) {
+    /*fun setOnLexaClickListener(onClick: () -> Unit) {
         binding.root.setOnClickListener {
             onClick.invoke()
         }
-    }
+    }*/
 }

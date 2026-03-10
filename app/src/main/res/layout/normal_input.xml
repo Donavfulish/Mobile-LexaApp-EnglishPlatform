@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app1="http://schemas.android.com/apk/res-auto"
-    android:padding="8dp">
+    xmlns:app1="http://schemas.android.com/apk/res-auto">
 
     <TextView
         android:id="@+id/tvLabel"
@@ -23,12 +22,13 @@
         android:background="@drawable/bg_input_field"  android:orientation="horizontal"
         android:padding="12dp"
         app1:layout_constraintCircleRadius="10dp"
-        app:layout_constraintTop_toBottomOf="@id/tvLabel">
+        app:layout_constraintTop_toBottomOf="@id/tvLabel"
+        android:layout_marginTop="6dp">
 
         <ImageView
             android:id="@+id/ivIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginEnd="8dp"
             android:visibility="gone" />
 
@@ -38,7 +38,6 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:hint="Nhập nội dung..."
-
             android:textSize="16sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
