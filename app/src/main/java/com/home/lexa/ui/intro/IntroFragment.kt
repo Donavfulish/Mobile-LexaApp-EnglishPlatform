@@ -43,6 +43,8 @@ class IntroFragment : BaseFragment<FragmentIntroBinding>(FragmentIntroBinding::i
             binding.textInput.setInputHeight(120)
             binding.textInput.setPlaceHolderText("Nhập tên khóa học...")
 
+
+
             // ----------------------------
         }
     }
