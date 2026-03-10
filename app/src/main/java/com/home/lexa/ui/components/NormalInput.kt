@@ -17,7 +17,7 @@ class NormalInput @JvmOverloads constructor(
 
     private val binding = NormalInputBinding.inflate(LayoutInflater.from(context), this, true)
 
-    // Set giá trị label và hiển thị Label trên ô Input
+    // Set giá trị label và hiển`    thị Label trên ô Input
     fun setLabel(text: String?) {
         if (text.isNullOrEmpty()) {
             binding.tvLabel.visibility = View.GONE
