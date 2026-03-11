@@ -49,9 +49,14 @@ class Popup @JvmOverloads constructor(
         if (isWarning) {
 
             binding.btnConfirm.backgroundTintList = context.getColorStateList(android.R.color.holo_red_dark)
+
+            binding.tvTitle.setTextColor(context.getColor(android.R.color.holo_red_dark))
+
+
         } else {
 
             binding.btnConfirm.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#6A65E9"))
+            binding.tvTitle.setTextColor(Color.parseColor("#202124"))
         }
 
 
