@@ -31,6 +31,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
 
         binding.progressBar.setProgress(80);
+
+
         binding.tag.setTagData("Ngày 04", "#6A65E9", true)
         binding.smallRing.setProgress(40)
         binding.headerSection.setHeaderData("Danh sách khóa học", R.drawable.ic_language)
