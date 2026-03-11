@@ -31,10 +31,30 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
 
         binding.progressBar.setProgress(80);
-        binding.tag.setTagData("Ngày 04", "#6A65E9", true)
+        binding.tag.setTagData("Ngày 04", "#000000", false)
         binding.smallRing.setProgress(40)
-        binding.headerSection.setHeaderData("Danh sách khóa học", R.drawable.ic_language)
-        binding.cardKhoaHoc.setCardData(R.drawable.ic_language, R.drawable.ic_language, "ccccc")
+        binding.cardKhoaHoc.setCardData(R.drawable.ic_language, 15, "Đây là một" +
+                "")
+        binding.headerSection.setHeaderData("Danh sách khóa học", R.drawable.ic_language,"Xem them"){}
+        binding.txtStatus.setOnClickListener {
+            // 1. Khởi tạo Popup (truyền Context của Fragment vào)
+            val myPopup = Popup(requireContext())
+
+            // 2. Gọi hàm showDialog bằng cú pháp "Named Arguments" cho dễ đọc
+            myPopup.showDialog(
+                title = "Thông báo hệ thống",
+                subTitle = "Bạn có chắc chắn muốn tải lại danh sách khóa học không? Dữ liệu cũ sẽ bị ghi đè.",
+                isWarning = true, // Set true để nút Xác nhận chuyển màu đỏ, false thì màu tím
+                confirmText = "Tải lại",
+                onConfirm = {
+                    // Xử lý khi bấm nút "Tải lại"
+                    viewModel.getCourses()
+                },
+                onCancel = {
+                    // Xử lý khi bấm nút "Hủy" (nếu không cần làm gì thêm thì để trống, dialog tự đóng)
+                }
+            )
+        }
 
     }
 

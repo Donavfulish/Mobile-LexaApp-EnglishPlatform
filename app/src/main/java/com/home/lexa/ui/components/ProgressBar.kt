@@ -11,7 +11,7 @@ import com.home.lexa.databinding.ViewProgressBarBinding
 
 class ProgressBar @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr) {
+) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     private val binding = ViewProgressBarBinding.inflate(LayoutInflater.from(context), this)
 

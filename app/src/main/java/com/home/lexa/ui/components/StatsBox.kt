@@ -14,7 +14,7 @@ class StatsBox @JvmOverloads constructor(
 
     init {
 
-        radius = 32f
+        radius = 24f
         cardElevation = 12f
         setCardBackgroundColor(android.graphics.Color.WHITE)
         strokeWidth = 0
