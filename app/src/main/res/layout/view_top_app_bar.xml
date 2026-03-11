@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:id="@+id/topBarLayout"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chi tiết khoá học"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:layout_marginStart="20dp"
+        app:layout_goneMarginStart="20dp"
+        app:layout_constraintStart_toEndOf="@id/leftBtn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <ImageButton
+        android:id="@+id/leftBtn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="0dp"
+        android:scaleType="fitCenter"
+        android:layout_marginStart="20dp"
+
+        android:background="@android:color/transparent"
+        app:layout_constraintVertical_bias="0.5"
+        android:src="@drawable/ic_back_btn" />
+
+
+    <ImageButton
+        android:id="@+id/rightBtn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="0dp"
+        android:scaleType="fitCenter"
+        android:layout_marginEnd="20dp"
+        android:visibility="gone"
+
+        android:background="@android:color/transparent"
+        app:layout_constraintVertical_bias="0.5"
+        tools:srcCompat="@drawable/ic_favorite_border_btn" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

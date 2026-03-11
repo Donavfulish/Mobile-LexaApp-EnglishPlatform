@@ -75,7 +75,7 @@ dependencies {
     val coroutinesVersion = "1.7.3"
 
     // 1. Dependency Injection: Koin
-    implementation("io.insert-koin:koin-android:$koinVersion")
+    implementation("io.insert-koin:koin-android:${koinVersion}")
 
     // 2. Networking: Retrofit & OkHttp & Kotlinx Serialization
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")

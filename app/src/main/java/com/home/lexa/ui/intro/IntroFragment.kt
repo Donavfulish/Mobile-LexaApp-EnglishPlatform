@@ -2,9 +2,9 @@ package com.home.lexa.ui.intro
 
 import android.view.View
 import android.widget.Toast
-import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentIntroBinding
+import com.home.lexa.ui.components.PrimaryButton
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class IntroFragment : BaseFragment<FragmentIntroBinding>(FragmentIntroBinding::inflate) {
@@ -20,6 +20,15 @@ class IntroFragment : BaseFragment<FragmentIntroBinding>(FragmentIntroBinding::i
             // Xử lý navigate sang LoginFragment ở đây
         }
 
+        val newButton = PrimaryButton(requireContext())
+        newButton.id = View.generateViewId()
+        newButton.setText("Hello", null)
+        newButton.setOnClickAction {
+            Toast.makeText(requireContext(), "Chào thế giới nhé", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.topBar.insertCustomeView(newButton)
+
         // 2. Gọi API lấy dữ liệu khi mở màn hình
         viewModel.loadIntro()
     }
@@ -34,18 +43,7 @@ class IntroFragment : BaseFragment<FragmentIntroBinding>(FragmentIntroBinding::i
         viewModel.introData.observe(viewLifecycleOwner) { data ->
             binding.tvIntroTitle.text = data.title
             binding.tvIntroDesc.text = data.description
-            binding.btnNext.setText(data.buttonText)
-
-            // Âu test --------------------
-
-            binding.textInput.setIcon(R.drawable.baseline_lock_24)
-            binding.textInput.setLabel("Tên khóa học")
-            binding.textInput.setInputHeight(120)
-            binding.textInput.setPlaceHolderText("Nhập tên khóa học...")
-
-            binding.searchbar.setPlaceHolderText("Tìm kiếm bộ từ vựng...")
-            binding.searchbar.setSuggestions(listOf("Apple", "Banana", "Orange"))
-            // ----------------------------
+            binding.btnNext.setText(data.buttonText, null)
         }
     }
 }
