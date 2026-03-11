@@ -36,7 +36,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         binding.tag.setTagData("Ngày 04", "#6A65E9", true)
         binding.smallRing.setProgress(40)
         binding.headerSection.setHeaderData("Danh sách khóa học", R.drawable.ic_language)
-        binding.cardKhoaHoc.setCardData(R.drawable.ic_language, R.drawable.ic_language, "ccccc")
+        binding.cardKhoaHoc.setCardData(R.drawable.ic_language, 15, "Đây là một" +
+                "")
 
     }
 
