@@ -27,8 +27,8 @@
 
     <com.home.lexa.ui.components.ProgressRing
         android:id="@+id/smallRing"
-        android:layout_width="100dp"
-        android:layout_height="100dp" />
+        android:layout_width="200dp"
+        android:layout_height="200dp" />
 
     <com.home.lexa.ui.components.StatsBox
         android:id="@+id/cardKhoaHoc"
