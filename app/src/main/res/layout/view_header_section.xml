@@ -10,38 +10,49 @@
         android:id="@+id/ivIcon"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginEnd="8dp" app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/ic_launcher_foreground"
-        tools:tint="#FFC107" /> <TextView
-    android:id="@+id/tvTitle"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:textColor="#111111"
-    android:textSize="18sp"
-    android:textStyle="bold"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toStartOf="@+id/tvAction"
-    app:layout_constraintStart_toEndOf="@+id/ivIcon"
-    app:layout_constraintTop_toTopOf="parent"
-    tools:text="Khóa học nổi bật" />
+        tools:tint="#FFC107" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp" android:textColor="#111111"
+        android:textStyle="bold"
+        android:maxLines="1"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeMaxTextSize="24sp"
+        app:autoSizeStepGranularity="1sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tvAction"
+        app:layout_constraintStart_toEndOf="@+id/ivIcon" app:layout_constraintTop_toTopOf="parent"
+        tools:text="Khóa học nổi bật" />
 
     <TextView
         android:id="@+id/tvAction"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
         android:paddingHorizontal="8dp"
         android:paddingVertical="4dp"
-        android:text="Xem tất cả"
+        android:gravity="center|end"
         android:textColor="#5C5AE8"
-        android:textSize="14sp"
         android:textStyle="bold"
+        android:maxLines="1"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="10sp"
+        app:autoSizeMaxTextSize="18sp"
+        app:autoSizeStepGranularity="1sp"
+        app:layout_constraintWidth_percent="0.25"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Xem tất cả" />
 
 </merge>

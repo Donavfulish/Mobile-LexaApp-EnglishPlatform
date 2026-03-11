@@ -17,27 +17,26 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     override fun setupViews() {
         // 1. Tương tác với Custom Component LexaButton
-        binding.btnLoadCourses.setText("Tải danh sách khóa học")
+//        binding.btnLoadCourses.setText("Tải danh sách khóa học")
+//
+//        binding.btnLoadCourses.setOnLexaClickListener {
+//            viewModel.getCourses() // Bắn event cho ViewModel xử lý
+//        }
+//
+//        // 2. Lắng nghe State thay đổi từ ViewModel để update UI (giống useEffect)
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            viewModel.uiState.collect { stateText ->
+//                binding.txtStatus.text = stateText
+//            }
+//        }
+//
+//        binding.progressBar.setProgress(80);
+//        binding.tag.setTagData("Ngày 04", "#000000", false)
+//        binding.smallRing.setProgress(40)
+//        binding.cardKhoaHoc.setCardData(R.drawable.ic_language, 15, "Đây là một" +
+//                "")
+        binding.headerSection.setHeaderData("Danh sách khóa học", R.drawable.ic_language,"Xem them"){}
 
-        binding.btnLoadCourses.setOnLexaClickListener {
-            viewModel.getCourses() // Bắn event cho ViewModel xử lý
-        }
-
-        // 2. Lắng nghe State thay đổi từ ViewModel để update UI (giống useEffect)
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.uiState.collect { stateText ->
-                binding.txtStatus.text = stateText
-            }
-        }
-
-        binding.progressBar.setProgress(80);
-
-
-        binding.tag.setTagData("Ngày 04", "#6A65E9", true)
-        binding.smallRing.setProgress(40)
-        binding.headerSection.setHeaderData("Danh sách khóa học", R.drawable.ic_language)
-        binding.cardKhoaHoc.setCardData(R.drawable.ic_language, 15, "Đây là một" +
-                "")
 
     }
 
