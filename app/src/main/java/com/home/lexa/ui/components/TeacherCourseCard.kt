@@ -5,7 +5,8 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import com.home.lexa.databinding.ViewTeacherCourseCardBinding
-
+import coil.load
+import com.home.lexa.R
 
 class TeacherCourseCard @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -37,8 +38,12 @@ class TeacherCourseCard @JvmOverloads constructor(
             hasBorder = false
         )
 
+        binding.ivThumbnail.load(data.thumbnail) {
+            crossfade(true) // Hiệu ứng mờ dần khi ảnh tải xong cho đẹp
+            placeholder(R.drawable.ic_launcher_background) // Ảnh hiển thị tạm trong lúc chờ tải
+            error(R.drawable.ic_launcher_background) // Ảnh hiển thị nếu link bị lỗi/mất mạng
+        }
 
-        binding.ivThumbnail.setImageResource(data.thumbnailRes)
 
 
         binding.ivOptions.setOnClickListener {

@@ -6,6 +6,9 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import com.home.lexa.databinding.ViewDeckCardBinding
+import coil.load
+import com.home.lexa.R
+
 data class CourseData(
     val title: String,
     val description: String,
@@ -15,8 +18,8 @@ data class CourseData(
     val wordCountText: String,
     val tagTitle: String,
     val tagColorHex: String,
-    val thumbnailRes: Int,
-    val authorAvatarRes: Int
+    val thumbnail: String,
+    val authorAvatar: String
 )
 
 class DeckCard @JvmOverloads constructor(
@@ -48,12 +51,21 @@ class DeckCard @JvmOverloads constructor(
         binding.tagCategory.setTagData(
             text = data.tagTitle,
             colorHex = data.tagColorHex,
-            hasBorder = false // Vì thẻ mẫu không có viền
+            hasBorder = false
         )
 
 
-        binding.ivThumbnail.setImageResource(data.thumbnailRes)
-        binding.ivAuthorAvatar.setImageResource(data.authorAvatarRes)
+        binding.ivThumbnail.load(data.thumbnail) {
+            crossfade(true) // Hiệu ứng mờ dần khi ảnh tải xong cho đẹp
+            placeholder(R.drawable.ic_launcher_background) // Ảnh hiển thị tạm trong lúc chờ tải
+            error(R.drawable.ic_launcher_background) // Ảnh hiển thị nếu link bị lỗi/mất mạng
+        }
+
+        binding.ivAuthorAvatar.load(data.authorAvatar) {
+            crossfade(true)
+            placeholder(R.drawable.ic_launcher_background) // Ảnh hiển thị tạm trong lúc chờ tải
+            error(R.drawable.ic_launcher_background) // Ảnh hiển thị nếu link bị lỗi/mất mạng
+        }
 
 
         binding.ivOptions.setOnClickListener {

@@ -1,7 +1,6 @@
 package com.home.lexa.ui.home
 
-import android.os.Bundle
-import android.view.View
+
 import androidx.lifecycle.lifecycleScope
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
@@ -67,8 +66,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             wordCountText = "12 TỪ",
             tagTitle = "Giao tiếp",
             tagColorHex = "#6A65E9",
-            thumbnailRes = R.drawable.ic_launcher_background, // Sửa thành ảnh thực tế
-            authorAvatarRes = R.drawable.ic_launcher_background  // Sửa thành ảnh thực tế
+            thumbnail= "https://tse1.mm.bing.net/th/id/OIP.dSQmjvuYtnHc2vvVd43NmQHaGO?pid=Api&P=0&h=180",
+            authorAvatar = "https://tse1.mm.bing.net/th/id/OIP.dSQmjvuYtnHc2vvVd43NmQHaGO?pid=Api&P=0&h=180",
         )
 
 
@@ -96,8 +95,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             actionText = "HỌC NGAY", // Hoặc đổi thành "TIẾP TỤC" nếu % lớn hơn 0
             tagTitle = "Luyện thi",
             tagColorHex = "#6A65E9", // Màu xanh tím
-            thumbnailRes = R.drawable.ic_launcher_background,
-            authorAvatarRes = R.drawable.ic_launcher_background
+            thumbnail= "https://tse1.mm.bing.net/th/id/OIP.dSQmjvuYtnHc2vvVd43NmQHaGO?pid=Api&P=0&h=180",
+            authorAvatar = "https://tse1.mm.bing.net/th/id/OIP.dSQmjvuYtnHc2vvVd43NmQHaGO?pid=Api&P=0&h=180",
         )
 
 

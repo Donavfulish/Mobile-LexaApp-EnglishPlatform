@@ -189,7 +189,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/cvAvatar"
             app:layout_constraintEnd_toStartOf="@+id/tvHeartCount"
             app:layout_constraintTop_toTopOf="@+id/cvAvatar"
-            app:tint="#888888" />
+            app:tint="#FF6B6B" />
 
         <TextView
             android:id="@+id/tvUserCount"

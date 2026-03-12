@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import coil.load
+import com.home.lexa.R
 import com.home.lexa.databinding.ViewStudentCourseCardBinding
 
 data class CourseProgressData(
@@ -12,17 +14,12 @@ data class CourseProgressData(
     val authorName: String,
     val userCount: Int,
     val heartCount: Int,
-
-    // Phần trăm hoàn thành (Từ 0 đến 100)
     val progressPercent: Int,
-
-    // Chữ hiển thị ở nút bấm (VD: "HỌC NGAY", "TIẾP TỤC")
     val actionText: String = "HỌC NGAY",
-
     val tagTitle: String,
     val tagColorHex: String,
-    val thumbnailRes: Int,
-    val authorAvatarRes: Int
+    val thumbnail: String,
+    val authorAvatar: String
 )
 class StudentCourseCard @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -59,9 +56,16 @@ class StudentCourseCard @JvmOverloads constructor(
             hasBorder = false
         )
 
-
-        binding.ivThumbnail.setImageResource(data.thumbnailRes)
-        binding.ivAuthorAvatar.setImageResource(data.authorAvatarRes)
+        binding.ivThumbnail.load(data.thumbnail) {
+            crossfade(true) // Hiệu ứng mờ dần khi ảnh tải xong cho đẹp
+            placeholder(R.drawable.ic_launcher_background) // Ảnh hiển thị tạm trong lúc chờ tải
+            error(R.drawable.ic_launcher_background) // Ảnh hiển thị nếu link bị lỗi/mất mạng
+        }
+        binding.ivAuthorAvatar.load(data.thumbnail) {
+            crossfade(true) // Hiệu ứng mờ dần khi ảnh tải xong cho đẹp
+            placeholder(R.drawable.ic_launcher_background) // Ảnh hiển thị tạm trong lúc chờ tải
+            error(R.drawable.ic_launcher_background) // Ảnh hiển thị nếu link bị lỗi/mất mạng
+        }
 
         binding.btnAction.setOnClickListener {
             onActionClick.invoke()
