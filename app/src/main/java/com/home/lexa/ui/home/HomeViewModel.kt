@@ -2,7 +2,7 @@ package com.home.lexa.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.home.lexa.data.repository.CourseRepository
+import com.home.lexa.domain.repository.CourseRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -18,8 +18,7 @@ class HomeViewModel(private val repository: CourseRepository) : ViewModel() {
         // Khởi chạy luồng bất đồng bộ (Coroutine)
         viewModelScope.launch {
             try {
-                val courses = repository.fetchCourses()
-                _uiState.value = "Đã tải xong ${courses.size} khóa học: ${courses[0].title}"
+                val courses = repository.getCourses()
             } catch (e: Exception) {
                 _uiState.value = "Lỗi rùi!"
             }

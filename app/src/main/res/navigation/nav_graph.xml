@@ -3,14 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
     app:startDestination="@id/teacherDashboardFragment">
-    <fragment
-        android:id="@+id/authFragment"
-        android:name="com.home.lexa.ui.auth.AuthFragment"
-        android:label="Auth" />
-    <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.home.lexa.ui.home.HomeFragment"
-        android:label="Home" />
 
 <!--============ AUTH =========-->
     <fragment
@@ -50,8 +42,6 @@
         android:name="com.home.lexa.ui.course.teacher_course_list.TeacherCourseListFragment"
         android:label="teacherCourseListFragment" />
 
-
-
     <fragment
         android:id="@+id/vocabularyFlashcardFragment"
         android:name="com.home.lexa.ui.course.vocabulary_flashcard.VocabularyFlashcardFragment"
@@ -73,6 +63,11 @@
         android:id="@+id/flashcardDetailFragment"
         android:name="com.home.lexa.ui.flashcard.flashcard_detail.FlashcardDetailFragment"
         android:label="FlashcardDetailFragment" />
+
+    <fragment
+        android:id="@+id/flashcardAddEditFragment"
+        android:name="com.home.lexa.ui.flashcard.flashcard_edit_add.FlashcardEditAddFragment"
+        android:label="FlashcardEditAddFragment" />
 
     <!--    =========== HOME  ======= -->
     <fragment
