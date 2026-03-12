@@ -2,4 +2,7 @@
 <resources>
 
     <style name="Theme.MyApplication" parent="Theme.Material3.DayNight.NoActionBar" />
+    <style name="RoundedCorner">
+        <item name="cornerSize">16dp</item>
+    </style>
 </resources>

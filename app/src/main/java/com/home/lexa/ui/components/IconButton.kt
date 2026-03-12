@@ -25,8 +25,11 @@ class IconButton @JvmOverloads constructor(
         }
     }
 
-    fun setIcon(icon: Drawable){
-        binding.iconBtn.icon = icon
+    fun setIcon(icon: Drawable?){
+        icon?.let{
+            binding.iconBtn.icon = icon
+            binding.iconBtn.iconTint = null
+        }
     }
 
     fun setIconSize(sizeDp: Int){
@@ -40,7 +43,7 @@ class IconButton @JvmOverloads constructor(
     }
 
     fun setTextSize(size: Float){
-        binding.iconBtn.setTextSize(TypedValue.COMPLEX_UNIT_PX, size)
+        binding.iconBtn.setTextSize(TypedValue.COMPLEX_UNIT_DIP, size)
     }
 
     fun setBackground(@ColorInt color: Int){

@@ -37,7 +37,8 @@
         android:id="@+id/favoriteBtn"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:backgroundTint="@color/lexa_primary"
+        app:backgroundTint="@color/white_opacity"
+
         android:gravity="center"
         android:insetLeft="0dp"
         android:insetTop="0dp"
@@ -46,6 +47,7 @@
         android:insetBottom="0dp"
         app:cornerRadius="100dp"
         app:icon="@drawable/ic_selector_favorite_btn"
+        app:iconTint="@null"
         app:iconGravity="textStart"
 
         app:iconPadding="0dp"

@@ -7,8 +7,10 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.annotation.ColorInt
+import androidx.compose.ui.graphics.Color
 import com.home.lexa.R
 import androidx.core.content.ContextCompat
+import androidx.core.content.withStyledAttributes
 import com.home.lexa.databinding.ViewPrimaryButtonBinding
 
 class PrimaryButton @JvmOverloads constructor(
@@ -24,11 +26,12 @@ class PrimaryButton @JvmOverloads constructor(
     }
 
     fun setTextSize(size: Float){
-        binding.primaryBtn.setTextSize(TypedValue.COMPLEX_UNIT_PX, size)
+        binding.primaryBtn.setTextSize(TypedValue.COMPLEX_UNIT_DIP, size)
     }
 
     fun setBackground(@ColorInt color: Int){
-        binding.primaryBtn.backgroundTintList = ColorStateList.valueOf(color)
+//        binding.primaryBtn.backgroundTintList = ColorStateList.valueOf(color)
+        binding.primaryBtn.setBackgroundColor(color)
     }
 
     fun setWidth(widthDp: Int){
