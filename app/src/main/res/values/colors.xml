@@ -9,5 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="lexa_primary">#4CAF50</color>
     <color name="lexa_white">#FFFFFF</color>
-
+    <color name="gray">#575E6B</color>
 </resources>

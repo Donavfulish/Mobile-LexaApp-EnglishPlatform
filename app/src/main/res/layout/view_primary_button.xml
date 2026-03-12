@@ -13,7 +13,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:elevation="8dp"
-        android:translationZ="10dp"
+        android:translationZ="0dp"
+        android:textColor="@color/black"
 
         android:text="Button"
         android:insetTop="0dp"
