@@ -108,4 +108,8 @@ dependencies {
 
     // 8. OTP bar
     implementation ("io.github.chaosleung:pinview:1.4.4")
+
+    // 9. Auto-sizing text (one in many functions)
+    implementation("com.intuit.sdp:sdp-android:1.1.1")
+    implementation("com.intuit.ssp:ssp-android:1.1.1")
 }

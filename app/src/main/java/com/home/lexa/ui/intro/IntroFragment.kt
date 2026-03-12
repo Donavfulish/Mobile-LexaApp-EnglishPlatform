@@ -1,15 +1,10 @@
 package com.home.lexa.ui.intro
 
+import android.view.View
 import android.widget.Toast
-import androidx.core.view.setMargins
 import com.home.lexa.core.base.BaseFragment
-import com.home.lexa.data.repository.mockCourses
-import com.home.lexa.data.repository.mockParagraphData
-import com.home.lexa.data.repository.mockStudyingCourses
 import com.home.lexa.databinding.FragmentIntroBinding
-import com.home.lexa.ui.components.FeaturedCourseCard
-import com.home.lexa.ui.components.ParagraphCard
-import com.home.lexa.ui.components.StudyingCourseCard
+import com.home.lexa.ui.components.PrimaryButton
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class IntroFragment : BaseFragment<FragmentIntroBinding>(FragmentIntroBinding::inflate) {
@@ -17,55 +12,38 @@ class IntroFragment : BaseFragment<FragmentIntroBinding>(FragmentIntroBinding::i
     // Inject ViewModel bằng Koin (giữ nguyên)
     private val viewModel: IntroViewModel by viewModel()
 
-
     override fun setupViews() {
         // 1. Gắn sự kiện (Thay thế cho setupActions)
-
-        val paragraphCard = ParagraphCard(requireContext()).apply {
-            displayParagraph(mockParagraphData)
-        }
-        binding.root.addView(paragraphCard)
-
-        mockCourses.forEach { course ->
-            val courseCard = FeaturedCourseCard(requireContext()).apply {
-                setData(course)
-
-                setOnClickToggleFavoriteButton { isSelected ->
-                    Toast.makeText(context, "${course.title} favorite: $isSelected", Toast.LENGTH_SHORT).show()
-                }
-                setOnClickTopic {
-                    Toast.makeText(context, "${course.topic}", Toast.LENGTH_SHORT).show()
-                }
-            }
-            binding.root.addView(courseCard)
+        binding.btnNext.setOnClickAction {
+            // Lưu ý: Trong Fragment, dùng requireContext() thay cho 'this'
+            Toast.makeText(requireContext(), "Chuyển sang màn Login!", Toast.LENGTH_SHORT).show()
+            // Xử lý navigate sang LoginFragment ở đây
         }
 
-        mockStudyingCourses.forEach { course ->
-            val studyCard = StudyingCourseCard(requireContext()).apply {
-                setData(course)
-
-                setOnClickTopic {
-                    Toast.makeText(context, "Click Topic: ${course.topic}", Toast.LENGTH_SHORT).show()
-                }
-            }
-            binding.root.addView(studyCard)
+        val newButton = PrimaryButton(requireContext())
+        newButton.id = View.generateViewId()
+        newButton.setText("Hello", null)
+        newButton.setOnClickAction {
+            Toast.makeText(requireContext(), "Chào thế giới nhé", Toast.LENGTH_SHORT).show()
         }
 
+        binding.topBar.insertCustomeView(newButton)
 
+        // 2. Gọi API lấy dữ liệu khi mở màn hình
         viewModel.loadIntro()
     }
 
     override fun observeData() {
         // Lưu ý: Trong Fragment, BẮT BUỘC dùng 'viewLifecycleOwner' thay cho 'this'
-//        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-//            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-//            binding.btnNext.visibility = if (isLoading) View.GONE else View.VISIBLE
-//        }
-//
-//        viewModel.introData.observe(viewLifecycleOwner) { data ->
-//            binding.tvIntroTitle.text = data.title
-//            binding.tvIntroDesc.text = data.description
-//            binding.btnNext.setText(data.buttonText, null)
-//        }
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.btnNext.visibility = if (isLoading) View.GONE else View.VISIBLE
+        }
+
+        viewModel.introData.observe(viewLifecycleOwner) { data ->
+            binding.tvIntroTitle.text = data.title
+            binding.tvIntroDesc.text = data.description
+            binding.btnNext.setText(data.buttonText, null)
+        }
     }
 }
