@@ -77,7 +77,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             onOptionsClick = {
                 println("Mở menu Tùy chọn (Lưu khóa học, Chia sẻ...)")
             })
-
+        binding.teacherCourseCard.setCourseData(data = sampleCourse,
+            onCardClick = {
+                println("Chuyển sang màn hình Chi tiết khóa học!")
+            },
+            onOptionsClick = {
+                println("Mở menu Tùy chọn (Lưu khóa học, Chia sẻ...)")
+            })
     }
 
     override fun observeData() {
