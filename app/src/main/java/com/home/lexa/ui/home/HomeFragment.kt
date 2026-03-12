@@ -7,6 +7,7 @@ import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentHomeBinding
 import com.home.lexa.ui.components.CourseData
+import com.home.lexa.ui.components.CourseProgressData
 import com.home.lexa.ui.components.Popup
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlinx.coroutines.launch
@@ -83,6 +84,28 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             },
             onOptionsClick = {
                 println("Mở menu Tùy chọn (Lưu khóa học, Chia sẻ...)")
+            })
+        val myCourse = CourseProgressData(
+            title = "Luyện Thi IELTS Speaking 7.0+",
+            description = "Chiến thuật trả lời các phần thi Speaking và bộ từ vựng nâng cấp cho các chủ đề",
+            authorName = "John Smith",
+            userCount = 850,
+            heartCount = 320,
+            progressPercent = 10, // Truyền 10% vào đây
+            actionText = "HỌC NGAY", // Hoặc đổi thành "TIẾP TỤC" nếu % lớn hơn 0
+            tagTitle = "Luyện thi",
+            tagColorHex = "#6A65E9", // Màu xanh tím
+            thumbnailRes = R.drawable.ic_launcher_background,
+            authorAvatarRes = R.drawable.ic_launcher_background
+        )
+
+
+        binding.studentCourseCard.setCourseData( data = myCourse,
+            onActionClick = {
+                println("User bấm nút HỌC NGAY -> Mở video bài giảng!")
+            },
+            onCardClick = {
+                println("User bấm vào thẻ -> Mở màn hình Giới thiệu khóa học!")
             })
     }
 

@@ -72,6 +72,10 @@
                 android:id="@+id/teacherCourseCard"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
+            <com.home.lexa.ui.components.StudentCourseCard
+                android:id="@+id/studentCourseCard"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
         </LinearLayout>
     </ScrollView>
 
