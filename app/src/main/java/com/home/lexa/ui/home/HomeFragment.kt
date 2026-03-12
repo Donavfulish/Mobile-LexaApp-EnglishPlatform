@@ -6,6 +6,7 @@ import androidx.lifecycle.lifecycleScope
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentHomeBinding
+import com.home.lexa.ui.components.CourseData
 import com.home.lexa.ui.components.Popup
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlinx.coroutines.launch
@@ -55,6 +56,27 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 }
             )
         }
+        val sampleCourse = CourseData(
+            title = "Tiếng Anh Giao Tiếp Cơ Bản ",
+            description = "Nắm vững 500 cấu trúc câu thông dụng nhất trong giao tiếp hàng ngày với người bản xứ.",
+            authorName = "John Smith",
+            userCount = 1240,
+            heartCount = 450,
+            wordCountText = "12 TỪ",
+            tagTitle = "Giao tiếp",
+            tagColorHex = "#6A65E9",
+            thumbnailRes = R.drawable.ic_launcher_background, // Sửa thành ảnh thực tế
+            authorAvatarRes = R.drawable.ic_launcher_background  // Sửa thành ảnh thực tế
+        )
+
+
+        binding.deckCard.setDeckCardData(data = sampleCourse,
+            onCardClick = {
+                println("Chuyển sang màn hình Chi tiết khóa học!")
+            },
+            onOptionsClick = {
+                println("Mở menu Tùy chọn (Lưu khóa học, Chia sẻ...)")
+            })
 
     }
 
