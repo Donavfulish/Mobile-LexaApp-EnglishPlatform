@@ -2,16 +2,147 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/authFragment">
-
+    app:startDestination="@id/teacherDashboardFragment">
     <fragment
         android:id="@+id/authFragment"
         android:name="com.home.lexa.ui.auth.AuthFragment"
         android:label="Auth" />
-
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.home.lexa.ui.home.HomeFragment"
         android:label="Home" />
+
+<!--============ AUTH =========-->
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.home.lexa.ui.auth.login.LoginFragment"
+        android:label="Login" />
+
+    <fragment
+        android:id="@+id/signupStudentFragment"
+        android:name="com.home.lexa.ui.auth.signup_student.SignupStudentFragment"
+        android:label="SignupStudent" />
+
+    <fragment
+        android:id="@+id/signupTeacherFragment"
+        android:name="com.home.lexa.ui.auth.signup_teacher.SignupTeacherFragment"
+        android:label="SignupTeacher" />
+
+    <fragment
+        android:id="@+id/verifyEmail"
+        android:name="com.home.lexa.ui.auth.verify_email.VerifyEmailFragment"
+        android:label="verifyEmail" />
+
+
+<!--    ========== COURSE ========== -->
+    <fragment
+        android:id="@+id/courseDetailFragment"
+        android:name="com.home.lexa.ui.course.course_detail.CourseDetailFragment"
+        android:label="CourseDetailFragment" />
+
+    <fragment
+        android:id="@+id/studentCourseListFragment"
+        android:name="com.home.lexa.ui.course.student_course_list.StudentCourseListFragment"
+        android:label="studentCourseListFragment" />
+
+    <fragment
+        android:id="@+id/teacherCourseListFragment"
+        android:name="com.home.lexa.ui.course.teacher_course_list.TeacherCourseListFragment"
+        android:label="teacherCourseListFragment" />
+
+
+
+    <fragment
+        android:id="@+id/vocabularyFlashcardFragment"
+        android:name="com.home.lexa.ui.course.vocabulary_flashcard.VocabularyFlashcardFragment"
+        android:label="VocabularyFlashcardFragment" />
+
+
+<!--    =========== FLASHCARD ======= -->
+    <fragment
+        android:id="@+id/exerciseModeFragment"
+        android:name="com.home.lexa.ui.flashcard.exercise_mode.ExerciseModeFragment"
+        android:label="ExerciseModeFragment" />
+
+    <fragment
+        android:id="@+id/exerciseResultFragment"
+        android:name="com.home.lexa.ui.flashcard.exercise_result.ExerciseResultFragment"
+        android:label="ExerciseResultFragment" />
+
+    <fragment
+        android:id="@+id/flashcardDetailFragment"
+        android:name="com.home.lexa.ui.flashcard.flashcard_detail.FlashcardDetailFragment"
+        android:label="FlashcardDetailFragment" />
+
+    <!--    =========== HOME  ======= -->
+    <fragment
+        android:id="@+id/studentDashboardFragment"
+        android:name="com.home.lexa.ui.home.student_dashboard.StudentDashboardFragment"
+        android:label="StudentDashboardFragment" />
+
+    <fragment
+        android:id="@+id/teacherDashboardFragment"
+        android:name="com.home.lexa.ui.home.teacher_dashboard.TeacherDashboardFragment"
+        android:label="TeacherDashboardFragment" />
+
+    <!--    =========== Library  ======= -->
+
+    <fragment
+        android:id="@+id/favoriteLibraryFragment"
+        android:name="com.home.lexa.ui.library.favorite_library.FavoriteLibraryFragment"
+        android:label="FavoriteLibraryFragment" />
+
+
+    <fragment
+        android:id="@+id/personalLibraryFragment"
+        android:name="com.home.lexa.ui.library.personal_library.PersonalLibraryFragment"
+        android:label="PersonalLibraryFragment" />
+
+    <!--    =========== Profile   ======= -->
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.home.lexa.ui.profile.profile.ProfileFragment"
+        android:label="ProfileFragment" />
+
+    <fragment
+        android:id="@+id/profileChangePasswordFragment"
+        android:name="com.home.lexa.ui.profile.profile_change_password.ProfileChangePasswordFragment"
+        android:label="ProfileChangePasswordFragment" />
+
+    <fragment
+        android:id="@+id/profileEmailFragment"
+        android:name="com.home.lexa.ui.profile.profile_email.ProfileEmailFragment"
+        android:label="ProfileEmailFragment" />
+
+    <fragment
+        android:id="@+id/profilePersonalInformationFragment"
+        android:name="com.home.lexa.ui.profile.profile_personal_information.ProfilePersonalInformationFragment"
+        android:label="ProfilePersonalInformationFragment" />
+
+    <fragment
+        android:id="@+id/profileLanguageFragment"
+        android:name="com.home.lexa.ui.profile.profile_language.ProfileLanguageFragment"
+        android:label="ProfileLanguageFragment" />
+
+    <fragment
+        android:id="@+id/profileNotificationFragment"
+        android:name="com.home.lexa.ui.profile.profile_notification.ProfileNotificationFragment"
+        android:label="ProfileNotificationFragment" />
+
+    <!--    =========== Speaking   ======= -->
+    <fragment
+        android:id="@+id/dailyResultFragment"
+        android:name="com.home.lexa.ui.speaking.daily_result.DailyResultFragment"
+        android:label="DailyResultFragment" />
+
+    <fragment
+        android:id="@+id/speakingDayListFragment"
+        android:name="com.home.lexa.ui.speaking.speaking_day_list.SpeakingDayListFragment"
+        android:label="SpeakingDayListFragment" />
+
+    <fragment
+        android:id="@+id/speakingPracticeFragment"
+        android:name="com.home.lexa.ui.speaking.speaking_practice.SpeakingPracticeFragment"
+        android:label="SpeakingPracticeFragment" />
 
 </navigation>

@@ -1,3 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">My Application</string>
+
+    <string name="login_title">Welcome back</string>
+    <string name="login_desc">Log in to continue learning with us</string>
+    <string name="remember_me">Remember me</string>
+    <string name="forgot_password">Forgot password</string>
+    <string name="or_continue_with">Or continue with</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="signup_title">Create a new account</string>
+    <string name="signup_desc">Join the Lexa learning community today</string>
+    <string name="student">Student</string>
+    <string name="teacher">Teacher</string>
+    <string name="register_linked_account">Register linked account</string>
+    <string name="enter_information">Or enter information</string>
+    <string name="birth_date">Date of birth</string>
+    <string name="address">Address</string>
+    <string name="login">Log in</string>
+    <string name="register">Register</string>
+    <string name="dont_have_account">Don\'t have an account</string>
+    <string name="title_footer">Developed by HCMUS \@ 2024</string>
+    <string name="register_now">Register now</string>
+    <string name="already_have_account">Already have an account</string>
+
+    <string name="signup_teacher_title">Create teacher account</string>
+    <string name="signup_teacher_desc">Join the teaching staff at Lexa</string>
+    <string name="certificate_language">Foreign language certificate</string>
+    <string name="certificate_degree">Teaching degree or related (recommended)</string>
+    <string name="authenticity_commitment">I guarantee that the degree is original and unedited. I take full responsibility for the authenticity of the documents.</string>
+
+    <string name="otp_title">Enter OTP code</string>
+    <string name="otp_desc">Open your %1$s mailbox to get the code</string>
+    <string name="otp_confirm">Haven\'t received the code from your mailbox?</string>
+    <string name="otp_resend">Resend OTP</string>
+
+    <string name="hello_user">Hello %1$s</string>
+    <string name="day">Day %1$s</string>
+    <string name="study_time">Study time</string>
+    <string name="this_week">This week</string>
+    <string name="this_month">This month</string>
+    <string name="featured_course">Featured courses</string>
+    <string name="see_all">See all</string>
+    <string name="studying">Currently studying</string>
+    <string name="your_favorite">Your favorites</string>
+    <string name="vocabulary">Vocabulary</string>
+    <string name="lesson">Lesson</string>
+    <string name="library">Library</string>
+    <string name="course">Course</string>
+    <string name="profile">Profile</string>
+
+    <string name="achievement">Achievements</string>
+    <string name="total_lesson">Total lessons taken</string>
+    <string name="favorite_vocabulary_set">Favorite vocabulary sets</string>
+
+    <string name="search_placeholder_favorite">Search for vocabulary sets, topics,...</string>
+    <string name="favorite">Favorite</string>
+    <string name="personal">Personal</string>
+
+    <string name="start_practice">Start practicing</string>
+    <string name="search_course">Search for courses,...</string>
+    <string name="word_list">Word list</string>
+    <string name="edit">Edit</string>
+    <string name="flashcard_detail_desc">You have viewed the entire list. Let\'s start practicing to memorize these words!</string>
+    <string name="start_practice_action">Start practicing</string>
+
+    <string name="edit_flashcard">Edit flashcard</string>
+    <string name="illustration_image">Illustration image</string>
+    <string name="pronunciation">Pronunciation</string>
+    <string name="word_type">Part of speech</string>
+    <string name="definition">Definition</string>
+    <string name="example_sentence">Example sentence</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="stop">Stop</string>
+    <string name="practice_upper">PRACTICE</string>
+    <string name="not_memorized_upper">NOT MEMORIZED</string>
+    <string name="memorized_upper">MEMORIZED</string>
+    <string name="word">Word</string>
+    <string name="tap_to_go_back">Tap to go back</string>
+    <string name="tap_to_show_meaning">Tap to show meaning</string>
+
+    <string name="completed_upper">COMPLETED</string>
+    <string name="learned_words">%1$s words learned</string>
+    <string name="congratulation_title">Congratulations, your progress has increased by %1$s</string>
+    <string name="congratulation_desc">Keep up the good work</string>
+    <string name="practice_unmemorized_words">Practice unmemorized words</string>
+    <string name="practice_again">Practice again</string>
+    <string name="exit">Exit</string>
+
+    <string name="results_count">%1$s results</string>
+
+    <string name="teacher_upper">TEACHER</string>
+    <string name="student_upper">STUDENT</string>
+    <string name="favorite_upper">FAVORITE</string>
+    <string name="course_introduction">Course introduction</string>
+    <string name="learning_path">Learning path</string>
+    <string name="continue_learning_now">Continue learning now</string>
+
+    <string name="search_flashcard">Search for vocabulary,...</string>
+    <string name="flashcard_list">Flashcard list</string>
+    <string name="quick_learning_tips">Quick learning tips</string>
+    <string name="flashcard_note_desc">Tap the card to see the meaning and example. Don\'t forget to turn on the sound to hear the correct pronunciation.</string>
+
+    <string name="lesson_progress_upper">LESSON PROGRESS</string>
+    <string name="completed_percentage">Completed %1$s</string>
+    <string name="paragraph">Paragraph %1$s</string>
+    <string name="listen_sample">Listen to sample</string>
+    <string name="listen_again">Listen again</string>
+    <string name="tap_mic_to_speak">Tap the microphone to speak</string>
+
+    <string name="edit_course">Edit course</string>
+    <string name="course_name">Course name</string>
+    <string name="course_type">Course type</string>
+    <string name="lesson_path">Lesson path %1$s</string>
+
+    <string name="study_day_name">Study day name</string>
+    <string name="score">Score</string>
+    <string name="good">Good</string>
+    <string name="bad">Bad</string>
+    <string name="medium">Medium</string>
+    <string name="study_again">Study again</string>
+    <string name="return_to_course">Return to course</string>
+    <string name="listen_standard_pronunciation">Listen to standard pronunciation</string>
+    <string name="listen_my_audio_again">Listen to my audio again</string>
+
+    <string name="personal_profile">Personal profile</string>
+    <string name="study_statistics">Study statistics</string>
+    <string name="current_course">Current course</string>
+    <string name="vocabulary_set">Vocabulary set</string>
+    <string name="weekly_study_time">Weekly study time</string>
+    <string name="total_amount">Total %1$s</string>
+    <string name="account_and_security_upper">ACCOUNT AND SECURITY</string>
+    <string name="personal_information">Personal information</string>
+    <string name="change_password">Change password</string>
+    <string name="app_settings_upper">APP SETTINGS</string>
+    <string name="language">Language</string>
+    <string name="notification">Notifications</string>
+    <string name="logout">Log out</string>
+    <string name="full_name_upper">FULL NAME</string>
+    <string name="birth_date_upper">DATE OF BIRTH</string>
+    <string name="address_upper">ADDRESS</string>
+    <string name="save_changes">Save changes</string>
+
+    <string name="streak_notification">Streak notification</string>
+    <string name="streak_notification_desc">A reminder to maintain your daily study streak so you don\'t lose progress.</string>
+    <string name="study_time_notification">Study time notification</string>
+    <string name="study_time_notification_desc">A reminder notification before your scheduled study time.</string>
+    <string name="set_reminder_time">Set reminder time</string>
+    <string name="home_screen">Home Screen</string>
 </resources>

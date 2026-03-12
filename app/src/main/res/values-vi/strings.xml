@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">My Application</string>
+
+    <string name="login_title">Chào mừng trở lại</string>
+    <string name="login_desc">Đăng nhập để tiếp tục học tập cùng chúng tôi</string>
+    <string name="remember_me">Ghi nhớ tôi</string>
+    <string name="forgot_password">Quên mật khẩu</string>
+    <string name="or_continue_with">Hoặc tiếp tục với</string>
+    <string name="password">Mật khẩu</string>
+    <string name="confirm_password">Xác nhận mật khẩu</string>
+    <string name="signup_title">Tạo tài khoản mới</string>
+    <string name="signup_desc">Tham gia cộng đồng học tập Lexa ngày hôm nay</string>
+    <string name="student">Học sinh</string>
+    <string name="teacher">Giáo viên</string>
+    <string name="register_linked_account">Đăng ký tài khoản liên kết</string>
+    <string name="enter_information">Hoặc nhập thông tin</string>
+    <string name="birth_date">Ngày sinh</string>
+    <string name="address">Địa chỉ</string>
+    <string name="login">Đăng nhập</string>
+    <string name="register">Đăng ký</string>
+    <string name="dont_have_account">Chưa có tài khoản</string>
+    <string name="title_footer">Phát triển bởi HCMUS \@ 2024</string>
+    <string name="register_now">Đăng ký ngay</string>
+    <string name="already_have_account">Đã có tài khoản</string>
+
+    <string name="signup_teacher_title">Tạo tài khoản giáo viên</string>
+    <string name="signup_teacher_desc">Tham gia đội ngũ giảng dạy tại Lexa</string>
+    <string name="certificate_language">Chứng chỉ ngoại ngữ</string>
+    <string name="certificate_degree">Bằng sư phạm hoặc liên quan (khuyến khích)</string>
+    <string name="authenticity_commitment">Tôi cam kết bằng cấp là bản gốc và chưa qua chỉnh sửa. Tôi hoàn toàn chịu trách nhiệm về tính xác thực của tài liệu</string>
+
+    <string name="otp_title">Nhập mã OTP</string>
+    <string name="otp_desc">Mở hộp thư %1$s để lấy mã</string>
+    <string name="otp_confirm">Chưa nhận được mã từ hộp thư?</string>
+    <string name="otp_resend">Gửi lại mã OTP</string>
+
+    <string name="hello_user">Chào %1$s</string>
+    <string name="day">%1$s day</string>
+    <string name="study_time">Thời gian học</string>
+    <string name="this_week">Tuần này</string>
+    <string name="this_month">Tháng này</string>
+    <string name="featured_course">Khoá học nổi bật</string>
+    <string name="see_all">Xem tất cả</string>
+    <string name="studying">Đang học</string>
+    <string name="your_favorite">Yêu thích của bạn</string>
+    <string name="vocabulary">Từ vựng</string>
+    <string name="lesson">Bài học</string>
+    <string name="library">Thư viện</string>
+    <string name="course">Khoá học</string>
+    <string name="profile">Hồ sơ</string>
+
+    <string name="achievement">Thành tựu đây</string>
+    <string name="total_lesson">Tổng số lượt học</string>
+    <string name="favorite_vocabulary_set">Yêu thích bộ từ vựng</string>
+
+    <string name="search_placeholder_favorite">Tìm bộ từ vựng, chủ đề,...</string>
+    <string name="favorite">Yêu thích</string>
+    <string name="personal">Cá nhân</string>
+
+    <string name="start_practice">Bắt đầu luyện tập</string>
+    <string name="search_course">Tìm kiếm khoá học,...</string>
+    <string name="word_list">Danh sách từ</string>
+    <string name="edit">Chỉnh sửa</string>
+    <string name="flashcard_detail_desc">Bạn đã xem hết danh sách. Hãy bắt đầu ôn luyện để ghi nhớ các từ vựng này nhé!</string>
+    <string name="start_practice_action">Bắt đầu luyện tập</string>
+
+    <string name="edit_flashcard">Chỉnh sửa flashcard</string>
+    <string name="illustration_image">Ảnh minh hoạ</string>
+    <string name="pronunciation">Phiên âm</string>
+    <string name="word_type">Loại từ</string>
+    <string name="definition">Định nghĩa</string>
+    <string name="example_sentence">Câu ví dụ</string>
+    <string name="save">Lưu</string>
+    <string name="cancel">Huỷ</string>
+
+    <string name="stop">Dừng</string>
+    <string name="practice_upper">LUYỆN TẬP</string>
+    <string name="not_memorized_upper">CHƯA THUỘC</string>
+    <string name="memorized_upper">ĐÃ THUỘC</string>
+    <string name="word">Từ</string>
+    <string name="tap_to_go_back">Chạm để quay lại</string>
+    <string name="tap_to_show_meaning">Chạm để hiện nghĩa</string>
+
+    <string name="completed_upper">HOÀN THÀNH</string>
+    <string name="learned_words">%1$s từ đã học</string>
+    <string name="congratulation_title">Chúc mừng, tiến độ của bạn đã tăng thêm %1$s</string>
+    <string name="congratulation_desc">Giữ vững phong độ nhé</string>
+    <string name="practice_unmemorized_words">Luyện từ chưa thuộc</string>
+    <string name="practice_again">Luyện lại</string>
+    <string name="exit">Thoát</string>
+
+    <string name="results_count">%1$s kết quả</string>
+
+    <string name="teacher_upper">GIÁO VIÊN</string>
+    <string name="student_upper">HỌC VIÊN</string>
+    <string name="favorite_upper">YÊU THÍCH</string>
+    <string name="course_introduction">Giới thiệu khoá học</string>
+    <string name="learning_path">Lộ trình</string>
+    <string name="continue_learning_now">Tiếp tục học ngay</string>
+
+    <string name="search_flashcard">Tìm kiếm từ vựng,...</string>
+    <string name="flashcard_list">Danh sách Flashcards</string>
+    <string name="quick_learning_tips">Mẹo học nhanh</string>
+    <string name="flashcard_note_desc">Chạm vào thẻ để xem nghĩa và ví dụ. Đừng quên bật âm thanh để nghe cách phát âm chuẩn nhé</string>
+
+    <string name="lesson_progress_upper">TIẾN ĐỘ BÀI HỌC</string>
+    <string name="completed_percentage">Đã hoàn thành %1$s</string>
+    <string name="paragraph">Đoạn văn %1$s</string>
+    <string name="listen_sample">Nghe mẫu</string>
+    <string name="listen_again">Nghe lại</string>
+    <string name="tap_mic_to_speak">Nhấn vào micro để nói</string>
+
+    <string name="edit_course">Chỉnh sửa khoá học</string>
+    <string name="course_name">Tên khoá học</string>
+    <string name="course_type">Loại khoá học</string>
+    <string name="lesson_path">Lộ trình bài học %1$s</string>
+
+    <string name="study_day_name">Tên ngày học</string>
+    <string name="score">Điểm số</string>
+    <string name="good">Good</string>
+    <string name="bad">Bad</string>
+    <string name="medium">Medium</string>
+    <string name="study_again">Học lại</string>
+    <string name="return_to_course">Trở về khoá học</string>
+    <string name="listen_standard_pronunciation">Nghe phát âm chuẩn</string>
+    <string name="listen_my_audio_again">Nghe lại âm của tôi</string>
+
+    <string name="personal_profile">Hồ sơ cá nhân</string>
+    <string name="study_statistics">Thống kê học tập</string>
+    <string name="current_course">Khoá đang học</string>
+    <string name="vocabulary_set">Bộ từ vựng</string>
+    <string name="weekly_study_time">Thời gian học trong tuần</string>
+    <string name="total_amount">Tổng cộng %1$s</string>
+    <string name="account_and_security_upper">TÀI KHOẢN VÀ BẢO MẬT</string>
+    <string name="personal_information">Thông tin cá nhân</string>
+    <string name="change_password">Đổi mật khẩu</string>
+    <string name="app_settings_upper">CÀI ĐẶT ỨNG DỤNG</string>
+    <string name="language">Ngôn ngữ</string>
+    <string name="notification">Thông báo</string>
+    <string name="logout">Đăng xuất</string>
+    <string name="full_name_upper">HỌ VÀ TÊN</string>
+    <string name="birth_date_upper">NGÀY SINH</string>
+    <string name="address_upper">ĐỊA CHỈ</string>
+    <string name="save_changes">Lưu thay đổi</string>
+
+    <string name="streak_notification">Thông báo chuỗi</string>
+    <string name="streak_notification_desc">Nhắc nhở bạn duy trì chuỗi học tập hàng ngày để không bỏ lỡ tiến độ.</string>
+    <string name="study_time_notification">Thông báo giờ học</string>
+    <string name="study_time_notification_desc">Thông báo nhắc nhở trước khi đến giờ học đã cài đặt của bạn.</string>
+    <string name="set_reminder_time">Cài đặt giờ nhắc nhở</string>
+</resources>
