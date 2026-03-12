@@ -6,13 +6,6 @@
     android:orientation="vertical"
     android:padding="0dp">
 
-    <TextView
-        android:id="@+id/txtStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Chưa có dữ liệu"
-        android:textSize="18sp"
-        android:layout_marginBottom="24dp"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -22,48 +15,11 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
            >
-            <com.home.lexa.ui.components.NormalInput
-                android:id="@+id/inputSearch"
+
+            <com.home.lexa.ui.components.ParagraphCard
+                android:id="@+id/paragraphCard"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginBottom="16dp" />
-
-            <com.home.lexa.ui.components.LexaButton
-                android:id="@+id/btnLoadCourses"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <com.home.lexa.ui.components.ProgressRing
-                android:id="@+id/smallRing"
-                android:layout_width="80dp"
-                android:layout_height="80dp" />
-            <com.home.lexa.ui.components.ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="12dp"
-                />
-
-            <com.home.lexa.ui.components.StatsBox
-                android:id="@+id/cardKhoaHoc"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp" />
-
-
-            <com.home.lexa.ui.components.Tag
-                android:id="@+id/tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="42dp"
-                android:layout_gravity="center"
-                />
-
-            <com.home.lexa.ui.components.HeaderSection
-                android:id="@+id/headerSection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"/>
+                android:layout_height="match_parent"/>
             <com.home.lexa.ui.components.DeckCard
                 android:id="@+id/deckCard"
                 android:layout_width="match_parent"
