@@ -12,8 +12,6 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:elevation="8dp"
-        android:translationZ="10dp"
 
         android:text="Button"
         android:textSize="14dp"
