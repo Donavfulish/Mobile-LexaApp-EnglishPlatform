@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="0dp">
 
     <TextView
         android:id="@+id/txtStatus"
@@ -64,6 +64,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"/>
+            <com.home.lexa.ui.components.DeckCard
+                android:id="@+id/deckCard"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <com.home.lexa.ui.components.TeacherCourseCard
+                android:id="@+id/teacherCourseCard"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <com.home.lexa.ui.components.StudentCourseCard
+                android:id="@+id/studentCourseCard"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <com.home.lexa.ui.components.PersonalDeckCard
+                android:id="@+id/personlDeckCard"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
         </LinearLayout>
     </ScrollView>
 
