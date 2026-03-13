@@ -5,4 +5,7 @@
         <item name="android:fontFamily">@font/archivo</item>
         <item name="fontFamily">@font/archivo</item>
     </style>
+    <style name="RoundedCorner">
+        <item name="cornerSize">16dp</item>
+    </style>
 </resources>

@@ -6,14 +6,12 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/iconBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:elevation="8dp"
-        android:translationZ="10dp"
 
         android:text="Button"
         android:textSize="14dp"
@@ -22,14 +20,17 @@
         android:insetBottom="0dp"
         app:cornerRadius="12dp"
         android:backgroundTint="@color/lexa_primary"
-        app:strokeWidth="2dp"
-        app:strokeColor="@color/black"
+
+        android:insetLeft="0dp"
+        android:insetRight="0dp"
+
+        android:padding="0dp"
+        android:paddingStart="0dp"
+        android:paddingEnd="0dp"
 
         app:icon="@drawable/ic_launcher_foreground"
         app:iconGravity="textStart"
-        app:iconSize="48dp"
         app:iconPadding="1dp"
-
         />
 
 

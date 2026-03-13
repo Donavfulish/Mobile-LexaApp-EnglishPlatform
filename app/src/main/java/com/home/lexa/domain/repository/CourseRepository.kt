@@ -1,11 +1,9 @@
-package com.home.lexa.data.repository
-import com.home.lexa.domain.models.Course
-import kotlinx.coroutines.delay
+package com.home.lexa.domain.repository
 
-class CourseRepository {
-    // suspend function là async/await của Kotlin
-    suspend fun fetchCourses(): List<Course> {
-        delay(1000) // Giả lập gọi API mất 1 giây
-        return listOf(Course(1, "IELTS Speaking"), Course(2, "TOEIC 800+"))
-    }
+import com.home.lexa.domain.models.Course
+import com.home.lexa.domain.models.CreateCourseRequest
+
+interface CourseRepository {
+    suspend fun getCourses(): Result<List<Course>>
+    suspend fun createCourse(request: CreateCourseRequest): Result<Long>
 }
