@@ -11,7 +11,9 @@ data class StudySetData(
     val title: String,
     val wordCountText: String,
     val timeText: String,
-    val iconRes: Int
+    val iconRes: Int,
+    val tagTitle: String,
+    val tagColorHex: String
 )
 
 class PersonalDeckCard @JvmOverloads constructor(
@@ -37,7 +39,11 @@ class PersonalDeckCard @JvmOverloads constructor(
         binding.tvWordCount.text = data.wordCountText
         binding.tvTime.text = data.timeText
         binding.ivMainIcon.setImageResource(data.iconRes)
-
+        binding.tagCategory.setTagData(
+            text = data.tagTitle,
+            colorHex = data.tagColorHex,
+            hasBorder = false
+        )
         binding.ivOptions.setOnClickListener {
             onOptionsClick.invoke()
         }

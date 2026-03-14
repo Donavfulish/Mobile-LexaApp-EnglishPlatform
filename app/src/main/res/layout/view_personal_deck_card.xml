@@ -5,7 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground" android:padding="16dp">
+    android:background="#FFFFFF"
+    android:foreground="?attr/selectableItemBackground"
+    android:padding="16dp">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cvIconBox"
@@ -24,7 +26,8 @@
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_launcher_foreground" app:tint="#6A65E9" />
+            android:src="@drawable/ic_launcher_foreground"
+            app:tint="#6A65E9" />
     </com.google.android.material.card.MaterialCardView>
 
     <ImageView
@@ -35,10 +38,11 @@
         android:clickable="true"
         android:focusable="true"
         android:padding="4dp"
-        app:layout_constraintBottom_toBottomOf="@+id/cvIconBox"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/cvIconBox"
-        app:srcCompat="@drawable/ic_more_horiz_24" app:tint="#888888" />
+        app:layout_constraintTop_toTopOf="@+id/tvTitle"
+        app:layout_constraintBottom_toBottomOf="@+id/tvTitle"
+        app:srcCompat="@drawable/ic_more_horiz_24"
+        app:tint="#888888" />
 
     <TextView
         android:id="@+id/tvTitle"
@@ -52,20 +56,22 @@
         android:textColor="#202124"
         android:textSize="16sp"
         android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/ivBook"
         app:layout_constraintEnd_toStartOf="@+id/ivOptions"
         app:layout_constraintStart_toEndOf="@+id/cvIconBox"
-        app:layout_constraintTop_toTopOf="@+id/cvIconBox"
-        app:layout_constraintVertical_chainStyle="packed" /> <ImageView
-    android:id="@+id/ivBook"
-    android:layout_width="16dp"
-    android:layout_height="16dp"
-    android:layout_marginTop="6dp"
-    app:srcCompat="@drawable/ic_outline_book_ribbon"
-    app:layout_constraintBottom_toBottomOf="@+id/cvIconBox"
-    app:layout_constraintStart_toStartOf="@+id/tvTitle"
-    app:layout_constraintTop_toBottomOf="@+id/tvTitle"
-    app:tint="#888888" />
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <ImageView
+        android:id="@+id/ivBook"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginTop="8dp"
+        app:srcCompat="@drawable/ic_outline_book_ribbon"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+        app:layout_constraintBottom_toTopOf="@+id/tagCategory"
+        app:layout_constraintStart_toStartOf="@+id/tvTitle"
+        app:tint="#888888" />
 
     <TextView
         android:id="@+id/tvWordCount"
@@ -101,5 +107,15 @@
         app:layout_constraintBottom_toBottomOf="@+id/ivBook"
         app:layout_constraintStart_toEndOf="@+id/ivCalendar"
         app:layout_constraintTop_toTopOf="@+id/ivBook" />
+
+    <com.home.lexa.ui.components.Tag
+        android:id="@+id/tagCategory"
+        android:layout_width="89dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivBook" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

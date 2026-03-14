@@ -1,14 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    >
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:textSize="24sp"
-        android:text="ĐÂY LÀ MÀN HÌNH TEACHER DASHBOARD"/>
+    android:orientation="vertical"
+
+    android:padding="8dp">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <com.home.lexa.ui.components.ParagraphCard
+                android:id="@+id/paragraphCard"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <com.home.lexa.ui.components.DeckCard
+                android:id="@+id/deckCard"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <com.home.lexa.ui.components.TeacherCourseCard
+                android:id="@+id/teacherCourseCard"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <com.home.lexa.ui.components.StudentCourseCard
+                android:id="@+id/studentCourseCard"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <com.home.lexa.ui.components.PersonalDeckCard
+                android:id="@+id/personlDeckCard"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

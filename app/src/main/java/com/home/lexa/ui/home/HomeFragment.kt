@@ -76,7 +76,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             title = "Tiếng Anh chuyên ngành IT",
             wordCountText = "120 từ",
             timeText = "2 ngày trước",
-            iconRes = R.drawable.ic_launcher_foreground // Đổi thành icon "Layers" của bạn
+            iconRes = R.drawable.ic_launcher_foreground ,
+            tagTitle = "Công nghệ",
+            tagColorHex = "#6A65E9",
+
         )
         binding.personlDeckCard.setDeckCardData(data = myStudySet,
             onItemClick = {
