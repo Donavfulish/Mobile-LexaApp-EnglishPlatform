@@ -2,14 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="24dp">
+    android:padding="8dp"
+    >
 
 
 <!--    <com.home.lexa.ui.components.ParagraphCard-->
 <!--        android:id="@+id/paragraphCard"-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="match_parent"/>-->
+    <com.home.lexa.ui.components.StudentSpeakingDayCard
+        android:id="@+id/card1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"/>
+
+    <com.home.lexa.ui.components.StudentSpeakingDayCard
+        android:id="@+id/card2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"/>
+
+    <com.home.lexa.ui.components.StudentSpeakingDayCard
+        android:id="@+id/card3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"/>
 
 </LinearLayout>

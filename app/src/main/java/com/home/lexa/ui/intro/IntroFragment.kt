@@ -22,33 +22,36 @@ class IntroFragment : BaseFragment<FragmentIntroBinding>(FragmentIntroBinding::i
     override fun setupViews() {
 //        binding.paragraphCard.displayParagraph(mockParagraphData)
         // 1. Gắn sự kiện (Thay thế cho setupActions)
-        mockCourses.forEach { course ->
-            val courseCard = FeaturedCourseCard(requireContext()).apply {
-                setData(course)
-
-                setOnClickToggleFavoriteButton { isSelected ->
-                    Toast.makeText(context, "${course.title} favorite: $isSelected", Toast.LENGTH_SHORT).show()
-                }
-                setOnClickTopic {
-                    Toast.makeText(context, "${course.topic}", Toast.LENGTH_SHORT).show()
-                }
-            }
-            binding.root.addView(courseCard)
-        }
-
-        mockStudyingCourses.forEach { course ->
-            val studyCard = StudyingCourseCard(requireContext()).apply {
-                setData(course)
-
-                setOnClickTopic {
-                    Toast.makeText(context, "Click Topic: ${course.topic}", Toast.LENGTH_SHORT).show()
-                }
-            }
-            binding.root.addView(studyCard)
-        }
-
-
-        viewModel.loadIntro()
+//        mockCourses.forEach { course ->
+//            val courseCard = FeaturedCourseCard(requireContext()).apply {
+//                setData(course)
+//
+//                setOnClickToggleFavoriteButton { isSelected ->
+//                    Toast.makeText(context, "${course.title} favorite: $isSelected", Toast.LENGTH_SHORT).show()
+//                }
+//                setOnClickTopic {
+//                    Toast.makeText(context, "${course.topic}", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//            binding.root.addView(courseCard)
+//        }
+//
+//        mockStudyingCourses.forEach { course ->
+//            val studyCard = StudyingCourseCard(requireContext()).apply {
+//                setData(course)
+//
+//                setOnClickTopic {
+//                    Toast.makeText(context, "Click Topic: ${course.topic}", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//            binding.root.addView(studyCard)
+//        }
+//
+//
+//        viewModel.loadIntro()
+        binding.card1.setData(1, "Chào hỏi cơ bản & Giới thiệu bản thân", 100)
+        binding.card2.setData(2, "Giao tiếp tại nhà hàng, thái độ phục vụ", 65)
+        binding.card3.setData(3, "Hỏi đường và Chỉ dẫn", 0)
     }
 
     override fun observeData() {
