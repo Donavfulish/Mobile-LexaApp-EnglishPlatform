@@ -17,6 +17,56 @@
 <!--        android:id="@+id/paragraphCard"-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="match_parent"/>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <com.home.lexa.ui.components.FlashcardMini
+            android:id="@+id/flashcardMini1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="5dp" />
+
+        <com.home.lexa.ui.components.FlashcardMini
+            android:id="@+id/flashcardMini2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="5dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <com.home.lexa.ui.components.FlashcardMini
+            android:id="@+id/flashcardMini3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="5dp" />
+
+        <com.home.lexa.ui.components.FlashcardMini
+            android:id="@+id/flashcardMini4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="5dp" />
+    </LinearLayout>
+
+    <com.home.lexa.ui.components.Flashcard
+        android:id="@+id/bigFlashcard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="20dp" />
+
     <com.home.lexa.ui.components.StudentSpeakingDayCard
         android:id="@+id/card1"
         android:layout_width="match_parent"
@@ -52,6 +102,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"/>
-
 </LinearLayout>
 </ScrollView>

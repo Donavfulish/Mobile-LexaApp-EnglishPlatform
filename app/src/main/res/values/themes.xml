@@ -8,4 +8,7 @@
     <style name="RoundedCorner">
         <item name="cornerSize">16dp</item>
     </style>
+    <style name="CircleImage" parent="">
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>

@@ -76,7 +76,7 @@
                 android:id="@+id/btnSound"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:background="#F3F4F6"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true"
                 android:padding="6dp"
