@@ -4,12 +4,13 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.FrameLayout
 import com.home.lexa.databinding.FlashcardBinding
 import com.home.lexa.databinding.StudentSpeakingDayCardBinding
 
 class StudentSpeakingDayCard @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : ScalableContainer(context, attrs) {
+) : FrameLayout(context, attrs, defStyleAttr) {
     private val binding = StudentSpeakingDayCardBinding.inflate(LayoutInflater.from(context), this, true)
     private var day = 1
     private var title = "Chào hỏi cơ bản & Giới thiệu bản thân"

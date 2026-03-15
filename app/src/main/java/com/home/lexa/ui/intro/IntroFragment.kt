@@ -51,7 +51,12 @@ class IntroFragment : BaseFragment<FragmentIntroBinding>(FragmentIntroBinding::i
 //        viewModel.loadIntro()
         binding.card1.setData(1, "Chào hỏi cơ bản & Giới thiệu bản thân", 100)
         binding.card2.setData(2, "Giao tiếp tại nhà hàng, thái độ phục vụ", 65)
-        binding.card3.setData(3, "Hỏi đường và Chỉ dẫn", 0)
+        binding.card3.setData(3, "Đây là một title rất dài kiểm tra xem size chữ tự điều chỉnh thế nào (dòng tối đa: 2)", 0)
+
+        binding.card4.setData(1, "Chào hỏi cơ bản & Giới thiệu bản thân", 15)
+        binding.card5.setData(2, "Giao tiếp tại nhà hàng, thái độ phục vụ", 101)
+        binding.card6.setData(3, "Đây là một title rất dài kiểm tra xem size chữ tự điều chỉnh thế nào (dòng tối đa: 2)", 273)
+
     }
 
     override fun observeData() {
