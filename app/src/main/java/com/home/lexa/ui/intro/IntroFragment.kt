@@ -25,19 +25,6 @@ class IntroFragment : BaseFragment<FragmentIntroBinding>(FragmentIntroBinding::i
         }
         binding.root.addView(paragraphCard)
         // 1. Gắn sự kiện (Thay thế cho setupActions)
-        mockCourses.forEach { course ->
-            val courseCard = FeaturedCourseCard(requireContext()).apply {
-                setData(course)
-
-                setOnClickToggleFavoriteButton { isSelected ->
-                    Toast.makeText(context, "${course.title} favorite: $isSelected", Toast.LENGTH_SHORT).show()
-                }
-                setOnClickTopic {
-                    Toast.makeText(context, "${course.topic}", Toast.LENGTH_SHORT).show()
-                }
-            }
-            binding.root.addView(courseCard)
-        }
 
         mockStudyingCourses.forEach { course ->
             val studyCard = StudyingCourseCard(requireContext()).apply {
