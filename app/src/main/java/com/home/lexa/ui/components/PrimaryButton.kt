@@ -30,8 +30,8 @@ class PrimaryButton @JvmOverloads constructor(
     }
 
     fun setBackground(@ColorInt color: Int){
-//        binding.primaryBtn.backgroundTintList = ColorStateList.valueOf(color)
-        binding.primaryBtn.setBackgroundColor(color)
+        binding.primaryBtn.backgroundTintList = ColorStateList.valueOf(color)
+//        binding.primaryBtn.setBackgroundColor(color)
     }
 
     fun setWidth(widthDp: Int){

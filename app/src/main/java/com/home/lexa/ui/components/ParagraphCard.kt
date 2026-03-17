@@ -21,16 +21,16 @@ class ParagraphCard @JvmOverloads constructor(
         binding.AIButton.setText("AI evaluated", null)
         binding.AIButton.setTextSize(10f)
 
-        binding.leftBtn.setText("Nghe phát âm chuẩn", context.getColor(R.color.purple_500))
-        binding.leftBtn.setStroke(1, context.getColor(R.color.purple_500))
+        binding.leftBtn.setText("Nghe phát âm chuẩn", context.getColor(R.color.purple_paragraph))
+        binding.leftBtn.setStroke(1, context.getColor(R.color.purple_paragraph))
         binding.leftBtn.setTextSize(12f)
         binding.leftBtn.setBackground(context.getColor(R.color.white))
         binding.leftBtn.setIcon(context.getDrawable(R.drawable.ic_play_circle))
         binding.leftBtn.setIconPadding(2)
 
 
-        binding.rightBtn.setText("Nghe lại âm của tôi", context.getColor(R.color.purple_200))
-        binding.rightBtn.setStroke(1, context.getColor(R.color.purple_200))
+        binding.rightBtn.setText("Nghe lại âm của tôi", context.getColor(R.color.pink))
+        binding.rightBtn.setStroke(1, context.getColor(R.color.pink))
         binding.rightBtn.setTextSize(12f)
         binding.rightBtn.setBackground(context.getColor(R.color.white))
         binding.rightBtn.setIcon(context.getDrawable(R.drawable.ic_replay))
@@ -55,9 +55,9 @@ class ParagraphCard @JvmOverloads constructor(
 
             // Ánh xạ status sang màu sắc
             val color = when (item.s) {
-                "green" -> android.R.color.holo_green_dark
-                "yellow" -> android.R.color.holo_orange_dark
-                "red" -> android.R.color.holo_red_dark
+                "green" -> R.color.green
+                "yellow" -> R.color.yellow_paragraph
+                "red" -> R.color.red_paragraph
                 else -> android.R.color.black
             }
             val actualColor = ContextCompat.getColor(context, color)

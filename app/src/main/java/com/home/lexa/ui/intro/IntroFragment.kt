@@ -20,7 +20,10 @@ class IntroFragment : BaseFragment<FragmentIntroBinding>(FragmentIntroBinding::i
 
 
     override fun setupViews() {
-//        binding.paragraphCard.displayParagraph(mockParagraphData)
+        val paragraphCard = ParagraphCard(requireContext()).apply {
+            displayParagraph(mockParagraphData)
+        }
+        binding.root.addView(paragraphCard)
         // 1. Gắn sự kiện (Thay thế cho setupActions)
         mockCourses.forEach { course ->
             val courseCard = FeaturedCourseCard(requireContext()).apply {

@@ -12,15 +12,15 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-
         android:text="Button"
         android:textSize="14dp"
         android:gravity="center"
         android:insetTop="0dp"
         android:insetBottom="0dp"
         app:cornerRadius="12dp"
+        app:rippleColor="#22000000"
         android:backgroundTint="@color/lexa_primary"
-
+        app:pressedTranslationZ="2dp"
         android:insetLeft="0dp"
         android:insetRight="0dp"
 
