@@ -9,15 +9,14 @@ import android.widget.Filter
 import android.widget.FrameLayout
 import androidx.core.widget.doOnTextChanged
 import com.home.lexa.R
-import com.home.lexa.databinding.SearchbarFilterBinding
-import com.home.lexa.databinding.ViewLexaButtonBinding
+import com.home.lexa.databinding.ViewSearchbarFilterBinding
 
 // Kế thừa FrameLayout để bọc component XML lại
 class SearchbarFilter @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val binding = SearchbarFilterBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = ViewSearchbarFilterBinding.inflate(LayoutInflater.from(context), this, true)
 
     // 1. Khai báo Callback cho nút Filter (vì mỗi trang sẽ có giao diện/chức năng bộ lọc khác nhau)
     private var onFilterClickListener: (() -> Unit)? = null
@@ -59,7 +58,7 @@ class SearchbarFilter @JvmOverloads constructor(
     fun setSuggestions(suggestions: List<String>) {
         val adapter = ArrayAdapter(
             context,
-            R.layout.item_suggestion, // File layout bạn vừa tạo
+            R.layout.view_item_suggestion, // File layout bạn vừa tạo
             R.id.tvSuggestion,        // ID của TextView trong layout đó
             suggestions
         )

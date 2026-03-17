@@ -5,9 +5,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import com.home.lexa.databinding.ViewDeckCardBinding
 import coil.load
 import com.home.lexa.R
+import com.home.lexa.databinding.CardDeckBinding
 
 data class CourseData(
     val title: String,
@@ -26,7 +26,7 @@ class DeckCard @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val binding = ViewDeckCardBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = CardDeckBinding.inflate(LayoutInflater.from(context), this, true)
 
     /**
      * Hàm nạp toàn bộ dữ liệu vào thẻ

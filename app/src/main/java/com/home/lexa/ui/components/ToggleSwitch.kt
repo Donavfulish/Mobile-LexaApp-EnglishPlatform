@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.home.lexa.databinding.ComponentToggleSwitchBinding
+import com.home.lexa.databinding.ButtonToggleSwitchBinding
 
 class ToggleSwitch  @JvmOverloads constructor(
     context: Context,
@@ -12,7 +12,7 @@ class ToggleSwitch  @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr){
     private val binding =
-        ComponentToggleSwitchBinding.inflate(LayoutInflater.from(context), this);
+        ButtonToggleSwitchBinding.inflate(LayoutInflater.from(context), this);
 
     var isChecked: Boolean = false
         set(value) {

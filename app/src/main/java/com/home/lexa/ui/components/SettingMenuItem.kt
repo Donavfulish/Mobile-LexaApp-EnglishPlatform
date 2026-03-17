@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import com.google.android.material.card.MaterialCardView
 import com.home.lexa.R
-import com.home.lexa.databinding.ComponentSettingMenuItemBinding
+import com.home.lexa.databinding.CardSettingMenuItemBinding
 
 class SettingMenuItem @JvmOverloads constructor(
     context: Context,
@@ -15,7 +15,7 @@ class SettingMenuItem @JvmOverloads constructor(
 ) : MaterialCardView(context, attrs, defStyleAttr) {
 
     // Quan trọng: Phải có tham số 'this' và 'true' để attach vào CardView
-    private val binding = ComponentSettingMenuItemBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = CardSettingMenuItemBinding.inflate(LayoutInflater.from(context), this, true)
 
     init {
 

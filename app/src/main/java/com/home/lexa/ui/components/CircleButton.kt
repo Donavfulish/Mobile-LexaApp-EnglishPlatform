@@ -10,14 +10,14 @@ import android.widget.FrameLayout
 import androidx.annotation.ColorInt
 import com.home.lexa.R
 import androidx.core.content.ContextCompat
-import com.home.lexa.databinding.ViewCircleButtonBinding
-import com.home.lexa.databinding.ViewIconButtonBinding
-import com.home.lexa.databinding.ViewPrimaryButtonBinding
+import com.home.lexa.databinding.ButtonCircleBinding
+import com.home.lexa.databinding.ButtonIconBinding
+import com.home.lexa.databinding.ButtonPrimaryBinding
 
 class CircleButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
-    private val binding = ViewCircleButtonBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = ButtonCircleBinding.inflate(LayoutInflater.from(context), this, true)
 
     fun setSize(sizeDp: Int){
         val sizePx = (sizeDp * context.resources.displayMetrics.density).toInt()

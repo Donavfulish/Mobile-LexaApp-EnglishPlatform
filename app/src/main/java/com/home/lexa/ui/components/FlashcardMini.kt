@@ -20,8 +20,8 @@ import androidx.core.graphics.toColorInt
 import com.home.lexa.R
 import com.home.lexa.databinding.FlashcardBinding
 import com.home.lexa.databinding.FlashcardMiniBinding
-import com.home.lexa.databinding.LayoutFlashcardZoomBinding
-import com.home.lexa.databinding.ViewLexaButtonBinding
+import com.home.lexa.databinding.ViewLayoutFlashcardZoomBinding
+import com.home.lexa.databinding.ButtonLexaBinding
 import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.domain.models.mockVocabularyData
@@ -77,7 +77,7 @@ class FlashcardMini @JvmOverloads constructor(
     // Bắt sự kiến bấm nút Zoom
     fun zoom() {
         val dialog = android.app.Dialog(context)
-        val dialogBinding = LayoutFlashcardZoomBinding.inflate(LayoutInflater.from(context), null, false)
+        val dialogBinding = ViewLayoutFlashcardZoomBinding.inflate(LayoutInflater.from(context), null, false)
 
         // Tìm trực tiếp từ XML
         val bigCard = dialogBinding.bigCard

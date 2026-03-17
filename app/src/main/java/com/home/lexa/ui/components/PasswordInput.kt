@@ -12,16 +12,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
 import com.home.lexa.R
-import com.home.lexa.databinding.NormalInputBinding
-import com.home.lexa.databinding.PasswordInputBinding
-import com.home.lexa.databinding.ViewLexaButtonBinding
+import com.home.lexa.databinding.InputNormalBinding
+import com.home.lexa.databinding.InputPasswordBinding
+import com.home.lexa.databinding.ButtonLexaBinding
 
 // Kế thừa FrameLayout để bọc component XML lại
 class PasswordInput @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val binding = PasswordInputBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = InputPasswordBinding.inflate(LayoutInflater.from(context), this, true)
     private var _isPasswordHidden = false
 
     init {

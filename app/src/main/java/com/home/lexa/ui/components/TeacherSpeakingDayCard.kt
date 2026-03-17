@@ -9,8 +9,8 @@ import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import com.home.lexa.R
-import com.home.lexa.databinding.StudentSpeakingDayCardBinding
-import com.home.lexa.databinding.TeacherSpeakingDayCardBinding
+import com.home.lexa.databinding.CardStudentSpeakingDayBinding
+import com.home.lexa.databinding.CardTeacherSpeakingDayBinding
 import com.home.lexa.databinding.ViewTagBinding
 
 
@@ -18,7 +18,7 @@ class TeacherSpeakingDayCard @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val binding = TeacherSpeakingDayCardBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = CardTeacherSpeakingDayBinding.inflate(LayoutInflater.from(context), this, true)
     private var day = 1
     private var title = "Chào hỏi cơ bản & Giới thiệu bản thân"
     private var paragraphNum = 15

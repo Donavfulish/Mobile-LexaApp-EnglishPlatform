@@ -5,14 +5,14 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.PopupMenu
-import com.home.lexa.databinding.ComponentDropdownInputBinding
+import com.home.lexa.databinding.InputDropdownBinding
 
 class DropDownInput @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ): LinearLayout(context, attrs, defStyleAttr) {
-    private val binding = ComponentDropdownInputBinding.inflate(LayoutInflater.from(context), this)
+    private val binding = InputDropdownBinding.inflate(LayoutInflater.from(context), this)
 
     var onItemSelected: ((String) -> Unit) ? = null
 

@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import com.home.lexa.databinding.ViewPersonalDeckCardBinding
+import com.home.lexa.databinding.CardPersonalDeckBinding
 
 
 data class StudySetData(
@@ -21,7 +21,7 @@ class PersonalDeckCard @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
 
-    private val binding = ViewPersonalDeckCardBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = CardPersonalDeckBinding.inflate(LayoutInflater.from(context), this, true)
 
     /**
      * Hàm nạp dữ liệu vào component

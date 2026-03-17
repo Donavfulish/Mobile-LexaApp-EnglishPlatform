@@ -17,7 +17,7 @@ import android.widget.TextView
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.toColorInt
 import com.home.lexa.databinding.FlashcardBinding
-import com.home.lexa.databinding.ViewLexaButtonBinding
+import com.home.lexa.databinding.ButtonLexaBinding
 import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.domain.models.mockVocabularyData

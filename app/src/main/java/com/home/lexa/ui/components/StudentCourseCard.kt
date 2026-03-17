@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import coil.load
 import com.home.lexa.R
-import com.home.lexa.databinding.ViewStudentCourseCardBinding
+import com.home.lexa.databinding.CardStudentCourseBinding
 
 data class CourseProgressData(
     val title: String,
@@ -25,7 +25,7 @@ class StudentCourseCard @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val binding = ViewStudentCourseCardBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = CardStudentCourseBinding.inflate(LayoutInflater.from(context), this, true)
 
     /**
      * @param data: Dữ liệu truyền vào

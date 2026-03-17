@@ -11,12 +11,12 @@ import androidx.compose.ui.graphics.Color
 import com.home.lexa.R
 import androidx.core.content.ContextCompat
 import androidx.core.content.withStyledAttributes
-import com.home.lexa.databinding.ViewPrimaryButtonBinding
+import com.home.lexa.databinding.ButtonPrimaryBinding
 
 class PrimaryButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
-    private val binding = ViewPrimaryButtonBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = ButtonPrimaryBinding.inflate(LayoutInflater.from(context), this, true)
 
     fun setText(text: String,@ColorInt color: Int?){
         binding.primaryBtn.text = text

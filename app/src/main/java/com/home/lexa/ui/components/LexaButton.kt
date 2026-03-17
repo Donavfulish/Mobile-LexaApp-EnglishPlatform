@@ -4,14 +4,14 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import com.home.lexa.databinding.ViewLexaButtonBinding
+import com.home.lexa.databinding.ButtonLexaBinding
 
 // Kế thừa FrameLayout để bọc component XML lại
 class LexaButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val binding = ViewLexaButtonBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = ButtonLexaBinding.inflate(LayoutInflater.from(context), this, true)
 
     // Hàm set text giống như truyền prop 'title' trong React
     fun setText(text: String) {

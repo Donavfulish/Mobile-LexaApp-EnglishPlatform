@@ -11,15 +11,15 @@ import androidx.annotation.ColorInt
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
-import com.home.lexa.databinding.NormalInputBinding
-import com.home.lexa.databinding.ViewLexaButtonBinding
+import com.home.lexa.databinding.InputNormalBinding
+import com.home.lexa.databinding.ButtonLexaBinding
 
 // Kế thừa FrameLayout để bọc component XML lại
 class NormalInput @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val binding = NormalInputBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = InputNormalBinding.inflate(LayoutInflater.from(context), this, true)
 
     // Set giá trị label và hiển`    thị Label trên ô Input
     fun setLabel(text: String?) {

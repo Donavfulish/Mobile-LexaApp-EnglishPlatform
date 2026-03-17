@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import com.home.lexa.databinding.ViewTeacherCourseCardBinding
+import com.home.lexa.databinding.CardTeacherCourseBinding
 import coil.load
 import com.home.lexa.R
 
@@ -13,7 +13,7 @@ class TeacherCourseCard @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     // Nạp file XML thu gọn vào đây
-    private val binding = ViewTeacherCourseCardBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = CardTeacherCourseBinding.inflate(LayoutInflater.from(context), this, true)
 
     /**
      * @param data: Dùng lại model CourseData đã tạo ở thẻ trước

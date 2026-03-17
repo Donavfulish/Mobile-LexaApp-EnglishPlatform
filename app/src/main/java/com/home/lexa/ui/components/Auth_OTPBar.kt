@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
-import com.home.lexa.databinding.ComponentOtpBarBinding
+import com.home.lexa.databinding.InputOtpBarBinding
 
 class Auth_OTPBar @JvmOverloads constructor(
     context: Context,
@@ -13,8 +13,8 @@ class Auth_OTPBar @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val binding: ComponentOtpBarBinding =
-        ComponentOtpBarBinding.inflate(LayoutInflater.from(context), this)
+    private val binding: InputOtpBarBinding =
+        InputOtpBarBinding.inflate(LayoutInflater.from(context), this)
 
     init {
         // Khi click vào vùng đệm xung quanh PinView
