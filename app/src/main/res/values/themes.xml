@@ -8,4 +8,11 @@
     <style name="RoundedCorner">
         <item name="cornerSize">16dp</item>
     </style>
+    <style name="CircleImage" parent="">
+        <item name="cornerSize">50%</item>
+    </style>
+    <style name="DialogZoomAnim">
+        <item name="android:windowEnterAnimation">@anim/zoom_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
 </resources>

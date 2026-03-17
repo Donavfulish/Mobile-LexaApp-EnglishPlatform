@@ -109,7 +109,7 @@
                 android:id="@+id/btnSound"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:background="#F3F4F6"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true"
                 android:padding="4dp"

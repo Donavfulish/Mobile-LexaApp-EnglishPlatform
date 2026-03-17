@@ -17,8 +17,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.toColorInt
+import com.home.lexa.R
 import com.home.lexa.databinding.FlashcardBinding
 import com.home.lexa.databinding.FlashcardMiniBinding
+import com.home.lexa.databinding.LayoutFlashcardZoomBinding
 import com.home.lexa.databinding.ViewLexaButtonBinding
 import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.Vocabulary
@@ -74,7 +76,39 @@ class FlashcardMini @JvmOverloads constructor(
 
     // Bắt sự kiến bấm nút Zoom
     fun zoom() {
-        // TODO phóng to thẻ (cái này giờ làm hơi lâu, để sau nhé)
+        val dialog = android.app.Dialog(context)
+        val dialogBinding = LayoutFlashcardZoomBinding.inflate(LayoutInflater.from(context), null, false)
+
+        // Tìm trực tiếp từ XML
+        val bigCard = dialogBinding.bigCard
+        val btnClose = dialogBinding.btnClose
+
+        // Đổ dữ liệu vào
+        bigCard.setData(this.data)
+
+        // Xử lý nút đóng
+        dialogBinding.root.setOnClickListener {
+            dialog.dismiss()
+        }
+        btnClose.setOnClickListener {
+            dialog.dismiss()
+        }
+        bigCard.setOnClickListener {
+            bigCard.flipCard() // Phải bắt sự kiện này để ngăn thoát khi bấm flashcard
+        }
+
+        dialog.setContentView(dialogBinding.root)
+
+        dialog.show()
+
+        dialog.window?.apply {
+            setBackgroundDrawableResource(android.R.color.transparent)
+
+            setLayout(
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT
+            )
+        }
     }
 
     // Bắt sự kiện bấm nút Edit
