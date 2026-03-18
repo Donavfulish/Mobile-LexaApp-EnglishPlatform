@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
-    // Koin tự động tiêm ViewModel vào đây cực gọn
+
     private val viewModel: HomeViewModel by viewModel()
 
     override fun setupViews() {

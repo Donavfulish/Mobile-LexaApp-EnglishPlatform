@@ -13,7 +13,6 @@ class BottomNavigation @JvmOverloads constructor(
 
     private val binding = BottomNavigationBinding.inflate(LayoutInflater.from(context), this, true)
 
-    // Khai báo một interface hoặc lambda để Fragment/Activity có thể lắng nghe
     private var onItemSelectedListener: ((Int) -> Unit)? = null
 
     init {
@@ -22,10 +21,7 @@ class BottomNavigation @JvmOverloads constructor(
 
     private fun setupNavigation() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
-            // 1. Chuyển đổi trạng thái Icon (từ Viền sang Đặc)
             updateIcons(item.itemId)
-
-            // 2. Trả sự kiện về cho màn hình đang chứa component này
             onItemSelectedListener?.invoke(item.itemId)
 
             true
@@ -35,18 +31,19 @@ class BottomNavigation @JvmOverloads constructor(
     private fun updateIcons(selectedId: Int) {
         val menu = binding.bottomNavigation.menu
 
-        // Reset tất cả về dạng viền (Outlined)
-        menu.findItem(R.id.nav_home).setIcon(R.drawable.home)
-        menu.findItem(R.id.nav_library).setIcon(R.drawable.book_2)
-        menu.findItem(R.id.nav_courses).setIcon(R.drawable.course_menu)
-        menu.findItem(R.id.nav_profile).setIcon(R.drawable.user_profile)
 
-        // Set icon đặc (Filled) cho mục được chọn
+        menu.findItem(R.id.teacherDashboardFragment).setIcon(R.drawable.home)
+        menu.findItem(R.id.favoriteLibraryFragment).setIcon(R.drawable.book_2)
+        menu.findItem(R.id.teacherCourseListFragment).setIcon(R.drawable.course_menu)
+        menu.findItem(R.id.profileFragment).setIcon(R.drawable.user_profile)
+
+
+        val selectedItem = menu.findItem(selectedId)
         when (selectedId) {
-            R.id.nav_home -> menu.findItem(R.id.nav_home).setIcon(R.drawable.home)
-            R.id.nav_library -> menu.findItem(R.id.nav_library).setIcon(R.drawable.book_2)
-            R.id.nav_courses -> menu.findItem(R.id.nav_courses).setIcon(R.drawable.course_menu)
-            R.id.nav_profile -> menu.findItem(R.id.nav_profile).setIcon(R.drawable.user_profile)
+            R.id.teacherDashboardFragment -> selectedItem.setIcon(R.drawable.home)
+            R.id.favoriteLibraryFragment -> selectedItem.setIcon(R.drawable.book_2)
+            R.id.teacherCourseListFragment -> selectedItem.setIcon(R.drawable.course_menu)
+            R.id.profileFragment -> selectedItem.setIcon(R.drawable.user_profile)
         }
     }
 
@@ -55,8 +52,13 @@ class BottomNavigation @JvmOverloads constructor(
         this.onItemSelectedListener = listener
     }
 
-    // Hàm để chuyển tab bằng code (nếu cần)
+
     fun setSelectedTab(itemId: Int) {
+
+        binding.bottomNavigation.setOnItemSelectedListener(null)
         binding.bottomNavigation.selectedItemId = itemId
+        updateIcons(itemId)
+
+        setupNavigation()
     }
 }
