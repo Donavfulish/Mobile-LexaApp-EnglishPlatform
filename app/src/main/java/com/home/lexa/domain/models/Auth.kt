@@ -8,7 +8,6 @@ data class UserInfo(
     val email: String,
     val name: String,
     val role: UserRole,
-    val passwordHash: String? = ""
 )
 
 data class LoginRequest(
