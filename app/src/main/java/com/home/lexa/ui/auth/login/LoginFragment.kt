@@ -1,19 +1,121 @@
 package com.home.lexa.ui.auth.login
 
-
-
-import android.os.Bundle
-import android.view.View
+import android.graphics.Color
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentLoginBinding
+import com.home.lexa.domain.models.LoginRequest
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
 
-    override fun setupViews() {
+    private val viewModel: AuthViewModel by viewModel()
 
+    private val colorPrimary = Color.parseColor("#6200EA")
+    private val colorTextDark = Color.parseColor("#333333")
+    private val colorBorder = Color.parseColor("#E0E0E0")
+
+    override fun setupViews() {
+        setupInputs()
+        setupButtons()
+    }
+
+    private fun setupInputs() {
+        binding.inputEmail.apply {
+            setLabel("Email")
+            setIcon(R.drawable.ic_email)
+            setPlaceHolderText("example@lingua.com")
+        }
+
+        binding.inputPassword.apply {
+            setLabel("Mật khẩu")
+            setPlaceHolderText("........")
+        }
+    }
+
+    private fun setupButtons() {
+        // Nút Đăng Nhập
+        binding.btnLogin.apply {
+            setText("Đăng Nhập", Color.WHITE)
+            setBackground(colorPrimary)
+            setOnClickAction {
+                val email = binding.inputEmail.getText().trim()
+                val password = binding.inputPassword.getText().trim()
+
+                if (email.isNotEmpty() && password.isNotEmpty()) {
+                    viewModel.login(LoginRequest(email, password))
+                } else {
+                    Toast.makeText(requireContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        // Quên mật khẩu
+        binding.tvForgotPassword.setOnClickListener {
+            Toast.makeText(requireContext(), "Forgot password clicked", Toast.LENGTH_SHORT).show()
+        }
+
+        // Nút Google
+        binding.btnGoogle.apply {
+            setText("Google", colorTextDark)
+            setBackground(Color.WHITE)
+            setStroke(1, colorBorder)
+            // Thay R.drawable.ic_google bằng icon thực tế của bạn
+            setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_google))
+            setOnClickAction {
+                Toast.makeText(requireContext(), "Google Click", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // Nút Facebook
+        binding.btnFacebook.apply {
+            setText("Facebook", colorTextDark)
+            setBackground(Color.WHITE)
+            setStroke(1, colorBorder)
+            // Thay R.drawable.ic_facebook bằng icon thực tế của bạn
+            setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_facebook))
+            setOnClickAction {
+                Toast.makeText(requireContext(), "Facebook Click", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // Click Đăng ký ngay
+        binding.tvSignUpAction.setOnClickListener {
+            Toast.makeText(requireContext(), "Chuyển sang màn Đăng ký", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun observeData() {
+        // Lắng nghe trạng thái từ ViewModel
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.loginState.collect { state ->
+                when (state) {
+                    is AuthState.Idle -> { /* Không làm gì */ }
+                    is AuthState.Loading -> {
+                        // TODO: Hiện ProgressDialog hoặc đổi text nút thành "Đang đăng nhập..."
+                        binding.btnLogin.setText("Đang xử lý...", Color.WHITE)
+                    }
+                    is AuthState.Success -> {
+                        Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+
+                        // Chuyển sang IntroFragment (Sử dụng Navigation Component)
+                        // Nếu bạn dùng FragmentTransaction thủ công, hãy thay bằng logic của bạn
+                        findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                    }
+                    is AuthState.Error -> {
+                        binding.btnLogin.setText("Đăng Nhập", Color.WHITE) // Khôi phục nút
+                        Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
+                    }
+
+                    else -> {}
+                }
+            }
+        }
     }
 }
