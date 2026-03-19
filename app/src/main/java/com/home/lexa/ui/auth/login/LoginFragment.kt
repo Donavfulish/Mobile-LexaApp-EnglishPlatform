@@ -103,10 +103,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                     }
                     is AuthState.Success -> {
                         Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
-
-                        // Chuyển sang IntroFragment (Sử dụng Navigation Component)
-                        // Nếu bạn dùng FragmentTransaction thủ công, hãy thay bằng logic của bạn
                         findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                        viewModel.resetState()
                     }
                     is AuthState.Error -> {
                         binding.btnLogin.setText("Đăng Nhập", Color.WHITE) // Khôi phục nút
