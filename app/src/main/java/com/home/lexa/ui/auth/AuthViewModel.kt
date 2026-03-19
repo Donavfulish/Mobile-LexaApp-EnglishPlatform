@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import android.util.Log
 
 sealed class AuthState {
     object Idle : AuthState()
@@ -30,6 +31,7 @@ class AuthViewModel(
             val result = repository.login(request)
 
             result.onSuccess { authResult ->
+                Log.d("AuthViewModel", "FULL RESPONSE: $authResult")
                 if (authResult.ok) {
                     // TODO: Lưu accessToken vào SharedPreferences hoặc DataStore tại đây
                     _loginState.value = AuthState.Success(authResult.message ?: "Đăng nhập thành công")
@@ -40,5 +42,9 @@ class AuthViewModel(
                 _loginState.value = AuthState.Error(error.message ?: "Có lỗi xảy ra")
             }
         }
+    }
+
+    fun resetState() {
+        _loginState.value = AuthState.Idle;
     }
 }
