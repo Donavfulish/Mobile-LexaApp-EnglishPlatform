@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/teacherDashboardFragment"
+        android:id="@+id/homeFragment"
         android:icon="@drawable/home"
         android:title="Trang chủ" />
     <item
-        android:id="@+id/favoriteLibraryFragment"
+        android:id="@+id/libraryFragment"
         android:icon="@drawable/book_2"
         android:title="Thư viện" />
     <item
-        android:id="@+id/teacherCourseListFragment"
+        android:id="@+id/courseFragment"
         android:icon="@drawable/course_menu"
         android:title="Khóa học" />
     <item

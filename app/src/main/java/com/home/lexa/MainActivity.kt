@@ -37,19 +37,18 @@ class MainActivity : AppCompatActivity() {
             val tvTitle = headerView.findViewById<TextView>(R.id.tvHeaderTitle)
 
             when (destination.id) {
-                R.id.teacherDashboardFragment -> {
+                R.id.homeFragment -> {
                     tvTitle.text = "Chào Alex!"
                     binding.appBarLayout.setBackButtonVisible(false)
                 }
 
-                R.id.favoriteLibraryFragment -> {
+                R.id.libraryFragment -> {
                     tvTitle.text = "Thư viện"
                     binding.appBarLayout.setBackButtonVisible(false)
                 }
 
-                R.id.teacherCourseListFragment -> {
+                R.id.courseFragment -> {
                     tvTitle.text = "Khóa học"
-                    // Lưu ý nhỏ: Nếu bạn muốn trang này có nút Back để bấm, bạn phải để là true nhé!
                     binding.appBarLayout.setBackButtonVisible(false)
                     binding.appBarLayout.setOnClickBack()
                 }

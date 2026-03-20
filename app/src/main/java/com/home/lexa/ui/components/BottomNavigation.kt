@@ -32,17 +32,17 @@ class BottomNavigation @JvmOverloads constructor(
         val menu = binding.bottomNavigation.menu
 
 
-        menu.findItem(R.id.teacherDashboardFragment).setIcon(R.drawable.home)
-        menu.findItem(R.id.favoriteLibraryFragment).setIcon(R.drawable.book_2)
-        menu.findItem(R.id.teacherCourseListFragment).setIcon(R.drawable.course_menu)
+        menu.findItem(R.id.homeFragment).setIcon(R.drawable.home)
+        menu.findItem(R.id.libraryFragment).setIcon(R.drawable.book_2)
+        menu.findItem(R.id.courseFragment).setIcon(R.drawable.course_menu)
         menu.findItem(R.id.profileFragment).setIcon(R.drawable.user_profile)
 
 
         val selectedItem = menu.findItem(selectedId)
         when (selectedId) {
-            R.id.teacherDashboardFragment -> selectedItem.setIcon(R.drawable.home)
-            R.id.favoriteLibraryFragment -> selectedItem.setIcon(R.drawable.book_2)
-            R.id.teacherCourseListFragment -> selectedItem.setIcon(R.drawable.course_menu)
+            R.id.homeFragment -> selectedItem.setIcon(R.drawable.home)
+            R.id.libraryFragment -> selectedItem.setIcon(R.drawable.book_2)
+            R.id.courseFragment -> selectedItem.setIcon(R.drawable.course_menu)
             R.id.profileFragment -> selectedItem.setIcon(R.drawable.user_profile)
         }
     }
