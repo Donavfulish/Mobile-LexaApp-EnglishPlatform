@@ -88,6 +88,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         // Click Đăng ký ngay
         binding.tvSignUpAction.setOnClickListener {
             Toast.makeText(requireContext(), "Chuyển sang màn Đăng ký", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_loginFragment_to_signUpFragment)
         }
     }
 

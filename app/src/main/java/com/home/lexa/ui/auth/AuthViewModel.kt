@@ -1,14 +1,16 @@
 package com.home.lexa.ui.auth.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.home.lexa.data.local.TokenManager
 import com.home.lexa.domain.models.LoginRequest
+import com.home.lexa.domain.models.SignUpRequest
 import com.home.lexa.domain.repository.AuthRespository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import android.util.Log
 
 sealed class AuthState {
     object Idle : AuthState()
@@ -18,11 +20,15 @@ sealed class AuthState {
 }
 
 class AuthViewModel(
-    private val repository: AuthRespository
+    private val repository: AuthRespository,
+    private val tokenManager: TokenManager // Inject TokenManager vào đây
 ) : ViewModel() {
 
     private val _loginState = MutableStateFlow<AuthState>(AuthState.Idle)
+    private val _signupState = MutableStateFlow<AuthState>(AuthState.Idle)
+
     val loginState: StateFlow<AuthState> = _loginState.asStateFlow()
+    val signupState: StateFlow<AuthState> = _signupState.asStateFlow()
 
     fun login(request: LoginRequest) {
         viewModelScope.launch {
@@ -33,7 +39,11 @@ class AuthViewModel(
             result.onSuccess { authResult ->
                 Log.d("AuthViewModel", "FULL RESPONSE: $authResult")
                 if (authResult.ok) {
-                    // TODO: Lưu accessToken vào SharedPreferences hoặc DataStore tại đây
+                    // Lưu Token qua TokenManager
+                    // LƯU Ý: Đổi 'accessToken' thành đúng tên property trong model response của bạn nhé
+                    authResult.accessToken?.let { token ->
+                        tokenManager.saveToken(token)
+                    }
                     _loginState.value = AuthState.Success(authResult.message ?: "Đăng nhập thành công")
                 } else {
                     _loginState.value = AuthState.Error(authResult.message ?: "Sai email hoặc mật khẩu")
@@ -44,7 +54,31 @@ class AuthViewModel(
         }
     }
 
+    fun signup(request: SignUpRequest) {
+        viewModelScope.launch {
+            _signupState.value = AuthState.Loading
+
+            val result = repository.signup(request)
+
+            result.onSuccess { authResult ->
+                Log.d("AuthViewModel", "FULL RESPONSE: $authResult")
+                if (authResult.ok) {
+                    // Nếu API signup của bạn cũng trả về token (auto-login sau khi đăng ký), thì lưu luôn tại đây
+                    authResult.accessToken?.let { token ->
+                        tokenManager.saveToken(token)
+                    }
+                    _signupState.value = AuthState.Success(authResult.message ?: "Đăng ký thành công")
+                } else {
+                    _signupState.value = AuthState.Error(authResult.message ?: "Lỗi đăng ký")
+                }
+            }.onFailure { error ->
+                _signupState.value = AuthState.Error(error.message ?: "Có lỗi xảy ra")
+            }
+        }
+    }
+
     fun resetState() {
-        _loginState.value = AuthState.Idle;
+        _loginState.value = AuthState.Idle
+        _signupState.value = AuthState.Idle
     }
 }
