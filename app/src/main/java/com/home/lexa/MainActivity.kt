@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
+    //comment cho co
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
