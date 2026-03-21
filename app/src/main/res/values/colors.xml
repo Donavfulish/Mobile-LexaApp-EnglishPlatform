@@ -24,6 +24,6 @@
     <color name="red">#FF4C52</color>
     <color name="red_paragraph">#de3b40</color>
     <color name="red_bg">#FCEBEC</color>
-    red FF4C52
-
+    <color name="gray_888888">#888888</color>
+    <color name="gray_E0E0E0">#E0E0E0</color>
 </resources>
