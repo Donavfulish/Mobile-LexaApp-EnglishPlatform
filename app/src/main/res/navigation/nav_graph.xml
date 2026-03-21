@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/teacherDashboardFragment">
 
 <!--============ AUTH =========-->
     <fragment
@@ -50,6 +50,10 @@
 
 
 <!--    ========== COURSE ========== -->
+    <fragment
+        android:id="@+id/courseFragment"
+        android:name="com.home.lexa.ui.course.CourseFragment"
+        android:label="CourseFragment" />
     <fragment
         android:id="@+id/courseDetailFragment"
         android:name="com.home.lexa.ui.course.course_detail.CourseDetailFragment"
@@ -102,9 +106,16 @@
         android:id="@+id/teacherDashboardFragment"
         android:name="com.home.lexa.ui.home.teacher_dashboard.TeacherDashboardFragment"
         android:label="TeacherDashboardFragment" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.home.lexa.ui.home.HomeFragment"
+        android:label="HomeFragment" />
 
     <!--    =========== Library  ======= -->
-
+    <fragment
+        android:id="@+id/libraryFragment"
+        android:name="com.home.lexa.ui.library.LibraryFragment"
+        android:label="LibraryFragment" />
     <fragment
         android:id="@+id/favoriteLibraryFragment"
         android:name="com.home.lexa.ui.library.favorite_library.FavoriteLibraryFragment"

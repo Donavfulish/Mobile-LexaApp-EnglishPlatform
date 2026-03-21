@@ -2,7 +2,6 @@ package com.home.lexa
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.home.lexa.ui.auth.login.LoginFragment
 import com.home.lexa.ui.home.HomeFragment
 import com.home.lexa.ui.intro.IntroFragment
 
@@ -12,10 +11,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        if (savedInstanceState == null) {
-//            supportFragmentManager.beginTransaction()
-//                .replace(R.id.fragmentContainer, LoginFragment())
-//                .commit()
-//        }
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, IntroFragment())
+                .commit()
+        }
     }
 }
