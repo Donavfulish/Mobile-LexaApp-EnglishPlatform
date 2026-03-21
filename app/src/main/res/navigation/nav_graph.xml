@@ -11,7 +11,7 @@
         android:label="Login">
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
-            app:destination="@id/introFragment" />
+            app:destination="@id/homeFragment" />
 
         <action
             android:id="@+id/action_loginFragment_to_signUpFragment"
@@ -29,7 +29,7 @@
         android:label="SignUp">
         <action
             android:id="@+id/action_signupFragment_to_homeFragment"
-            app:destination="@id/introFragment" />
+            app:destination="@id/homeFragment" />
 
     </fragment>
 
@@ -50,6 +50,10 @@
 
 
 <!--    ========== COURSE ========== -->
+    <fragment
+        android:id="@+id/courseFragment"
+        android:name="com.home.lexa.ui.course.CourseFragment"
+        android:label="CourseFragment" />
     <fragment
         android:id="@+id/courseDetailFragment"
         android:name="com.home.lexa.ui.course.course_detail.CourseDetailFragment"
@@ -102,9 +106,16 @@
         android:id="@+id/teacherDashboardFragment"
         android:name="com.home.lexa.ui.home.teacher_dashboard.TeacherDashboardFragment"
         android:label="TeacherDashboardFragment" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.home.lexa.ui.home.HomeFragment"
+        android:label="HomeFragment" />
 
     <!--    =========== Library  ======= -->
-
+    <fragment
+        android:id="@+id/libraryFragment"
+        android:name="com.home.lexa.ui.library.LibraryFragment"
+        android:label="LibraryFragment" />
     <fragment
         android:id="@+id/favoriteLibraryFragment"
         android:name="com.home.lexa.ui.library.favorite_library.FavoriteLibraryFragment"

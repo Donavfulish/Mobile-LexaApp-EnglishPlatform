@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/nav_home"
+        android:id="@+id/homeFragment"
         android:icon="@drawable/home"
         android:title="Trang chủ" />
     <item
-        android:id="@+id/nav_library"
+        android:id="@+id/libraryFragment"
         android:icon="@drawable/book_2"
         android:title="Thư viện" />
     <item
-        android:id="@+id/nav_courses"
+        android:id="@+id/courseFragment"
         android:icon="@drawable/course_menu"
         android:title="Khóa học" />
     <item
-        android:id="@+id/nav_profile"
+        android:id="@+id/profileFragment"
         android:icon="@drawable/user_profile"
         android:title="Cá nhân" />
 </menu>
