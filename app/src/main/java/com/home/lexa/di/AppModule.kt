@@ -78,7 +78,7 @@ val appModule = module {
 
 
     // 4. Khởi tạo ViewModel (Koin lấy Repository tương ứng nhét vào)
-    viewModel { HomeViewModel(get()) }
+    viewModel { HomeViewModel(get<CourseRepository>()) }
     viewModel { IntroViewModel(get()) }
     viewModel { AuthViewModel(get(), get(), get()) }
     viewModel { ProfileViewModel(get(), get()) }

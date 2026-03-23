@@ -98,18 +98,19 @@
 
     <!--    =========== HOME  ======= -->
     <fragment
-        android:id="@+id/studentDashboardFragment"
-        android:name="com.home.lexa.ui.home.student_dashboard.StudentDashboardFragment"
-        android:label="StudentDashboardFragment" />
-
-    <fragment
-        android:id="@+id/teacherDashboardFragment"
-        android:name="com.home.lexa.ui.home.teacher_dashboard.TeacherDashboardFragment"
-        android:label="TeacherDashboardFragment" />
-    <fragment
         android:id="@+id/homeFragment"
         android:name="com.home.lexa.ui.home.HomeFragment"
-        android:label="HomeFragment" />
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_courseFragment"
+            app:destination="@id/courseFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_courseDetailFragment"
+            app:destination="@id/courseDetailFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_libraryFragment"
+            app:destination="@id/libraryFragment" />
+    </fragment>
 
     <!--    =========== Library  ======= -->
     <fragment
