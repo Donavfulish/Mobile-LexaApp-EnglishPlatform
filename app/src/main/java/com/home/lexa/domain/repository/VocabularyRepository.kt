@@ -1,6 +1,5 @@
 package com.home.lexa.data.repository
 import com.home.lexa.domain.models.ColorLabel
-import com.home.lexa.domain.models.Course
 import com.home.lexa.domain.models.Vocabulary
 import kotlinx.coroutines.delay
 

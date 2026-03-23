@@ -9,7 +9,6 @@ import com.home.lexa.databinding.FragmentHomeBinding
 import com.home.lexa.ui.components.CourseData
 import com.home.lexa.ui.components.CourseProgressData
 import com.home.lexa.ui.components.Popup
-import com.home.lexa.ui.components.StudySetData
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlinx.coroutines.launch
 

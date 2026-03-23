@@ -1,6 +1,5 @@
 package com.home.lexa.domain.repository
 
-import com.home.lexa.domain.models.Course
 import com.home.lexa.domain.models.CreateDeckRequest
 import com.home.lexa.domain.models.DeckDto
 import com.home.lexa.domain.models.DeckResult

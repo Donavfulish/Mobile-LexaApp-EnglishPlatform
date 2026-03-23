@@ -1,13 +1,19 @@
 package com.home.lexa.domain.models
 
 // Model hứng data từ luồng GET
-data class Course(
+data class ShortCourseDto(
     val id: Long,
-    val topicId: Int?,
+    val thumbnail_url: String?,
+    val topic: TopicDto,
+    val is_favorite: Boolean? = null,
     val title: String,
-    val description: String?,
-    val creatorId: Int,
-    val privacy: String?
+    val description: String,
+    val creator_name: String,
+    val creator_avatar_url: String,
+    val vocabNumber: Int,
+    val studying_user_count: Int,
+    val favorite_user_count: Int,
+    val completed: Int? = null
 )
 
 // Model đẩy data lên cho luồng POST
