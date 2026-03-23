@@ -6,7 +6,6 @@ import com.home.lexa.domain.models.SpeakingCourseDetailDto
 import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.domain.models.GetFeaturedCourseResponse
 import com.home.lexa.domain.models.GetStudyingCourseResponse
-import com.home.lexa.domain.models.ShortCourseDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
