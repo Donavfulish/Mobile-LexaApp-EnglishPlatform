@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.home.lexa.data.local.TokenManager
+import com.home.lexa.data.local.UserManager
 import com.home.lexa.domain.models.LoginRequest
 import com.home.lexa.domain.models.SignUpRequest
 import com.home.lexa.domain.repository.AuthRespository
@@ -21,7 +22,8 @@ sealed class AuthState {
 
 class AuthViewModel(
     private val repository: AuthRespository,
-    private val tokenManager: TokenManager // Inject TokenManager vào đây
+    private val tokenManager: TokenManager,
+    private val userManager: UserManager
 ) : ViewModel() {
 
     private val _loginState = MutableStateFlow<AuthState>(AuthState.Idle)
@@ -44,6 +46,10 @@ class AuthViewModel(
                     authResult.accessToken?.let { token ->
                         tokenManager.saveToken(token)
                     }
+                    authResult.user?.let { user ->
+                        userManager.saveUser(user)
+                    }
+
                     _loginState.value = AuthState.Success(authResult.message ?: "Đăng nhập thành công")
                 } else {
                     _loginState.value = AuthState.Error(authResult.message ?: "Sai email hoặc mật khẩu")
@@ -67,6 +73,11 @@ class AuthViewModel(
                     authResult.accessToken?.let { token ->
                         tokenManager.saveToken(token)
                     }
+
+                    authResult.user?.let { user ->
+                        userManager.saveUser(user)
+                    }
+
                     _signupState.value = AuthState.Success(authResult.message ?: "Đăng ký thành công")
                 } else {
                     _signupState.value = AuthState.Error(authResult.message ?: "Lỗi đăng ký")
