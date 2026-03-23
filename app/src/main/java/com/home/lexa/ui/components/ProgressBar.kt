@@ -18,8 +18,23 @@ class ProgressBar @JvmOverloads constructor(
     fun setProgress(percentage: Int) {
         val validPercentage = percentage.coerceIn(0, 100)
 
-
         binding.tvPercentage.text = "$validPercentage%"
+
+        val animation = ObjectAnimator.ofInt(
+            binding.linearProgressBar,
+            "progress",
+            binding.linearProgressBar.progress,
+            validPercentage
+        )
+        animation.duration = 800 // 0.8 giây
+        animation.interpolator = DecelerateInterpolator()
+        animation.start()
+    }
+
+    fun setProgressVocabulary(percentage: Int, vocabTotal: Int, vocabLearnning: Int) {
+        val validPercentage = percentage.coerceIn(0, 100)
+
+        binding.tvPercentage.text = "${vocabLearnning}/${vocabTotal} từ"
 
         val animation = ObjectAnimator.ofInt(
             binding.linearProgressBar,

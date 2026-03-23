@@ -31,6 +31,9 @@ class IconButton @JvmOverloads constructor(
             binding.iconBtn.iconTint = null
         }
     }
+    fun setIconColor(@ColorInt color: Int){
+        binding.iconBtn.iconTint = ColorStateList.valueOf(color)
+    }
 
     fun setIconSize(sizeDp: Int){
         val sizePx = (sizeDp * context.resources.displayMetrics.density).toInt()

@@ -1,0 +1,33 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="300dp"
+    android:height="160dp"
+    android:viewportWidth="300"
+    android:viewportHeight="160">
+
+    <path
+        android:pathData="M0,20 h10 M20,20 h10 M40,20 h10 M60,20 h10 M80,20 h10 M100,20 h10 M120,20 h10 M140,20 h10 M160,20 h10 M180,20 h10 M200,20 h10 M220,20 h10 M240,20 h10 M260,20 h10 M280,20 h10"
+        android:strokeWidth="0.5"
+        android:strokeColor="#F0F0F0" />
+    <path
+        android:pathData="M0,50 h10 M20,50 h10 M40,50 h10 M60,50 h10 M80,50 h10 M100,50 h10 M120,50 h10 M140,50 h10 M160,50 h10 M180,50 h10 M200,50 h10 M220,50 h10 M240,50 h10 M260,50 h10 M280,50 h10"
+        android:strokeWidth="0.5"
+        android:strokeColor="#F0F0F0" />
+    <path
+        android:pathData="M0,80 h10 M20,80 h10 M40,80 h10 M60,80 h10 M80,80 h10 M100,80 h10 M120,80 h10 M140,80 h10 M160,80 h10 M180,80 h10 M200,80 h10 M220,80 h10 M240,80 h10 M260,80 h10 M280,80 h10"
+        android:strokeWidth="0.5"
+        android:strokeColor="#F0F0F0" />
+    <path
+        android:pathData="M0,110 h10 M20,110 h10 M40,110 h10 M60,110 h10 M80,110 h10 M100,110 h10 M120,110 h10 M140,110 h10 M160,110 h10 M180,110 h10 M200,110 h10 M220,110 h10 M240,110 h10 M260,110 h10 M280,110 h10"
+        android:strokeWidth="0.5"
+        android:strokeColor="#F0F0F0" />
+
+    <path android:fillColor="#6200EE" android:pathData="M15,140 v-40 h18 v40 z" />
+    <path android:fillColor="#6200EE" android:pathData="M55,140 v-30 h18 v30 z" />
+    <path android:fillColor="#6200EE" android:pathData="M95,140 v-80 h18 v80 z" />
+    <path android:fillColor="#6200EE" android:pathData="M135,140 v-25 h18 v25 z" />
+    <path android:fillColor="#6200EE" android:pathData="M175,140 v-55 h18 v55 z" />
+    <path android:fillColor="#6200EE" android:pathData="M215,140 v-110 h18 v110 z" />
+    <path android:fillColor="#6200EE" android:pathData="M255,140 v-45 h18 v45 z" />
+
+    <path android:fillColor="#E0E0E0" android:pathData="M0,140 h300 v1 h-300 z" />
+</vector>
