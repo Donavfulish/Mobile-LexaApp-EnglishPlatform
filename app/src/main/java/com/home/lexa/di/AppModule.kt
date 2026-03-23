@@ -18,6 +18,7 @@ import com.home.lexa.domain.repository.FlashcardRepository
 import com.home.lexa.domain.repository.IntroRepository
 import com.home.lexa.ui.auth.login.AuthViewModel
 import com.home.lexa.ui.course.course_detail.CourseDetailViewModel
+import com.home.lexa.ui.course.vocabulary_flashcard.VocabularyFlashcardViewModel
 import com.home.lexa.ui.home.HomeViewModel
 import com.home.lexa.ui.intro.IntroViewModel
 import okhttp3.OkHttpClient
@@ -71,5 +72,5 @@ val appModule = module {
     viewModel { IntroViewModel(get()) }
     viewModel { AuthViewModel(get(), get()) }
     viewModel { CourseDetailViewModel(get(), get())}
-
+    viewModel { VocabularyFlashcardViewModel(get(), get())}
 }
