@@ -3,6 +3,7 @@ package com.home.lexa.data.repository
 import com.home.lexa.data.remote.CourseApiService
 import com.home.lexa.domain.models.CreateCourseRequest
 import com.home.lexa.domain.models.ShortCourseDto
+import com.home.lexa.domain.models.SpeakingCourseDetailDto
 import com.home.lexa.domain.repository.CourseRepository
 
 class CourseRepositoryImpl(
@@ -40,6 +41,21 @@ class CourseRepositoryImpl(
             }
         } catch (e: Exception) {
             Result.failure(e)
+        }
+    }
+
+    override suspend fun getSpeakingDayCourse(courseId: Long): Result<SpeakingCourseDetailDto?> {
+        return try {
+            val response = apiService.getSpeakingDayCourse(courseId)
+            val body = response.body()
+
+            if (response.isSuccessful && body?.success == true) {
+                Result.success(body.data)
+            } else {
+                Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ"))
+            }
+        } catch (e: Exception) {
+            Result.failure(Exception("Lỗi kết nối: ${e.message}"))
         }
     }
 

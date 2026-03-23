@@ -5,7 +5,7 @@
     android:id="@+id/topBarLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="80dp">
+    android:minHeight="68dp">
 
 
     <TextView

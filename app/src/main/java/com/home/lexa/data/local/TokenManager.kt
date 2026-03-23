@@ -12,7 +12,9 @@ class TokenManager(context: Context) {
     }
 
     fun getToken(): String? {
-        return prefs.getString("ACCESS_TOKEN", null)
+        val myRealToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJVc2VySW5mbyhpZD04LCBlbWFpbD1oZ2F1MjNAY2xjLmZpdHVzLmVkdS52biwgbmFtZT1IdeG7s25oIEdpYSBC4buLcCwgcm9sZT1URUFDSEVSLCBwYXNzd29yZEhhc2g9JDJhJDEwJGZuVm4zeDd1RThHZExwN3RPd3hrMS4yWnVNeGppaWRiSExmSG13MFVoZjIuczBzeWpPa0ZhKSIsImlzcyI6Imh0dHA6Ly8wLjAuMC4wOjgwODAiLCJpZCI6OCwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTc3NDI2NTQ5N30.vxRvImwSjmJ4SCF-r5VTYAVQx4F1M5obQ7IXxZgEFTc"
+        return myRealToken
+        //return prefs.getString("ACCESS_TOKEN", null)
     }
 
     fun clearToken() {

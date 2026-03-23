@@ -74,7 +74,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
             // --- HỌC SINH INACTIVE ---
             binding.btnRoleStudent.setTextColor(colorInactiveText)
             binding.btnRoleStudent.setIconTintResource(R.color.gray_888888)
-            binding.btnRoleStudent.strokeColor = ContextCompat.getColorStateList(requireContext(), R.color.gray_E0E0E0)
+            binding.btnRoleStudent.strokeColor = ContextCompat.getColorStateList(requireContext(), R.color.gray_E0E0E5)
             binding.btnRoleStudent.backgroundTintList = ColorStateList.valueOf(Color.WHITE) // Đổi nền trắng
 
             binding.llTeacherFields.visibility = View.VISIBLE
@@ -93,7 +93,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
             // --- GIÁO VIÊN INACTIVE ---
             binding.btnRoleTeacher.setTextColor(colorInactiveText)
             binding.btnRoleTeacher.setIconTintResource(R.color.gray_888888)
-            binding.btnRoleTeacher.strokeColor = ContextCompat.getColorStateList(requireContext(), R.color.gray_E0E0E0)
+            binding.btnRoleTeacher.strokeColor = ContextCompat.getColorStateList(requireContext(), R.color.gray_E0E0E5)
             binding.btnRoleTeacher.backgroundTintList = ColorStateList.valueOf(Color.WHITE) // Đổi nền trắng
 
             binding.llTeacherFields.visibility = View.GONE

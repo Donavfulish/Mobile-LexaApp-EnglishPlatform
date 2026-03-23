@@ -6,17 +6,22 @@ import com.home.lexa.data.local.UserManager
 import com.home.lexa.data.remote.AuthApiService
 import com.home.lexa.data.remote.CourseApiService
 import com.home.lexa.data.remote.ProfileApiService
+import com.home.lexa.data.remote.FlashcardApiService
+import com.home.lexa.data.remote.DeckApiService
 import com.home.lexa.data.repository.AuthRespositoryImpl
 import com.home.lexa.data.repository.CourseRepositoryImpl
 import com.home.lexa.data.repository.DeckRepositoryImpl
+import com.home.lexa.data.repository.FlashcardRepositoryImpl
 import com.home.lexa.data.repository.IntroRepositoryImpl
 import com.home.lexa.data.repository.ProfileRepositoryImpl
 import com.home.lexa.domain.repository.AuthRespository
 import com.home.lexa.domain.repository.CourseRepository
 import com.home.lexa.domain.repository.DeckRepository
+import com.home.lexa.domain.repository.FlashcardRepository
 import com.home.lexa.domain.repository.IntroRepository
 import com.home.lexa.domain.repository.ProfileRepository
 import com.home.lexa.ui.auth.login.AuthViewModel
+import com.home.lexa.ui.course.course_detail.CourseDetailViewModel
 import com.home.lexa.ui.home.HomeViewModel
 import com.home.lexa.ui.intro.IntroViewModel
 import com.home.lexa.ui.profile.ProfileViewModel
@@ -54,13 +59,13 @@ val appModule = module {
     single {
         get<Retrofit>().create(CourseApiService::class.java)
     }
+    single { get<Retrofit>().create(FlashcardApiService::class.java) }
+    single { get<Retrofit>().create(DeckApiService::class.java) }
     single {
         get<Retrofit>().create(AuthApiService::class.java)
     }
     single { get<Retrofit>().create(ProfileApiService::class.java) }
-    single {
-        get<Retrofit>().create(com.home.lexa.data.remote.DeckApiService::class.java)
-    }
+
 
     // 3. Khởi tạo Repository
     // Koin dùng get() để lấy CourseApiService nhét vào CourseRepositoryImpl
@@ -69,6 +74,8 @@ val appModule = module {
     single<AuthRespository>{ AuthRespositoryImpl(get()) }
     single<ProfileRepository> { ProfileRepositoryImpl(get()) }
     single<DeckRepository>{ DeckRepositoryImpl(get()) }
+    single<FlashcardRepository> { FlashcardRepositoryImpl(get()) }
+
 
     // 4. Khởi tạo ViewModel (Koin lấy Repository tương ứng nhét vào)
     viewModel { HomeViewModel(get()) }
@@ -79,5 +86,6 @@ val appModule = module {
     viewModel { FavoriteLibraryModel(get()) }
     viewModel { PersonalLibraryModel(get()) }
 
+    viewModel { CourseDetailViewModel(get(), get())}
 
 }

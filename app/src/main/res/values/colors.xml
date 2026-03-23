@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="purple_100">#f2f2fd</color>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -25,5 +26,7 @@
     <color name="red_paragraph">#de3b40</color>
     <color name="red_bg">#FCEBEC</color>
     <color name="gray_888888">#888888</color>
-    <color name="gray_E0E0E0">#E0E0E0</color>
+    <color name="gray_E0E0E5">#E0E0E5</color>
+    <color name="gray_F4F4F6">#F4F4F6</color>
+
 </resources>
