@@ -7,4 +7,7 @@ interface CourseRepository {
     suspend fun getAllCourses(): Result<List<ShortCourseDto>>
     suspend fun createCourse(request: CreateCourseRequest): Result<Long>
     suspend fun getFavoriteDecks(userId: Int): Result<List<ShortCourseDto>>
+
+    suspend fun getMyCourses(): Result<List<ShortCourseDto>>
+    suspend fun getLearningCourses(): Result<List<ShortCourseDto>>
 }

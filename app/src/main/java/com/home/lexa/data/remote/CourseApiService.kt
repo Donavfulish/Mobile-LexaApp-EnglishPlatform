@@ -22,4 +22,10 @@ interface CourseApiService {
     // Gọi GET /api/user/me/course/favorite"
     @GET("/api/user/me/deck/favorite/{id}")
     suspend fun getFavoriteDecks(@Path("id") userId: Int): Response<ApiResponse<List<ShortCourseDto>>>
+
+
+    @GET("/api/users/me/courses")
+    suspend fun getMyCourses(): Response<ApiResponse<List<ShortCourseDto>>>
+    @GET("/api/courses/studying")
+    suspend fun getLearningCourses():  Response<ApiResponse<List<ShortCourseDto>>>
 }
