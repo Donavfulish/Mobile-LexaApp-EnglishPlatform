@@ -5,22 +5,82 @@ import androidx.lifecycle.viewModelScope
 import com.home.lexa.domain.repository.CourseRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import com.home.lexa.domain.models.GetFeaturedCourseResponse
+import com.home.lexa.domain.models.GetStudyingCourseResponse
+
+data class UserStats(
+    val streakDays: Int,
+    val weeklyHours: Float,
+    val monthlyHours: Float
+)
 
 class HomeViewModel(private val repository: CourseRepository) : ViewModel() {
 
-    // State lưu status hiển thị (giống useState)
-    private val _uiState = MutableStateFlow("Đang chờ thao tác...")
-    val uiState: StateFlow<String> = _uiState
 
-    fun getCourses() {
-        _uiState.value = "Đang tải dữ liệu..."
-        // Khởi chạy luồng bất đồng bộ (Coroutine)
+
+
+    private val _featuredCoursesFlow = MutableStateFlow<List<GetFeaturedCourseResponse>>(emptyList())
+    val featuredCoursesFlow: StateFlow<List<GetFeaturedCourseResponse>> = _featuredCoursesFlow.asStateFlow()
+
+    private val _studyingCoursesFlow = MutableStateFlow<List<GetStudyingCourseResponse>>(emptyList())
+    val studyingCoursesFlow: StateFlow<List<GetStudyingCourseResponse>> = _studyingCoursesFlow.asStateFlow()
+
+    private val _topStudiedCoursesFlow = MutableStateFlow<List<GetFeaturedCourseResponse>>(emptyList())
+    val topStudiedCoursesFlow: StateFlow<List<GetFeaturedCourseResponse>> = _topStudiedCoursesFlow.asStateFlow()
+
+    private val _userStatsFlow = MutableStateFlow(UserStats(3, 5f, 6f))
+    val userStatsFlow: StateFlow<UserStats> = _userStatsFlow.asStateFlow()
+
+    init {
+
+        fetchFeaturedCourses()
+
+
+        checkRoleAndFetchData()
+    }
+
+    private fun checkRoleAndFetchData() {
+
+        val isTeacher = true
+
+        if (isTeacher) {
+            fetchTopStudiedCourses()
+        } else {
+            fetchStudyingCourses()
+        }
+    }
+
+    private fun fetchFeaturedCourses() {
         viewModelScope.launch {
-            try {
-                val courses = repository.getCourses()
-            } catch (e: Exception) {
-                _uiState.value = "Lỗi rùi!"
+            val result = repository.getFeaturedCourses()
+            result.onSuccess { dtoList ->
+                _featuredCoursesFlow.value = dtoList
+            }.onFailure { exception ->
+                println("Lỗi gọi API Featured Courses: ${exception.message}")
+            }
+        }
+    }
+
+    private fun fetchStudyingCourses() {
+        viewModelScope.launch {
+            val result = repository.getStudyingCourses()
+            result.onSuccess { dtoList ->
+                _studyingCoursesFlow.value = dtoList
+            }.onFailure { exception ->
+                println("Lỗi gọi API Studying Courses: ${exception.message}")
+            }
+        }
+    }
+
+    private fun fetchTopStudiedCourses() {
+        viewModelScope.launch {
+            val result = repository.getTopStudiedCourses()
+            result.onSuccess { dtoList ->
+                _topStudiedCoursesFlow.value = dtoList
+            }.onFailure { exception ->
+                println("Lỗi gọi API Top Studied Courses: ${exception.message}")
             }
         }
     }

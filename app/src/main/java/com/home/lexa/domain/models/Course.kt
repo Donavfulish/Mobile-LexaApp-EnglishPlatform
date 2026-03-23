@@ -18,3 +18,35 @@ data class CreateCourseRequest(
     val creatorId: Int,
     val privacy: String
 )
+data class ShortCourseDto(
+    val id: Long,
+    val thumbnail_url: String?,
+    val topic: TopicDto,
+    val is_favorite: Boolean? = null,
+    val title: String,
+    val description: String,
+    val creator_name: String,
+    val creator_avatar_url: String,
+    val vocabNumber: Int,
+    val studying_user_count: Int,
+    val favorite_user_count: Int,
+    val completed: Int? = null
+)
+data class GetFeaturedCourseResponse(
+    val id: Long,
+    val thumbnail_url: String?,
+    val topic: TopicDto,
+    val is_favorite: Boolean? = null,
+    val title: String,
+    val creator_name: String,
+    val creator_avatar_url: String,
+    val studying_user_count: Int,
+    val favorite_user_count: Int,
+)
+data class GetStudyingCourseResponse(
+    val id: Long,
+    val title: String,
+    val topic: TopicDto,
+    val progress: Int,
+    val thumbnail_url: String?
+)
