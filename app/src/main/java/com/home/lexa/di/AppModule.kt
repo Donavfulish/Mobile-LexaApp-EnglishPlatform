@@ -22,6 +22,7 @@ import com.home.lexa.domain.repository.IntroRepository
 import com.home.lexa.domain.repository.ProfileRepository
 import com.home.lexa.ui.auth.login.AuthViewModel
 import com.home.lexa.ui.course.course_detail.CourseDetailViewModel
+import com.home.lexa.ui.course.vocabulary_flashcard.VocabularyFlashcardViewModel
 import com.home.lexa.ui.home.HomeViewModel
 import com.home.lexa.ui.intro.IntroViewModel
 import com.home.lexa.ui.profile.ProfileViewModel
@@ -87,5 +88,5 @@ val appModule = module {
     viewModel { PersonalLibraryModel(get()) }
 
     viewModel { CourseDetailViewModel(get(), get())}
-
+    viewModel { VocabularyFlashcardViewModel(get(), get())}
 }

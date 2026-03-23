@@ -16,7 +16,6 @@ class CourseDetailViewModel(
 ) : ViewModel() {
     private val _courseDetailData = MutableLiveData<SpeakingCourseDetailDto?>()
     val courseDetailData: LiveData<SpeakingCourseDetailDto?> get() = _courseDetailData
-
     private val _flashcardDetailData = MutableLiveData<List<DetailFlashcard>>()
     val flashcardDetailData: LiveData<List<DetailFlashcard>> get() = _flashcardDetailData
     private val _isLoading = MutableLiveData<Boolean>()
