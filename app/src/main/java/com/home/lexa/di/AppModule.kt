@@ -8,16 +8,20 @@ import com.home.lexa.data.remote.CourseApiService
 import com.home.lexa.data.remote.ProfileApiService
 import com.home.lexa.data.repository.AuthRespositoryImpl
 import com.home.lexa.data.repository.CourseRepositoryImpl
+import com.home.lexa.data.repository.DeckRepositoryImpl
 import com.home.lexa.data.repository.IntroRepositoryImpl
 import com.home.lexa.data.repository.ProfileRepositoryImpl
 import com.home.lexa.domain.repository.AuthRespository
 import com.home.lexa.domain.repository.CourseRepository
+import com.home.lexa.domain.repository.DeckRepository
 import com.home.lexa.domain.repository.IntroRepository
 import com.home.lexa.domain.repository.ProfileRepository
 import com.home.lexa.ui.auth.login.AuthViewModel
 import com.home.lexa.ui.home.HomeViewModel
 import com.home.lexa.ui.intro.IntroViewModel
 import com.home.lexa.ui.profile.ProfileViewModel
+import com.home.lexa.ui.library.favorite_library.FavoriteLibraryModel
+import com.home.lexa.ui.library.personal_library.PersonalLibraryModel
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -54,6 +58,9 @@ val appModule = module {
         get<Retrofit>().create(AuthApiService::class.java)
     }
     single { get<Retrofit>().create(ProfileApiService::class.java) }
+    single {
+        get<Retrofit>().create(com.home.lexa.data.remote.DeckApiService::class.java)
+    }
 
     // 3. Khởi tạo Repository
     // Koin dùng get() để lấy CourseApiService nhét vào CourseRepositoryImpl
@@ -61,11 +68,16 @@ val appModule = module {
     single<IntroRepository> { IntroRepositoryImpl() }
     single<AuthRespository>{ AuthRespositoryImpl(get()) }
     single<ProfileRepository> { ProfileRepositoryImpl(get()) }
+    single<DeckRepository>{ DeckRepositoryImpl(get()) }
 
     // 4. Khởi tạo ViewModel (Koin lấy Repository tương ứng nhét vào)
     viewModel { HomeViewModel(get()) }
     viewModel { IntroViewModel(get()) }
     viewModel { AuthViewModel(get(), get(), get()) }
     viewModel { ProfileViewModel(get(), get()) }
+    viewModel { AuthViewModel(get(), get(), get()) }
+    viewModel { FavoriteLibraryModel(get()) }
+    viewModel { PersonalLibraryModel(get()) }
+
 
 }

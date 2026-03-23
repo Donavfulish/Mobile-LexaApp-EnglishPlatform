@@ -18,7 +18,7 @@ class HomeViewModel(private val repository: CourseRepository) : ViewModel() {
         // Khởi chạy luồng bất đồng bộ (Coroutine)
         viewModelScope.launch {
             try {
-                val courses = repository.getCourses()
+                val courses = repository.getAllCourses()
             } catch (e: Exception) {
                 _uiState.value = "Lỗi rùi!"
             }

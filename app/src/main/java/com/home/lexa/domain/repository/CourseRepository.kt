@@ -1,9 +1,10 @@
 package com.home.lexa.domain.repository
 
-import com.home.lexa.domain.models.Course
 import com.home.lexa.domain.models.CreateCourseRequest
+import com.home.lexa.domain.models.ShortCourseDto
 
 interface CourseRepository {
-    suspend fun getCourses(): Result<List<Course>>
+    suspend fun getAllCourses(): Result<List<ShortCourseDto>>
     suspend fun createCourse(request: CreateCourseRequest): Result<Long>
+    suspend fun getFavoriteDecks(userId: Int): Result<List<ShortCourseDto>>
 }

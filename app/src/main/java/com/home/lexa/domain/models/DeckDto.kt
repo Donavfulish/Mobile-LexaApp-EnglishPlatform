@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 data class DeckDto(
     val id: Long,
     val title: String,
+    val topic: TopicDto? = null,
     val vocabNumber: Int,
     val createdAt: String
 )

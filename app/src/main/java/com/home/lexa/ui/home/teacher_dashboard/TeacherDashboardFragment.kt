@@ -9,7 +9,6 @@ import com.home.lexa.databinding.FragmentLoginBinding
 import com.home.lexa.databinding.FragmentTeacherDashboardBinding
 import com.home.lexa.ui.components.CourseData
 import com.home.lexa.ui.components.CourseProgressData
-import com.home.lexa.ui.components.StudySetData
 import androidx.lifecycle.lifecycleScope
 import com.home.lexa.data.repository.mockParagraphData
 import com.home.lexa.databinding.FragmentHomeBinding

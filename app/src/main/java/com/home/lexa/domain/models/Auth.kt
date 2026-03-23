@@ -1,5 +1,7 @@
 package com.home.lexa.domain.models
 
+import androidx.compose.ui.semantics.Role
+
 // Enum role (nếu bạn chưa định nghĩa)
 enum class UserRole { TEACHER, STUDENT }
 
@@ -31,4 +33,11 @@ data class AuthResult(
     val user: UserInfo? = null,
     val accessToken: String? = null,
     val refreshToken: String? = null
+)
+
+val mockUserInfo = UserInfo(
+    id = 8,
+    name = "Huỳnh Gia Bịp",
+    email = "hgau23@clc.fitus.edu.vn",
+    role = UserRole.TEACHER
 )
