@@ -34,36 +34,36 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
 
-            val headerView = LayoutInflater.from(this).inflate(R.layout.logo_header, null)
-            val tvTitle = headerView.findViewById<TextView>(R.id.tvHeaderTitle)
-
-            when (destination.id) {
-                R.id.homeFragment -> {
-                    tvTitle.text = "Chào Alex!"
-                    binding.appBarLayout.setBackButtonVisible(false)
-                }
-
-                R.id.libraryFragment -> {
-                    tvTitle.text = "Thư viện"
-                    binding.appBarLayout.setBackButtonVisible(false)
-                }
-
-                R.id.courseFragment -> {
-                    tvTitle.text = "Khóa học"
-                    binding.appBarLayout.setBackButtonVisible(false)
-                    binding.appBarLayout.setOnClickBack()
-                }
-
-                R.id.profileFragment -> {
-                    tvTitle.text = "Hồ sơ cá nhân"
-
-                    binding.appBarLayout.setBackButtonVisible(false)
-                    binding.appBarLayout.setOnClickBack()
-                }
-            }
-
-
-            binding.appBarLayout.insertCustomeView(headerView)
+//            val headerView = LayoutInflater.from(this).inflate(R.layout.logo_header, null)
+//            val tvTitle = headerView.findViewById<TextView>(R.id.tvHeaderTitle)
+//
+//            when (destination.id) {
+//                R.id.homeFragment -> {
+//                    tvTitle.text = "Chào Alex!"
+//                    binding.appBarLayout.setBackButtonVisible(false)
+//                }
+//
+//                R.id.libraryFragment -> {
+//                    tvTitle.text = "Thư viện"
+//                    binding.appBarLayout.setBackButtonVisible(false)
+//                }
+//
+//                R.id.courseFragment -> {
+//                    tvTitle.text = "Khóa học"
+//                    binding.appBarLayout.setBackButtonVisible(false)
+//                    binding.appBarLayout.setOnClickBack()
+//                }
+//
+//                R.id.profileFragment -> {
+//                    tvTitle.text = "Hồ sơ cá nhân"
+//
+//                    binding.appBarLayout.setBackButtonVisible(false)
+//                    binding.appBarLayout.setOnClickBack()
+//                }
+//            }
+//
+//
+//            binding.appBarLayout.insertCustomeView(headerView)
         }
     }
 

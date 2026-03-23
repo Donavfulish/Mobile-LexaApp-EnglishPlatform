@@ -4,13 +4,20 @@ import com.home.lexa.core.network.AuthInterceptor
 import com.home.lexa.data.local.TokenManager
 import com.home.lexa.data.remote.AuthApiService
 import com.home.lexa.data.remote.CourseApiService
+import com.home.lexa.data.remote.FlashcardApiService
+import com.home.lexa.data.remote.DeckApiService
 import com.home.lexa.data.repository.AuthRespositoryImpl
 import com.home.lexa.data.repository.CourseRepositoryImpl
+import com.home.lexa.data.repository.DeckRepositoryImpl
+import com.home.lexa.data.repository.FlashcardRepositoryImpl
 import com.home.lexa.data.repository.IntroRepositoryImpl
 import com.home.lexa.domain.repository.AuthRespository
 import com.home.lexa.domain.repository.CourseRepository
+import com.home.lexa.domain.repository.DeckRepository
+import com.home.lexa.domain.repository.FlashcardRepository
 import com.home.lexa.domain.repository.IntroRepository
 import com.home.lexa.ui.auth.login.AuthViewModel
+import com.home.lexa.ui.course.course_detail.CourseDetailViewModel
 import com.home.lexa.ui.home.HomeViewModel
 import com.home.lexa.ui.intro.IntroViewModel
 import okhttp3.OkHttpClient
@@ -44,6 +51,8 @@ val appModule = module {
     single {
         get<Retrofit>().create(CourseApiService::class.java)
     }
+    single { get<Retrofit>().create(FlashcardApiService::class.java) }
+    single { get<Retrofit>().create(DeckApiService::class.java) }
     single {
         get<Retrofit>().create(AuthApiService::class.java)
     }
@@ -53,10 +62,14 @@ val appModule = module {
     single<CourseRepository> { CourseRepositoryImpl(get()) }
     single<IntroRepository> { IntroRepositoryImpl() }
     single<AuthRespository>{ AuthRespositoryImpl(get()) }
+    single<DeckRepository> { DeckRepositoryImpl(get()) }
+    single<FlashcardRepository> { FlashcardRepositoryImpl(get()) }
+
 
     // 4. Khởi tạo ViewModel (Koin lấy Repository tương ứng nhét vào)
     viewModel { HomeViewModel(get()) }
     viewModel { IntroViewModel(get()) }
     viewModel { AuthViewModel(get(), get()) }
+    viewModel { CourseDetailViewModel(get(), get())}
 
 }
