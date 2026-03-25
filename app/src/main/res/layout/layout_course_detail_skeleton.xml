@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:paddingBottom="40dp">
+
+    <!-- 1. Banner Skeleton (16:9) -->
+    <View
+        android:id="@+id/skBanner"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/gray_E0E0E5"
+        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 2. Topic Button Skeleton -->
+    <View
+        android:id="@+id/skTopic"
+        android:layout_width="132dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="113dp"
+        android:background="@drawable/bg_gray_rounded"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 3. Title Skeleton (2 lines) -->
+    <View
+        android:id="@+id/skTitle1"
+        android:layout_width="0dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="80dp"
+        android:background="@color/white_opacity"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/skTopic" />
+
+    <View
+        android:id="@+id/skTitle2"
+        android:layout_width="150dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:background="@color/white_opacity"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/skTitle1" />
+
+    <!-- 4. Teacher Info Skeleton -->
+    <View
+        android:id="@+id/skTeacherImg"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_gray_circle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/skBanner" />
+
+    <View
+        android:id="@+id/skTeacherLabel"
+        android:layout_width="40dp"
+        android:layout_height="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/gray_E0E0E5"
+        app:layout_constraintEnd_toEndOf="@+id/skTeacherImg"
+        app:layout_constraintStart_toStartOf="@+id/skTeacherImg"
+        app:layout_constraintTop_toBottomOf="@+id/skTeacherImg" />
+
+    <View
+        android:layout_width="60dp"
+        android:layout_height="12dp"
+        android:layout_marginTop="4dp"
+        android:background="@color/gray_E0E0E5"
+        app:layout_constraintEnd_toEndOf="@+id/skTeacherImg"
+        app:layout_constraintStart_toStartOf="@+id/skTeacherImg"
+        app:layout_constraintTop_toBottomOf="@+id/skTeacherLabel" />
+
+    <!-- 5. Vertical Divider Skeleton -->
+    <View
+        android:id="@+id/skVerticalDivider"
+        android:layout_width="1dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/gray_E0E0E5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/skBanner" />
+
+    <!-- 6. Student & Favorite Stats -->
+    <View
+        android:id="@+id/skStudentCircle"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_gray_circle"
+        app:layout_constraintStart_toEndOf="@+id/skVerticalDivider"
+        app:layout_constraintTop_toBottomOf="@+id/skBanner" />
+
+    <View
+        android:id="@+id/skFavoriteCircle"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="65dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_gray_circle"
+        app:layout_constraintStart_toEndOf="@+id/skStudentCircle"
+        app:layout_constraintTop_toBottomOf="@+id/skBanner" />
+
+    <!-- 7. Horizontal Divider -->
+    <View
+        android:id="@+id/skHorizontalDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="110dp"
+        android:background="@color/gray_E0E0E5"
+        app:layout_constraintTop_toBottomOf="@+id/skBanner" />
+
+    <!-- 8. Introduction Section -->
+    <View
+        android:id="@+id/skIntroTitle"
+        android:layout_width="200dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/gray_E0E0E5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/skHorizontalDivider" />
+
+    <View
+        android:id="@+id/skIntroLine1"
+        android:layout_width="match_parent"
+        android:layout_height="14dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/gray_F4F4F6"
+        app:layout_constraintTop_toBottomOf="@+id/skIntroTitle" />
+
+    <View
+        android:id="@+id/skIntroLine2"
+        android:layout_width="match_parent"
+        android:layout_height="14dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="40dp"
+        android:background="@color/gray_F4F4F6"
+        app:layout_constraintTop_toBottomOf="@+id/skIntroLine1" />
+
+    <!-- 9. Card Layout (Speaking/Vocab buttons) -->
+    <View
+        android:id="@+id/skCard"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/bg_gray_rounded"
+        app:layout_constraintTop_toBottomOf="@+id/skIntroLine2" />
+
+    <!-- 10. Route/Speaking Layout Skeleton -->
+    <View
+        android:id="@+id/skRouteIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_gray_circle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/skCard" />
+
+    <View
+        android:layout_width="80dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="12dp"
+        android:background="@color/gray_E0E0E5"
+        app:layout_constraintBottom_toBottomOf="@+id/skRouteIcon"
+        app:layout_constraintStart_toEndOf="@+id/skRouteIcon"
+        app:layout_constraintTop_toTopOf="@+id/skRouteIcon" />
+
+    <!-- Mocking some lesson items -->
+    <View
+        android:id="@+id/skLesson1"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/bg_gray_rounded"
+        android:alpha="0.3"
+        app:layout_constraintTop_toBottomOf="@+id/skRouteIcon" />
+
+    <View
+        android:id="@+id/skLesson2"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/bg_gray_rounded"
+        android:alpha="0.3"
+        app:layout_constraintTop_toBottomOf="@+id/skLesson1" />
+
+    <!-- 11. Big Learning Button -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/bg_gray_rounded"
+        app:layout_constraintTop_toBottomOf="@+id/skLesson2" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,9 +3,8 @@ package com.home.lexa.ui.intro
 import android.widget.Toast
 import androidx.core.view.setMargins
 import com.home.lexa.core.base.BaseFragment
-import com.home.lexa.data.repository.mockCourses
+
 import com.home.lexa.data.repository.mockParagraphData
-import com.home.lexa.data.repository.mockStudyingCourses
 import com.home.lexa.databinding.FragmentIntroBinding
 import com.home.lexa.ui.components.FeaturedCourseCard
 import com.home.lexa.ui.components.ParagraphCard

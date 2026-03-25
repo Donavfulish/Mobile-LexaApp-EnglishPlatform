@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import com.google.android.material.card.MaterialCardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.home.lexa.R
 import com.home.lexa.databinding.CardSettingMenuItemBinding
 
@@ -12,16 +12,16 @@ class SettingMenuItem @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : MaterialCardView(context, attrs, defStyleAttr) {
+) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-    // Quan trọng: Phải có tham số 'this' và 'true' để attach vào CardView
     private val binding = CardSettingMenuItemBinding.inflate(LayoutInflater.from(context), this, true)
 
     init {
+        // Layout params để chiếm full chiều ngang khi được ném vào LinearLayout
+        layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
 
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SettingMenuItem)
 
-        // Map dữ liệu từ XML vào UI
         val iconRes = typedArray.getResourceId(R.styleable.SettingMenuItem_menuIcon, 0)
         if (iconRes != 0) {
             binding.ivMenuIcon.setImageResource(iconRes)
@@ -43,9 +43,5 @@ class SettingMenuItem @JvmOverloads constructor(
     fun setMenuValue(value: String) {
         binding.tvMenuValue.text = value
         binding.tvMenuValue.visibility = if (value.isNotEmpty()) View.VISIBLE else View.GONE
-    }
-
-    fun setMenuTitle(title: String) {
-        binding.tvMenuTitle.text = title
     }
 }

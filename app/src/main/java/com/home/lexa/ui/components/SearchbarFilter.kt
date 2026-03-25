@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Filter
 import android.widget.FrameLayout
+import androidx.annotation.ColorInt
 import androidx.core.widget.doOnTextChanged
 import com.home.lexa.R
 import com.home.lexa.databinding.ViewSearchbarFilterBinding
@@ -26,6 +27,14 @@ class SearchbarFilter @JvmOverloads constructor(
         binding.btnFilter.setOnClickListener {
             onFilterClickListener?.invoke()
         }
+    }
+
+    fun setIconColor(@ColorInt color: Int){
+        binding.iconFilter.setColorFilter(color)
+    }
+
+    fun setTextSearch(text: String){
+        binding.etSearch.hint = text
     }
 
     // 2. Định nghĩa hàm thiết lập Callback cho nút Filter

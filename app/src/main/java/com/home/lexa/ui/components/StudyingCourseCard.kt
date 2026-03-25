@@ -5,9 +5,10 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import coil.load
 import com.home.lexa.R
 import com.home.lexa.databinding.CardStudyingCourseBinding
-import com.home.lexa.domain.models.CourseProgress
+import com.home.lexa.domain.models.GetStudyingCourseResponse
 
 class StudyingCourseCard @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -22,15 +23,20 @@ class StudyingCourseCard @JvmOverloads constructor(
         binding.topic.setBackground(color)
     }
 
-    fun setData(course: CourseProgress) {
+    fun setData(course: GetStudyingCourseResponse) {
         binding.title.text = course.title
-        binding.topic.setText(course.topic, null) // Gọi từ PrimaryButton
-        binding.background.setImageResource(course.imageRes)
-
+        binding.topic.setText(course.topic.name, null) // Gọi từ PrimaryButton
+        setThumbnail(course.thumbnail_url)
         binding.linearProgressBar.progress = course.progress
         binding.titleProgress.text = "Đã hoàn thành ${course.progress}%"
     }
-
+    fun setThumbnail(url: String?){
+        binding.background.load(url) {
+            crossfade(true)
+            placeholder(R.drawable.ic_launcher_background) // Ảnh hiển thị trong lúc chờ tải
+            error(R.drawable.ic_launcher_background)       // Ảnh hiển thị nếu tải URL bị lỗi
+        }
+    }
     fun setOnClickTopic(action: () -> Unit){
         binding.topic.setOnClickAction {
             action()

@@ -8,7 +8,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.home.lexa.R
 import com.home.lexa.databinding.CardFeaturedCourseBinding
-import com.home.lexa.domain.models.CourseTest
+import com.home.lexa.domain.models.ShortCourseDto
+import coil.load
+import com.home.lexa.domain.models.GetFeaturedCourseResponse
 
 class FeaturedCourseCard @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -21,14 +23,15 @@ class FeaturedCourseCard @JvmOverloads constructor(
         binding.topic.setBackground(color)
         binding.favoriteBtn.isSelected = false
     }
-    fun setData(course: CourseTest){
+    fun setData(course: GetFeaturedCourseResponse){
         binding.title.setText(course.title)
-        binding.topic.setText(course.topic, null)
-        binding.teacherName.setText(course.teacher)
-        binding.background.setImageResource(course.imageRes)
-        binding.groupNum.setText(course.member)
-        binding.favoriteNum.setText(course.favorite)
-        setFavoriteButtonSelected(course.isFavorite)
+        binding.topic.setText(course.topic.name, null)
+        binding.teacherName.setText(course.creator_name)
+        binding.groupNum.setText(course.studying_user_count.toString())
+        binding.favoriteNum.setText(course.favorite_user_count.toString())
+        setFavoriteButtonSelected(course.is_favorite == true )
+        setThumbnail(course.thumbnail_url)
+        setTeacherImage(course.creator_avatar_url)
     }
 
     fun setTitle(title: String){
@@ -52,7 +55,20 @@ class FeaturedCourseCard @JvmOverloads constructor(
     fun setFavoriteButtonSelected(isSelected: Boolean) {
         binding.favoriteBtn.isSelected = isSelected
     }
-
+    fun setThumbnail(url: String?){
+        binding.background.load(url) {
+            crossfade(true)
+            placeholder(R.drawable.ic_launcher_background) // Ảnh hiển thị trong lúc chờ tải
+            error(R.drawable.ic_launcher_background)       // Ảnh hiển thị nếu tải URL bị lỗi
+        }
+    }
+    fun setTeacherImage(url: String?){
+        binding.teacherIcon.load(url) {
+            crossfade(true)
+            placeholder(R.drawable.ic_launcher_background) // Ảnh hiển thị trong lúc chờ tải
+            error(R.drawable.ic_launcher_background)       // Ảnh hiển thị nếu tải URL bị lỗi
+        }
+    }
     fun setOnClickToggleFavoriteButton(onToggle: (Boolean) -> Unit){
         binding.favoriteBtn.setOnClickListener {
             val selected = !binding.favoriteBtn.isSelected

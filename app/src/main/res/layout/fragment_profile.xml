@@ -1,14 +1,335 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    >
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:textSize="24sp"
-        android:text="ĐÂY LÀ MÀN HÌNH profile"/>
+    android:background="#F8F9FA">
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="32dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="32dp"
+            android:paddingBottom="16dp">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivAvatar"
+                android:layout_width="86dp"
+                android:layout_height="86dp"
+                android:background="#E0E0E0"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                tools:src="@tools:sample/avatars" />
+
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_marginEnd="-4dp"
+                android:layout_marginBottom="-4dp"
+                android:background="@drawable/bg_circle_icon"
+                android:backgroundTint="#6200EE"
+                android:padding="5dp"
+                android:src="@drawable/ic_edit"
+                app:layout_constraintBottom_toBottomOf="@+id/ivAvatar"
+                app:layout_constraintEnd_toEndOf="@+id/ivAvatar"
+                app:tint="@android:color/white" />
+
+            <TextView
+                android:id="@+id/tvUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textColor="#202124"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ivAvatar"
+                tools:text="Nguyễn Văn A" />
+
+            <TextView
+                android:id="@+id/tvUserEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="#757575"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvUserName"
+                tools:text="van-a.nguyen@example.com" />
+
+            <TextView
+                android:id="@+id/tvUserRole"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_rounded_badge"
+                android:backgroundTint="#EFEFFD"
+                android:paddingHorizontal="16dp" android:paddingVertical="5dp" android:textAllCaps="false" android:textColor="#6200EE"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvUserEmail"
+                tools:text="Teacher" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="20dp"
+            android:background="#EEEEEE" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="12dp"
+            android:drawableStart="@drawable/ic_trending"
+            android:drawablePadding="8dp"
+            android:text="THỐNG KÊ HỌC TẬP"
+            android:textColor="#757575"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            app:drawableTint="#757575" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <com.home.lexa.ui.components.StatsBox
+                android:id="@+id/statsCourses"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1" />
+
+            <com.home.lexa.ui.components.StatsBox
+                android:id="@+id/statsVocab"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="4dp"
+                android:layout_weight="1" />
+
+            <com.home.lexa.ui.components.StatsBox
+                android:id="@+id/statsVocabSets"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:strokeColor="#F0F0F0"
+            app:strokeWidth="1dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/tvChartTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_clock"
+                    android:drawablePadding="6dp"
+                    android:text="Thời gian học trong tuần"
+                    android:textColor="#202124"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:drawableTint="#6200EE"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="15 ngày 🔥"
+                    android:textColor="#757575"
+                    android:textSize="11sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvChartTitle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tvChartTitle" />
+
+                <TextView
+                    android:id="@+id/tvChartSub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Tổng cộng: 5 giờ 30 phút"
+                    android:textColor="#9E9E9E"
+                    android:textSize="11sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvChartTitle" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:layout_marginTop="20dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/mock_chart_image"
+                    app:layout_constraintTop_toBottomOf="@+id/tvChartSub" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"
+            android:text="TÀI KHOẢN &amp; BẢO MẬT"
+            android:textColor="#757575"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:strokeColor="#F0F0F0"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.home.lexa.ui.components.SettingMenuItem
+                    android:id="@+id/menuPersonalInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:menuIcon="@drawable/ic_person"
+                    app:menuTitle="Thông tin cá nhân"
+                    app:menuValue="Chỉnh sửa" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:background="#F0F0F0" />
+
+                <com.home.lexa.ui.components.SettingMenuItem
+                    android:id="@+id/menuEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:menuIcon="@drawable/ic_email"
+                    app:menuTitle="Email"
+                    app:menuValue="van-a.nguyen..." />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:background="#F0F0F0" />
+
+                <com.home.lexa.ui.components.SettingMenuItem
+                    android:id="@+id/menuPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:menuIcon="@drawable/ic_lock"
+                    app:menuTitle="Đổi mật khẩu"
+                    app:showValue="false" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"
+            android:text="CÀI ĐẶT ỨNG DỤNG"
+            android:textColor="#757575"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:strokeColor="#F0F0F0"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.home.lexa.ui.components.SettingMenuItem
+                    android:id="@+id/menuLanguage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:menuIcon="@drawable/ic_language"
+                    app:menuTitle="Ngôn ngữ"
+                    app:menuValue="Tiếng Việt" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:background="#F0F0F0" />
+
+                <com.home.lexa.ui.components.SettingMenuItem
+                    android:id="@+id/menuNotifications"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:menuIcon="@drawable/ic_notification"
+                    app:menuTitle="Thông báo"
+                    app:menuValue="Bật" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLogout"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="32dp"
+            android:text="Đăng xuất"
+            android:textColor="#FF3B30"
+            android:textSize="14sp"
+            app:cornerRadius="8dp"
+            app:strokeColor="#FF3B30" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:gravity="center"
+            android:text="LEXA v2.4.0 (Build 20241025)"
+            android:textColor="#BDBDBD"
+            android:textSize="10sp" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
