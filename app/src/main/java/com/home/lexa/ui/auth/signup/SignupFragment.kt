@@ -1,7 +1,9 @@
 package com.home.lexa.ui.auth.signup
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.net.Uri
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -30,6 +32,8 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
 
     private var isTeacherRoleSelected = false
 
+    private var tempOAuthToken: String? = null
+
     override fun setupViews() {
         setupSocialButtons()
         setupInputs()
@@ -38,6 +42,16 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
 
         binding.tvLoginAction.setOnClickListener {
             findNavController().popBackStack()
+        }
+
+        viewModel.oauthGoogleResult.observe(viewLifecycleOwner) { data ->
+            data?.let {
+                binding.inputEmail.setText(it.user?.email ?: "")
+                this.tempOAuthToken = it.accessToken
+
+                // Xóa dữ liệu trong VM sau khi dùng để tránh xoay màn hình bị nhảy lại
+                viewModel.oauthGoogleResult.value = null
+            }
         }
     }
 
@@ -107,7 +121,12 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
             setStroke(1, colorBorder)
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_google))
             setOnClickAction {
-                Toast.makeText(requireContext(),"GG", Toast.LENGTH_SHORT).show()
+
+                val serverUrl = "http://10.0.2.2:8081/api/auth/oauth/google-callback" // 10.0.2.2 là localhost của máy tính khi dùng Emulator
+                val redirectUri = "lexa://auth-success" // URL để app nhận lại data
+
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$serverUrl?redirectUrl=$redirectUri"))
+                startActivity(intent)
             }
         }
 
@@ -117,7 +136,11 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
             setStroke(1, colorBorder)
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_facebook))
             setOnClickAction {
-                Toast.makeText(requireContext(),"FB", Toast.LENGTH_SHORT).show()
+                val serverUrl = "http://10.0.2.2:8081/api/auth/oauth/google-callback" // 10.0.2.2 là localhost của máy tính khi dùng Emulator
+                val redirectUri = "lexa://auth-success" // URL để app nhận lại data
+
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$serverUrl?redirectUrl=$redirectUri"))
+                startActivity(intent)
             }
         }
     }

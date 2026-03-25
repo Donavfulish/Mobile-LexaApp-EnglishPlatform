@@ -12,6 +12,13 @@ data class UserInfo(
     val role: UserRole,
 )
 
+data class GoogleUserInfo(
+    val sub: String? = null,
+    val name: String,
+    val email: String,
+    val picture: String? = null
+)
+
 data class LoginRequest(
     val email: String,
     val password: String
@@ -33,6 +40,11 @@ data class AuthResult(
     val user: UserInfo? = null,
     val accessToken: String? = null,
     val refreshToken: String? = null
+)
+
+data class OAuthGoogleResult (
+    val accessToken: String? = null,
+    val user: GoogleUserInfo? = null
 )
 
 val mockUserInfo = UserInfo(

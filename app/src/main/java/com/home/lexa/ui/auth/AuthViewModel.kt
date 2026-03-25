@@ -1,10 +1,12 @@
 package com.home.lexa.ui.auth.login
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.home.lexa.data.local.TokenManager
 import com.home.lexa.domain.models.LoginRequest
+import com.home.lexa.domain.models.OAuthGoogleResult
 import com.home.lexa.domain.models.SignUpRequest
 import com.home.lexa.domain.repository.AuthRespository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,6 +31,8 @@ class AuthViewModel(
 
     val loginState: StateFlow<AuthState> = _loginState.asStateFlow()
     val signupState: StateFlow<AuthState> = _signupState.asStateFlow()
+
+    val oauthGoogleResult = MutableLiveData<OAuthGoogleResult?>()
 
     fun login(request: LoginRequest) {
         viewModelScope.launch {
