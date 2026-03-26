@@ -2,7 +2,9 @@ package com.home.lexa.data.repository
 import com.home.lexa.data.remote.ParagraphApiService
 import com.home.lexa.domain.models.CreateParagraphRequest
 import com.home.lexa.domain.models.ParagraphResponseDto
+import com.home.lexa.domain.models.ParagraphResultResponseDto
 import com.home.lexa.domain.models.UpdateParagraphRequest
+import com.home.lexa.domain.models.UpdateParagraphResultRequest
 import com.home.lexa.domain.repository.ParagraphRepository
 
 class ParagraphRepositoryImpl (
@@ -51,6 +53,21 @@ class ParagraphRepositoryImpl (
                 Result.success(Unit)
             } else {
                 Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ khi xóa đoạn văn"))
+            }
+        } catch (e: Exception) {
+            Result.failure(Exception("Không thể kết nối. Vui lòng kiểm tra mạng!"))
+        }
+    }
+
+    override suspend fun updateParagraphResult(request: UpdateParagraphResultRequest): Result<ParagraphResultResponseDto> {
+        return try {
+            val response = apiService.updateParagraphResult(request)
+            val body = response.body()
+
+            if (response.isSuccessful && body?.success == true && body.data != null) {
+                Result.success(body.data)
+            } else {
+                Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ khi cập nhật kết quả"))
             }
         } catch (e: Exception) {
             Result.failure(Exception("Không thể kết nối. Vui lòng kiểm tra mạng!"))
