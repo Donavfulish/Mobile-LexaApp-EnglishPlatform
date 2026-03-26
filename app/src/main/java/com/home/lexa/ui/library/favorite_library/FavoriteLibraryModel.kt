@@ -28,7 +28,7 @@ class FavoriteLibraryModel(private val repository: CourseRepository) : ViewModel
         viewModelScope.launch {
             _isLoading.value = true
 
-            val result = repository.getFavoriteDecks(mockUserInfo.id)
+            val result = repository.getFavoriteDecks()
 
             result.onSuccess { list ->
                 _courses.value = list

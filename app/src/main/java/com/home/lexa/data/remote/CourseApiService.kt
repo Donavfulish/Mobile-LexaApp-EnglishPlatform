@@ -32,7 +32,7 @@ interface CourseApiService {
 
     // Gọi GET /api/user/me/course/favorite"
     @GET("/api/user/me/deck/favorite/{id}")
-    suspend fun getFavoriteDecks(@Path("id") userId: Int): Response<ApiResponse<List<ShortCourseDto>>>
+    suspend fun getFavoriteDecks(): Response<ApiResponse<List<ShortCourseDto>>>
 
 
     @GET("/api/users/me/courses")

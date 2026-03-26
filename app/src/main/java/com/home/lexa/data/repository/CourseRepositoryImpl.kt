@@ -103,9 +103,9 @@ class CourseRepositoryImpl(
         }
     }
 
-    override suspend fun getFavoriteDecks(userId: Int): Result<List<ShortCourseDto>> {
+    override suspend fun getFavoriteDecks(): Result<List<ShortCourseDto>> {
         return try {
-            val response = apiService.getFavoriteDecks(userId)
+            val response = apiService.getFavoriteDecks()
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
