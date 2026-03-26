@@ -20,3 +20,28 @@ data class ParagraphResponseDto(
     val audioUrl: String?,
     val paragraphOrder: Int
 )
+
+data class WordEvaluationItem(
+    val word: String,
+    val score: Int,
+    val status: String
+)
+
+data class UpdateParagraphResultRequest(
+    val paragraphId: Long,
+    val wordEvaluation: List<WordEvaluationItem>? = null,
+    val goodCount: Int? = null,
+    val mediumCount: Int? = null,
+    val badCount: Int? = null,
+    val userAudioUrl: String? = null
+)
+
+data class ParagraphResultResponseDto(
+    val userId: Int,
+    val paragraphId: Long,
+    val wordEvaluation: List<WordEvaluationItem>?,
+    val goodCount: Int?,
+    val mediumCount: Int?,
+    val badCount: Int?,
+    val userAudioUrl: String?
+)
