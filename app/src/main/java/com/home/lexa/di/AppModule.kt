@@ -8,17 +8,20 @@ import com.home.lexa.data.remote.CourseApiService
 import com.home.lexa.data.remote.ProfileApiService
 import com.home.lexa.data.remote.FlashcardApiService
 import com.home.lexa.data.remote.DeckApiService
+import com.home.lexa.data.remote.ParagraphApiService
 import com.home.lexa.data.repository.AuthRespositoryImpl
 import com.home.lexa.data.repository.CourseRepositoryImpl
 import com.home.lexa.data.repository.DeckRepositoryImpl
 import com.home.lexa.data.repository.FlashcardRepositoryImpl
 import com.home.lexa.data.repository.IntroRepositoryImpl
+import com.home.lexa.data.repository.ParagraphRepositoryImpl
 import com.home.lexa.data.repository.ProfileRepositoryImpl
 import com.home.lexa.domain.repository.AuthRespository
 import com.home.lexa.domain.repository.CourseRepository
 import com.home.lexa.domain.repository.DeckRepository
 import com.home.lexa.domain.repository.FlashcardRepository
 import com.home.lexa.domain.repository.IntroRepository
+import com.home.lexa.domain.repository.ParagraphRepository
 import com.home.lexa.domain.repository.ProfileRepository
 import com.home.lexa.ui.auth.login.AuthViewModel
 import com.home.lexa.ui.course.course_detail.CourseDetailViewModel
@@ -66,6 +69,7 @@ val appModule = module {
         get<Retrofit>().create(AuthApiService::class.java)
     }
     single { get<Retrofit>().create(ProfileApiService::class.java) }
+    single {get<Retrofit>().create(ParagraphApiService::class.java)}
 
 
     // 3. Khởi tạo Repository
@@ -76,6 +80,7 @@ val appModule = module {
     single<ProfileRepository> { ProfileRepositoryImpl(get()) }
     single<DeckRepository>{ DeckRepositoryImpl(get()) }
     single<FlashcardRepository> { FlashcardRepositoryImpl(get()) }
+    single<ParagraphRepository> { ParagraphRepositoryImpl(get()) }
 
 
     // 4. Khởi tạo ViewModel (Koin lấy Repository tương ứng nhét vào)
