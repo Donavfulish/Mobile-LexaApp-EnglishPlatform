@@ -1,20 +1,12 @@
 package com.home.lexa.ui.components
 
 import android.content.Context
-import android.graphics.PorterDuff
 import android.util.AttributeSet
-import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.FrameLayout
-import androidx.annotation.ColorInt
-import androidx.compose.ui.graphics.Color
-import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
 import com.home.lexa.R
-import com.home.lexa.databinding.InputNormalBinding
 import com.home.lexa.databinding.InputPasswordBinding
-import com.home.lexa.databinding.ButtonLexaBinding
 
 // Kế thừa FrameLayout để bọc component XML lại
 class PasswordInput @JvmOverloads constructor(
@@ -35,12 +27,12 @@ class PasswordInput @JvmOverloads constructor(
 
             if (_isPasswordHidden) {
                 // 1. Đổi icon sang "Mắt mở"
-                binding.ivShowPassword.setImageResource(R.drawable.close_eye)
+                binding.ivShowPassword.setImageResource(R.drawable.ic_close_eye)
                 // 2. Hiện mật khẩu
                 binding.etInput.transformationMethod = android.text.method.HideReturnsTransformationMethod.getInstance()
             } else {
                 // 1. Đổi icon sang "Mắt đóng"
-                binding.ivShowPassword.setImageResource(R.drawable.open_eye)
+                binding.ivShowPassword.setImageResource(R.drawable.ic_open_eye)
                 // 2. Ẩn mật khẩu (dùng PasswordTransformationMethod)
                 binding.etInput.transformationMethod = android.text.method.PasswordTransformationMethod.getInstance()
             }

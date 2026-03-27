@@ -16,7 +16,6 @@ class AuthRespositoryImpl(private val apiService: AuthApiService) : AuthResposit
                 if (body.success == true && body.data != null) {
                     Result.success(body.data)
                 } else {
-                    // Nếu BE trả success = false, lấy message lỗi từ ApiResponse
                     Result.failure(Exception(body.message ?: "Đăng nhập thất bại từ server"))
                 }
             } else {

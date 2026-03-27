@@ -39,10 +39,17 @@ import retrofit2.converter.gson.GsonConverterFactory
 val appModule = module {
 
     // 1. Khởi tạo Retrofit (Cốt lõi mạng)
+
+    /*
+    single {...}: Tạo singleton -> Tạo ra môt object duy nhất cho toàn bộ app
+     */
     single {TokenManager(androidContext())}
     single { UserManager(androidContext()) }
 
     single{AuthInterceptor(get())}
+    /*
+    Tạo OkHttpClient và găn thêm AuthInterceptor để đính kèm token vào header
+     */
     single{
         OkHttpClient.Builder()
             .addInterceptor(get<AuthInterceptor>())
@@ -52,6 +59,7 @@ val appModule = module {
         Retrofit.Builder()
             // IP này trỏ về localhost:8081 của máy tính từ máy ảo Android
             .baseUrl("http://10.0.2.2:8081/")
+            // get() -> Tìm OkHttpClient
             .client(get())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -88,7 +96,6 @@ val appModule = module {
     viewModel { FavoriteLibraryModel(get()) }
     viewModel { PersonalLibraryModel(get()) }
     viewModel { StudentCourseListModel (get()) }
-
     viewModel { CourseDetailViewModel(get(), get())}
     viewModel { VocabularyFlashcardViewModel(get(), get())}
 }

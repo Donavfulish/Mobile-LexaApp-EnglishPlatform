@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/vocabularyFlashcardFragment">
+    app:startDestination="@id/loginFragment">
 
 <!--============ AUTH =========-->
     <fragment
@@ -53,7 +53,12 @@
     <fragment
         android:id="@+id/courseFragment"
         android:name="com.home.lexa.ui.course.CourseFragment"
-        android:label="CourseFragment" />
+        android:label="CourseFragment" >
+        <action
+            android:id="@+id/action_courseFragment_to_courseDetailFragment"
+            app:destination="@id/courseDetailFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/courseDetailFragment"
         android:name="com.home.lexa.ui.course.course_detail.CourseDetailFragment"

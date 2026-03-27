@@ -22,7 +22,7 @@
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/search"
+            android:src="@drawable/ic_search"
             app:tint="#5F6368" />
 
         <AutoCompleteTextView
@@ -58,7 +58,7 @@
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_gravity="center"
-            android:src="@drawable/filter"
+            android:src="@drawable/ic_filter"
             app:tint="#202124" />
     </FrameLayout>
 

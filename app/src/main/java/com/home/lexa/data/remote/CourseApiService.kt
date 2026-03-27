@@ -14,26 +14,20 @@ import retrofit2.http.Path
 
 interface CourseApiService {
 
-    // Gọi GET /api/courses
     @GET("api/courses")
     suspend fun getCourses(): Response<ApiResponse<List<ShortCourseDto>>>
 
-    // Gọi GET /api/courses/featured
     @GET("api/courses/featured")
     suspend fun getFeaturedCourses(): Response<ApiResponse<List<GetFeaturedCourseResponse>>>
-    // Gọi GET /api/courses/studying
     @GET("api/courses/studying")
     suspend fun getStudyingCourses(): Response<ApiResponse<List<GetStudyingCourseResponse>>>
     @GET("api/courses/top-studied")
     suspend fun getTopStudiedCourses(): Response<ApiResponse<List<GetFeaturedCourseResponse>>>
-    // Gọi @GET("api/courses/studying")
     @POST("api/courses")
     suspend fun createCourse(@Body request: CreateCourseRequest): Response<ApiResponse<Map<String, Long>>>
 
-    // Gọi GET /api/user/me/course/favorite"
     @GET("/api/user/me/deck/favorite/{id}")
     suspend fun getFavoriteDecks(@Path("id") userId: Int): Response<ApiResponse<List<ShortCourseDto>>>
-
 
     @GET("/api/users/me/courses")
     suspend fun getMyCourses(): Response<ApiResponse<List<ShortCourseDto>>>

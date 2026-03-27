@@ -2,7 +2,9 @@ package com.home.lexa.ui.library.personal_library
 
 
 
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentLoginBinding
 import com.home.lexa.databinding.FragmentPersonalLibraryBinding
@@ -15,6 +17,9 @@ class PersonalLibraryFragment : BaseFragment<FragmentPersonalLibraryBinding>(Fra
     private val viewModel: PersonalLibraryModel by viewModel()
     private val deckAdapter by lazy {
         PersonalLibraryAdapter(emptyList())
+        { course ->
+            findNavController().navigate(R.id.courseDetailFragment)
+        }
     }
     override fun setupViews() {
         binding.rvDecks.apply {

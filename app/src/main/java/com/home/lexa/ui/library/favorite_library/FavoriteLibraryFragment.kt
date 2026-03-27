@@ -2,7 +2,9 @@ package com.home.lexa.ui.library.favorite_library
 
 
 
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentFavoriteLibraryBinding
 import com.home.lexa.databinding.FragmentLoginBinding
@@ -17,6 +19,9 @@ class FavoriteLibraryFragment : BaseFragment<FragmentFavoriteLibraryBinding>(Fra
     private val viewModel: FavoriteLibraryModel by viewModel()
     private val deckAdapter by lazy {
         FavoriteLibraryAdapter(emptyList())
+        { course ->
+            findNavController().navigate(R.id.courseDetailFragment)
+        }
     }
 
     override fun setupViews() {

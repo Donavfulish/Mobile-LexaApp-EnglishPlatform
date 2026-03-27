@@ -2,6 +2,7 @@ package com.home.lexa.ui.course.teacher_course_list
 
 import android.util.Log
 import android.widget.Button
+import androidx.navigation.fragment.findNavController
 import com.home.lexa.databinding.FragmentStudentCourseListBinding
 import com.home.lexa.R
 
@@ -25,6 +26,9 @@ class TeacherCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
     private val viewModel: StudentCourseListModel by viewModel()
     private val courseAdapter by lazy {
         StudentCourseListAdapter(emptyList())
+        { course ->
+            findNavController().navigate(R.id.action_courseFragment_to_courseDetailFragment)
+        }
     }
 
     private fun updateFilterUI(filter: CourseFilter) {

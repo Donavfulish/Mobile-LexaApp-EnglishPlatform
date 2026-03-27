@@ -115,7 +115,7 @@
                 android:padding="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/sound_filled_1"
+                app:srcCompat="@drawable/ic_sound_filled_1"
                 app:tint="#6366F1" />
 
             <TextView

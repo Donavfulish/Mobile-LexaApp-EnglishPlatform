@@ -2,11 +2,13 @@ package com.home.lexa.ui.course.course_detail
 
 
 
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.home.lexa.R
 import androidx.core.content.ContextCompat
 import coil.load
+import com.home.lexa.MainActivity
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentCourseDetailBinding
 import com.home.lexa.domain.models.ColorLabel
@@ -19,12 +21,15 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
     private val viewModel: CourseDetailViewModel by viewModel()
     private var isSpeakingMode = true
     override fun setupViews() {
-//        binding.topBar.apply{
-//            setBackButtonVisible(true)
-//            setIconRightButton(ContextCompat.getDrawable(requireContext(), R.drawable.ic_selector_favorite_btn)!!)
-//            setRightButtonSelected(true)
-//        }
 
+        val activityBinding = (requireActivity() as MainActivity).binding
+        activityBinding.appBarLayout.apply {
+            removeCustomView();
+        }
+        activityBinding.appBarLayout.apply {
+            setText("Chi tiết khoá học");
+            setBackButtonVisible(true);
+        }
         binding.searchBarVocabulary.apply {
             setIconColor(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
             setTextSearch("Tìm kiếm từ vựng...")

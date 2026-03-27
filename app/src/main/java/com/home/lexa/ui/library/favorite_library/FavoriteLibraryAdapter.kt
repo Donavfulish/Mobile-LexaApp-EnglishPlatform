@@ -9,7 +9,7 @@ import com.home.lexa.ui.components.DeckCard
 
 class FavoriteLibraryAdapter(
     private var decks: List<ShortCourseDto>,
-//    private val onItemClick: (DeckDto) -> Unit,
+    private val onItemClick: (ShortCourseDto) -> Unit,
 //    private val onOptionsClick: (DeckDto) -> Unit
 ) : RecyclerView.Adapter<FavoriteLibraryAdapter.ViewHolder>() {
 
@@ -33,7 +33,9 @@ class FavoriteLibraryAdapter(
 
         holder.favoriteDeckCard.setDeckCardData(
             data = deck,
-            onCardClick = { },
+            onCardClick = {
+                onItemClick(deck)
+            },
             onOptionsClick = { }
         )
     }

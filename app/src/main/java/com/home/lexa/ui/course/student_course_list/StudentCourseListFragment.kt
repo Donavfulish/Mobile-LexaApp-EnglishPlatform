@@ -2,6 +2,7 @@ package com.home.lexa.ui.course.student_course_list
 
 import android.util.Log
 import android.widget.Button
+import androidx.navigation.fragment.findNavController
 import com.home.lexa.databinding.FragmentStudentCourseListBinding
 import com.home.lexa.R
 
@@ -9,12 +10,6 @@ import com.home.lexa.R
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.home.lexa.core.base.BaseFragment
-import com.home.lexa.databinding.FragmentFavoriteLibraryBinding
-import com.home.lexa.databinding.FragmentLoginBinding
-import com.home.lexa.domain.models.ShortCourseDto
-import com.home.lexa.ui.library.LibraryFragment
-import com.home.lexa.ui.library.personal_library.PersonalLibraryAdapter
-import com.home.lexa.ui.library.personal_library.PersonalLibraryModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
 
@@ -22,6 +17,9 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
     private val viewModel: StudentCourseListModel by viewModel()
     private val courseAdapter by lazy {
         StudentCourseListAdapter(emptyList())
+        { course ->
+            findNavController().navigate(R.id.courseDetailFragment)
+        }
     }
 
     private fun updateFilterUI(filter: CourseFilter) {
@@ -48,13 +46,6 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
     }
 
     override fun setupViews() {
-        binding.headerSection.setHeaderData(
-            title = "Tất cả khoá học",
-            actionText = "4 tất cả",
-            onActionClick = {}
-        )
-
-
 
         binding.rvCourses.apply {
             adapter = courseAdapter
@@ -69,7 +60,6 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
         }
 
         binding.btnLearning.setOnClickListener {
-            Log.d("LEARNING", "123");
             viewModel.changeFilter(CourseFilter.LEARNING)
         }
 

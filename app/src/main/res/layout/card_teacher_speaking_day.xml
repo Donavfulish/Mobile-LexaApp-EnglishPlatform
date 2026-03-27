@@ -31,7 +31,7 @@
                 android:layout_height="20dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="4dp"
-                android:src="@drawable/drag_handle"
+                android:src="@drawable/ic_drag_handle"
                 android:alpha="0.3"
                 app:tint="@color/black"/>
         </FrameLayout>
