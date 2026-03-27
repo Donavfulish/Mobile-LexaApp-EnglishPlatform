@@ -2,9 +2,11 @@ package com.home.lexa.data.remote
 
 import com.home.lexa.core.network.ApiResponse
 import com.home.lexa.domain.models.CreateDeckRequest
+import com.home.lexa.domain.models.CreateDeckResultRequest
 import com.home.lexa.domain.models.DeckDto
 import com.home.lexa.domain.models.DeckResult
 import com.home.lexa.domain.models.UpdateDeckRequest
+import com.home.lexa.domain.models.UpdateDeckResultRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -22,6 +24,18 @@ interface DeckApiService {
     suspend fun getDeckResult(
         @Path("deckId") deckId: Long
     ): Response<ApiResponse<DeckResult>>
+
+    @POST("/api/user/me/decks/result/{deckId}")
+    suspend fun createDeckResult(
+        @Path("deckId") deckId: Long,
+        @Body request: CreateDeckResultRequest
+    ): Response<ApiResponse<Boolean>>
+
+    @PATCH("/api/user/me/decks/result/{deckId}")
+    suspend fun updateDeckResult(
+        @Path("deckId") deckId: Long,
+        @Body request: UpdateDeckResultRequest
+    ): Response<ApiResponse<Boolean>>
 
     @POST("/api/user/me/decks")
     suspend fun createDeck(
