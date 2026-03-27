@@ -44,7 +44,7 @@ class StudentCourseListModel(private val repository: CourseRepository) : ViewMod
 
             val result = when (_currentFilter.value) {
                 TeacherCourseFilter.ALL -> repository.getAllCourses()
-                TeacherCourseFilter.FAVORITE -> repository.getFavoriteDecks(mockUserInfo.id)
+                TeacherCourseFilter.FAVORITE -> repository.getFavoriteDecks()
                 TeacherCourseFilter.LEARNING -> repository.getLearningCourses() // nếu có API
                 TeacherCourseFilter.MYCOURSE -> repository.getMyCourses() // nếu có API
             }

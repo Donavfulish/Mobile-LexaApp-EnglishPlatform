@@ -13,13 +13,7 @@ data class Course(
 )
 
 // Model đẩy data lên cho luồng POST
-data class CreateCourseRequest(
-    val topicId: Int? = null,
-    val title: String,
-    val description: String? = null,
-    val creatorId: Int,
-    val privacy: String
-)
+
 data class ShortCourseDto(
     val id: Long,
     val thumbnail_url: String?,
@@ -73,4 +67,23 @@ data class SpeakingCourseDetailDto(
     val description: String?,
     val deckId: Long,
     val list_speaking_day: List<ShortSpeakingDayDto>
+)
+
+
+@Serializable
+data class CreateCourseRequest(
+    val topicId: Int? = null,
+    val title: String,
+    val description: String? = null,
+    val privacy: String,
+    val deckId: Long?,
+    val thumbnailUrl: String?
+)
+@Serializable
+data class EditCourseRequest(
+    val topicId: Int? = null,
+    val title: String,
+    val description: String? = null,
+    val privacy: String,
+    val thumbnailUrl: String?
 )

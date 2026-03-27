@@ -2,13 +2,16 @@ package com.home.lexa.data.remote
 
 import com.home.lexa.core.network.ApiResponse
 import com.home.lexa.domain.models.CreateCourseRequest
+import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.SpeakingCourseDetailDto
 import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.domain.models.GetFeaturedCourseResponse
 import com.home.lexa.domain.models.GetStudyingCourseResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -30,9 +33,15 @@ interface CourseApiService {
     @POST("api/courses")
     suspend fun createCourse(@Body request: CreateCourseRequest): Response<ApiResponse<Map<String, Long>>>
 
+    @PATCH("api/users/me/courses/{courseId}")
+    suspend fun editCourse(@Path("courseId") courseId: Long, @Body request: EditCourseRequest): Response<ApiResponse<Map<String, Any>>>
+
+    @DELETE("api/users/me/courses/{courseId}")
+    suspend fun deleteCourse(@Path("courseId") courseId: Long): Response<ApiResponse<Map<String, Any>>>
+
     // Gọi GET /api/user/me/course/favorite"
     @GET("/api/user/me/deck/favorite/{id}")
-    suspend fun getFavoriteDecks(@Path("id") userId: Int): Response<ApiResponse<List<ShortCourseDto>>>
+    suspend fun getFavoriteDecks(): Response<ApiResponse<List<ShortCourseDto>>>
 
 
     @GET("/api/users/me/courses")
@@ -44,4 +53,11 @@ interface CourseApiService {
     suspend fun getSpeakingDayCourse(
         @Path("courseId") courseId: Long
     ) : Response<ApiResponse<SpeakingCourseDetailDto>>
+
+    @POST("api/courses/{courseId}/favorite")
+    suspend fun favoriteCourse(@Path("courseId") courseId: Long): Response<ApiResponse<Map<String, Any>>>
+
+    @DELETE("api/courses/{courseId}/favorite")
+    suspend fun disFavoriteCourse(@Path("courseId") courseId: Long): Response<ApiResponse<Map<String, Any>>>
+
 }

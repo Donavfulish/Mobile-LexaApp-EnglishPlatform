@@ -11,4 +11,6 @@ interface DeckRepository {
 //    suspend fun createDeck(request: CreateDeckRequest): Result<Long>
 //    suspend fun updateDeck(request: UpdateDeckRequest): Result<Boolean>
 //    suspend fun deleteDeck(deckId: Long): Result<Boolean>
+    suspend fun favoriteDeck(deckId: Long ): Result<Boolean>
+    suspend fun disFavoriteDeck(deckId: Long): Result<Boolean>
 }

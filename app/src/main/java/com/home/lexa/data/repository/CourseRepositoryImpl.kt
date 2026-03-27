@@ -2,6 +2,7 @@ package com.home.lexa.data.repository
 
 import com.home.lexa.data.remote.CourseApiService
 import com.home.lexa.domain.models.CreateCourseRequest
+import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.domain.models.SpeakingCourseDetailDto
 import com.home.lexa.domain.models.GetStudyingCourseResponse
@@ -40,6 +41,35 @@ class CourseRepositoryImpl(
                 Result.success(newId)
             } else {
                 Result.failure(Exception(body?.message ?: "Tạo khóa học thất bại"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    override suspend fun editCourse(courseId: Long, request: EditCourseRequest): Result<Boolean> {
+        return try {
+            val response = apiService.editCourse(courseId, request)
+            val body = response.body()
+
+            if (response.isSuccessful && body?.success == true) {
+
+                Result.success(true)
+            } else {
+                Result.failure(Exception(body?.message ?: "Chỉnh sửa khóa học thất bại"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    override suspend fun deleteCourse(courseId: Long): Result<Boolean> {
+        return try {
+            val response = apiService.deleteCourse(courseId)
+            val body = response.body()
+
+            if (response.isSuccessful && body?.success == true) {
+                Result.success(true)
+            } else {
+                Result.failure(Exception(body?.message ?: "Xóa khóa học thất bại"))
             }
         } catch (e: Exception) {
             Result.failure(e)
@@ -103,9 +133,9 @@ class CourseRepositoryImpl(
         }
     }
 
-    override suspend fun getFavoriteDecks(userId: Int): Result<List<ShortCourseDto>> {
+    override suspend fun getFavoriteDecks(): Result<List<ShortCourseDto>> {
         return try {
-            val response = apiService.getFavoriteDecks(userId)
+            val response = apiService.getFavoriteDecks()
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
@@ -154,6 +184,37 @@ class CourseRepositoryImpl(
         } catch (e: Exception) {
             // Lỗi do mất mạng, không connect được server...
             Result.failure(Exception("Không thể kết nối. Vui lòng kiểm tra mạng!"))
+        }
+
+
+    }
+    override suspend fun favoriteCourse(courseId: Long): Result<Boolean> {
+        return try {
+            val response = apiService.favoriteCourse(courseId)
+            val body = response.body()
+
+            if (response.isSuccessful && body?.success == true) {
+                Result.success(true)
+            } else {
+                Result.failure(Exception(body?.message ?: "Yêu thích khóa học thất bại"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    override suspend fun disFavoriteCourse(courseId: Long): Result<Boolean> {
+        return try {
+            val response = apiService.disFavoriteCourse(courseId)
+            val body = response.body()
+
+            if (response.isSuccessful && body?.success == true) {
+
+                Result.success(true)
+            } else {
+                Result.failure(Exception(body?.message ?: "Bỏ yêu thích khóa học thất bại"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 }
