@@ -12,6 +12,8 @@ class TokenManager(context: Context) {
     }
 
     fun getToken(): String? {
+//        val myRealToken = ""
+//        return myRealToken
         return prefs.getString("ACCESS_TOKEN", null)
     }
 

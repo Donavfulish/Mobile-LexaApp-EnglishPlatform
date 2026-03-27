@@ -22,7 +22,6 @@
         android:id="@+id/introFragment"
         android:name="com.home.lexa.ui.intro.IntroFragment"
         android:label="Intro" />
-
     <fragment
         android:id="@+id/signUpFragment"
         android:name="com.home.lexa.ui.auth.signup.SignupFragment"

@@ -6,7 +6,7 @@ import com.home.lexa.domain.models.UpdateFlashcardRequest
 
 interface FlashcardRepository {
     suspend fun getAllFlashcard(deckId: Long): Result<List<DetailFlashcard>>
-//    suspend fun updateFlashcard(request: UpdateFlashcardRequest): Result<Boolean>
-//    suspend fun deleteFlashcard(flashcardId: Long):  Result<Boolean>
-//    suspend fun createFlashcard(request: CreateFlashcardRequest) : Result<Long>
+    suspend fun updateFlashcard(request: UpdateFlashcardRequest): Result<Boolean>
+    suspend fun deleteFlashcard(flashcardId: Long):  Result<Boolean>
+    suspend fun createFlashcard(request: CreateFlashcardRequest) : Result<Long>
 }

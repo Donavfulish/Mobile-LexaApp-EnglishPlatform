@@ -9,7 +9,10 @@ import androidx.core.content.ContextCompat
 import coil.load
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentCourseDetailBinding
+import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.ColorLabel
+import com.home.lexa.domain.models.DetailFlashcard
+import com.home.lexa.domain.models.SpeakingCourseDetailDto
 import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.ui.components.FlashcardMini
 import com.home.lexa.ui.components.StudentSpeakingDayCard
@@ -74,8 +77,15 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 binding.vocabularyLayout.visibility = View.VISIBLE
             }
         }
+        val courseId = 17L
+        val cacheCourse: SpeakingCourseDetailDto? = AppMemoryCache.get("speakingCourseDetail_${courseId}")
+        val cacheVocabulary: List<DetailFlashcard>? = AppMemoryCache.get("vocabularyList_${courseId}")
+        if(cacheCourse != null){
+            viewModel.setCourseAndFlashcard(cacheCourse, cacheVocabulary!!)
+        } else {
+            viewModel.loadCourseDetail(courseId)
+        }
 
-        viewModel.loadCourseDetail(17L) // Thử nghiệm với ID = 1
     }
 
     override fun observeData() {

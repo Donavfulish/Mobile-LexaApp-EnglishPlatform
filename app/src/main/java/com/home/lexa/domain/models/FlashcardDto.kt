@@ -29,12 +29,13 @@ data class CreateFlashcardRequest(
 
 @Serializable
 data class UpdateFlashcardRequest(
-    val id: Long,
-    val word: String,
-    val transcription: String,
-    val typeId: Int,
+    val flashcardId: Long,
+    val word: String? = null,
+    val transcription: String? = null,
+    val typeId: Int? = null,
     val imageUrl: String? = null,
-    val meaning: String,
+    val audioUrl: String? = null,
+    val meaning: String? = null,
     val example: String? = null,
-    val partOfSpeechId: Int
+    val partOfSpeechId: Int? = null
 )
