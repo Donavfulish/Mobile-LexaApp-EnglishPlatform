@@ -2,8 +2,8 @@ package com.home.lexa.domain.models
 
 import androidx.compose.ui.semantics.Role
 
-// Enum role (nếu bạn chưa định nghĩa)
 enum class UserRole { TEACHER, STUDENT }
+enum class ProviderType { GOOGLE, FACEBOOK, GITHUB }
 
 data class UserInfo(
     val id: Int,
@@ -13,6 +13,14 @@ data class UserInfo(
 )
 
 data class GoogleUserInfo(
+    val sub: String? = null,
+    val name: String,
+    val email: String,
+    val picture: String? = null
+)
+
+data class OAuthUserInfo(
+    val provider: ProviderType,
     val sub: String? = null,
     val name: String,
     val email: String,
@@ -40,6 +48,16 @@ data class AuthResult(
     val user: UserInfo? = null,
     val accessToken: String? = null,
     val refreshToken: String? = null
+)
+
+data class OAuthRegisterRequest (
+    val provider: ProviderType,
+    val name: String,
+    val email: String? = null,
+    val address: String,
+    val role: UserRole,
+    val english_certificate_url: String? = null,
+    val pedagogical_certificate_url: String? = null
 )
 
 data class OAuthGoogleResult (

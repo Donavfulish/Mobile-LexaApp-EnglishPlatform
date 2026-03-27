@@ -9,16 +9,38 @@ import com.home.lexa.databinding.ActivityMainBinding
 import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.lifecycle.ViewModelProvider
+import com.home.lexa.data.local.TokenManager
+import com.home.lexa.data.local.UserManager
+import com.home.lexa.data.remote.AuthApiService
+import com.home.lexa.data.repository.AuthRespositoryImpl
 import com.home.lexa.domain.models.GoogleUserInfo
 import com.home.lexa.domain.models.OAuthGoogleResult
+import com.home.lexa.domain.repository.AuthRespository
 import com.home.lexa.ui.auth.login.AuthViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
-    private val authViewModel: AuthViewModel by viewModels()
-
+//    private lateinit var authViewModel: AuthViewModel
+    private val authViewModel: AuthViewModel by viewModel()
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val tokenManager = TokenManager(this)
+        val userManager = UserManager(this)
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://10.0.2.2:8081/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val authApiService = retrofit.create(AuthApiService::class.java)
+        val repository = AuthRespositoryImpl(authApiService)
+
+        // Khởi tạo ViewModel có Constructor đầy đủ ngay tại đây
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupNavigation()

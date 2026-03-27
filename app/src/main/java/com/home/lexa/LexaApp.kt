@@ -2,6 +2,7 @@ package com.home.lexa
 
 import android.app.Application
 import com.home.lexa.di.appModule
+import dagger.hilt.android.HiltAndroidApp
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 

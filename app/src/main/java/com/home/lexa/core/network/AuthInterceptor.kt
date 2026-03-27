@@ -11,6 +11,7 @@ class AuthInterceptor(private val tokenManager: TokenManager) : Interceptor {
 
         // Lấy token từ local storage
         val token = tokenManager.getToken()
+        println("DEBUG_TOKEN: Current token is -> $token")
 
         // Nếu có token, gắn vào header
         if (!token.isNullOrEmpty()) {

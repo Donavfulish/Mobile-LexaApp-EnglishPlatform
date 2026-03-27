@@ -77,6 +77,10 @@ class NormalInput @JvmOverloads constructor(
         }
     }
 
+    fun setEnable(isEnable: Boolean) {
+        binding.etInput.isEnabled = isEnable
+    }
+
     // Hàm nhận function (callback) xử lý click
     /*fun setOnLexaClickListener(onClick: () -> Unit) {
         binding.root.setOnClickListener {

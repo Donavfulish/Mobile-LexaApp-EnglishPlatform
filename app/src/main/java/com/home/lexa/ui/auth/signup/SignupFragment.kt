@@ -7,22 +7,30 @@ import android.net.Uri
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.get
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.VIEW_MODEL_STORE_OWNER_KEY
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentSignupBinding
 import com.home.lexa.domain.models.LoginRequest
+import com.home.lexa.domain.models.OAuthRegisterRequest
+import com.home.lexa.domain.models.ProviderType
 import com.home.lexa.domain.models.SignUpRequest
 import com.home.lexa.domain.models.UserRole
+import com.home.lexa.ui.auth.GoogleUrls
 import com.home.lexa.ui.auth.login.AuthState
 import com.home.lexa.ui.auth.login.AuthViewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding::inflate) {
 
-    private val viewModel: AuthViewModel by viewModel()
+//    private lateinit var viewModel: AuthViewModel
+    private val viewModel: AuthViewModel by activityViewModel()
 
     private val colorPrimary = Color.parseColor("#6200EA")
     private val colorLightPrimary = Color.parseColor("#F8F4FF") // Màu nền tím nhạt khi được chọn
@@ -31,8 +39,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
     private val colorInactiveText = Color.parseColor("#888888")
 
     private var isTeacherRoleSelected = false
-
-    private var tempOAuthToken: String? = null
+    private var oauthProvider: ProviderType? = null
 
     override fun setupViews() {
         setupSocialButtons()
@@ -41,17 +48,8 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
         setupSignupButton()
 
         binding.tvLoginAction.setOnClickListener {
+            viewModel.resetOAuth()
             findNavController().popBackStack()
-        }
-
-        viewModel.oauthGoogleResult.observe(viewLifecycleOwner) { data ->
-            data?.let {
-                binding.inputEmail.setText(it.user?.email ?: "")
-                this.tempOAuthToken = it.accessToken
-
-                // Xóa dữ liệu trong VM sau khi dùng để tránh xoay màn hình bị nhảy lại
-                viewModel.oauthGoogleResult.value = null
-            }
         }
     }
 
@@ -121,11 +119,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
             setStroke(1, colorBorder)
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_google))
             setOnClickAction {
-
-                val serverUrl = "http://10.0.2.2:8081/api/auth/oauth/google-callback" // 10.0.2.2 là localhost của máy tính khi dùng Emulator
-                val redirectUri = "lexa://auth-success" // URL để app nhận lại data
-
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$serverUrl?redirectUrl=$redirectUri"))
+                val intent = Intent(Intent.ACTION_VIEW, GoogleUrls.loginUri)
                 startActivity(intent)
             }
         }
@@ -136,10 +130,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
             setStroke(1, colorBorder)
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_facebook))
             setOnClickAction {
-                val serverUrl = "http://10.0.2.2:8081/api/auth/oauth/google-callback" // 10.0.2.2 là localhost của máy tính khi dùng Emulator
-                val redirectUri = "lexa://auth-success" // URL để app nhận lại data
-
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$serverUrl?redirectUrl=$redirectUri"))
+                val intent = Intent(Intent.ACTION_VIEW, GoogleUrls.loginUri)
                 startActivity(intent)
             }
         }
@@ -150,6 +141,12 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
             setLabel("Email *")
             setPlaceHolderText("example@lingua.com")
             setIcon(R.drawable.ic_email)
+        }
+
+        binding.inputName.apply {
+            setLabel("Họ và tên *")
+            setPlaceHolderText("Nguyễn Văn A")
+            setIcon(R.drawable.user_profile)
         }
 
         binding.inputDob.apply {
@@ -182,17 +179,42 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
             setBackground(colorPrimary)
             setOnClickAction {
                 // Xử lý lc gọi ViewModel tùy theo isTeacherRoleSelected
-                val name = "Đỗ Văn Hà"
+                val name = binding.inputName.getText()
                 val role = if (isTeacherRoleSelected) UserRole.TEACHER else UserRole.STUDENT
                 val password = binding.inputPassword.getText()
                 val email = binding.inputEmail.getText()
                 val date_of_birth = binding.inputDob.getText()
                 val address = binding.inputAddress.getText()
 
-                if (email.isNotEmpty() && password.isNotEmpty() && name.isNotEmpty()) {
-                    viewModel.signup(SignUpRequest(email, password, date_of_birth, address, name, role))
-                } else {
-                    Toast.makeText(requireContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show()
+                if (oauthProvider == null) {
+                    if (email.isNotEmpty() && password.isNotEmpty() && name.isNotEmpty()) {
+                        viewModel.signup(
+                            SignUpRequest(
+                                email = email,
+                                password = password,
+                                date_of_birth = date_of_birth,
+                                address = address,
+                                name = name,
+                                role = role
+                            )
+                        )
+                    } else {
+                        Toast.makeText(requireContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show()
+                    }
+                } else if (oauthProvider == ProviderType.GOOGLE) {
+                    if (name.isNotEmpty()) {
+                        viewModel.signupGoogle(
+                            OAuthRegisterRequest(
+                                provider = ProviderType.GOOGLE,
+                                name = name,
+                                email = email,
+                                address = address,
+                                role = role
+                            )
+                        )
+                    } else {
+                        Toast.makeText(requireContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
@@ -223,11 +245,32 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                     }
                     is AuthState.Error -> {
                         binding.btnSignup.setText("Đăng Ký", Color.WHITE) // Khôi phục nút
-                        Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), "Tài khoản đã tồn tại hoặc không hợp lệ", Toast.LENGTH_LONG).show()
                     }
 
                     else -> {}
                 }
+            }
+        }
+
+        viewModel.oauthGoogleResult.observe(viewLifecycleOwner) { data ->
+            data?.let {
+                // Vô hiệu hóa các nút đăng ký OAuth và các UI không cần thiết
+                binding.btnGoogle.visibility = View.GONE
+                binding.btnFacebook.visibility = View.GONE
+                binding.inputPassword.visibility = View.GONE
+                binding.inputConfirmPassword.visibility = View.GONE
+                binding.tvSocialLabel.visibility = View.GONE
+                binding.tvEnterInformation.text = "Register with Google"
+
+                // Tự động nhập liệu thông tin người dùng bằng dữ liệu bên thứ 3
+                binding.inputEmail.setText(it.user?.email ?: "")
+                binding.inputEmail.setEnable(false)
+
+                binding.inputName.setText(it.user?.name ?: "")
+
+                viewModel.setAccessToken(it.accessToken?: "")
+                this.oauthProvider = ProviderType.GOOGLE
             }
         }
     }

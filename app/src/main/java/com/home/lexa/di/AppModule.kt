@@ -32,6 +32,7 @@ import com.home.lexa.ui.course.student_course_list.StudentCourseListModel
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -43,16 +44,17 @@ val appModule = module {
     single { UserManager(androidContext()) }
 
     single{AuthInterceptor(get())}
-    single{
+
+    single(named("auth_client")) {
         OkHttpClient.Builder()
             .addInterceptor(get<AuthInterceptor>())
             .build()
     }
+
     single {
         Retrofit.Builder()
-            // IP này trỏ về localhost:8081 của máy tính từ máy ảo Android
             .baseUrl("http://10.0.2.2:8081/")
-            .client(get())
+            .client(get(named("auth_client"))) // Chỉ định đích danh client có interceptor
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

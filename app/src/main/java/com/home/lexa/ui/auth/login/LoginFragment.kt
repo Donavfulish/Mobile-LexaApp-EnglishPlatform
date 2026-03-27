@@ -1,6 +1,8 @@
 package com.home.lexa.ui.auth.login
 
+import android.content.Intent
 import android.graphics.Color
+import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -9,13 +11,16 @@ import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentLoginBinding
 import com.home.lexa.domain.models.LoginRequest
+import com.home.lexa.domain.models.ProviderType
+import com.home.lexa.ui.auth.GoogleUrls
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
 
-    private val viewModel: AuthViewModel by viewModel()
+    private val viewModel: AuthViewModel by activityViewModel()
 
     private val colorPrimary = Color.parseColor("#6200EA")
     private val colorTextDark = Color.parseColor("#333333")
@@ -69,7 +74,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             // Thay R.drawable.ic_google bằng icon thực tế của bạn
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_google))
             setOnClickAction {
-                Toast.makeText(requireContext(), "Google Click", Toast.LENGTH_SHORT).show()
+                val intent = Intent(Intent.ACTION_VIEW, GoogleUrls.loginUri)
+                startActivity(intent)
             }
         }
 
@@ -81,13 +87,15 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             // Thay R.drawable.ic_facebook bằng icon thực tế của bạn
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_facebook))
             setOnClickAction {
-                Toast.makeText(requireContext(), "Facebook Click", Toast.LENGTH_SHORT).show()
+                val intent = Intent(Intent.ACTION_VIEW, GoogleUrls.loginUri)
+                startActivity(intent)
             }
         }
 
         // Click Đăng ký ngay
         binding.tvSignUpAction.setOnClickListener {
             Toast.makeText(requireContext(), "Chuyển sang màn Đăng ký", Toast.LENGTH_SHORT).show()
+            viewModel.resetOAuth()
             findNavController().navigate(R.id.action_loginFragment_to_signUpFragment)
         }
     }
@@ -109,11 +117,18 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                     }
                     is AuthState.Error -> {
                         binding.btnLogin.setText("Đăng Nhập", Color.WHITE) // Khôi phục nút
-                        Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), "Tài khoản chưa được đăng ký hoặc không hợp lệ", Toast.LENGTH_LONG).show()
                     }
 
                     else -> {}
                 }
+            }
+        }
+
+        viewModel.oauthGoogleResult.observe(viewLifecycleOwner) { data ->
+            data?.let {
+                viewModel.setAccessToken(it.accessToken?: "")
+                viewModel.loginGoogle()
             }
         }
     }

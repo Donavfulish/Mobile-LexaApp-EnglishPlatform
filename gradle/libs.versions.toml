@@ -1,6 +1,6 @@
 [versions]
 agp = "8.10.1"
-kotlin = "1.9.0"
+kotlin = "1.9.21"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -13,6 +13,7 @@ navigationUiKtx = "2.9.7"
 remoteCreationCompose = "1.0.0-alpha06"
 remoteCreationCore = "1.0.0-alpha06"
 gridlayout = "1.1.0"
+ksp = "1.9.21-1.0.15"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -38,4 +39,5 @@ androidx-gridlayout = { group = "androidx.gridlayout", name = "gridlayout", vers
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
