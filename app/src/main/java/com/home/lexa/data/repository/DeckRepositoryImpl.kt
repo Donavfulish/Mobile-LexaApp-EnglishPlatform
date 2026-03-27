@@ -36,4 +36,33 @@ class DeckRepositoryImpl(private val apiService: DeckApiService
             Result.failure(Exception("Lỗi kết nối: ${e.message}"))
         }
     }
+    override suspend fun favoriteDeck(deckId: Long): Result<Boolean> {
+        return try {
+            val response = apiService.favoriteDeck(deckId)
+            val body = response.body()
+
+            if (response.isSuccessful && body?.success == true) {
+                Result.success(true)
+            } else {
+                Result.failure(Exception(body?.message ?: "Yêu thích bộ từ vựng thất bại"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    override suspend fun disFavoriteDeck(deckId: Long): Result<Boolean> {
+        return try {
+            val response = apiService.disFavoriteDeck(deckId)
+            val body = response.body()
+
+            if (response.isSuccessful && body?.success == true) {
+
+                Result.success(true)
+            } else {
+                Result.failure(Exception(body?.message ?: "Bỏ yêu thích bộ từ vựng thất bại"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

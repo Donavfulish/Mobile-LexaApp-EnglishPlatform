@@ -37,4 +37,11 @@ interface DeckApiService {
     suspend fun deleteDeck(
         @Path("deckId") deckId: Long
     ): Response<ApiResponse<Boolean>>
+
+    @POST("api/decks/{deckId}/favorite")
+    suspend fun favoriteDeck(@Path("deckId") deckId: Long): Response<ApiResponse<Map<String, Any>>>
+
+    @DELETE("api/decks/{deckId}/favorite")
+    suspend fun disFavoriteDeck(@Path("deckId") deckId: Long): Response<ApiResponse<Map<String, Any>>>
+
 }
