@@ -43,6 +43,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 val appModule = module {
 
     // 1. Khởi tạo Retrofit (Cốt lõi mạng)
+
+    /*
+    single {...}: Tạo singleton -> Tạo ra môt object duy nhất cho toàn bộ app
+     */
     single {TokenManager(androidContext())}
     single { UserManager(androidContext()) }
 
@@ -53,7 +57,6 @@ val appModule = module {
             .addInterceptor(get<AuthInterceptor>())
             .build()
     }
-
     single {
         Retrofit.Builder()
             .baseUrl("http://10.0.2.2:8081/")

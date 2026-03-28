@@ -25,7 +25,7 @@
 
         app:cornerRadius="100dp"
         android:backgroundTint="#636AE8"
-        app:icon="@drawable/plus"
+        app:icon="@drawable/ic_plus"
         app:iconGravity="textStart"
         app:iconSize="32dp"
         app:iconPadding="0dp"

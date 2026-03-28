@@ -3,18 +3,20 @@ package com.home.lexa.ui.course.student_course_list
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.home.lexa.domain.models.DeckDto
+import com.home.lexa.domain.models.GetFeaturedCourseResponse
+import com.home.lexa.domain.models.GetStudyingCourseResponse
 import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.ui.components.CourseData
 import com.home.lexa.ui.components.DeckCard
+import com.home.lexa.ui.components.FeaturedCourseCard
 
 class StudentCourseListAdapter(
     private var courses: List<ShortCourseDto>,
-//    private val onItemClick: (DeckDto) -> Unit,
-//    private val onOptionsClick: (DeckDto) -> Unit
+    private val onCardClick: (ShortCourseDto) -> Unit
 ) : RecyclerView.Adapter<StudentCourseListAdapter.ViewHolder>() {
 
-    class ViewHolder(val favoriteDeckCard: DeckCard) :
-        RecyclerView.ViewHolder(favoriteDeckCard)
+    class ViewHolder(val courseItem: DeckCard) :
+        RecyclerView.ViewHolder(courseItem)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val card = DeckCard(parent.context).apply {
@@ -29,14 +31,17 @@ class StudentCourseListAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val deck = courses[position]
+        val course = courses[position]
 
-        holder.favoriteDeckCard.setDeckCardData(
-            data = deck,
-            onCardClick = { },
+        holder.courseItem.setDeckCardData(
+            data = course,
+            onCardClick = {
+                onCardClick(course)
+            },
             onOptionsClick = { }
         )
     }
+
 
     override fun getItemCount(): Int {
         return courses.size

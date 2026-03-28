@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import coil.load
+import com.home.lexa.MainActivity
 import com.home.lexa.R
 import com.home.lexa.data.local.UserManager
 import com.home.lexa.databinding.FragmentProfileBinding
@@ -36,6 +37,7 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         setupInitialUI()
         observeData()

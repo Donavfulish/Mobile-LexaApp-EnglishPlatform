@@ -11,7 +11,12 @@ class LexaApp : Application() {
         super.onCreate()
         // Kích hoạt Koin DI khi app vừa mở lên
         startKoin {
+            /*
+            androidContext: Cung cấp Context cuả toàn bộ ứng dụng. Nhờ vậy các class bên dưới như
+            TokenManager hay UserManager mới dùng chung cho toàn bộ app đc
+             */
             androidContext(this@LexaApp)
+
             modules(appModule)
         }
     }

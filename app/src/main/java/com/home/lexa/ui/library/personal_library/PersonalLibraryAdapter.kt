@@ -8,7 +8,7 @@ import com.home.lexa.ui.components.PersonalDeckCard
 
 class PersonalLibraryAdapter(
     private var decks: List<DeckDto>,
-//    private val onItemClick: (DeckDto) -> Unit,
+    private val onItemClick: (DeckDto) -> Unit,
 //    private val onOptionsClick: (DeckDto) -> Unit
 ) : RecyclerView.Adapter<PersonalLibraryAdapter.ViewHolder>() {
 
@@ -32,7 +32,9 @@ class PersonalLibraryAdapter(
 
         holder.personalDeckCard.setDeckCardData(
             data = deck,
-            onItemClick = { },
+            onItemClick = {
+                onItemClick(deck)
+            },
             onOptionsClick = { }
         )
     }

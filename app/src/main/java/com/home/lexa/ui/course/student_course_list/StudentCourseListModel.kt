@@ -30,9 +30,7 @@ class StudentCourseListModel(private val repository: CourseRepository) : ViewMod
     private val _courses = MutableLiveData<List<ShortCourseDto>>(emptyList())
     val courses: LiveData<List<ShortCourseDto>> get() = _courses
 
-    // Hàm này không cần suspend, gọi phát chạy luôn
     fun changeFilter(filter: CourseFilter) {
-        Log.d("File filter", filter.toString());
         if (_currentFilter.value == filter) return
         _currentFilter.value = filter
         fetchAllCourses()
@@ -49,8 +47,6 @@ class StudentCourseListModel(private val repository: CourseRepository) : ViewMod
 
             result.onSuccess { list ->
                 _courses.value = list
-                Log.d("Filter: ", currentFilter.toString());
-                Log.d("Value: ", list.toString());
             }.onFailure {
                 _courses.value = emptyList()
             }

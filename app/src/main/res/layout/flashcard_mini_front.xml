@@ -113,7 +113,7 @@
                 android:layout_gravity="bottom|end"
                 android:layout_marginEnd="12dp"
                 android:layout_marginBottom="12dp"
-                android:src="@drawable/pen"
+                android:src="@drawable/ic_pen"
                 app:tint="#818CF8"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"

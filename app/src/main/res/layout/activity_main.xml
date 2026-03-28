@@ -12,11 +12,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.home.lexa.ui.components.BottomNavigation
-        android:id="@+id/bottomNavigation"
+        android:id="@+id/bottomNavigationMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent" />
 
+<!--    app:defaultNavHost="true": đảm bảo navController điều khiển navigation-->
+<!--    app:navGraph="@navigation/nav_graph": xác định các Fragment + startDesination -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainer"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -25,6 +27,6 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph"
         app:layout_constraintTop_toBottomOf="@id/appBarLayout"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigation" />
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationMain" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

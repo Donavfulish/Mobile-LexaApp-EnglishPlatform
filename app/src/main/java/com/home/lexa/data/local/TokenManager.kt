@@ -5,9 +5,14 @@ import android.content.Context
 import android.content.SharedPreferences
 
 class TokenManager(context: Context) {
+    /*
+    SharedPreferences: Class lưu trữ cục bộ
+    context.getSharedPreferences("lexa_prefs", Context.MODE_PRIVATE): Tạo một SharedReferences riêng tên "lexa_prefs" và dùng MODE_PRIVATE
+     */
     private val prefs: SharedPreferences = context.getSharedPreferences("lexa_prefs", Context.MODE_PRIVATE)
 
     fun saveToken(token: String) {
+        // Lưu token này với key là ACCESS_TOKEN
         prefs.edit().putString("ACCESS_TOKEN", token).apply()
     }
 
