@@ -9,7 +9,7 @@ class ProfileRepositoryImpl(private val apiService: ProfileApiService) : Profile
 
     override suspend fun getProfile(id: Int): Result<Profile> {
         return try {
-            val response = apiService.getProfile(id)
+            val response = apiService.getProfile()
             val body = response.body()
 
             if (response.isSuccessful && body != null) {

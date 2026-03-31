@@ -40,9 +40,8 @@ interface CourseApiService {
     suspend fun deleteCourse(@Path("courseId") courseId: Long): Response<ApiResponse<Map<String, Any>>>
 
     // Gọi GET /api/user/me/course/favorite"
-    @GET("/api/user/me/deck/favorite/{id}")
+    @GET("/api/user/me/deck/favorite")
     suspend fun getFavoriteDecks(): Response<ApiResponse<List<ShortCourseDto>>>
-
 
     @GET("/api/users/me/courses")
     suspend fun getMyCourses(): Response<ApiResponse<List<ShortCourseDto>>>

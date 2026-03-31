@@ -25,6 +25,7 @@ interface DeckApiService {
         @Path("deckId") deckId: Long
     ): Response<ApiResponse<DeckResult>>
 
+
     @POST("/api/user/me/decks/result/{deckId}")
     suspend fun createDeckResult(
         @Path("deckId") deckId: Long,

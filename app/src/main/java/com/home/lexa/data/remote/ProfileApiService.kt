@@ -10,8 +10,8 @@ import retrofit2.http.PATCH
 import retrofit2.http.Path
 
 interface ProfileApiService {
-    @GET("api/profile/{id}")
-    suspend fun getProfile(@Path("id") id: Int): Response<ApiResponse<Profile>>
+    @GET("api/profile")
+    suspend fun getProfile(): Response<ApiResponse<Profile>>
 
     @PATCH("api/profile/update")
     suspend fun updateProfile(@Body data: UpdateProfileRequest): Response<ApiResponse<Boolean?>>
