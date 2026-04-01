@@ -61,13 +61,19 @@ class MainActivity : AppCompatActivity() {
         + binding.bottomNavigation.setSelectedTab(destination.id): set lại id của tab được chọn hiện tại
          */
         navController.addOnDestinationChangedListener { _, destination, _ ->
+            val hideLayoutFragment = setOf(
+                R.id.loginFragment,
+                R.id.signUpFragment,
+                R.id.vocabularyFlashcardFragment,
+                R.id.exerciseModeFragment
+            )
             binding.bottomNavigationMain.setSelectedTab(destination.id)
-            if (destination.id == R.id.loginFragment || destination.id == R.id.signUpFragment) {
-                binding.bottomNavigationMain.visibility = View.GONE
+            if (destination.id in hideLayoutFragment) {
                 binding.appBarLayout.visibility = View.GONE
+                binding.bottomNavigationMain.visibility = View.GONE
             } else {
-                binding.bottomNavigationMain.visibility = View.VISIBLE
                 binding.appBarLayout.visibility = View.VISIBLE
+                binding.bottomNavigationMain.visibility = View.VISIBLE
             }
         }
         navController.addOnDestinationChangedListener { _, destination, _ ->
