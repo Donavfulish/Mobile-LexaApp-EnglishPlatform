@@ -76,14 +76,37 @@
     <fragment
         android:id="@+id/vocabularyFlashcardFragment"
         android:name="com.home.lexa.ui.course.vocabulary_flashcard.VocabularyFlashcardFragment"
-        android:label="VocabularyFlashcardFragment" />
+        android:label="VocabularyFlashcardFragment" >
+        <action
+            android:id="@+id/action_vocabularyFlashcardFragment_to_exerciseModeFragment"
+            app:destination="@id/exerciseModeFragment" />
+    </fragment>
 
 
 <!--    =========== FLASHCARD ======= -->
     <fragment
         android:id="@+id/exerciseModeFragment"
         android:name="com.home.lexa.ui.flashcard.exercise_mode.ExerciseModeFragment"
-        android:label="ExerciseModeFragment" />
+        android:label="ExerciseModeFragment" >
+        <argument
+            android:name="deckId"
+            app:argType="long" />
+
+        <argument
+            android:name="rememberedCount"
+            app:argType="integer"
+            android:defaultValue="0" />
+
+        <argument
+            android:name="forgottenCount"
+            app:argType="integer"
+            android:defaultValue="0" />
+
+        <argument
+            android:name="totalCards"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
 
     <fragment
         android:id="@+id/exerciseResultFragment"
