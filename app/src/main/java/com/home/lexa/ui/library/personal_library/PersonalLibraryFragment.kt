@@ -18,7 +18,7 @@ class PersonalLibraryFragment : BaseFragment<FragmentPersonalLibraryBinding>(Fra
     private val deckAdapter by lazy {
         PersonalLibraryAdapter(emptyList())
         { course ->
-            findNavController().navigate(R.id.courseDetailFragment)
+            findNavController().navigate(R.id.vocabularyFlashcardFragment)
         }
     }
     override fun setupViews() {
