@@ -15,6 +15,13 @@ data class DetailFlashcard(
     val partOfSpeech: String
 )
 
+
+@Serializable
+data class DetailFlashcardWithResult (
+    val flashCard: DetailFlashcard,
+    val result: String,
+)
+
 @Serializable
 data class CreateFlashcardRequest(
     val word: String,
