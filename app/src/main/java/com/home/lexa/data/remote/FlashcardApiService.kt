@@ -3,6 +3,7 @@ package com.home.lexa.data.remote
 import com.home.lexa.core.network.ApiResponse
 import com.home.lexa.domain.models.CreateFlashcardRequest
 import com.home.lexa.domain.models.DetailFlashcard
+import com.home.lexa.domain.models.DetailFlashcardWithResult
 import com.home.lexa.domain.models.UpdateFlashcardRequest
 import retrofit2.Response
 import retrofit2.http.Body
@@ -17,6 +18,11 @@ interface FlashcardApiService {
     suspend fun getAllFlashcard(
         @Path("deckId") deckId: Long
     ): Response<ApiResponse<List<DetailFlashcard>>>
+
+    @GET("api/decks/{deckId}/flashcards/result")
+    suspend fun getAllFlashcardWithResult(
+        @Path("deckId") deckId: Long
+    ): Response<ApiResponse<List<DetailFlashcardWithResult>>>
 
     @POST("/api/decks/{deckId}/flashcards")
     suspend fun createFlashcard(
