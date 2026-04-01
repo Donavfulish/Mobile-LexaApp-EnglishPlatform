@@ -1,0 +1,172 @@
+package com.home.lexa.ui.flashcard.exercise_mode
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.home.lexa.di.AppMemoryCache
+import com.home.lexa.domain.models.ColorLabel
+import com.home.lexa.domain.models.DetailFlashcardWithResult
+import com.home.lexa.domain.models.Vocabulary
+import com.home.lexa.domain.repository.FlashcardRepository
+import kotlinx.coroutines.launch
+
+class ExerciseModeViewModel(
+    private val repository: FlashcardRepository
+) : ViewModel() {
+
+    companion object {
+        const val RESULT_REMEMBER = "REMEMBER"
+        const val RESULT_FORGOTTEN = "FORGOTTEN"
+        const val RESULT_NULL = "NULL"
+    }
+
+    private var deckId: Long = -1
+    private var cacheKey: String = ""
+
+    private var allCards = mutableListOf<DetailFlashcardWithResult>()
+    private var practiceQueue = mutableListOf<DetailFlashcardWithResult>()
+    private var currentQueueIndex = 0
+
+    private val _currentCard = MutableLiveData<Vocabulary?>()
+    val currentCard: LiveData<Vocabulary?> = _currentCard
+
+    private val _rememberedCount = MutableLiveData<Int>()
+    val rememberedCount: LiveData<Int> = _rememberedCount
+
+    private val _forgottenCount = MutableLiveData<Int>()
+    val forgottenCount: LiveData<Int> = _forgottenCount
+
+    private val _totalCards = MutableLiveData<Int>()
+    val totalCards: LiveData<Int> = _totalCards
+
+    private val _progress = MutableLiveData<Int>()
+    val progress: LiveData<Int> = _progress
+
+    private val _isFinished = MutableLiveData<Boolean>()
+    val isFinished: LiveData<Boolean> = _isFinished
+
+    // Nhận data khởi tạo từ màn trước để show UI ngay lập tức
+    fun initInitialData(passedDeckId: Long, rem: Int, forg: Int, total: Int) {
+        deckId = passedDeckId
+        cacheKey = "FLASHCARD_DECK_RESULT_$deckId"
+
+        _rememberedCount.value = rem
+        _forgottenCount.value = forg
+        _totalCards.value = total
+        _progress.value = rem
+
+        fetchFlashcardsFromApi()
+    }
+
+    // GỌI API Ở ĐÂY
+    private fun fetchFlashcardsFromApi() {
+        viewModelScope.launch {
+            try {
+                // Giả sử userId = 1, bạn có thể truyền từ Session vào
+                val result = repository.getAllFlashcardWithResult(deckId)
+
+                result.onSuccess { data ->
+                    allCards = data.toMutableList()
+
+                    // Lấy về xong thì mới cất vào Cache để quản lý việc vuốt thẻ
+                    AppMemoryCache.put(cacheKey, allCards.toList())
+
+                    // Tính toán lại để đảm bảo đồng bộ tuyệt đối với API
+                    updateStatsFromAllCards()
+
+                    // Bắt đầu luyện (chỉ các từ chưa thuộc)
+                    startNewSession(onlyForgotten = true)
+                }.onFailure {
+                    // Xử lý lỗi load API
+                }
+            } catch (e: Exception) {
+                // Xử lý exception
+            }
+        }
+    }
+
+    private fun startNewSession(onlyForgotten: Boolean) {
+        practiceQueue = if (onlyForgotten) {
+            allCards.filter { it.result != RESULT_REMEMBER }.toMutableList()
+        } else {
+            allCards.toMutableList()
+        }
+
+        currentQueueIndex = 0
+
+        if (practiceQueue.isEmpty()) {
+            _isFinished.value = true
+        } else {
+            _isFinished.value = false
+            loadCardAt(currentQueueIndex)
+        }
+    }
+
+    private fun loadCardAt(index: Int) {
+        if (index < practiceQueue.size) {
+            val item = practiceQueue[index]
+            _currentCard.value = mapToVocabulary(item)
+
+            val learnedInDeck = allCards.count { it.result == RESULT_REMEMBER || it.result == RESULT_FORGOTTEN }
+            _progress.value = learnedInDeck
+        } else {
+            _isFinished.value = true
+        }
+    }
+
+    fun handleSwipe(isRemembered: Boolean) {
+        if (currentQueueIndex >= practiceQueue.size) return
+
+        val currentItem = practiceQueue[currentQueueIndex]
+        val newResult = if (isRemembered) RESULT_REMEMBER else RESULT_FORGOTTEN
+
+        val indexInAll = allCards.indexOfFirst { it.flashCard.id == currentItem.flashCard.id }
+        if (indexInAll != -1) {
+            allCards[indexInAll] = allCards[indexInAll].copy(result = newResult)
+        }
+
+        AppMemoryCache.put(cacheKey, allCards.toList())
+        updateStatsFromAllCards()
+
+        currentQueueIndex++
+        loadCardAt(currentQueueIndex)
+    }
+
+    private fun updateStatsFromAllCards() {
+        _rememberedCount.value = allCards.count { it.result == RESULT_REMEMBER }
+        _forgottenCount.value = allCards.count { it.result == RESULT_FORGOTTEN }
+        _totalCards.value = allCards.size
+    }
+
+    fun practiceForgottenWords() {
+        startNewSession(onlyForgotten = true)
+    }
+
+    fun resetAndPracticeAll() {
+        allCards = allCards.map { it.copy(result = RESULT_NULL) }.toMutableList()
+        AppMemoryCache.put(cacheKey, allCards.toList())
+        updateStatsFromAllCards()
+        startNewSession(onlyForgotten = false)
+    }
+
+    fun saveProgressToApi(onComplete: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            // TODO: Gọi API lưu kết quả
+            onComplete(true)
+        }
+    }
+
+    private fun mapToVocabulary(item: DetailFlashcardWithResult): Vocabulary {
+        return Vocabulary(
+            level = ColorLabel(item.flashCard.type, "#E0E0E5"),
+            image = 0,
+            word = item.flashCard.word,
+            pronunciation_url = item.flashCard.audioUrl ?: "",
+            transciption = item.flashCard.transcription,
+            part_of_speech = ColorLabel(item.flashCard.partOfSpeech, "#636AE8"),
+            definition = item.flashCard.meaning,
+            example = item.flashCard.example ?: ""
+        )
+    }
+}
