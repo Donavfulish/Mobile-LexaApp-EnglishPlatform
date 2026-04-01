@@ -17,10 +17,10 @@ class VocabularyFlashcardViewModel(
 ) : ViewModel() {
     private val _deckResultData = MutableLiveData<DeckResult>()
     val deckResultData: LiveData<DeckResult> get() = _deckResultData
-    
+
     private val _flashcardDetailData = MutableLiveData<List<DetailFlashcard>>()
     val flashcardDetailData: LiveData<List<DetailFlashcard>> get() = _flashcardDetailData
-    
+
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
@@ -28,12 +28,10 @@ class VocabularyFlashcardViewModel(
         viewModelScope.launch {
             try {
                 _isLoading.value = true
-                
-                // Chạy song song 2 API
+
                 val flashcardsDeferred = async { flashcardRepository.getAllFlashcard(deckId) }
                 val deckResultDeferred = async { deckRepository.getDeckResult(deckId) }
 
-                // Đợi cả 2 hoàn thành
                 val flashcardsResult = flashcardsDeferred.await()
                 val deckResult = deckResultDeferred.await()
 
