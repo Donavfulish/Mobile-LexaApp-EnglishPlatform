@@ -4,25 +4,12 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.content.Context
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.DecelerateInterpolator
-import android.widget.FrameLayout
-import android.widget.TextView
-import android.widget.Toast
-import androidx.core.graphics.ColorUtils
-import androidx.core.graphics.toColorInt
-import com.home.lexa.R
-import com.home.lexa.databinding.FlashcardBinding
 import com.home.lexa.databinding.FlashcardMiniBinding
 import com.home.lexa.databinding.ViewLayoutFlashcardZoomBinding
-import com.home.lexa.databinding.ButtonLexaBinding
-import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.domain.models.mockVocabularyData
 
