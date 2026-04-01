@@ -2,6 +2,7 @@ package com.home.lexa.ui.library.personal_library
 
 
 
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.home.lexa.R
@@ -9,6 +10,7 @@ import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentLoginBinding
 import com.home.lexa.databinding.FragmentPersonalLibraryBinding
 import com.home.lexa.domain.models.DeckDto
+import com.home.lexa.ui.components.DeckInput
 import com.home.lexa.ui.home.HomeViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
@@ -28,6 +30,19 @@ class PersonalLibraryFragment : BaseFragment<FragmentPersonalLibraryBinding>(Fra
         }
 
         viewModel.fetchAllDecks()
+
+        binding.btnAdd.setOnClickAction {
+            // Khi người dùng bấm nút +, khởi tạo và show Popup
+            val popup = DeckInput(requireContext()) // Dùng 'this' nếu bạn đang ở Activity
+
+            popup.showDialog(
+                title = "Tạo bộ từ vựng mới",
+                confirmText = "Tạo",
+                onConfirm = { vocabName ->
+                    viewModel.createDeck(vocabName)
+                }
+            )
+        }
     }
 
     override fun observeData() {

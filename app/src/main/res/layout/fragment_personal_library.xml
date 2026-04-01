@@ -13,6 +13,7 @@
         android:clipToPadding="false"/>
 
     <com.home.lexa.ui.components.CircleButton
+        android:id="@+id/btnAdd"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_marginEnd="16dp"
