@@ -5,17 +5,17 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
 import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.view.get
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.VIEW_MODEL_STORE_OWNER_KEY
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentSignupBinding
-import com.home.lexa.domain.models.LoginRequest
 import com.home.lexa.domain.models.OAuthRegisterRequest
 import com.home.lexa.domain.models.ProviderType
 import com.home.lexa.domain.models.SignUpRequest
@@ -25,8 +25,12 @@ import com.home.lexa.ui.auth.login.AuthState
 import com.home.lexa.ui.auth.login.AuthViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import android.provider.OpenableColumns
+import coil.load
+import coil.size.ViewSizeResolver
+import com.home.lexa.ui.utils.MediaUtils
 
+enum class CertType { LANGUAGE, PEDAGOGY }
 class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding::inflate) {
 
 //    private lateinit var viewModel: AuthViewModel
@@ -40,6 +44,17 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
 
     private var isTeacherRoleSelected = false
     private var oauthProvider: ProviderType? = null
+
+    private var certType: CertType? = null
+    private val pickMediaLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            if (certType == CertType.LANGUAGE) {
+                updateMediaUI(it, binding.btnUploadLanguageCert.root)
+            } else {
+                updateMediaUI(it, binding.btnUploadPedagogyCert.root)
+            }
+        }
+    }
 
     override fun setupViews() {
         setupSocialButtons()
@@ -110,6 +125,29 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
 
             binding.llTeacherFields.visibility = View.GONE
         }
+    }
+
+    private fun updateMediaUI(uri: Uri, container: LinearLayout) {
+        val imgPreview = container.findViewById<ImageView>(R.id.imgPreview)
+        val txtFileName = container.findViewById<TextView>(R.id.txtFileName)
+        val icUpload = container.findViewById<ImageView>(R.id.icUpload) // Icon gốc
+        val txtInstruction = container.findViewById<TextView>(R.id.txtStatus) // Text hướng dẫn gốc
+        val txtFileType = container.findViewById<TextView>(R.id.txtFileType)
+
+        // Lấy tên file từ Uri
+        val fileName = MediaUtils.getFileName(requireContext(), uri)
+
+        // Ẩn các thành phần cũ
+        icUpload.visibility = View.GONE
+        txtInstruction.visibility = View.GONE
+        txtFileType.visibility = View.GONE
+
+        // Hiển thị phần preview
+        txtFileName.visibility = View.VISIBLE
+        txtFileName.text = fileName
+
+        imgPreview.visibility = View.VISIBLE
+        imgPreview.load(uri)
     }
 
     private fun setupSocialButtons() {
@@ -220,12 +258,16 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
         }
 
         // Sự kiện click để chọn file cho Giáo viên
-        binding.btnUploadLanguageCert.setOnClickListener {
+        binding.btnUploadLanguageCert.root.setOnClickListener {
             Toast.makeText(requireContext(), "Mở thư viện ảnh/file", Toast.LENGTH_SHORT).show()
+            certType = CertType.LANGUAGE
+            pickMediaLauncher.launch("image/*")
         }
 
-        binding.btnUploadPedagogyCert.setOnClickListener {
+        binding.btnUploadPedagogyCert.root.setOnClickListener {
             Toast.makeText(requireContext(), "Mở thư viện ảnh/file", Toast.LENGTH_SHORT).show()
+            certType = CertType.PEDAGOGY
+            pickMediaLauncher.launch("image/*")
         }
     }
 
