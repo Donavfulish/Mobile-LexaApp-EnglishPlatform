@@ -7,9 +7,19 @@ import com.home.lexa.databinding.ActivityMainBinding
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.findNavController
+import com.home.lexa.core.network.AuthEvent
+import com.home.lexa.core.network.AuthEventBus
 import com.home.lexa.data.local.UserManager
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import kotlin.getValue
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.navigation.navOptions
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +43,8 @@ class MainActivity : AppCompatActivity() {
          */
         setContentView(binding.root)
         setupNavigation()
+
+        listenToLogout()
 
     }
     private fun setupNavigation() {
@@ -105,5 +117,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun listenToLogout() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                AuthEventBus.events.collect { event ->
+                    if (event == AuthEvent.LOGOUT) {
+                        val navHostFragment = supportFragmentManager
+                            .findFragmentById(R.id.fragmentContainer) as? NavHostFragment
+                        val navController = navHostFragment?.navController
+
+                        navController?.let {
+                            // Sửa dòng navigate thành thế này để ép nó hiểu là dùng Resource ID
+                            it.navigate(resId = R.id.loginFragment, args = null, navOptions = navOptions {
+                                popUpTo(it.graph.startDestinationId) {
+                                    inclusive = true
+                                }
+                            })
+                        }
+
+                        Toast.makeText(this@MainActivity, "Phiên đăng nhập hết hạn.", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
     }
+}
 

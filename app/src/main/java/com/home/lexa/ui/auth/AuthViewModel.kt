@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.home.lexa.data.local.TokenManager
 import com.home.lexa.data.local.UserManager
+import com.home.lexa.domain.models.AuthResult
 import com.home.lexa.domain.models.LoginRequest
 import com.home.lexa.domain.models.OAuthGoogleResult
 import com.home.lexa.domain.models.OAuthRegisterRequest
@@ -56,7 +57,7 @@ class AuthViewModel (
 //    }
 
     fun setAccessToken(token: String) {
-        tokenManager.saveToken(token)
+        tokenManager.saveAccessToken(token)
     }
 
     fun login(request: LoginRequest) {
@@ -68,14 +69,7 @@ class AuthViewModel (
             result.onSuccess { authResult ->
                 Log.d("AuthViewModel", "FULL RESPONSE: $authResult")
                 if (authResult.ok) {
-                    // Lưu Token qua TokenManager
-                    // LƯU Ý: Đổi 'accessToken' thành đúng tên property trong model response của bạn nhé
-                    authResult.accessToken?.let { token ->
-                        tokenManager.saveToken(token)
-                    }
-                    authResult.user?.let { user ->
-                        userManager.saveUser(user)
-                    }
+                    saveUserAndToken(authResult)
 
                     _loginState.value = AuthState.Success(authResult.message ?: "Đăng nhập thành công")
                 } else {
@@ -96,14 +90,7 @@ class AuthViewModel (
             result.onSuccess { authResult ->
                 Log.d("AuthViewModel", "FULL RESPONSE: $authResult")
                 if (authResult.ok) {
-                    // Nếu API signup của bạn cũng trả về token (auto-login sau khi đăng ký), thì lưu luôn tại đây
-                    authResult.accessToken?.let { token ->
-                        tokenManager.saveToken(token)
-                    }
-
-                    authResult.user?.let { user ->
-                        userManager.saveUser(user)
-                    }
+                    saveUserAndToken(authResult)
 
                     _signupState.value = AuthState.Success(authResult.message ?: "Đăng ký thành công")
                 } else {
@@ -123,13 +110,7 @@ class AuthViewModel (
 
             result.onSuccess { authResult ->
                 if (authResult.ok) {
-                    authResult.accessToken?.let { token ->
-                        tokenManager.saveToken(token)
-                    }
-
-                    authResult.user?.let { user ->
-                        userManager.saveUser(user)
-                    }
+                    saveUserAndToken(authResult)
 
                     _signupState.value = AuthState.Success(authResult.message ?: "Đăng ký với Google thành công")
                 } else {
@@ -150,14 +131,7 @@ class AuthViewModel (
             result.onSuccess { authResult ->
                 Log.d("AuthViewModel", "FULL RESPONSE: $authResult")
                 if (authResult.ok) {
-                    // Lưu Token qua TokenManager
-                    // LƯU Ý: Đổi 'accessToken' thành đúng tên property trong model response của bạn nhé
-                    authResult.accessToken?.let { token ->
-                        tokenManager.saveToken(token)
-                    }
-                    authResult.user?.let { user ->
-                        userManager.saveUser(user)
-                    }
+                    saveUserAndToken(authResult)
 
                     _loginState.value = AuthState.Success(authResult.message ?: "Đăng nhập bằng Google thành công")
                 } else {
@@ -176,5 +150,14 @@ class AuthViewModel (
     fun resetState() {
         _loginState.value = AuthState.Idle
         _signupState.value = AuthState.Idle
+    }
+
+    private fun saveUserAndToken(data: AuthResult?) {
+        if (data == null) return
+
+        tokenManager.saveTokens(data.accessToken ?: "", data.refreshToken ?: "")
+        data.user?.let { user ->
+            userManager.saveUser(user)
+        }
     }
 }

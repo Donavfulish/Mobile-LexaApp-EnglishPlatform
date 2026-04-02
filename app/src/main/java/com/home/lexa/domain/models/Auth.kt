@@ -41,6 +41,10 @@ data class SignUpRequest(
     val role: UserRole
 )
 
+data class RefreshRequest(
+    val refreshToken: String
+)
+
 data class AuthResult(
     val ok: Boolean,
     val message: String? = "",

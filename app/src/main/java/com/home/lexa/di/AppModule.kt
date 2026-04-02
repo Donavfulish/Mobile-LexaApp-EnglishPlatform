@@ -1,6 +1,7 @@
 package com.home.lexa.di
 
 import com.home.lexa.core.network.AuthInterceptor
+import com.home.lexa.core.network.TokenAuthenticator
 import com.home.lexa.data.local.TokenManager
 import com.home.lexa.data.local.UserManager
 import com.home.lexa.data.remote.AuthApiService
@@ -47,14 +48,16 @@ val appModule = module {
     /*
     single {...}: Tạo singleton -> Tạo ra môt object duy nhất cho toàn bộ app
      */
-    single {TokenManager(androidContext())}
+    single { TokenManager(androidContext()) }
     single { UserManager(androidContext()) }
 
-    single{AuthInterceptor(get())}
+    single{ AuthInterceptor(get()) }
+    single{ TokenAuthenticator(get(), getKoin())}
 
     single(named("auth_client")) {
         OkHttpClient.Builder()
             .addInterceptor(get<AuthInterceptor>())
+            .authenticator(get<TokenAuthenticator>())
             .build()
     }
     single {
