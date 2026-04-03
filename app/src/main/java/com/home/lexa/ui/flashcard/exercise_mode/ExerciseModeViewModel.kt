@@ -46,8 +46,8 @@ class ExerciseModeViewModel(
     private val _isFinished = MutableLiveData<Boolean>()
     val isFinished: LiveData<Boolean> = _isFinished
 
-    // Nhận data khởi tạo từ màn trước để show UI ngay lập tức
-    fun initInitialData(passedDeckId: Long, rem: Int, forg: Int, total: Int) {
+    // Nhận data khởi tạo từ màn trước và cờ điều hướng
+    fun initInitialData(passedDeckId: Long, rem: Int, forg: Int, total: Int, isRetryForgotten: Boolean, isRetryAll: Boolean) {
         deckId = passedDeckId
         cacheKey = "FLASHCARD_DECK_RESULT_$deckId"
 
@@ -56,14 +56,30 @@ class ExerciseModeViewModel(
         _totalCards.value = total
         _progress.value = rem
 
-        fetchFlashcardsFromApi()
+        // Điều hướng dữ liệu: Đọc từ Cache hay Gọi API?
+        if (isRetryForgotten) {
+            loadFromCache()
+            startNewSession(onlyForgotten = true)
+        } else if (isRetryAll) {
+            loadFromCache()
+            resetAndPracticeAll()
+        } else {
+            // Mới vào lần đầu tiên -> Fetch dữ liệu mới nhất từ Server
+            fetchFlashcardsFromApi()
+        }
+    }
+
+    private fun loadFromCache() {
+        val cachedData = AppMemoryCache.get<List<DetailFlashcardWithResult>>(cacheKey)
+        if (cachedData != null) {
+            allCards = cachedData.toMutableList()
+        }
     }
 
     // GỌI API Ở ĐÂY
     private fun fetchFlashcardsFromApi() {
         viewModelScope.launch {
             try {
-                // Giả sử userId = 1, bạn có thể truyền từ Session vào
                 val result = repository.getAllFlashcardWithResult(deckId)
 
                 result.onSuccess { data ->
@@ -78,7 +94,7 @@ class ExerciseModeViewModel(
                     // Bắt đầu luyện (chỉ các từ chưa thuộc)
                     startNewSession(onlyForgotten = true)
                 }.onFailure {
-                    // Xử lý lỗi load API
+                    // Xử lý lỗi load API nếu cần
                 }
             } catch (e: Exception) {
                 // Xử lý exception
@@ -139,22 +155,11 @@ class ExerciseModeViewModel(
         _totalCards.value = allCards.size
     }
 
-    fun practiceForgottenWords() {
-        startNewSession(onlyForgotten = true)
-    }
-
-    fun resetAndPracticeAll() {
+    private fun resetAndPracticeAll() {
         allCards = allCards.map { it.copy(result = RESULT_NULL) }.toMutableList()
         AppMemoryCache.put(cacheKey, allCards.toList())
         updateStatsFromAllCards()
         startNewSession(onlyForgotten = false)
-    }
-
-    fun saveProgressToApi(onComplete: (Boolean) -> Unit) {
-        viewModelScope.launch {
-            // TODO: Gọi API lưu kết quả
-            onComplete(true)
-        }
     }
 
     private fun mapToVocabulary(item: DetailFlashcardWithResult): Vocabulary {
