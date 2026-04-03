@@ -33,6 +33,8 @@ import com.home.lexa.ui.profile.ProfileViewModel
 import com.home.lexa.ui.library.favorite_library.FavoriteLibraryModel
 import com.home.lexa.ui.library.personal_library.PersonalLibraryModel
 import com.home.lexa.ui.course.student_course_list.StudentCourseListModel
+import com.home.lexa.ui.flashcard.exercise_mode.ExerciseModeViewModel
+import com.home.lexa.ui.flashcard.exercise_result.ExerciseResultViewModel
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -104,4 +106,6 @@ val appModule = module {
 
     viewModel { CourseDetailViewModel(get(), get())}
     viewModel { VocabularyFlashcardViewModel(get(), get())}
+    viewModel { ExerciseModeViewModel(get())}
+    viewModel { ExerciseResultViewModel(get(), get())}
 }

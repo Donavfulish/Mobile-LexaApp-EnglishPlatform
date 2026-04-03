@@ -91,19 +91,48 @@
     <fragment
         android:id="@+id/vocabularyFlashcardFragment"
         android:name="com.home.lexa.ui.course.vocabulary_flashcard.VocabularyFlashcardFragment"
-        android:label="VocabularyFlashcardFragment" />
+        android:label="VocabularyFlashcardFragment" >
+        <action
+            android:id="@+id/action_vocabularyFlashcardFragment_to_exerciseModeFragment"
+            app:destination="@id/exerciseModeFragment" />
+    </fragment>
 
 
 <!--    =========== FLASHCARD ======= -->
     <fragment
         android:id="@+id/exerciseModeFragment"
         android:name="com.home.lexa.ui.flashcard.exercise_mode.ExerciseModeFragment"
-        android:label="ExerciseModeFragment" />
+        android:label="ExerciseModeFragment" >
+        <argument android:name="deckId" app:argType="long" />
+        <argument android:name="rememberedCount" app:argType="integer" android:defaultValue="0" />
+        <argument android:name="forgottenCount" app:argType="integer" android:defaultValue="0" />
+        <argument android:name="totalCards" app:argType="integer" android:defaultValue="0" />
+
+        <argument android:name="isRetryForgotten" app:argType="boolean" android:defaultValue="false" />
+        <argument android:name="isRetryAll" app:argType="boolean" android:defaultValue="false" />
+
+        <action
+            android:id="@+id/action_exerciseModeFragment_to_exerciseResultFragment"
+            app:destination="@id/exerciseResultFragment"
+            app:popUpTo="@id/exerciseModeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/exerciseResultFragment"
         android:name="com.home.lexa.ui.flashcard.exercise_result.ExerciseResultFragment"
-        android:label="ExerciseResultFragment" />
+        android:label="ExerciseResultFragment" >
+        <argument android:name="deckId" app:argType="long" />
+        <argument android:name="rememberedCount" app:argType="integer" />
+        <argument android:name="forgottenCount" app:argType="integer" />
+        <argument android:name="totalCards" app:argType="integer" />
+
+        <action
+            android:id="@+id/action_exerciseResultFragment_to_exerciseModeFragment"
+            app:destination="@id/exerciseModeFragment"
+            app:popUpTo="@id/exerciseResultFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/flashcardDetailFragment"

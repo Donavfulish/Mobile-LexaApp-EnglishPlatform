@@ -2,9 +2,13 @@ package com.home.lexa.ui.course.vocabulary_flashcard
 
 
 
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentVocabularyFlashcardBinding
@@ -34,6 +38,11 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play_circle))
             setIconColor(ContextCompat.getColor(requireContext(), R.color.white))
             setBackground(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
+
+            setOnClickAction {
+                Log.d("LEXA_DEBUG", "Đã ấn nút startBtn 1")
+                navigateToExerciseMode()
+            }
         }
         binding.startBtn2.apply {
             setIconPadding(10)
@@ -42,6 +51,12 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play_circle))
             setIconColor(ContextCompat.getColor(requireContext(), R.color.white))
             setBackground(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
+
+
+            setOnClickAction {
+                Log.d("LEXA_DEBUG", "Đã ấn nút startBtn 2")
+                navigateToExerciseMode()
+            }
         }
         binding.vocabularyIconBtn.apply {
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_book)!!)
@@ -60,6 +75,34 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
             }
         }
         viewModel.loadFlashcardDetail(deck.id)
+    }
+
+    private fun navigateToExerciseMode() {
+        Log.d("LEXA_DEBUG", "Hàm navigateToExerciseMode được gọi")
+
+        try {
+            val forgotten = deck.vocabNumber - vocabLearning
+            Log.d("LEXA_DEBUG", "Dữ liệu chuẩn bị chuyển: deckId=${deck.id}, rem=$vocabLearning, forg=$forgotten, total=${deck.vocabNumber}")
+
+            val bundle = bundleOf(
+                "deckId" to deck.id,
+                "rememberedCount" to vocabLearning,
+                "forgottenCount" to forgotten,
+                "totalCards" to deck.vocabNumber
+            )
+
+            Log.d("LEXA_DEBUG", "Bắt đầu gọi findNavController().navigate...")
+            findNavController().navigate(
+                R.id.action_vocabularyFlashcardFragment_to_exerciseModeFragment,
+                bundle
+            )
+            Log.d("LEXA_DEBUG", "Chuyển trang thành công!")
+
+        } catch (e: Exception) {
+            // Nếu có lỗi do Nav Graph chưa mapping đúng, nó sẽ văng vào đây
+            Log.e("LEXA_DEBUG", "LỖI CHUYỂN TRANG: ${e.message}", e)
+            Toast.makeText(requireContext(), "Lỗi chuyển trang: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun observeData() {

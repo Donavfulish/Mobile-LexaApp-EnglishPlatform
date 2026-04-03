@@ -5,6 +5,7 @@ import com.home.lexa.domain.models.CreateFlashcardRequest
 import com.home.lexa.domain.models.DetailFlashcard
 import com.home.lexa.domain.models.DetailFlashcardWithResult
 import com.home.lexa.domain.models.UpdateFlashcardRequest
+import com.home.lexa.domain.models.UpdateFlashcardResultRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -39,5 +40,11 @@ interface FlashcardApiService {
     @DELETE("/api/decks/{deckId}/flashcards/{flashcardId}")
     suspend fun deleteFlashcard(
         @Path("flashcardId") flashcardId: Long
+    ): Response<ApiResponse<Boolean>>
+
+    @PATCH("api/decks/{deckId}/flashcards/result")
+    suspend fun updateFlashcardResults(
+        @Path("deckId") deckId: Long,
+        @Body request: UpdateFlashcardResultRequest
     ): Response<ApiResponse<Boolean>>
 }
