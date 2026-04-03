@@ -89,7 +89,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
         binding.cardVocabulary.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_libraryFragment)
-
         }
         binding.cardLessons.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_libraryFragment)
