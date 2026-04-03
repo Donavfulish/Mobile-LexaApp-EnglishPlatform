@@ -51,7 +51,7 @@ data class UpdateFlashcardRequest(
 
 @Serializable
 data class FlashcardResultItem(
-    val flashcardId: Int,
+    val flashcardId: Long,
     val status: String?
 )
 
