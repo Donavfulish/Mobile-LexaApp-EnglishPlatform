@@ -1,11 +1,20 @@
 package com.home.lexa.data.repository
 
+import android.net.Uri
+import com.google.gson.Gson
 import com.home.lexa.data.remote.AuthApiService
 import com.home.lexa.domain.models.AuthResult
 import com.home.lexa.domain.models.LoginRequest
 import com.home.lexa.domain.models.OAuthRegisterRequest
+import com.home.lexa.domain.models.OtpRequest
+import com.home.lexa.domain.models.OtpVerify
 import com.home.lexa.domain.models.SignUpRequest
 import com.home.lexa.domain.repository.AuthRespository
+import com.home.lexa.ui.utils.MediaUtils
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 class AuthRespositoryImpl(private val apiService: AuthApiService) : AuthRespository {
     override suspend fun login(request: LoginRequest): Result<AuthResult> {
@@ -27,9 +36,13 @@ class AuthRespositoryImpl(private val apiService: AuthApiService) : AuthResposit
         }
     }
 
-    override suspend fun signup(request: SignUpRequest): Result<AuthResult> {
+    override suspend fun signup(
+        dataPart: RequestBody,
+        languagePart: MultipartBody.Part?,
+        pedagogyPart: MultipartBody.Part?
+    ): Result<AuthResult> {
         return try {
-            val response = apiService.signup(request)
+            val response = apiService.signup(dataPart, languagePart, pedagogyPart)
             val body = response.body()
 
             if (response.isSuccessful && body != null) {
@@ -43,7 +56,7 @@ class AuthRespositoryImpl(private val apiService: AuthApiService) : AuthResposit
                 Result.failure(Exception("Lỗi máy chủ: ${response.code()}"))
             }
         } catch (e: Exception) {
-            Result.failure(Exception("Lỗi đăng ký: ${e.message}"))
+            Result.failure(Exception("Lỗi kết nối mạng: ${e.message}"))
         }
     }
 
@@ -63,13 +76,17 @@ class AuthRespositoryImpl(private val apiService: AuthApiService) : AuthResposit
                 Result.failure(Exception("Lỗi máy chủ: ${response.code()}"))
             }
         } catch (e: Exception) {
-            Result.failure(Exception("Lỗi đăng ký: ${e.message}"))
+            Result.failure(Exception("Lỗi kết nối mạng: ${e.message}"))
         }
     }
 
-    override suspend fun signupGoogle(request: OAuthRegisterRequest): Result<AuthResult> {
+    override suspend fun signupGoogle(
+        dataPart: RequestBody,
+        languagePart: MultipartBody.Part?,
+        pedagogyPart: MultipartBody.Part?
+    ): Result<AuthResult> {
         return try {
-            val response = apiService.signupGoogle(request)
+            val response = apiService.signupGoogle(dataPart, languagePart, pedagogyPart)
             val body = response.body()
 
             if (response.isSuccessful && body != null) {
@@ -83,7 +100,45 @@ class AuthRespositoryImpl(private val apiService: AuthApiService) : AuthResposit
                 Result.failure(Exception("Lỗi máy chủ: ${response.code()}"))
             }
         } catch (e: Exception) {
-            Result.failure(Exception("Lỗi đăng ký: ${e.message}"))
+            Result.failure(Exception("Lỗi kết nối mạng: ${e.message}"))
+        }
+    }
+
+    override suspend fun sendOTP(request: OtpRequest): Result<Unit> {
+        return try {
+            val response = apiService.sendOTP(request)
+            val body = response.body()
+
+            if (response.isSuccessful && body != null) {
+                if (body.success == true) {
+                    Result.success(Unit)
+                } else {
+                    Result.failure(Exception(body.message ?: "Gửi OTP không thành công"))
+                }
+            } else {
+                Result.failure(Exception("Lỗi server: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(Exception("Lỗi kết nối mạng: ${e.message}"))
+        }
+    }
+
+    override suspend fun verifyOTP(request: OtpVerify): Result<Unit> {
+        return try {
+            val response = apiService.verifyOTP(request)
+            val body = response.body()
+
+            if (response.isSuccessful && body != null) {
+                if (body.success == true) {
+                    Result.success(Unit)
+                } else {
+                    Result.failure(Exception(body.message ?: "OTP không hợp lệ"))
+                }
+            } else {
+                Result.failure(Exception("Lỗi server: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(Exception("Lỗi kết nối mạng: ${e.message}"))
         }
     }
 }

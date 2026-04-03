@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.androidx.navigation.safeargs)
     id("com.google.dagger.hilt.android")
     kotlin("kapt")
 }
@@ -129,4 +130,7 @@ dependencies {
 
     implementation("androidx.fragment:fragment-ktx:1.8.2")
     implementation("androidx.activity:activity-ktx:1.9.1")
+
+    //12. Upload & Hiển thị ảnh
+    implementation("io.coil-kt:coil:2.5.0")
 }

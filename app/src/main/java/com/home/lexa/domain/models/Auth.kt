@@ -10,6 +10,7 @@ data class UserInfo(
     val email: String,
     val name: String,
     val role: UserRole,
+    var isEmailVerified: Boolean? = false,
 )
 
 data class GoogleUserInfo(
@@ -35,10 +36,14 @@ data class LoginRequest(
 data class SignUpRequest(
     val email: String,
     val password: String,
-    val date_of_birth: String,
-    val address: String,
+    val date_of_birth: String?,
+    val address: String?,
     val name: String,
     val role: UserRole
+)
+
+data class RefreshRequest(
+    val refreshToken: String
 )
 
 data class AuthResult(
@@ -62,7 +67,17 @@ data class OAuthRegisterRequest (
 
 data class OAuthGoogleResult (
     val accessToken: String? = null,
-    val user: GoogleUserInfo? = null
+    val user: GoogleUserInfo? = null,
+    val registered: Boolean = false
+)
+
+data class OtpRequest (
+    val email: String
+)
+
+data class OtpVerify (
+    val email: String,
+    val otp: String,
 )
 
 val mockUserInfo = UserInfo(

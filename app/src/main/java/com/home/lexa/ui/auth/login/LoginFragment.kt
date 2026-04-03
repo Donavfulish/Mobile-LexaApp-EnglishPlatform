@@ -9,10 +9,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
+import com.home.lexa.data.local.UserManager
 import com.home.lexa.databinding.FragmentLoginBinding
 import com.home.lexa.domain.models.LoginRequest
 import com.home.lexa.domain.models.ProviderType
 import com.home.lexa.ui.auth.GoogleUrls
+import com.home.lexa.ui.auth.signup.SignupFragmentDirections
+import com.home.lexa.ui.auth.verify_email.IS_EMAIL_VERIFY_STRING
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
@@ -112,15 +115,22 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                     }
                     is AuthState.Success -> {
                         Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
-                        findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
-                        viewModel.resetState()
+
+                        if (!viewModel.isEmailVerified()) {
+                            val email = binding.inputEmail.getText().trim()
+                            viewModel.sendOTP(email)
+
+                            val action = LoginFragmentDirections.actionSignupFragmentToVerifyEmail(email)
+                            findNavController().navigate(action)
+                        } else {
+                            findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                            viewModel.resetState()
+                        }
                     }
                     is AuthState.Error -> {
                         binding.btnLogin.setText("Đăng Nhập", Color.WHITE) // Khôi phục nút
                         Toast.makeText(requireContext(), "Tài khoản chưa được đăng ký hoặc không hợp lệ", Toast.LENGTH_LONG).show()
                     }
-
-                    else -> {}
                 }
             }
         }

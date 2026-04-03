@@ -5,17 +5,17 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
 import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.view.get
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.VIEW_MODEL_STORE_OWNER_KEY
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentSignupBinding
-import com.home.lexa.domain.models.LoginRequest
 import com.home.lexa.domain.models.OAuthRegisterRequest
 import com.home.lexa.domain.models.ProviderType
 import com.home.lexa.domain.models.SignUpRequest
@@ -25,8 +25,17 @@ import com.home.lexa.ui.auth.login.AuthState
 import com.home.lexa.ui.auth.login.AuthViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import android.provider.OpenableColumns
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
+import coil.load
+import coil.size.ViewSizeResolver
+import com.home.lexa.ui.auth.verify_email.IS_EMAIL_VERIFY_STRING
+import com.home.lexa.ui.utils.DateUtils
+import com.home.lexa.ui.utils.MediaUtils
+import com.home.lexa.ui.utils.StringUtils
 
+enum class CertType { LANGUAGE, PEDAGOGY }
 class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding::inflate) {
 
 //    private lateinit var viewModel: AuthViewModel
@@ -41,6 +50,19 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
     private var isTeacherRoleSelected = false
     private var oauthProvider: ProviderType? = null
 
+    private var certType: CertType? = null
+    private val pickMediaLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            if (certType == CertType.LANGUAGE) {
+                updateMediaUI(it, binding.btnUploadLanguageCert.root)
+                viewModel.setLanguageUri(it)
+            } else {
+                updateMediaUI(it, binding.btnUploadPedagogyCert.root)
+                viewModel.setPedagogyUri(it)
+            }
+        }
+    }
+
     override fun setupViews() {
         setupSocialButtons()
         setupInputs()
@@ -51,6 +73,8 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
             viewModel.resetOAuth()
             findNavController().popBackStack()
         }
+
+        handleNavigation()
     }
 
     private fun setupRoleToggle() {
@@ -110,6 +134,29 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
 
             binding.llTeacherFields.visibility = View.GONE
         }
+    }
+
+    private fun updateMediaUI(uri: Uri, container: LinearLayout) {
+        val imgPreview = container.findViewById<ImageView>(R.id.imgPreview)
+        val txtFileName = container.findViewById<TextView>(R.id.txtFileName)
+        val icUpload = container.findViewById<ImageView>(R.id.icUpload) // Icon gốc
+        val txtInstruction = container.findViewById<TextView>(R.id.txtStatus) // Text hướng dẫn gốc
+        val txtFileType = container.findViewById<TextView>(R.id.txtFileType)
+
+        // Lấy tên file từ Uri
+        val fileName = MediaUtils.getFileName(requireContext(), uri)
+
+        // Ẩn các thành phần cũ
+        icUpload.visibility = View.GONE
+        txtInstruction.visibility = View.GONE
+        txtFileType.visibility = View.GONE
+
+        // Hiển thị phần preview
+        txtFileName.visibility = View.VISIBLE
+        txtFileName.text = fileName
+
+        imgPreview.visibility = View.VISIBLE
+        imgPreview.load(uri)
     }
 
     private fun setupSocialButtons() {
@@ -182,9 +229,37 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                 val name = binding.inputName.getText()
                 val role = if (isTeacherRoleSelected) UserRole.TEACHER else UserRole.STUDENT
                 val password = binding.inputPassword.getText()
+                val confirmPassword = binding.inputConfirmPassword.getText()
                 val email = binding.inputEmail.getText()
                 val date_of_birth = binding.inputDob.getText()
                 val address = binding.inputAddress.getText()
+                val isGuaranteed = binding.cbCommitment.isChecked
+
+                if (!StringUtils.isValidEmail(email)) {
+                    Toast.makeText(requireContext(), "Email sai định dạng", Toast.LENGTH_SHORT).show()
+                    return@setOnClickAction
+                }
+
+                if (!password.isEmpty() && password != confirmPassword) {
+                    Toast.makeText(requireContext(), "Mật khẩu không trùng khớp", Toast.LENGTH_SHORT).show()
+                    return@setOnClickAction
+                }
+
+                if (!date_of_birth.isEmpty() && !DateUtils.isValidDate(date_of_birth)) {
+                    Toast.makeText(requireContext(), "Ngày sinh sai định dạng", Toast.LENGTH_SHORT).show()
+                    return@setOnClickAction
+                }
+
+                if (role == UserRole.TEACHER) {
+                    if (binding.btnUploadLanguageCert.icUpload.isVisible) {
+                        Toast.makeText(requireContext(), "Vui lòng cung cấp bằng ngoại ngữ", Toast.LENGTH_SHORT).show()
+                        return@setOnClickAction
+                    }
+                    if (!isGuaranteed) {
+                        Toast.makeText(requireContext(), "Vui lòng xác nhận bằng cấp không qua chỉnh sửa", Toast.LENGTH_SHORT).show()
+                        return@setOnClickAction
+                    }
+                }
 
                 if (oauthProvider == null) {
                     if (email.isNotEmpty() && password.isNotEmpty() && name.isNotEmpty()) {
@@ -192,12 +267,15 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                             SignUpRequest(
                                 email = email,
                                 password = password,
-                                date_of_birth = date_of_birth,
+                                date_of_birth = DateUtils.convertToBackendFormat(date_of_birth),
                                 address = address,
                                 name = name,
                                 role = role
                             )
                         )
+
+                        viewModel.sendOTP(email)
+                        navigateToOTPFragment(email)
                     } else {
                         Toast.makeText(requireContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show()
                     }
@@ -220,12 +298,16 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
         }
 
         // Sự kiện click để chọn file cho Giáo viên
-        binding.btnUploadLanguageCert.setOnClickListener {
+        binding.btnUploadLanguageCert.root.setOnClickListener {
             Toast.makeText(requireContext(), "Mở thư viện ảnh/file", Toast.LENGTH_SHORT).show()
+            certType = CertType.LANGUAGE
+            pickMediaLauncher.launch("image/*")
         }
 
-        binding.btnUploadPedagogyCert.setOnClickListener {
+        binding.btnUploadPedagogyCert.root.setOnClickListener {
             Toast.makeText(requireContext(), "Mở thư viện ảnh/file", Toast.LENGTH_SHORT).show()
+            certType = CertType.PEDAGOGY
+            pickMediaLauncher.launch("image/*")
         }
     }
 
@@ -247,14 +329,16 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                         binding.btnSignup.setText("Đăng Ký", Color.WHITE) // Khôi phục nút
                         Toast.makeText(requireContext(), "Tài khoản đã tồn tại hoặc không hợp lệ", Toast.LENGTH_LONG).show()
                     }
-
-                    else -> {}
                 }
             }
         }
 
         viewModel.oauthGoogleResult.observe(viewLifecycleOwner) { data ->
             data?.let {
+                if (data.registered) {
+                    Toast.makeText(requireContext(), "Tài khoản không hợp lệ hoặc đã được sử dụng", Toast.LENGTH_SHORT).show()
+                    return@observe
+                }
                 // Vô hiệu hóa các nút đăng ký OAuth và các UI không cần thiết
                 binding.btnGoogle.visibility = View.GONE
                 binding.btnFacebook.visibility = View.GONE
@@ -273,5 +357,21 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                 this.oauthProvider = ProviderType.GOOGLE
             }
         }
+    }
+
+    private fun navigateToOTPFragment(email: String) {
+        val action = SignupFragmentDirections.actionSignupFragmentToVerifyEmail(email)
+
+        findNavController().navigate(action)
+    }
+
+    private fun handleNavigation() {
+        val navBackStackEntry = findNavController().currentBackStackEntry
+
+        navBackStackEntry?.savedStateHandle?.getLiveData<Boolean>(IS_EMAIL_VERIFY_STRING)
+            ?.observe(viewLifecycleOwner) {
+                navBackStackEntry.savedStateHandle.remove<Boolean>(IS_EMAIL_VERIFY_STRING)
+                findNavController().popBackStack()
+            }
     }
 }

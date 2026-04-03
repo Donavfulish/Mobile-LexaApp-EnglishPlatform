@@ -218,37 +218,9 @@
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
-            <LinearLayout
+            <include
                 android:id="@+id/btnUploadLanguageCert"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/bg_dashed_border"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_upload"
-                    app:tint="#575E6B" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Nhấn để tải tệp tin từ thiết bị"
-                    android:textColor="#575E6B"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="PDF, JPG, PNG (Tối đa 5MB)"
-                    android:textColor="#AAAAAA"
-                    android:textSize="10sp" />
-            </LinearLayout>
+                layout="@layout/view_upload_language_cert" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -259,29 +231,9 @@
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
-            <LinearLayout
+            <include
                 android:id="@+id/btnUploadPedagogyCert"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/bg_dashed_border"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_upload"
-                    app:tint="#575E6B" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Nhấn để tải tệp tin từ thiết bị"
-                    android:textColor="#575E6B"
-                    android:textSize="12sp" />
-            </LinearLayout>
+                layout="@layout/view_upload_pedagogy_cert" />
 
             <CheckBox
                 android:id="@+id/cbCommitment"
