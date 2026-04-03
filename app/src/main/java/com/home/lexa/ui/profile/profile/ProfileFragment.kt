@@ -6,13 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import coil.load
 import com.home.lexa.MainActivity
 import com.home.lexa.R
+import com.home.lexa.core.network.AuthEventBus
 import com.home.lexa.data.local.UserManager
 import com.home.lexa.databinding.FragmentProfileBinding
 import com.home.lexa.ui.profile.ProfileViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
@@ -96,8 +101,11 @@ class ProfileFragment : Fragment() {
 
     private fun handleLogout() {
         userManager.clearUser()
-        findNavController().navigate(R.id.loginFragment)
-        activity?.finish()
+//        findNavController().navigate(R.id.loginFragment)
+//        activity?.finish()
+        lifecycleScope.launch {
+            AuthEventBus.logout()
+        }
     }
 
     private fun formatDate(date: java.util.Date?): String {

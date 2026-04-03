@@ -34,6 +34,7 @@ import com.home.lexa.ui.library.favorite_library.FavoriteLibraryModel
 import com.home.lexa.ui.library.personal_library.PersonalLibraryModel
 import com.home.lexa.ui.course.student_course_list.StudentCourseListModel
 import okhttp3.OkHttpClient
+import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
@@ -95,9 +96,8 @@ val appModule = module {
     // 4. Khởi tạo ViewModel (Koin lấy Repository tương ứng nhét vào)
     viewModel { HomeViewModel(get<CourseRepository>()) }
     viewModel { IntroViewModel(get()) }
-    viewModel { AuthViewModel(get(), get(), get()) }
+    viewModel { AuthViewModel(androidApplication(), get(), get(), get()) }
     viewModel { ProfileViewModel(get(), get()) }
-    viewModel { AuthViewModel(get(), get(), get()) }
     viewModel { FavoriteLibraryModel(get()) }
     viewModel { PersonalLibraryModel(get()) }
     viewModel { StudentCourseListModel (get()) }

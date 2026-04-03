@@ -1,5 +1,6 @@
 package com.home.lexa.core.network
 
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.home.lexa.R
 import com.home.lexa.data.local.TokenManager
@@ -76,7 +77,7 @@ class TokenAuthenticator(
     private fun handleLogout() {
         tokenManager.clearTokens()
         CoroutineScope(Dispatchers.IO).launch {
-            AuthEventBus.logout()
+            AuthEventBus.expireToken()
         }
     }
 }

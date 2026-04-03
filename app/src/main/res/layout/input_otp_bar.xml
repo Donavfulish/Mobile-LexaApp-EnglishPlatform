@@ -13,15 +13,17 @@
         android:cursorVisible="true"
         android:inputType="number"
 
+        android:stateListAnimator="@null"
+
         android:itemBackground="@android:color/transparent"
         app:itemBackground="@android:color/transparent"
 
-        android:textSize="22sp"
+        android:textSize="24sp"
         app:itemCount="6"
-        app:itemHeight="50dp"
+        app:itemHeight="55dp"
         app:itemRadius="8dp"
         app:itemSpacing="8dp"
-        app:itemWidth="44dp"
+        app:itemWidth="50dp"
 
         app:lineColor="#BDBDBD"
         app:lineWidth="2dp"

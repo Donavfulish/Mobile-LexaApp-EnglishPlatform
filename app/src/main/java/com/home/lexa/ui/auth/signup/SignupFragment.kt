@@ -26,9 +26,14 @@ import com.home.lexa.ui.auth.login.AuthViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import android.provider.OpenableColumns
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import coil.load
 import coil.size.ViewSizeResolver
+import com.home.lexa.ui.auth.verify_email.IS_EMAIL_VERIFY_STRING
+import com.home.lexa.ui.utils.DateUtils
 import com.home.lexa.ui.utils.MediaUtils
+import com.home.lexa.ui.utils.StringUtils
 
 enum class CertType { LANGUAGE, PEDAGOGY }
 class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding::inflate) {
@@ -50,8 +55,10 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
         uri?.let {
             if (certType == CertType.LANGUAGE) {
                 updateMediaUI(it, binding.btnUploadLanguageCert.root)
+                viewModel.setLanguageUri(it)
             } else {
                 updateMediaUI(it, binding.btnUploadPedagogyCert.root)
+                viewModel.setPedagogyUri(it)
             }
         }
     }
@@ -66,6 +73,8 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
             viewModel.resetOAuth()
             findNavController().popBackStack()
         }
+
+        handleNavigation()
     }
 
     private fun setupRoleToggle() {
@@ -220,9 +229,37 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                 val name = binding.inputName.getText()
                 val role = if (isTeacherRoleSelected) UserRole.TEACHER else UserRole.STUDENT
                 val password = binding.inputPassword.getText()
+                val confirmPassword = binding.inputConfirmPassword.getText()
                 val email = binding.inputEmail.getText()
                 val date_of_birth = binding.inputDob.getText()
                 val address = binding.inputAddress.getText()
+                val isGuaranteed = binding.cbCommitment.isChecked
+
+                if (!StringUtils.isValidEmail(email)) {
+                    Toast.makeText(requireContext(), "Email sai định dạng", Toast.LENGTH_SHORT).show()
+                    return@setOnClickAction
+                }
+
+                if (!password.isEmpty() && password != confirmPassword) {
+                    Toast.makeText(requireContext(), "Mật khẩu không trùng khớp", Toast.LENGTH_SHORT).show()
+                    return@setOnClickAction
+                }
+
+                if (!date_of_birth.isEmpty() && !DateUtils.isValidDate(date_of_birth)) {
+                    Toast.makeText(requireContext(), "Ngày sinh sai định dạng", Toast.LENGTH_SHORT).show()
+                    return@setOnClickAction
+                }
+
+                if (role == UserRole.TEACHER) {
+                    if (binding.btnUploadLanguageCert.icUpload.isVisible) {
+                        Toast.makeText(requireContext(), "Vui lòng cung cấp bằng ngoại ngữ", Toast.LENGTH_SHORT).show()
+                        return@setOnClickAction
+                    }
+                    if (!isGuaranteed) {
+                        Toast.makeText(requireContext(), "Vui lòng xác nhận bằng cấp không qua chỉnh sửa", Toast.LENGTH_SHORT).show()
+                        return@setOnClickAction
+                    }
+                }
 
                 if (oauthProvider == null) {
                     if (email.isNotEmpty() && password.isNotEmpty() && name.isNotEmpty()) {
@@ -230,12 +267,15 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                             SignUpRequest(
                                 email = email,
                                 password = password,
-                                date_of_birth = date_of_birth,
+                                date_of_birth = DateUtils.convertToBackendFormat(date_of_birth),
                                 address = address,
                                 name = name,
                                 role = role
                             )
                         )
+
+                        viewModel.sendOTP(email)
+                        navigateToOTPFragment(email)
                     } else {
                         Toast.makeText(requireContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show()
                     }
@@ -289,14 +329,16 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                         binding.btnSignup.setText("Đăng Ký", Color.WHITE) // Khôi phục nút
                         Toast.makeText(requireContext(), "Tài khoản đã tồn tại hoặc không hợp lệ", Toast.LENGTH_LONG).show()
                     }
-
-                    else -> {}
                 }
             }
         }
 
         viewModel.oauthGoogleResult.observe(viewLifecycleOwner) { data ->
             data?.let {
+                if (data.registered) {
+                    Toast.makeText(requireContext(), "Tài khoản không hợp lệ hoặc đã được sử dụng", Toast.LENGTH_SHORT).show()
+                    return@observe
+                }
                 // Vô hiệu hóa các nút đăng ký OAuth và các UI không cần thiết
                 binding.btnGoogle.visibility = View.GONE
                 binding.btnFacebook.visibility = View.GONE
@@ -315,5 +357,21 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                 this.oauthProvider = ProviderType.GOOGLE
             }
         }
+    }
+
+    private fun navigateToOTPFragment(email: String) {
+        val action = SignupFragmentDirections.actionSignupFragmentToVerifyEmail(email)
+
+        findNavController().navigate(action)
+    }
+
+    private fun handleNavigation() {
+        val navBackStackEntry = findNavController().currentBackStackEntry
+
+        navBackStackEntry?.savedStateHandle?.getLiveData<Boolean>(IS_EMAIL_VERIFY_STRING)
+            ?.observe(viewLifecycleOwner) {
+                navBackStackEntry.savedStateHandle.remove<Boolean>(IS_EMAIL_VERIFY_STRING)
+                findNavController().popBackStack()
+            }
     }
 }

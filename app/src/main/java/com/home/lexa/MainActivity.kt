@@ -1,5 +1,7 @@
 package com.home.lexa
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
@@ -20,8 +22,18 @@ import org.koin.android.ext.android.inject
 import kotlin.getValue
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.navigation.navOptions
+import com.home.lexa.data.local.TokenManager
+import com.home.lexa.data.remote.AuthApiService
+import com.home.lexa.data.repository.AuthRespositoryImpl
+import com.home.lexa.domain.models.GoogleUserInfo
+import com.home.lexa.domain.models.OAuthGoogleResult
+import com.home.lexa.ui.auth.login.AuthViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
+    private val authViewModel: AuthViewModel by viewModel()
 
     // binding: tuơng tác giao diện thay vì dùng findViewById
     private val userManager: UserManager by inject()
@@ -43,6 +55,8 @@ class MainActivity : AppCompatActivity() {
          */
         setContentView(binding.root)
         setupNavigation()
+
+        handleIntent(intent)
 
         listenToLogout()
 
@@ -117,11 +131,37 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent) // Cực kỳ quan trọng để update intent mới
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent) {
+        val data: Uri? = intent.data
+        if (data != null && data.scheme == "lexa" && data.host == "auth-success") {
+            val token = data.getQueryParameter("token") ?: ""
+            val name = data.getQueryParameter("name") ?: ""
+            val email = data.getQueryParameter("email") ?: ""
+            val registered = data.getQueryParameter("registered").toBoolean()
+
+            // Đẩy dữ liệu vào ViewModel
+            authViewModel.oauthGoogleResult.value = OAuthGoogleResult(
+                accessToken = token,
+                user = GoogleUserInfo(
+                    email = email,
+                    name = name
+                ),
+                registered = registered
+            )
+        }
+    }
+
     private fun listenToLogout() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 AuthEventBus.events.collect { event ->
-                    if (event == AuthEvent.LOGOUT) {
+                    if (event == AuthEvent.LOGOUT || event == AuthEvent.TOKEN_EXPIRED) {
                         val navHostFragment = supportFragmentManager
                             .findFragmentById(R.id.fragmentContainer) as? NavHostFragment
                         val navController = navHostFragment?.navController
@@ -129,13 +169,19 @@ class MainActivity : AppCompatActivity() {
                         navController?.let {
                             // Sửa dòng navigate thành thế này để ép nó hiểu là dùng Resource ID
                             it.navigate(resId = R.id.loginFragment, args = null, navOptions = navOptions {
-                                popUpTo(it.graph.startDestinationId) {
+                                popUpTo(it.graph.id) {
                                     inclusive = true
                                 }
                             })
                         }
 
-                        Toast.makeText(this@MainActivity, "Phiên đăng nhập hết hạn.", Toast.LENGTH_LONG).show()
+                        if (event == AuthEvent.TOKEN_EXPIRED) {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Phiên đăng nhập hết hạn.",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }
                 }
             }

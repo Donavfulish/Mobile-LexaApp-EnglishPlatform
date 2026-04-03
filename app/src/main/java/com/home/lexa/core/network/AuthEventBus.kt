@@ -10,8 +10,12 @@ object AuthEventBus {
     suspend fun logout() {
         _events.emit(AuthEvent.LOGOUT)
     }
+    suspend fun expireToken() {
+        _events.emit(AuthEvent.TOKEN_EXPIRED)
+    }
 }
 
 enum class AuthEvent {
-    LOGOUT
+    LOGOUT,
+    TOKEN_EXPIRED
 }
