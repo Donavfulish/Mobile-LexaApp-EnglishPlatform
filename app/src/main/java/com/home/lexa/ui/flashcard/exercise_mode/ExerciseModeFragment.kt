@@ -1,8 +1,9 @@
 package com.home.lexa.ui.flashcard.exercise_mode
 
 import android.app.AlertDialog
-import android.view.View
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
+import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.core.utils.SwipeTouchListener
 import com.home.lexa.databinding.FragmentExerciseModeBinding
@@ -19,13 +20,14 @@ class ExerciseModeFragment : BaseFragment<FragmentExerciseModeBinding>(FragmentE
         val forgottenCount = arguments?.getInt("forgottenCount") ?: 0
         val totalCards = arguments?.getInt("totalCards") ?: 0
 
+        // Cờ xác định xem đang luyện tiếp từ Cache hay là mới vào lần đầu
+        val isRetryForgotten = arguments?.getBoolean("isRetryForgotten") ?: false
+        val isRetryAll = arguments?.getBoolean("isRetryAll") ?: false
+
         // Khởi tạo ViewModel bằng data nhận được
-        viewModel.initInitialData(deckId, rememberedCount, forgottenCount, totalCards)
+        viewModel.initInitialData(deckId, rememberedCount, forgottenCount, totalCards, isRetryForgotten, isRetryAll)
 
         binding.btnStop.setOnClickListener { showExitConfirmDialog() }
-        binding.btnExit.setOnClickListener { showExitConfirmDialog() }
-        binding.btnPracticeForgotten.setOnClickListener { viewModel.practiceForgottenWords() }
-        binding.btnRetryAll.setOnClickListener { showResetConfirmDialog() }
 
         binding.flashcardView.setOnTouchListener(SwipeTouchListener(
             onSwipeLeft = {
@@ -48,13 +50,10 @@ class ExerciseModeFragment : BaseFragment<FragmentExerciseModeBinding>(FragmentE
 
         viewModel.rememberedCount.observe(viewLifecycleOwner) { count ->
             binding.tvRememberedCount.text = count.toString()
-            binding.tvResultRemembered.text = count.toString()
-            updateResultPercentage()
         }
 
         viewModel.forgottenCount.observe(viewLifecycleOwner) { count ->
             binding.tvForgottenCount.text = count.toString()
-            binding.tvResultForgotten.text = count.toString()
         }
 
         viewModel.progress.observe(viewLifecycleOwner) { currentProgress ->
@@ -68,24 +67,22 @@ class ExerciseModeFragment : BaseFragment<FragmentExerciseModeBinding>(FragmentE
             )
         }
 
+        // Lắng nghe sự kiện hoàn thành để chuyển sang màn hình ExerciseResultFragment
         viewModel.isFinished.observe(viewLifecycleOwner) { isFinished ->
             if (isFinished) {
-                binding.layoutPractice.visibility = View.GONE
-                binding.layoutResult.visibility = View.VISIBLE
-            } else {
-                binding.layoutPractice.visibility = View.VISIBLE
-                binding.layoutResult.visibility = View.GONE
+                val actualDeckId = arguments?.getLong("deckId") ?: -1L
+                val bundle = bundleOf(
+                    "deckId" to actualDeckId,
+                    "rememberedCount" to (viewModel.rememberedCount.value ?: 0),
+                    "forgottenCount" to (viewModel.forgottenCount.value ?: 0),
+                    "totalCards" to (viewModel.totalCards.value ?: 1)
+                )
+                findNavController().navigate(
+                    R.id.action_exerciseModeFragment_to_exerciseResultFragment,
+                    bundle
+                )
             }
         }
-    }
-
-    private fun updateResultPercentage() {
-        val rem = viewModel.rememberedCount.value ?: 0
-        val total = viewModel.totalCards.value ?: 1
-        val percent = if (total > 0) (rem * 100) / total else 0
-
-        binding.tvPercentage.text = "$percent%"
-        binding.tvTotalLearned.text = "$rem/$total từ đã học"
     }
 
     private fun resetFlashcardView() {
@@ -100,28 +97,14 @@ class ExerciseModeFragment : BaseFragment<FragmentExerciseModeBinding>(FragmentE
         binding.flashcardView.flipFront()
     }
 
-    private fun showResetConfirmDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Luyện lại từ đầu?")
-            .setMessage("Tiến độ của bộ từ vựng này sẽ bị reset về 0%. Bạn có chắc chắn không?")
-            .setPositiveButton("Đồng ý") { _, _ -> viewModel.resetAndPracticeAll() }
-            .setNegativeButton("Hủy", null)
-            .show()
-    }
-
     private fun showExitConfirmDialog() {
         AlertDialog.Builder(requireContext())
-            .setTitle("Lưu và thoát")
-            .setMessage("Bạn có muốn lưu lại kết quả luyện tập không?")
-            .setPositiveButton("Lưu & Thoát") { _, _ ->
-                viewModel.saveProgressToApi { success ->
-                    findNavController().popBackStack()
-                }
-            }
-            .setNegativeButton("Thoát không lưu") { _, _ ->
+            .setTitle("Dừng luyện tập")
+            .setMessage("Bạn có chắc chắn muốn dừng luyện tập không? Tiến độ hiện tại vẫn được lưu tạm.")
+            .setPositiveButton("Thoát") { _, _ ->
                 findNavController().popBackStack()
             }
-            .setNeutralButton("Hủy", null)
+            .setNegativeButton("Hủy", null)
             .show()
     }
 }
