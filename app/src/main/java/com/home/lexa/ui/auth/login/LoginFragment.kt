@@ -120,6 +120,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                             val email = binding.inputEmail.getText().trim()
                             viewModel.sendOTP(email)
 
+                            viewModel.resetState()
+
                             val action = LoginFragmentDirections.actionSignupFragmentToVerifyEmail(email)
                             findNavController().navigate(action)
                         } else {

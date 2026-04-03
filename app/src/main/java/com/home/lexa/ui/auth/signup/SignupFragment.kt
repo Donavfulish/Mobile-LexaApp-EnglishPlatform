@@ -275,6 +275,9 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                         )
 
                         viewModel.sendOTP(email)
+
+                        viewModel.resetState()
+
                         navigateToOTPFragment(email)
                     } else {
                         Toast.makeText(requireContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show()
