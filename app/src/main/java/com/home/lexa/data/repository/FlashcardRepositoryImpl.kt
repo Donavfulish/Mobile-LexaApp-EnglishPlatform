@@ -42,7 +42,7 @@ class FlashcardRepositoryImpl(
 
     override suspend fun updateFlashcard(request: UpdateFlashcardRequest): Result<Boolean> {
         return try {
-            val response = apiService.updateFlashcard(request.flashcardId, request)
+            val response = apiService.updateFlashcard(request.deckId, request)
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {

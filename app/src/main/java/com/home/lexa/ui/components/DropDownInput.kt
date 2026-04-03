@@ -48,4 +48,7 @@ class DropDownInput @JvmOverloads constructor(
             popup.show()
         }
     }
+    fun getSelection(): String {
+        return binding.tvSelectedValue.text.toString()
+    }
 }

@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.fragmentContainer) as NavHostFragment
         val navController = navHostFragment.navController
 
-
+        binding.appBarLayout.setOnClickBack()
         /*
         + bindding.bottomNavigation: lấy thành phần bottomNavigation trong file main_activity.xml
         + setOnItemSelectedListener: hàm lắng nghe sự kiện khi ấn một item trong bottomNavigation
@@ -60,36 +60,44 @@ class MainActivity : AppCompatActivity() {
         + addOnDestinationChangedListener: hàm bắt sự kiện khi app chuyển sang màn hình mới
         + binding.bottomNavigation.setSelectedTab(destination.id): set lại id của tab được chọn hiện tại
          */
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            binding.bottomNavigationMain.setSelectedTab(destination.id)
-            if (destination.id == R.id.loginFragment || destination.id == R.id.signUpFragment) {
-                binding.bottomNavigationMain.visibility = View.GONE
-                binding.appBarLayout.visibility = View.GONE
-            } else {
-                binding.bottomNavigationMain.visibility = View.VISIBLE
-                binding.appBarLayout.visibility = View.VISIBLE
-            }
-        }
-        navController.addOnDestinationChangedListener { _, destination, _ ->
+
+        navController.addOnDestinationChangedListener { _, destination, arguments ->
 
             val headerView = LayoutInflater.from(this).inflate(R.layout.logo_header, null)
             val tvTitle = headerView.findViewById<TextView>(R.id.tvHeaderTitle)
 
             when (destination.id) {
+                //AUTH
+                R.id.loginFragment, R.id.signUpFragment -> {
+                    binding.bottomNavigationMain.visibility = View.GONE
+                    binding.appBarLayout.visibility = View.GONE
+                }
+                // MAIN TABS
                 R.id.homeFragment -> {
                     tvTitle.text = "Chào ${userManager.getUserName() ?: "Alex"}"
                     binding.appBarLayout.setBackButtonVisible(false)
+                    binding.bottomNavigationMain.visibility = View.VISIBLE
+                    binding.appBarLayout.visibility = View.VISIBLE
+
+                    binding.appBarLayout.insertCustomeView(headerView)
                 }
 
                 R.id.libraryFragment -> {
                     tvTitle.text = "Thư viện"
                     binding.appBarLayout.setBackButtonVisible(false)
+                    binding.bottomNavigationMain.visibility = View.VISIBLE
+                    binding.appBarLayout.visibility = View.VISIBLE
+                    binding.appBarLayout.insertCustomeView(headerView)
+                    binding.appBarLayout.setBottomBorderVisible(isVisible = false)
                 }
 
                 R.id.courseFragment -> {
                     tvTitle.text = "Khóa học"
                     binding.appBarLayout.setBackButtonVisible(false)
                     binding.appBarLayout.setOnClickBack()
+                    binding.bottomNavigationMain.visibility = View.VISIBLE
+                    binding.appBarLayout.visibility = View.VISIBLE
+                    binding.appBarLayout.insertCustomeView(headerView)
                 }
 
                 R.id.profileFragment -> {
@@ -97,11 +105,54 @@ class MainActivity : AppCompatActivity() {
 
                     binding.appBarLayout.setBackButtonVisible(false)
                     binding.appBarLayout.setOnClickBack()
+
+                    binding.bottomNavigationMain.visibility = View.VISIBLE
+                    binding.appBarLayout.visibility = View.VISIBLE
+                    binding.appBarLayout.insertCustomeView(headerView)
+                }
+                //SECOND TABS
+                R.id.vocabularyFlashcardFragment -> {
+
+                    binding.bottomNavigationMain.visibility = View.GONE
+                    binding.appBarLayout.visibility = View.VISIBLE
+                    binding.appBarLayout.setBackButtonVisible(true) // Bật nút back
+                    binding.appBarLayout.removeCustomView()
+                    val deckTitle = arguments?.getString("DECK_TITLE_KEY") ?: "Chi tiết bộ từ vựng"
+                    binding.appBarLayout.setText(deckTitle)
+
+                }
+                //Thirt tabs
+                R.id.flashcardAddEditFragment -> {
+
+                    binding.bottomNavigationMain.visibility = View.GONE
+                    binding.appBarLayout.visibility = View.VISIBLE
+                    binding.appBarLayout.setBackButtonVisible(true)
+                    binding.appBarLayout.removeCustomView()
+                    val isEditMode = arguments?.getBoolean("IS_EDIT_KEY") ?: false
+
+
+                    val title = if (isEditMode ) {
+                        "Chỉnh sửa từ vựng"
+                    } else {
+                        "Thêm từ vựng mới"
+                    }
+                    binding.appBarLayout.setText(title)
+
+                }
+                R.id.exerciseModeFragment -> {
+
+                    binding.bottomNavigationMain.visibility = View.GONE
+                    binding.appBarLayout.visibility = View.VISIBLE
+                    binding.appBarLayout.setBackButtonVisible(true)
+                    binding.appBarLayout.removeCustomView()
+                    binding.appBarLayout.setText("Chế độ luyện tập")
+
                 }
             }
 
 
-            binding.appBarLayout.insertCustomeView(headerView)
+
+
         }
     }
 
