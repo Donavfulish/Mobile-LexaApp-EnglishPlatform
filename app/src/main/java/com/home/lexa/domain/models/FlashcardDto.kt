@@ -46,3 +46,15 @@ data class UpdateFlashcardRequest(
     val example: String? = null,
     val partOfSpeechId: Int? = null
 )
+
+@Serializable
+data class FlashcardResultItem(
+    val flashcardId: Int,
+    val status: String?
+)
+
+@Serializable
+data class UpdateFlashcardResultRequest(
+    val deckId: Long,
+    val results: List<FlashcardResultItem>
+)
