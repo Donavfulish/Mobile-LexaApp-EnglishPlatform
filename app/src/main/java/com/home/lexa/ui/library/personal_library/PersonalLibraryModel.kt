@@ -4,11 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.home.lexa.domain.models.CreateDeckRequest
 import com.home.lexa.domain.models.DeckDto
 import com.home.lexa.domain.models.IntroData
+import com.home.lexa.domain.models.mockUserInfo
 import com.home.lexa.domain.repository.DeckRepository
 import com.home.lexa.domain.repository.IntroRepository
 import kotlinx.coroutines.launch
+
+
 
 class PersonalLibraryModel(private val repository: DeckRepository) : ViewModel() {
 
@@ -32,6 +36,23 @@ class PersonalLibraryModel(private val repository: DeckRepository) : ViewModel()
             }.onFailure {
                 _decks.value = emptyList()
             }
+
+            _isLoading.value = false
+        }
+    }
+    fun createDeck(title: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+
+            val request = CreateDeckRequest(
+                title = title,
+                creatorId = mockUserInfo.id
+            )
+
+            val result = repository.createDeck(request)
+
+            fetchAllDecks()
+
 
             _isLoading.value = false
         }
