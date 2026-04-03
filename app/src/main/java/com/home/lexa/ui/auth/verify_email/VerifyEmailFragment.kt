@@ -60,7 +60,6 @@ class VerifyEmailFragment : BaseFragment<FragmentVerifyEmailBinding>(FragmentVer
                         binding.otpInputs.setInputEnabled(false)
                     }
                     is AuthState.Success -> {
-                        val navController = findNavController()
                         viewModel.commitEmailVerified()
 
                         val action = VerifyEmailFragmentDirections.actionVerifyEmailToHomeFragment()

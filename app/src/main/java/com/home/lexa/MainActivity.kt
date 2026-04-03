@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
          */
         navController.addOnDestinationChangedListener { _, destination, _ ->
             binding.bottomNavigationMain.setSelectedTab(destination.id)
-            if (destination.id == R.id.loginFragment || destination.id == R.id.signUpFragment) {
+            if (destination.id == R.id.loginFragment || destination.id == R.id.signUpFragment || destination.id == R.id.verifyEmail) {
                 binding.bottomNavigationMain.visibility = View.GONE
                 binding.appBarLayout.visibility = View.GONE
             } else {

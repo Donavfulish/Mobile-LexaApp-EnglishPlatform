@@ -15,8 +15,8 @@
 
         android:stateListAnimator="@null"
 
-        android:itemBackground="@android:color/transparent"
-        app:itemBackground="@android:color/transparent"
+        android:itemBackground="@android:color/white"
+        app:itemBackground="@android:color/white"
 
         android:textSize="24sp"
         app:itemCount="6"

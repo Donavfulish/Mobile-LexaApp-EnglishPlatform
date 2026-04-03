@@ -2,6 +2,7 @@ package com.home.lexa.ui.components
 
 import android.content.Context
 import android.graphics.Color
+import android.text.InputType
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.inputmethod.InputMethodManager
@@ -62,15 +63,24 @@ class Auth_OTPBar @JvmOverloads constructor(
 
     fun setInputEnabled(enabled: Boolean) {
         binding.pinview.apply {
+            // GIỮ NGUYÊN isFocusable = true ĐỂ KHÔNG BỊ ĐỔI MÀU HỆ THỐNG
+            isFocusable = true
+            isFocusableInTouchMode = true
             isFocusable = enabled
             isFocusableInTouchMode = enabled
             isCursorVisible = enabled
             alpha = 1.0f
 
             if (enabled) {
+//                inputType = InputType.TYPE_CLASS_NUMBER
+//                requestFocus()
                 focusAndShowKeyboard()
             } else {
-                clearFocus()
+                inputType = InputType.TYPE_NULL
+//                val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//                imm.hideSoftInputFromWindow(windowToken, 0)
+                val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(windowToken, 0)
             }
         }
     }
@@ -85,9 +95,9 @@ class Auth_OTPBar @JvmOverloads constructor(
         val errorColor = Color.parseColor("#FF0000")
         binding.pinview.apply {
             setLineColor(errorColor)
+            setItemBackgroundColor(Color.WHITE)
             // Lắc nhẹ máy để báo lỗi (User sẽ hiểu là sai mà không cần nhìn màu xám)
             animate().translationX(10f).setDuration(50).setInterpolator(android.view.animation.CycleInterpolator(3f)).start()
-            setItemBackgroundColor(Color.WHITE)
         }
     }
 
