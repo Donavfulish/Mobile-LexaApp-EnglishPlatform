@@ -6,6 +6,7 @@ import com.home.lexa.domain.models.CreateFlashcardRequest
 import com.home.lexa.domain.models.DetailFlashcard
 import com.home.lexa.domain.models.DetailFlashcardWithResult
 import com.home.lexa.domain.models.UpdateFlashcardRequest
+import com.home.lexa.domain.models.UpdateFlashcardResultRequest
 import com.home.lexa.domain.repository.FlashcardRepository
 
 class FlashcardRepositoryImpl(
@@ -85,6 +86,21 @@ class FlashcardRepositoryImpl(
                 Result.success(body.data ?: true)
             } else {
                 Result.failure(Exception(body?.message ?: "Lỗi khi xóa flashcard"))
+            }
+        } catch (e: Exception) {
+            Result.failure(Exception("Lỗi kết nối: ${e.message}"))
+        }
+    }
+
+    override suspend fun updateFlashcardResults(deckId: Long, request: UpdateFlashcardResultRequest): Result<Boolean> {
+        return try {
+            val response = apiService.updateFlashcardResults(deckId, request)
+            val body = response.body()
+
+            if (response.isSuccessful && body?.success == true) {
+                Result.success(true)
+            } else {
+                Result.failure(Exception(body?.message ?: "Lỗi khi cập nhật kết quả flashcard"))
             }
         } catch (e: Exception) {
             Result.failure(Exception("Lỗi kết nối: ${e.message}"))
