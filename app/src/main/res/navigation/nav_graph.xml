@@ -93,6 +93,9 @@
         android:name="com.home.lexa.ui.course.vocabulary_flashcard.VocabularyFlashcardFragment"
         android:label="VocabularyFlashcardFragment" >
         <action
+            android:id="@+id/action_vocabularyFlashcardFragment_to_flashcardAddEditFragment"
+            app:destination="@id/flashcardAddEditFragment" />
+        <action
             android:id="@+id/action_vocabularyFlashcardFragment_to_exerciseModeFragment"
             app:destination="@id/exerciseModeFragment" />
     </fragment>
@@ -164,7 +167,11 @@
     <fragment
         android:id="@+id/libraryFragment"
         android:name="com.home.lexa.ui.library.LibraryFragment"
-        android:label="LibraryFragment" />
+        android:label="LibraryFragment" >
+        <action
+            android:id="@+id/action_libraryFragment_to_vocabularyFlashcardFragment"
+            app:destination="@id/vocabularyFlashcardFragment" />
+    </fragment>
     <fragment
         android:id="@+id/favoriteLibraryFragment"
         android:name="com.home.lexa.ui.library.favorite_library.FavoriteLibraryFragment"

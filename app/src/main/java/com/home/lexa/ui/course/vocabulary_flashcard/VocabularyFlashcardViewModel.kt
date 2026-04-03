@@ -54,4 +54,19 @@ class VocabularyFlashcardViewModel(
             }
         }
     }
+    fun deleteFlashcard(flashcardId: Long, deckId: Long) { // Hoặc kiểu Int/String tùy cấu trúc của bạn
+        viewModelScope.launch {
+            try {
+
+
+                flashcardRepository.deleteFlashcard(flashcardId) // Gọi hàm xóa từ Repository
+                loadFlashcardDetail(deckId)
+
+            } catch (e: Exception) {
+                // Xử lý lỗi (báo lỗi qua LiveData/SharedFlow để Fragment hiện Toast)
+            } finally {
+                // _isLoading.value = false
+            }
+        }
+    }
 }

@@ -17,6 +17,8 @@ import com.home.lexa.domain.models.mockVocabularyData
 class FlashcardMini @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ScalableContainer(context, attrs) {
+    var onEditClick: ((Vocabulary) -> Unit)? = null
+    var onDeleteClick: ((Vocabulary) -> Unit)? = null
     private val binding = FlashcardMiniBinding.inflate(LayoutInflater.from(context), this)
     private var isFront = true
     private var isAnimating = false
@@ -38,8 +40,8 @@ class FlashcardMini @JvmOverloads constructor(
         binding.layoutBack.root.cameraDistance = scale
 
         binding.layoutFront.btnZoom.setOnClickListener { zoom() }
-        binding.layoutFront.btnEdit.setOnClickListener { onClickEdit() }
-        binding.layoutFront.btnDelete.setOnClickListener { onClickDelete() }
+        binding.layoutFront.btnEdit.setOnClickListener { onEditClick?.invoke(data) }
+        binding.layoutFront.btnDelete.setOnClickListener { onDeleteClick?.invoke(data) }
         binding.layoutBack.btnSound.setOnClickListener { pronounce() }
         setOnClickListener { flipCard() }
     }
@@ -99,14 +101,6 @@ class FlashcardMini @JvmOverloads constructor(
     }
 
     // Bắt sự kiện bấm nút Edit
-    fun onClickEdit() {
-        // TODO chuyển tới trang Edit Flashcard
-    }
-
-    // Bắt sự kiện bấm nút Delete
-    fun onClickDelete() {
-        // TODO hiện confirmBox xóa flashcard
-    }
 
     // Tác vụ phát âm khi bấm nút
     fun pronounce() {

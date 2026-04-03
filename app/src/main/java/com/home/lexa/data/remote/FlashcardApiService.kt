@@ -33,7 +33,7 @@ interface FlashcardApiService {
 
     @PATCH("/api/decks/{deckId}/flashcards")
     suspend fun updateFlashcard(
-        @Path("flashcardId") id: Long,
+        @Path("deckId") id: Long,
         @Body request: UpdateFlashcardRequest
     ): Response<ApiResponse<Boolean>>
 
