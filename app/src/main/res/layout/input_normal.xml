@@ -37,6 +37,8 @@
             android:id="@+id/etInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:saveEnabled="false"
+            android:importantForAutofill="no"
             android:background="@android:color/transparent"
             android:hint="Nhập nội dung..."
             android:textSize="16sp" />

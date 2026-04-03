@@ -144,4 +144,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        // Xóa trạng thái cũ để không bị trigger lại logic Success
+        viewModel.resetState()
+    }
 }
