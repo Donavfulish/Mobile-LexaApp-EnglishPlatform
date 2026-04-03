@@ -64,7 +64,7 @@ class ExerciseResultFragment : BaseFragment<FragmentExerciseResultBinding>(Fragm
             .setTitle("Lưu và thoát")
             .setMessage("Bạn có muốn lưu lại kết quả luyện tập không?")
             .setPositiveButton("Lưu & Thoát") { _, _ ->
-                viewModel.saveProgressToApi(deckId) {
+                viewModel.saveProgressToApi(deckId, remembered = rememberedCount, forgotten = forgottenCount) {
                     // Pop ngược về màn hình chi tiết bộ từ vựng
                     findNavController().popBackStack(R.id.vocabularyFlashcardFragment, false)
                 }
