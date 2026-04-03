@@ -65,7 +65,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.loginFragment,
                 R.id.signUpFragment,
                 R.id.vocabularyFlashcardFragment,
-                R.id.exerciseModeFragment
+                R.id.exerciseModeFragment,
+                R.id.exerciseResultFragment
             )
             binding.bottomNavigationMain.setSelectedTab(destination.id)
             if (destination.id in hideLayoutFragment) {
