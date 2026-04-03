@@ -180,7 +180,15 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.home.lexa.ui.profile.profile.ProfileFragment"
-        android:label="ProfileFragment" />
+        android:label="ProfileFragment">
+
+        <action
+            android:id="@+id/action_profileFragment_to_profilePersonalInformationFragment"
+            app:destination="@id/profilePersonalInformationFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_profileNotificationFragment"
+            app:destination="@id/profileNotificationFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/profileChangePasswordFragment"

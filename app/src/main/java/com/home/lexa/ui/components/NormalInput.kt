@@ -7,21 +7,17 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
-import androidx.annotation.ColorInt
-import androidx.compose.ui.graphics.Color
+import androidx.annotation.DrawableRes
 import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
 import com.home.lexa.databinding.InputNormalBinding
-import com.home.lexa.databinding.ButtonLexaBinding
 
-// Kế thừa FrameLayout để bọc component XML lại
 class NormalInput @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val binding = InputNormalBinding.inflate(LayoutInflater.from(context), this, true)
 
-    // Set giá trị label và hiển`    thị Label trên ô Input
     fun setLabel(text: String?) {
         if (text.isNullOrEmpty()) {
             binding.tvLabel.visibility = View.GONE
@@ -31,25 +27,42 @@ class NormalInput @JvmOverloads constructor(
         }
     }
 
-    // Cài đặt nội dung hint
     fun setPlaceHolderText(text: String?) {
         if (text.isNullOrEmpty()) return
-
         binding.etInput.hint = text
     }
 
-    // Cài đặt icon đầu ô Input (resId: id của drawable resource, colorHex: "#123456")
-    fun setIcon(resId: Int?, colorHex: String? = "#575E6B") {
+    fun setIcon(@DrawableRes resId: Int?, colorHex: String? = "#575E6B") {
         if (resId == null || resId == -1) {
-            // Nếu không có icon hoặc id không hợp lệ, ẩn ImageView đi để EditText tràn ra
             binding.ivIcon.visibility = View.GONE
         } else {
             binding.ivIcon.setImageResource(resId)
-
             binding.ivIcon.setColorFilter(colorHex!!.toColorInt(), PorterDuff.Mode.SRC_IN)
-
             binding.ivIcon.visibility = View.VISIBLE
         }
+    }
+
+    fun setEndIcon(@DrawableRes resId: Int?, colorHex: String? = "#575E6B") {
+        if (resId == null || resId == -1) {
+            binding.ivEndIcon.visibility = View.GONE
+        } else {
+            binding.ivEndIcon.setImageResource(resId)
+            binding.ivEndIcon.setColorFilter(colorHex!!.toColorInt(), PorterDuff.Mode.SRC_IN)
+            binding.ivEndIcon.visibility = View.VISIBLE
+        }
+    }
+
+    fun setOnEndIconClickListener(onClick: () -> Unit) {
+        binding.ivEndIcon.setOnClickListener {
+            onClick.invoke()
+        }
+    }
+
+    fun setOnInputClickListener(onClick: () -> Unit) {
+        binding.etInput.isFocusable = false
+        binding.etInput.isClickable = true
+        binding.etInput.setOnClickListener { onClick() }
+        binding.containerInput.setOnClickListener { onClick() }
     }
 
     fun getText(): String = binding.etInput.text.toString()
@@ -58,33 +71,24 @@ class NormalInput @JvmOverloads constructor(
         binding.etInput.setText(text)
     }
 
-    // Giúp ViewModel lắng nghe được sự thay đổi của text
     fun onTextChanged(action: (String) -> Unit) {
-        binding.etInput.doOnTextChanged { text, start, before, count ->
+        binding.etInput.doOnTextChanged { text, _, _, _ ->
             action(text.toString())
         }
     }
 
     fun setInputHeight(heightInDp: Int) {
         val params = binding.containerInput.layoutParams
-        // Chuyển từ Dp sang Pixel
         params.height = (heightInDp * context.resources.displayMetrics.density).toInt()
         binding.containerInput.layoutParams = params
-
-        // Nếu chiều cao lớn, cho chữ lên phía trên cho đẹp
-        if (heightInDp > 60) {
-            binding.etInput.gravity = Gravity.TOP
-        }
+        
+        binding.containerInput.gravity = Gravity.TOP
+        binding.etInput.gravity = Gravity.TOP
+            // Thêm padding top nếu cần để chữ không dính sát viền trên
+        binding.etInput.setPadding(0, (4 * context.resources.displayMetrics.density).toInt(), 0, 0)
     }
 
     fun setEnable(isEnable: Boolean) {
         binding.etInput.isEnabled = isEnable
     }
-
-    // Hàm nhận function (callback) xử lý click
-    /*fun setOnLexaClickListener(onClick: () -> Unit) {
-        binding.root.setOnClickListener {
-            onClick.invoke()
-        }
-    }*/
 }

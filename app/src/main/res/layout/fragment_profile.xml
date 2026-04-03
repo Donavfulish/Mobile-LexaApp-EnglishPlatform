@@ -83,12 +83,6 @@
                 tools:text="Teacher" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginHorizontal="20dp"
-            android:background="#EEEEEE" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -116,7 +110,14 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="4dp"
-                android:layout_weight="1" />
+                android:layout_weight="1" >
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:background="#EEEEEE" />
+            </com.home.lexa.ui.components.StatsBox>
 
             <com.home.lexa.ui.components.StatsBox
                 android:id="@+id/statsVocab"
@@ -221,6 +222,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:background="#F0F0F0" />
+
                 <com.home.lexa.ui.components.SettingMenuItem
                     android:id="@+id/menuPersonalInfo"
                     android:layout_width="match_parent"
@@ -228,12 +235,6 @@
                     app:menuIcon="@drawable/ic_person"
                     app:menuTitle="Thông tin cá nhân"
                     app:menuValue="Chỉnh sửa" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginHorizontal="16dp"
-                    android:background="#F0F0F0" />
 
                 <com.home.lexa.ui.components.SettingMenuItem
                     android:id="@+id/menuEmail"

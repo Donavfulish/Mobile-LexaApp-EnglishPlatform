@@ -5,6 +5,7 @@
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
     <View
+
         android:id="@+id/switchTrack"
         android:layout_width="48dp"
         android:layout_height="24dp"

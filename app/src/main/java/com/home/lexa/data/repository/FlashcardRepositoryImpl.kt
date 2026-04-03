@@ -15,11 +15,16 @@ class FlashcardRepositoryImpl(
 
     override suspend fun getAllFlashcard(deckId: Long): Result<List<DetailFlashcard>> {
         return try {
+            val flashcards: List<DetailFlashcard>? = AppMemoryCache.get("getAllFlashcard_${deckId}");
+            if (flashcards != null){
+                return Result.success(flashcards);
+            }
             val response = apiService.getAllFlashcard(deckId)
             val body = response.body()
-
             if (response.isSuccessful && body?.success == true) {
-                Result.success(body.data ?: emptyList())
+                val data = body.data ?: emptyList();
+                AppMemoryCache.put("getAllFlashcard_${deckId}", data);
+                Result.success(data);
             } else {
                 Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ"))
             }

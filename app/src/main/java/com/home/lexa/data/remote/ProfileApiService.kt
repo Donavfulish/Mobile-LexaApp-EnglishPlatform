@@ -13,6 +13,6 @@ interface ProfileApiService {
     @GET("api/profile")
     suspend fun getProfile(): Response<ApiResponse<Profile>>
 
-    @PATCH("api/profile/update")
+    @PATCH("api/profile")
     suspend fun updateProfile(@Body data: UpdateProfileRequest): Response<ApiResponse<Boolean?>>
 }

@@ -3,9 +3,7 @@ package com.home.lexa.domain.repository
 import com.home.lexa.domain.models.Profile
 import com.home.lexa.domain.models.UpdateProfileRequest
 
-// This file was a duplicate and has been deprecated in favor of ProfileRepository.kt
-// Use ProfileRepository instead.
-interface ProfileRepositoryDeprecated {
+interface ProfileRepository {
     suspend fun getProfile(): Result<Profile>
     suspend fun updateProfile(data: UpdateProfileRequest): Result<Boolean>
 }

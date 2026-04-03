@@ -1,6 +1,7 @@
 package com.home.lexa.data.repository
 
 import com.home.lexa.data.remote.DeckApiService
+import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.CreateDeckRequest
 import com.home.lexa.domain.models.CreateDeckResultRequest
 import com.home.lexa.domain.models.DeckDto
@@ -15,11 +16,17 @@ class DeckRepositoryImpl(
 
     override suspend fun getAllDecks(): Result<List<DeckDto>> {
         return try {
+            val decks: List<DeckDto>? = AppMemoryCache.get("getAllDecks");
+            if (decks != null){
+                return Result.success(decks);
+            }
             val response = apiService.getAllDecks()
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
-                Result.success(body.data ?: emptyList())
+                val data = body.data ?: emptyList();
+                AppMemoryCache.put("getAllDecks", data);
+                Result.success(data);
             } else {
                 Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ"))
             }
@@ -30,11 +37,17 @@ class DeckRepositoryImpl(
 
     override suspend fun getDeckResult(deckId: Long): Result<DeckResult?> {
         return try {
+            val decks: DeckResult? = AppMemoryCache.get("getDeckResult_${deckId}");
+            if (decks != null){
+                return Result.success(decks);
+            }
             val response = apiService.getDeckResult(deckId)
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
-                Result.success(body.data)
+                val data = body.data;
+                AppMemoryCache.put("getDeckResult_${deckId}", data as Any);
+                Result.success(data);
             } else {
                 Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ"))
             }
