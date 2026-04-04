@@ -16,8 +16,9 @@ class ToggleSwitch  @JvmOverloads constructor(
 
     var isChecked: Boolean = false
         set(value) {
+            if (field == value) return
             field = value
-            updateUI(animate = true)
+            updateUI(animate = isAttachedToWindow)
             onCheckedChangeListener?.invoke(value)
         }
 
@@ -34,20 +35,25 @@ class ToggleSwitch  @JvmOverloads constructor(
     private fun updateUI(animate: Boolean) {
         binding.switchTrack.isSelected = isChecked
 
-        var translationX = if (isChecked) {
-            (binding.switchTrack.width - binding.switchThumb.width - 8).toFloat()
-        } else {
-            0f
-        }
+        binding.root.post {
+            val trackWidth = binding.switchTrack.width
+            val thumbWidth = binding.switchThumb.width
 
-        if (animate) {
-            binding.switchThumb.animate()
-                .translationX(translationX)
-                .setDuration(200)
-                .start()
-        } else {
-            binding.switchThumb.post {
-                binding.switchThumb.translationX = if (isChecked) 70f else 0f // Giá trị tạm tính
+            if (trackWidth == 0) return@post
+
+            val translationX = if (isChecked) {
+                (trackWidth - thumbWidth - 8).toFloat()
+            } else {
+                0f
+            }
+
+            if (animate) {
+                binding.switchThumb.animate()
+                    .translationX(translationX)
+                    .setDuration(200)
+                    .start()
+            } else {
+                binding.switchThumb.translationX = translationX
             }
         }
     }

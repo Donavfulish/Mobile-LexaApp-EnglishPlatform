@@ -60,6 +60,41 @@ class TopAppBar @JvmOverloads constructor(
         binding.title.visibility = View.GONE
     }
 
+    fun insertCustomeViewRight(view: View) {
+        if (customViewId != View.NO_ID) {
+            val oldView = binding.topBarLayout.findViewById<View>(customViewId)
+            if (oldView != null) {
+                binding.topBarLayout.removeView(oldView)
+            }
+        }
+
+        if (view.id == View.NO_ID) {
+            view.id = View.generateViewId()
+        }
+        customViewId = view.id
+
+        binding.topBarLayout.addView(view)
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(binding.topBarLayout)
+
+        constraintSet.constrainWidth(view.id, ConstraintSet.WRAP_CONTENT)
+        constraintSet.constrainHeight(view.id, ConstraintSet.WRAP_CONTENT)
+
+        constraintSet.connect(
+            view.id, ConstraintSet.END,
+            if (binding.rightBtn.visibility == View.VISIBLE) binding.rightBtn.id else ConstraintSet.PARENT_ID,
+            if (binding.rightBtn.visibility == View.VISIBLE) ConstraintSet.START else ConstraintSet.END,
+            40
+        )
+
+        constraintSet.connect(view.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+        constraintSet.connect(view.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+
+        constraintSet.applyTo(binding.topBarLayout)
+
+        binding.title.visibility = View.VISIBLE
+    }
+
     // Hàm MỚI: Gọi hàm này khi chuyển sang trang khác (như Thư viện) để xóa sạch cái Logo đi
     fun removeCustomView() {
         if (customViewId != View.NO_ID) {

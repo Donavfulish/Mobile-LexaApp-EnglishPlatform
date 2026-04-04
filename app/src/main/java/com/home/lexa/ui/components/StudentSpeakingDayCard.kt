@@ -42,4 +42,10 @@ class StudentSpeakingDayCard @JvmOverloads constructor(
         }
     }
 
+    fun setOnClickAction(action: () -> Unit) {
+        binding.root.setOnClickListener {
+            action()
+        }
+    }
+
 }
