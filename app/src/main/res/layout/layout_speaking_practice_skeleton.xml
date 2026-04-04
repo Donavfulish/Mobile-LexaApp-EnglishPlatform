@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="16dp">
+
+    <!-- Title Skeleton -->
+    <View
+        android:id="@+id/skTitle"
+        android:layout_width="150dp"
+        android:layout_height="24dp"
+        android:background="@color/gray_E0E0E5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Input Box Skeleton -->
+    <View
+        android:id="@+id/skInput"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_gray_rounded"
+        app:layout_constraintTop_toBottomOf="@id/skTitle" />
+
+    <!-- Section Title Skeleton -->
+    <View
+        android:id="@+id/skSectionTitle"
+        android:layout_width="180dp"
+        android:layout_height="22dp"
+        android:layout_marginTop="32dp"
+        android:background="@color/gray_E0E0E5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/skInput" />
+
+    <!-- List Items Skeleton (Giả lập danh sách đoạn văn) -->
+    <View
+        android:id="@+id/skItem1"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_gray_rounded"
+        app:layout_constraintTop_toBottomOf="@id/skSectionTitle" />
+
+    <View
+        android:id="@+id/skItem2"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_gray_rounded"
+        app:layout_constraintTop_toBottomOf="@id/skItem1" />
+
+    <View
+        android:id="@+id/skItem3"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_gray_rounded"
+        app:layout_constraintTop_toBottomOf="@id/skItem2" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

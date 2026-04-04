@@ -7,6 +7,7 @@ import com.home.lexa.domain.models.SpeakingCourseDetailDto
 import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.domain.models.GetFeaturedCourseResponse
 import com.home.lexa.domain.models.GetStudyingCourseResponse
+import com.home.lexa.domain.models.Topic
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -16,6 +17,9 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface CourseApiService {
+
+    @GET("api/topics")
+    suspend fun getTopics(): Response<ApiResponse<List<Topic>>>
 
     // Gọi GET /api/courses
     @GET("api/courses")

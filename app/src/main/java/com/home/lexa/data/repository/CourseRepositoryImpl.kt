@@ -7,6 +7,7 @@ import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.domain.models.SpeakingCourseDetailDto
 import com.home.lexa.domain.models.GetStudyingCourseResponse
+import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.repository.CourseRepository
 import com.home.lexa.domain.models.GetFeaturedCourseResponse
 
@@ -40,6 +41,21 @@ class CourseRepositoryImpl(
         } catch (e: Exception) {
             // Lỗi do mất mạng, không connect được server...
              Result.failure(Exception("Không thể kết nối. Vui lòng kiểm tra mạng!"))
+        }
+    }
+
+    override suspend fun getAllTopics(): Result<List<Topic>> {
+        return try {
+            val response = apiService.getTopics()
+            val body = response.body()
+
+            if (response.isSuccessful && body?.success == true) {
+                Result.success(body.data ?: emptyList())
+            } else {
+                Result.failure(Exception(body?.message ?: "Lấy danh sách chủ đề thất bại"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 

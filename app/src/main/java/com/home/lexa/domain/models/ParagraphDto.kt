@@ -1,6 +1,14 @@
 package com.home.lexa.domain.models
 
+import kotlinx.serialization.Serializable
+
 // --- REQUESTS ---
+@Serializable
+data class ShortParagraphDto(
+    val id: Long,
+    val paragraph: String?,
+    val paragraph_order: Long?,
+)
 
 data class CreateParagraphRequest(
     val speakingDayId: Long,

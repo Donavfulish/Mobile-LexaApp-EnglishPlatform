@@ -3,18 +3,35 @@ package com.home.lexa.data.repository
 import com.home.lexa.data.remote.SpeakingDayApiService
 import com.home.lexa.domain.models.CreateSpeakingDayRequest
 import com.home.lexa.domain.models.EditSpeakingDayRequest
+import com.home.lexa.domain.models.ShortParagraphSpeakingDayDto
 import com.home.lexa.domain.repository.SpeakingDayRepository
 
 class SpeakingDayRepositoryImpl(
     private val apiService: SpeakingDayApiService
 ): SpeakingDayRepository {
+
+    override suspend fun getParagraphSpeakingDay(speakingDayId: Long): Result<ShortParagraphSpeakingDayDto?> {
+        return try {
+            val response = apiService.getParagraphSpeakingDay(speakingDayId)
+            val body = response.body()
+
+            if (response.isSuccessful && body?.success == true) {
+                Result.success(body.data ?: null)
+            } else {
+                Result.failure(Exception(body?.message ?: "Lấy danh sách bài học thất bại"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     override suspend fun createSpeakingDay(request: CreateSpeakingDayRequest): Result<Long> {
         return try {
             val response = apiService.createSpeakingDay(request)
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
-                val newId = body.data?.get("id") ?: throw Exception("Không lấy được ID")
+                val newId = body.data ?: throw Exception("Không lấy được ID")
                 Result.success(newId)
             } else {
                 Result.failure(Exception(body?.message ?: "Tạo bài học thất bại"))

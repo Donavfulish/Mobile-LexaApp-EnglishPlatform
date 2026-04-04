@@ -43,4 +43,10 @@ class TeacherSpeakingDayCard @JvmOverloads constructor(
         this.paragraphNum = _number
         binding.tvParagraphNum.text = "$paragraphNum đoạn văn"
     }
+
+    fun setOnClickAction(action: () -> Unit) {
+        binding.root.setOnClickListener {
+            action()
+        }
+    }
 }
