@@ -33,7 +33,10 @@ class SpeakingPracticeViewModel(
 
     private val _deleteStatus = MutableLiveData<Result<Unit>?>()
     val deleteStatus: LiveData<Result<Unit>?> get() = _deleteStatus
-    
+
+    private val _deleteSpeakingDayStatus = MutableLiveData<Result<Unit>?>()
+    val deleteSpeakingDayStatus: LiveData<Result<Unit>?> get() = _deleteSpeakingDayStatus
+
     fun loadParagraphList(speakingDayId: Long){
         viewModelScope.launch {
             try {
@@ -112,6 +115,19 @@ class SpeakingPracticeViewModel(
         }
     }
 
+    fun deleteSpeakingDay(speakingDayId: Long) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val result = speakingDayRepository.deleteSpeakingDay(speakingDayId)
+            result.onSuccess {
+                _deleteSpeakingDayStatus.value = Result.success(Unit)
+            }.onFailure {
+                _deleteSpeakingDayStatus.value = Result.failure(it)
+                _isLoading.value = false
+            }
+        }
+    }
+
     fun resetUpdateStatus() {
         _updateStatus.value = null
     }
@@ -126,5 +142,9 @@ class SpeakingPracticeViewModel(
 
     fun resetUpdateParagraphStatus() {
         _updateParagraphStatus.value = null
+    }
+
+    fun resetDeleteSpeakingDayStatus() {
+        _deleteSpeakingDayStatus.value = null
     }
 }

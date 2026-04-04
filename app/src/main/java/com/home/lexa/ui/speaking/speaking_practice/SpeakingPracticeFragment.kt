@@ -11,13 +11,12 @@ import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentSpeakingPracticeBinding
 import com.home.lexa.domain.models.CreateSpeakingDayRequest
-import com.home.lexa.domain.models.EditCourseRequest
+import androidx.navigation.fragment.findNavController
 import com.home.lexa.domain.models.EditSpeakingDayRequest
 import com.home.lexa.ui.components.NormalInput
 import com.home.lexa.ui.components.ParagraphEditCard
 import com.home.lexa.ui.components.PopUpInput
 import com.home.lexa.ui.components.Popup
-import com.home.lexa.ui.components.ToggleSwitch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(FragmentSpeakingPracticeBinding::inflate) {
@@ -34,6 +33,25 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
             setOnClickBack()
             setText("Ngày ${order + 1}")
             setBackButtonVisible(true)
+        }
+        activityBinding.appBarLayout.apply {
+            setIconRightButton(ContextCompat.getDrawable(requireContext(), R.drawable.trash)!!)
+            activityBinding.appBarLayout.apply {
+                setIconRightButton(ContextCompat.getDrawable(requireContext(), R.drawable.trash)!!)
+                setOnClickToggleRightButton { _ ->
+                    val confirmPopup = Popup(requireContext())
+                    confirmPopup.showDialog(
+                        title = "Xóa ngày học",
+                        subTitle = "Bạn có chắc chắn muốn xóa toàn bộ ngày học này? Tất cả các đoạn văn bên trong cũng sẽ bị mất.",
+                        isWarning = true,
+                        confirmText = "Xóa toàn bộ",
+                        onConfirm = {
+
+                            viewModel.deleteSpeakingDay(speakingDayId)
+                        }
+                    )
+                }
+            }
         }
 
         if (speakingDayId != -1L) {
@@ -92,6 +110,18 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
                 Toast.makeText(requireContext(), "Xóa đoạn văn thành công!", Toast.LENGTH_SHORT).show()
                 viewModel.resetDeleteStatus()
                 viewModel.loadParagraphList(speakingDayId)
+            }
+        }
+
+        viewModel.deleteSpeakingDayStatus.observe(viewLifecycleOwner) { result ->
+            result?.onSuccess {
+                Toast.makeText(requireContext(), "Đã xóa ngày học thành công!", Toast.LENGTH_SHORT).show()
+                viewModel.resetDeleteSpeakingDayStatus()
+
+                findNavController().popBackStack()
+            }?.onFailure {
+                Toast.makeText(requireContext(), "Lỗi khi xóa ngày học: ${it.message}", Toast.LENGTH_SHORT).show()
+                viewModel.resetDeleteSpeakingDayStatus()
             }
         }
 
@@ -177,6 +207,7 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
                         }
                     )
                 }
+
             }
         }
     }
