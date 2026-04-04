@@ -21,10 +21,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/introFragment"
-        android:name="com.home.lexa.ui.intro.IntroFragment"
-        android:label="Intro" />
-    <fragment
         android:id="@+id/signUpFragment"
         android:name="com.home.lexa.ui.auth.signup.SignupFragment"
         android:label="SignUp">
@@ -36,15 +32,7 @@
             app:destination="@id/verifyEmail" />
     </fragment>
 
-    <fragment
-        android:id="@+id/signupStudentFragment"
-        android:name="com.home.lexa.ui.auth.signup_student.SignupStudentFragment"
-        android:label="SignupStudent" />
 
-    <fragment
-        android:id="@+id/signupTeacherFragment"
-        android:name="com.home.lexa.ui.auth.signup_teacher.SignupTeacherFragment"
-        android:label="SignupTeacher" />
 
     <fragment
         android:id="@+id/verifyEmail"
