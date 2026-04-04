@@ -203,6 +203,8 @@ class MainActivity : AppCompatActivity() {
     private fun observeData() {
         this.lifecycleScope.launch {
             authViewModel.loginState.collect { state ->
+                if (isFirstAuthenticated) return@collect
+
                 val navHostFragment = supportFragmentManager
                     .findFragmentById(R.id.fragmentContainer) as NavHostFragment
                 val navController = navHostFragment.navController

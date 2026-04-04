@@ -29,7 +29,6 @@ import androidx.core.view.isVisible
 import coil.load
 import coil.size.ViewSizeResolver
 import com.google.firebase.auth.OAuthProvider
-import com.home.lexa.ui.auth.verify_email.IS_EMAIL_VERIFY_STRING
 import com.home.lexa.ui.utils.DateUtils
 import com.home.lexa.ui.utils.MediaUtils
 import com.home.lexa.ui.utils.StringUtils

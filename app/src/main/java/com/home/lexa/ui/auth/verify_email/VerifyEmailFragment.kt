@@ -8,16 +8,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentVerifyEmailBinding
-import com.home.lexa.ui.auth.login.AuthState
-import com.home.lexa.ui.auth.login.AuthViewModel
 import com.home.lexa.ui.auth.AuthState
 import com.home.lexa.ui.auth.AuthViewModel
 import com.home.lexa.ui.utils.StringUtils
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import kotlin.getValue
-
-val IS_EMAIL_VERIFY_STRING = "is_email_verify"
 
 class VerifyEmailFragment : BaseFragment<FragmentVerifyEmailBinding>(FragmentVerifyEmailBinding::inflate) {
     private val args: VerifyEmailFragmentArgs by navArgs()
