@@ -3,6 +3,7 @@ package com.home.lexa.ui.course.vocabulary_flashcard
 import android.util.Log
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -12,9 +13,12 @@ import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentVocabularyFlashcardBinding
 import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.DeckDto
+import com.home.lexa.domain.models.Topic
+import com.home.lexa.domain.models.UpdateDeckRequest
 import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.ui.components.FlashcardMini
 import com.home.lexa.ui.components.Popup
+import kotlinx.coroutines.selects.select
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBinding>(FragmentVocabularyFlashcardBinding::inflate) {
@@ -31,6 +35,9 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
     private val deckVocabNum by lazy { arguments?.getInt("DECK_VOCAB_NUMBER_KEY") }
     private val deckTopicName by lazy { arguments?.getString("DECK_TOPIC_NAME_KEY") }
 
+    private var deckTopics: List<Topic> = listOf()
+    private var topicColorMap: MutableMap<String, String> = mutableMapOf<String, String>()
+
     override fun setupViews() {
 
         if(deckId == null || deckId == 0L) return
@@ -39,7 +46,13 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
 
         binding.diTopic.apply {
             setTile("Chủ đề")
-            setSelection(deckTopicName ?: "None")
+            onItemSelected =  { topicName ->
+                setFrameColor(topicColorMap[topicName] ?: "#FFFFFF")
+                viewModel.updateDeck(UpdateDeckRequest(
+                    deckId = deckId!!,
+                    topicName = binding.diTopic.getSelection()
+                ))
+            }
         }
 
         binding.startBtn.apply {
@@ -95,6 +108,7 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
         }
 
         viewModel.loadFlashcardDetail(deckId!!)
+        viewModel.loadTopics()
     }
 
     private fun navigateToExerciseMode() {
@@ -220,6 +234,17 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
                 vocabLearning = result.rememberedCount!!
             }
         }
+
+        viewModel.topicData.observe(viewLifecycleOwner) { topics ->
+            deckTopics = topics
+            binding.diTopic.setUpOptions(topics.map { it ->
+                topicColorMap[it.name] = it.colorHex
+                it.name
+            })
+            binding.diTopic.setSelection(deckTopicName ?: "None")
+            binding.diTopic.setFrameColor(topicColorMap[deckTopicName] ?: "#FFFFFF")
+        }
+
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("RELOAD_DATA")
             ?.observe(viewLifecycleOwner) { shouldReload ->
                 if (shouldReload) {

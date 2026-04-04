@@ -5,6 +5,7 @@ import com.home.lexa.domain.models.CreateDeckRequest
 import com.home.lexa.domain.models.CreateDeckResultRequest
 import com.home.lexa.domain.models.DeckDto
 import com.home.lexa.domain.models.DeckResult
+import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.models.UpdateDeckRequest
 import com.home.lexa.domain.models.UpdateDeckResultRequest
 import retrofit2.Response
@@ -42,8 +43,9 @@ interface DeckApiService {
         @Body request: CreateDeckRequest
     ): Response<ApiResponse<Long>>
 
-    @PATCH("/api/user/me/decks")
+    @PATCH("/api/user/me/decks/{deckId}")
     suspend fun updateDeck(
+        @Path("deckId") deckId: Long,
         @Body request: UpdateDeckRequest
     ): Response<ApiResponse<Boolean>>
 
@@ -58,4 +60,7 @@ interface DeckApiService {
     @DELETE("api/decks/{deckId}/favorite")
     suspend fun disFavoriteDeck(@Path("deckId") deckId: Long): Response<ApiResponse<Map<String, Any>>>
 
+    // ==== TOPIC ====
+    @GET("api/topics")
+    suspend fun getTopics(): Response<ApiResponse<List<Topic>>>
 }

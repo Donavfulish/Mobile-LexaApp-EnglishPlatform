@@ -4,6 +4,7 @@ import com.home.lexa.domain.models.CreateDeckRequest
 import com.home.lexa.domain.models.CreateDeckResultRequest
 import com.home.lexa.domain.models.DeckDto
 import com.home.lexa.domain.models.DeckResult
+import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.models.UpdateDeckRequest
 import com.home.lexa.domain.models.UpdateDeckResultRequest
 
@@ -17,4 +18,7 @@ interface DeckRepository {
     suspend fun deleteDeck(deckId: Long): Result<Boolean>
     suspend fun createDeckResult(request: CreateDeckResultRequest): Result<Boolean>
     suspend fun updateDeckResult(request: UpdateDeckResultRequest): Result<Boolean>
+
+    // ==== TOPIC ====
+    suspend fun getAllTopics(): Result<List<Topic>>
 }

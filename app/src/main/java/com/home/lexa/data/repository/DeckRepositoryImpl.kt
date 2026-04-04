@@ -6,6 +6,7 @@ import com.home.lexa.domain.models.CreateDeckRequest
 import com.home.lexa.domain.models.CreateDeckResultRequest
 import com.home.lexa.domain.models.DeckDto
 import com.home.lexa.domain.models.DeckResult
+import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.models.UpdateDeckRequest
 import com.home.lexa.domain.models.UpdateDeckResultRequest
 import com.home.lexa.domain.repository.DeckRepository
@@ -102,7 +103,7 @@ class DeckRepositoryImpl(
 
     override suspend fun updateDeck(request: UpdateDeckRequest): Result<Boolean> {
         return try {
-            val response = apiService.updateDeck(request)
+            val response = apiService.updateDeck(request.deckId, request)
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
@@ -155,6 +156,21 @@ class DeckRepositoryImpl(
             }
         } catch (e: Exception) {
             Result.failure(Exception("Lỗi kết nối: ${e.message}"))
+        }
+    }
+
+    override suspend fun getAllTopics(): Result<List<Topic>> {
+        return try {
+            val response = apiService.getTopics()
+            val body = response.body()
+
+            if (response.isSuccessful && body?.success == true) {
+                Result.success(body.data ?: emptyList())
+            } else {
+                Result.failure(Exception(body?.message ?: "Lấy danh sách chủ đề thất bại"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 }

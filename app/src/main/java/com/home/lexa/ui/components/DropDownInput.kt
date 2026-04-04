@@ -1,10 +1,15 @@
 package com.home.lexa.ui.components
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.PopupMenu
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
+import com.home.lexa.R
 import com.home.lexa.databinding.InputDropdownBinding
 
 class DropDownInput @JvmOverloads constructor(
@@ -50,5 +55,24 @@ class DropDownInput @JvmOverloads constructor(
     }
     fun getSelection(): String {
         return binding.tvSelectedValue.text.toString()
+    }
+
+    fun setFrameColor(colorHex: String, hasBorder: Boolean = false) {
+        val baseColor = Color.parseColor(colorHex)
+
+        val backgroundColor = ColorUtils.setAlphaComponent(baseColor, 38)
+
+        binding.tvSelectedValue.setTextColor(baseColor)
+        binding.ivArrow.setColorFilter(baseColor)
+
+        val drawable = ContextCompat.getDrawable(context, R.drawable.bg_tag)?.mutate() as GradientDrawable
+        drawable.setColor(backgroundColor)
+        if (hasBorder) {
+            drawable.setStroke(3, baseColor)
+        } else {
+            drawable.setStroke(0, Color.TRANSPARENT)
+        }
+
+        binding.containerDropdown.background = drawable
     }
 }
