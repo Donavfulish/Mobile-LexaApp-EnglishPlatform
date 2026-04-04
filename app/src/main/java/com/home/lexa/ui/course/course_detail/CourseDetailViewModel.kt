@@ -13,6 +13,7 @@ import com.home.lexa.domain.repository.CourseRepository
 import com.home.lexa.domain.repository.FlashcardRepository
 import kotlinx.coroutines.launch
 import com.home.lexa.domain.models.EditCourseRequest
+import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.repository.SpeakingDayRepository
 
 class CourseDetailViewModel(
@@ -31,11 +32,15 @@ class CourseDetailViewModel(
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
+    private val _topicData = MutableLiveData<List<Topic>>()
+    val topicData: LiveData<List<Topic>> get() = _topicData
+
     fun setCourseAndFlashcard(course: SpeakingCourseDetailDto, flashcard: List<DetailFlashcard>){
         _courseDetailData.value = course
         _flashcardDetailData.value = flashcard
         _isLoading.value = false
     }
+
 
     fun loadCourseDetail(courseId: Long) {
         viewModelScope.launch {
@@ -55,6 +60,23 @@ class CourseDetailViewModel(
                 }
             } catch (e: Exception) {
                 _courseDetailData.value = null
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun loadTopics() {
+        viewModelScope.launch {
+            val result = courseRepository.getAllTopics()
+            try {
+            result.onSuccess { list ->
+                _topicData.value = list
+            }.onFailure {
+                _topicData.value = emptyList()
+                Log.e("DEBUG_VM", "Load Topics failed: ${it.message}")
+            }
+        } catch (e: Exception){
+                _topicData.value = emptyList()
                 _isLoading.value = false
             }
         }

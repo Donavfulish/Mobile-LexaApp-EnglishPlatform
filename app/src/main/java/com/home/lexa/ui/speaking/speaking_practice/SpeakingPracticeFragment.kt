@@ -36,23 +36,21 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
         }
         activityBinding.appBarLayout.apply {
             setIconRightButton(ContextCompat.getDrawable(requireContext(), R.drawable.trash)!!)
-            activityBinding.appBarLayout.apply {
-                setIconRightButton(ContextCompat.getDrawable(requireContext(), R.drawable.trash)!!)
-                setOnClickToggleRightButton { _ ->
-                    val confirmPopup = Popup(requireContext())
-                    confirmPopup.showDialog(
-                        title = "Xóa ngày học",
-                        subTitle = "Bạn có chắc chắn muốn xóa toàn bộ ngày học này? Tất cả các đoạn văn bên trong cũng sẽ bị mất.",
-                        isWarning = true,
-                        confirmText = "Xóa toàn bộ",
-                        onConfirm = {
+            setOnClickToggleRightButton { _ ->
+                val confirmPopup = Popup(requireContext())
+                confirmPopup.showDialog(
+                    title = "Xóa ngày học",
+                    subTitle = "Bạn có chắc chắn muốn xóa toàn bộ ngày học này? Tất cả các đoạn văn bên trong cũng sẽ bị mất.",
+                    isWarning = true,
+                    confirmText = "Xóa toàn bộ",
+                    onConfirm = {
 
-                            viewModel.deleteSpeakingDay(speakingDayId)
-                        }
-                    )
-                }
+                        viewModel.deleteSpeakingDay(speakingDayId)
+                    }
+                )
             }
         }
+
 
         if (speakingDayId != -1L) {
             viewModel.loadParagraphList(speakingDayId)

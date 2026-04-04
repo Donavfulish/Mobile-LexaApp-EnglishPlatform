@@ -41,10 +41,10 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
     private lateinit var list_topic: List<Topic>
     override fun setupViews() {
 
-//        val courseId = arguments?.getLong("courseId") ?: -1L
+        val courseId = arguments?.getLong("courseId") ?: -1L
 
         if (courseId == -1L) {
-            Toast.makeText(requireContext(), "ID khóa học không hợp lệ", Toast.LENGTH_SHORT).show()
+            viewModel.loadTopics()
         } else {
             viewModel.loadCourseDetail(courseId)
         }
@@ -180,6 +180,14 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             }
         }
 
+        // THEO DOI DS TOPIC
+        viewModel.topicData.observe(viewLifecycleOwner) { topics ->
+            list_topic = viewModel.topicData.value!!
+            val list_topic_name = list_topic?.map { it.name }
+            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, list_topic_name!!)
+            binding.topicInput.setAdapter(adapter)
+        }
+
         // THEO DOI TINH TRANG KHOA HOC TRA VE
         viewModel.courseDetailData.observe(viewLifecycleOwner) { course ->
             if (course == null){
@@ -196,7 +204,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 binding.imgTeacher.load(course.creator.image) {
                     crossfade(true)
                     placeholder(R.drawable.placeholder_teacher)
-                    error(R.drawable.placeholder_teacher)       // Hiện ảnh này nếu link lỗi
+                    error(R.drawable.placeholder_teacher)
                 }
             }
             binding.teacherNameCourse.text = course.creator.name
@@ -238,7 +246,10 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                             _paragraphNum = day.paragraphNum
                         )
                         setOnClickAction {
-                            val bundle = bundleOf("speakingDayId" to day.speakingDayId)
+                            val bundle = bundleOf(
+                                "speakingDayId" to day.speakingDayId,
+                                "order" to index
+                            )
                             findNavController().navigate(
                                 R.id.action_courseDetailFragment_to_speakingPracticeFragment,
                                 bundle

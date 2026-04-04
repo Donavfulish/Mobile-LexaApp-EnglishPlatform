@@ -19,9 +19,7 @@ class TopAppBar @JvmOverloads constructor(
     fun setText(text: String){
         binding.title.text = text
     }
-    fun setBottomBorderVisible(isVisible: Boolean) {
-        binding.bottomBorder.visibility = if (isVisible) View.VISIBLE else View.GONE
-    }
+
     fun setBackButtonVisible(isVisible: Boolean){
         binding.leftBtn.visibility = if (isVisible) android.view.View.VISIBLE else android.view.View.GONE
     }
@@ -74,6 +72,7 @@ class TopAppBar @JvmOverloads constructor(
         customViewId = view.id
 
         binding.topBarLayout.addView(view)
+
         val constraintSet = ConstraintSet()
         constraintSet.clone(binding.topBarLayout)
 
@@ -84,7 +83,7 @@ class TopAppBar @JvmOverloads constructor(
             view.id, ConstraintSet.END,
             if (binding.rightBtn.visibility == View.VISIBLE) binding.rightBtn.id else ConstraintSet.PARENT_ID,
             if (binding.rightBtn.visibility == View.VISIBLE) ConstraintSet.START else ConstraintSet.END,
-            40
+            20
         )
 
         constraintSet.connect(view.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
@@ -95,7 +94,6 @@ class TopAppBar @JvmOverloads constructor(
         binding.title.visibility = View.VISIBLE
     }
 
-    // Hàm MỚI: Gọi hàm này khi chuyển sang trang khác (như Thư viện) để xóa sạch cái Logo đi
     fun removeCustomView() {
         if (customViewId != View.NO_ID) {
             val oldView = binding.topBarLayout.findViewById<View>(customViewId)
@@ -103,8 +101,10 @@ class TopAppBar @JvmOverloads constructor(
                 binding.topBarLayout.removeView(oldView)
             }
             customViewId = View.NO_ID
-            binding.title.visibility = View.VISIBLE // Trả lại chữ cho Title
         }
+        binding.title.visibility = View.VISIBLE
+        binding.rightBtn.visibility = View.GONE
+        binding.rightBtn.setOnClickListener(null)
     }
 
     fun setIconRightButton(icon: Drawable){
