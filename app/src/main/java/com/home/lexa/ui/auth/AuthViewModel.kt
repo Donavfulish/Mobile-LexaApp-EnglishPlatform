@@ -126,6 +126,12 @@ class AuthViewModel (
         }
     }
 
+    fun logout() {
+        viewModelScope.launch {
+            repository.logout()
+        }
+    }
+
     fun getMe() {
         viewModelScope.launch {
             _loginState.value = AuthState.Loading

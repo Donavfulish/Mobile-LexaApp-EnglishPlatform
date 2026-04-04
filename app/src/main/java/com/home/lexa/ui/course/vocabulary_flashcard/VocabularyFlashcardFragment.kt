@@ -29,12 +29,18 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
     private val deckId by lazy { arguments?.getLong("DECK_ID_KEY") }
     private val deckTitle by lazy { arguments?.getString("DECK_TITLE_KEY") }
     private val deckVocabNum by lazy { arguments?.getInt("DECK_VOCAB_NUMBER_KEY") }
+    private val deckTopicName by lazy { arguments?.getString("DECK_TOPIC_NAME_KEY") }
 
     override fun setupViews() {
 
         if(deckId == null || deckId == 0L) return
 
         binding.deckTitle.text = deckTitle
+
+        binding.diTopic.apply {
+            setTile("Chủ đề")
+            setSelection(deckTopicName ?: "None")
+        }
 
         binding.startBtn.apply {
             setIconPadding(10)
@@ -87,6 +93,7 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
             }
             findNavController().navigate(R.id.action_vocabularyFlashcardFragment_to_flashcardAddEditFragment,bundle)
         }
+
         viewModel.loadFlashcardDetail(deckId!!)
     }
 

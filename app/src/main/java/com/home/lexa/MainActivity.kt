@@ -174,6 +174,8 @@ class MainActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 AuthEventBus.events.collect { event ->
                     if (event == AuthEvent.LOGOUT || event == AuthEvent.TOKEN_EXPIRED) {
+                        authViewModel.logout()
+
                         val navHostFragment = supportFragmentManager
                             .findFragmentById(R.id.fragmentContainer) as? NavHostFragment
                         val navController = navHostFragment?.navController
@@ -202,29 +204,34 @@ class MainActivity : AppCompatActivity() {
 
     private fun observeData() {
         this.lifecycleScope.launch {
-            authViewModel.loginState.collect { state ->
-                if (isFirstAuthenticated) return@collect
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                authViewModel.loginState.collect { state ->
+                    if (isFirstAuthenticated || state is AuthState.Idle || state is AuthState.Loading) return@collect
 
-                val navHostFragment = supportFragmentManager
-                    .findFragmentById(R.id.fragmentContainer) as NavHostFragment
-                val navController = navHostFragment.navController
+                    val navHostFragment = supportFragmentManager
+                        .findFragmentById(R.id.fragmentContainer) as NavHostFragment
+                    val navController = navHostFragment.navController
 
-                val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
+                    val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
 
-                when (state) {
-                    is AuthState.Success -> {
-                        isFirstAuthenticated = true
-                        authViewModel.resetState()
-                        navGraph.setStartDestination(R.id.homeFragment)
-                        navController.graph = navGraph
+                    when (state) {
+                        is AuthState.Success -> {
+                            isFirstAuthenticated = true
+                            authViewModel.resetState()
+                            navGraph.setStartDestination(R.id.homeFragment)
+                        }
+
+                        is AuthState.Error -> {
+                            isFirstAuthenticated = true
+                            authViewModel.resetState()
+                            navGraph.setStartDestination(R.id.loginFragment)
+                        }
+
+                        else -> {}
                     }
-                    is AuthState.Error -> {
-                        isFirstAuthenticated = true
-                        authViewModel.resetState()
-                        navGraph.setStartDestination(R.id.loginFragment)
-                        navController.graph = navGraph
-                    }
-                    else -> {}
+
+                    navController.graph = navGraph
+                    navController.setGraph(navGraph, null)
                 }
             }
         }

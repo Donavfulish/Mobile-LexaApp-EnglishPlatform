@@ -20,6 +20,7 @@ class PersonalLibraryFragment : BaseFragment<FragmentPersonalLibraryBinding>(Fra
                 putLong("DECK_ID_KEY", deck.id)
                 putString("DECK_TITLE_KEY", deck.title)
                 putInt("DECK_VOCAB_NUMBER_KEY", deck.vocabNumber)
+                putString("DECK_TOPIC_NAME_KEY", deck.topic?.name ?: "")
             }
 
             findNavController().navigate(R.id.action_libraryFragment_to_vocabularyFlashcardFragment, bundle)

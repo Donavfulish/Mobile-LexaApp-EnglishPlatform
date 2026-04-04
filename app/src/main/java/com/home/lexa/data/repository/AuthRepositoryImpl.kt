@@ -55,6 +55,25 @@ class AuthRepositoryImpl(private val apiService: AuthApiService) : AuthResposito
         }
     }
 
+    override suspend fun logout(): Result<Unit> {
+        return try {
+            val response = apiService.logout()
+            val body = response.body()
+
+            if (response.isSuccessful && body != null) {
+                if (body.success == true) {
+                    Result.success(Unit)
+                } else {
+                    Result.failure(Exception(body.message ?: "Lỗi xóa khóa token"))
+                }
+            } else {
+                Result.failure(Exception("Lỗi máy chủ: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(Exception("Lỗi kết nối mạng: ${e.message}"))
+        }
+    }
+
     override suspend fun getMe(): Result<UserInfo?> {
         return try {
             val response = apiService.getMe()

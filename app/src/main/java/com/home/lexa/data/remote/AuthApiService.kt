@@ -31,6 +31,9 @@ interface AuthApiService {
         @Part pedagogyCert: MultipartBody.Part?
     ): Response<ApiResponse<AuthResult>>
 
+    @POST("api/auth/logout")
+    suspend fun logout(): Response<ApiResponse<Unit>>
+
     @Headers(
         "Auth-Action: Refresh",
         "Content-Type: application/json",

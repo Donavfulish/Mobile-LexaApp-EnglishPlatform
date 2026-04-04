@@ -16,6 +16,7 @@ interface AuthRespository {
         languagePart: MultipartBody.Part?,
         pedagogyPart: MultipartBody.Part?
     ): Result<AuthResult>
+    suspend fun logout(): Result<Unit>
     suspend fun getMe(): Result<UserInfo?>
     suspend fun loginGoogle(): Result<AuthResult>
     suspend fun signupGoogle(
