@@ -17,11 +17,14 @@ import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentCourseDetailBinding
 import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.ColorLabel
+import com.home.lexa.domain.models.CreateSpeakingDayRequest
 import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.SpeakingCourseDetailDto
 import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.ui.components.FlashcardMini
+import com.home.lexa.ui.components.NormalInput
+import com.home.lexa.ui.components.PopUpInput
 import com.home.lexa.ui.components.StudentSpeakingDayCard
 import com.home.lexa.ui.components.TeacherSpeakingDayCard
 import com.home.lexa.ui.components.ToggleSwitch
@@ -141,6 +144,8 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
     }
 
     override fun observeData() {
+
+        // THEO DOI LOADING CHUNG
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             if (isLoading) {
                 binding.shimmerLayout.startShimmer()
@@ -174,6 +179,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             }
         }
 
+        // THEO DOI TINH TRANG KHOA HOC TRA VE
         viewModel.courseDetailData.observe(viewLifecycleOwner) { course ->
             if (course == null){
                 Toast.makeText(requireContext(), "Không tìm thấy dữ liệu khóa học", Toast.LENGTH_SHORT).show()
@@ -259,6 +265,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             }
         }
 
+        // THEO DOI TINH TRANG FLASHCARD TRA VE
         viewModel.flashcardDetailData.observe(viewLifecycleOwner) { flashcards ->
             if (flashcards.isNullOrEmpty()) return@observe
             binding.flashcardNum.text = "${flashcards.size}"
@@ -292,6 +299,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             }
         }
 
+        // THEO DOI TINH TRANG CAP NHAT TT KHOA HOCC
         viewModel.updateStatus.observe(viewLifecycleOwner) { result ->
             result?.onSuccess {
                 Toast.makeText(requireContext(), "Cập nhật thành công!", Toast.LENGTH_SHORT).show()
@@ -301,6 +309,19 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 Toast.makeText(requireContext(), "Lỗi: ${it.message}", Toast.LENGTH_SHORT).show()
                 viewModel.resetUpdateStatus()
                 binding.saveBtn.setText("Lưu thông tin", ContextCompat.getColor(requireContext(), R.color.white))
+            }
+        }
+
+        // THEO DOI TINH TRANG THEM MOI NGAY HOC
+        viewModel.createStatus.observe(viewLifecycleOwner){ result ->
+            result?.onSuccess {
+                Toast.makeText(requireContext(), "Thêm ngày học mới thành công!", Toast.LENGTH_SHORT).show()
+                viewModel.resetCreateStatus()
+                viewModel.loadCourseDetail(courseId)
+            }?.onFailure {
+                Toast.makeText(requireContext(), "Lỗi: ${it.message}", Toast.LENGTH_SHORT).show()
+                Log.e("CREATE_STATUS", "Lỗi: ${it.message}", it)
+                viewModel.resetCreateStatus()
             }
         }
     }
@@ -392,18 +413,6 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             }
         }
 
-//        binding.addBtn.setOnClickAction {
-//            val bundle = Bundle().apply {
-//                if(isSpeakingMode){
-//                    putLong("speakingDayId", course.id)
-//                } else {
-//
-//                }
-//            }
-//            findNavController().navigate(R.id.action_homeFragment_to_courseDetailFragment,
-//                bundle)
-//        }
-
         binding.cameraBtn.apply{
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_camera)!!)
             setBackground(ContextCompat.getColor(requireContext(), R.color.white_opacity))
@@ -414,6 +423,28 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
         binding.saveBtn.apply{
             setBackground(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
             setText("Lưu thông tin", ContextCompat.getColor(requireContext(), R.color.white))
+        }
+
+        val popUpInput = PopUpInput(requireContext())
+        val speakingDayTitle = NormalInput(requireContext()).apply {
+            setLabel("Tiêu đề")
+            setPlaceHolderText("Nhập tiêu đề ngày học...")
+        }
+        popUpInput.insertNormalInput(speakingDayTitle)
+        binding.addBtn.setOnClickAction {
+            popUpInput.showDialog(
+                dialogTitle = "Tạo ngày học mới",
+                confirmText = "Tạo ngay",
+                onConfirm = { dataList ->
+                    viewModel.createSpeakingDay(CreateSpeakingDayRequest(
+                        courseId = courseId,
+                        title = dataList[0]
+                    ))
+                },
+                onCancel = {
+                    Log.d("DEBUG_POPUP", "Đã hủy bỏ")
+                }
+            )
         }
     }
 }

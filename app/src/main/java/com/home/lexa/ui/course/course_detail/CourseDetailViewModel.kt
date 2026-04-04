@@ -1,26 +1,29 @@
 package com.home.lexa.ui.course.course_detail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.home.lexa.di.AppMemoryCache
+import com.home.lexa.domain.models.CreateSpeakingDayRequest
 import com.home.lexa.domain.models.DetailFlashcard
 import com.home.lexa.domain.models.SpeakingCourseDetailDto
 import com.home.lexa.domain.repository.CourseRepository
 import com.home.lexa.domain.repository.FlashcardRepository
 import kotlinx.coroutines.launch
 import com.home.lexa.domain.models.EditCourseRequest
-import com.home.lexa.domain.models.Topic
+import com.home.lexa.domain.repository.SpeakingDayRepository
 
 class CourseDetailViewModel(
     private val courseRepository: CourseRepository,
-    private val flashcardRepository: FlashcardRepository
+    private val flashcardRepository: FlashcardRepository,
+    private val speakingDayRepository: SpeakingDayRepository
 ) : ViewModel() {
+    private val _createStatus = MutableLiveData<Result<Unit>?>()
+    val createStatus: LiveData<Result<Unit>?> get() = _createStatus
     private val _updateStatus = MutableLiveData<Result<Unit>?>()
     val updateStatus: LiveData<Result<Unit>?> get() = _updateStatus
-    private val _topicData = MutableLiveData<List<Topic>>()
-    val topicData: LiveData<List<Topic>> get() = _topicData
     private val _courseDetailData = MutableLiveData<SpeakingCourseDetailDto?>()
     val courseDetailData: LiveData<SpeakingCourseDetailDto?> get() = _courseDetailData
     private val _flashcardDetailData = MutableLiveData<List<DetailFlashcard>>()
@@ -85,4 +88,22 @@ class CourseDetailViewModel(
     fun resetUpdateStatus() {
         _updateStatus.value = null
     }
+
+    fun createSpeakingDay(request: CreateSpeakingDayRequest){
+        viewModelScope.launch {
+            val result = speakingDayRepository.createSpeakingDay(request)
+            result.onSuccess {
+                AppMemoryCache.remove("speakingCourseDetail_${request.courseId}")
+                _updateStatus.value = Result.success(Unit)
+            }.onFailure {
+                Log.e("CREATE_STATUS", "Lỗi: ${it.message}", it)
+                _updateStatus.value = Result.failure(it)
+            }
+        }
+    }
+
+    fun resetCreateStatus() {
+        _createStatus.value = null
+    }
+
 }

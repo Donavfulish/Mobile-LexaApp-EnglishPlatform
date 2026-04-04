@@ -20,7 +20,7 @@ interface SpeakingDayApiService {
     ): Response<ApiResponse<ShortParagraphSpeakingDayDto>>
 
     @POST("api/users/me/speaking-day")
-    suspend fun createSpeakingDay(@Body request: CreateSpeakingDayRequest): Response<ApiResponse<Map<String, Long>>>
+    suspend fun createSpeakingDay(@Body request: CreateSpeakingDayRequest): Response<ApiResponse<Long>>
 
     @PATCH("api/users/me/speaking-day/{speakingDayId}")
     suspend fun editSpeakingDay(@Path("speakingDayId") speakingDayId: Long, @Body request: EditSpeakingDayRequest): Response<ApiResponse<Map<String, Any>>>

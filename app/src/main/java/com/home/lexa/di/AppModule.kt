@@ -100,7 +100,7 @@ val appModule = module {
     viewModel { FavoriteLibraryModel(get()) }
     viewModel { PersonalLibraryModel(get()) }
     viewModel { StudentCourseListModel (get()) }
-    viewModel { CourseDetailViewModel(get(), get())}
+    viewModel { CourseDetailViewModel(get(), get(), get())}
     viewModel { VocabularyFlashcardViewModel(get(), get())}
     viewModel { ExerciseModeViewModel(get())}
     viewModel { ExerciseResultViewModel(get(), get())}

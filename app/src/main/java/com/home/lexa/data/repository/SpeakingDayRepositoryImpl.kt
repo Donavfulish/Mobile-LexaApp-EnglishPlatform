@@ -31,7 +31,7 @@ class SpeakingDayRepositoryImpl(
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
-                val newId = body.data?.get("id") ?: throw Exception("Không lấy được ID")
+                val newId = body.data ?: throw Exception("Không lấy được ID")
                 Result.success(newId)
             } else {
                 Result.failure(Exception(body?.message ?: "Tạo bài học thất bại"))
