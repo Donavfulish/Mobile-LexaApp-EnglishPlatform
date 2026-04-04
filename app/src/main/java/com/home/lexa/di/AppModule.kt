@@ -105,5 +105,5 @@ val appModule = module {
     viewModel { ExerciseModeViewModel(get())}
     viewModel { ExerciseResultViewModel(get(), get())}
     viewModel { FlashcardEditAddViewModel(get())}
-    viewModel { SpeakingPracticeViewModel(get()) }
+    viewModel { SpeakingPracticeViewModel(get(), get()) }
 }

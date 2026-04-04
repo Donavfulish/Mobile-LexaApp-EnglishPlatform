@@ -51,7 +51,8 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
 
         val activityBinding = (requireActivity() as MainActivity).binding
         activityBinding.appBarLayout.apply {
-            removeCustomView();
+            removeCustomView()
+            setOnClickBack()
         }
         activityBinding.appBarLayout.apply {
             val linearLayout = LinearLayout(requireContext()).apply {

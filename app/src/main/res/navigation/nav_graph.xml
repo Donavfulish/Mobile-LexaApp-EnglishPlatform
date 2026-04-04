@@ -239,6 +239,10 @@
             android:name="speakingDayId"
             app:argType="long"
             android:defaultValue="-1L" />
+        <argument
+            android:name="order"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
 
 </navigation>

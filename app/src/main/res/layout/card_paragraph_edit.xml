@@ -7,14 +7,48 @@
     android:layout_margin="6dp"
     app:cardCornerRadius="16dp"
     app:cardElevation="4dp"
-    app:cardBackgroundColor="#FFFFFF"
-    android:foreground="?android:attr/selectableItemBackground"
-    android:clickable="true"
-    android:focusable="true">
+    app:cardBackgroundColor="#FFFFFF">
 
+    <!-- LỚP DƯỚI BÊN TRÁI: Nút chỉnh sửa -->
+    <LinearLayout
+        android:id="@+id/layoutEdit"
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/lexa_primary"
+        android:gravity="center"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_edit"
+            app:tint="@color/white"/>
+    </LinearLayout>
+
+    <!-- LỚP DƯỚI BÊN PHẢI: Nút xoá -->
+    <LinearLayout
+        android:id="@+id/layoutDelete"
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="@color/red"
+        android:gravity="center"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/trash"
+            app:tint="@color/white"/>
+    </LinearLayout>
+
+    <!-- LỚP TRÊN: Chứa nội dung -->
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/foregroundContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:paddingVertical="20dp">
 
         <FrameLayout
@@ -30,7 +64,6 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="4dp"
                 android:src="@drawable/ic_drag_handle"
                 android:alpha="0.3"
                 app:tint="@color/black"/>

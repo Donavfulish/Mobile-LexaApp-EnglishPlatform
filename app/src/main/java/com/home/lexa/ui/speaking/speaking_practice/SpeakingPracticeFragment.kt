@@ -3,19 +3,46 @@ package com.home.lexa.ui.speaking.speaking_practice
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import com.home.lexa.MainActivity
+import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentSpeakingPracticeBinding
+import com.home.lexa.domain.models.CreateSpeakingDayRequest
+import com.home.lexa.domain.models.EditCourseRequest
+import com.home.lexa.domain.models.EditSpeakingDayRequest
+import com.home.lexa.ui.components.NormalInput
 import com.home.lexa.ui.components.ParagraphEditCard
+import com.home.lexa.ui.components.PopUpInput
+import com.home.lexa.ui.components.Popup
+import com.home.lexa.ui.components.ToggleSwitch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(FragmentSpeakingPracticeBinding::inflate) {
     private val viewModel: SpeakingPracticeViewModel by viewModel()
     private var speakingDayId = -1L
-
+    private var order = 0
     override fun setupViews() {
         speakingDayId = arguments?.getLong("speakingDayId") ?: -1L
+        order = arguments?.getInt("order") ?: 0
+
+        val activityBinding = (requireActivity() as MainActivity).binding
+        activityBinding.appBarLayout.apply {
+            removeCustomView()
+            setOnClickBack()
+            setText("Ngày ${order + 1}")
+            setBackButtonVisible(true)
+        }
+
         if (speakingDayId != -1L) {
             viewModel.loadParagraphList(speakingDayId)
+        }
+        
+        binding.saveBtn.apply{
+            setBackground(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
+            setText("Lưu thông tin", ContextCompat.getColor(requireContext(), R.color.white))
         }
     }
 
@@ -33,13 +60,55 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
             }
         }
 
+        viewModel.updateStatus.observe(viewLifecycleOwner) { result ->
+            result?.onSuccess {
+                Toast.makeText(requireContext(), "Cập nhật tiêu đề thành công!", Toast.LENGTH_SHORT).show()
+                binding.saveBtn.setText("Lưu thông tin", ContextCompat.getColor(requireContext(), R.color.white))
+                viewModel.resetUpdateStatus()
+            }
+        }
+
+        viewModel.updateParagraphStatus.observe(viewLifecycleOwner) { result ->
+            result?.onSuccess {
+                Toast.makeText(requireContext(), "Cập nhật đoạn văn thành công!", Toast.LENGTH_SHORT).show()
+                viewModel.resetUpdateParagraphStatus()
+                viewModel.loadParagraphList(speakingDayId)
+            }?.onFailure {
+                Toast.makeText(requireContext(), "Lỗi: ${it.message}", Toast.LENGTH_SHORT).show()
+                viewModel.resetUpdateParagraphStatus()
+            }
+        }
+
+        viewModel.createStatus.observe(viewLifecycleOwner){ result ->
+            result?.onSuccess {
+                Toast.makeText(requireContext(), "Thêm đoạn văn mới thành công!", Toast.LENGTH_SHORT).show()
+                viewModel.resetCreateStatus()
+                viewModel.loadParagraphList(speakingDayId)
+            }
+        }
+
+        viewModel.deleteStatus.observe(viewLifecycleOwner) { result ->
+            result?.onSuccess {
+                Toast.makeText(requireContext(), "Xóa đoạn văn thành công!", Toast.LENGTH_SHORT).show()
+                viewModel.resetDeleteStatus()
+                viewModel.loadParagraphList(speakingDayId)
+            }
+        }
+
         viewModel.paragraphDetailData.observe(viewLifecycleOwner) { data ->
             data?.let { detail ->
-                binding.paragraphTitle.text = detail.title ?: ""
                 binding.paragraphInput.setText(detail.title ?: "")
 
-                binding.paragraphLayout.removeAllViews()
+                binding.saveBtn.setOnClickAction {
+                    val newTitle = binding.paragraphInput.text.toString().trim()
+                    if (newTitle.isNotEmpty()){
+                        binding.saveBtn.setText("Đang lưu...", ContextCompat.getColor(requireContext(), R.color.white))
+                        viewModel.editSpeakingDay(speakingDayId, EditSpeakingDayRequest(title = newTitle))
+                    }
+                }
 
+                binding.paragraphLayout.removeAllViews()
+                
                 val paragraphs = detail.list_paragraphs ?: emptyList()
                 binding.paragraphNum.text = paragraphs.size.toString()
 
@@ -57,10 +126,58 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
                         setMargins(0, 0, 0, 32)
                     }
                     paragraphCard.layoutParams = params
+
+                    paragraphCard.initSwipe()
+                    
+                    paragraphCard.setOnEditClickListener {
+                        val popUpEdit = PopUpInput(requireContext())
+                        val editInput = NormalInput(requireContext()).apply {
+                            setLabel("Nội dung đoạn văn")
+                            setText(paragraph.paragraph)
+                        }
+                        popUpEdit.insertNormalInput(editInput)
+                        popUpEdit.showDialog(
+                            dialogTitle = "Chỉnh sửa đoạn văn",
+                            confirmText = "Cập nhật",
+                            onConfirm = { dataList ->
+                                viewModel.updateParagraph(paragraph.id, dataList[0])
+                            }
+                        )
+                    }
+
+                    paragraphCard.setOnDeleteClickListener {
+                        // Thêm Popup xác nhận xoá
+                        val confirmPopup = Popup(requireContext())
+                        confirmPopup.showDialog(
+                            title = "Xác nhận xoá",
+                            subTitle = "Bạn có chắc chắn muốn xoá đoạn văn này không? Hành động này không thể hoàn tác.",
+                            isWarning = true,
+                            confirmText = "Xoá ngay",
+                            onConfirm = {
+                                viewModel.deleteParagraph(speakingDayId, paragraph.id)
+                            }
+                        )
+                    }
+
                     binding.paragraphLayout.addView(paragraphCard)
+                }
+
+                binding.addBtn.setOnClickAction {
+                    val popUpAdd = PopUpInput(requireContext())
+                    val addInput = NormalInput(requireContext()).apply {
+                        setLabel("Nội dung đoạn văn")
+                        setPlaceHolderText("Nhập đoạn văn mới...")
+                    }
+                    popUpAdd.insertNormalInput(addInput)
+                    popUpAdd.showDialog(
+                        dialogTitle = "Tạo đoạn văn mới",
+                        confirmText = "Tạo ngay",
+                        onConfirm = { dataList ->
+                            viewModel.createParagraph(speakingDayId, dataList[0], paragraphs.size + 1)
+                        }
+                    )
                 }
             }
         }
     }
-
 }
