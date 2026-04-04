@@ -60,11 +60,21 @@
             android:id="@+id/action_courseFragment_to_courseDetailFragment"
             app:destination="@id/courseDetailFragment" />
     </fragment>
-
+    
     <fragment
         android:id="@+id/courseDetailFragment"
         android:name="com.home.lexa.ui.course.course_detail.CourseDetailFragment"
-        android:label="CourseDetailFragment" />
+        android:label="CourseDetailFragment">
+        <argument
+            android:name="courseId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+        <action
+            android:id="@+id/action_courseDetailFragment_to_speakingPracticeFragment"
+            app:destination="@id/speakingPracticeFragment" />
+    </fragment>
+    
+    
 
     <fragment
         android:id="@+id/studentCourseListFragment"
@@ -224,6 +234,11 @@
     <fragment
         android:id="@+id/speakingPracticeFragment"
         android:name="com.home.lexa.ui.speaking.speaking_practice.SpeakingPracticeFragment"
-        android:label="SpeakingPracticeFragment" />
+        android:label="SpeakingPracticeFragment">
+        <argument
+            android:name="speakingDayId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+    </fragment>
 
 </navigation>

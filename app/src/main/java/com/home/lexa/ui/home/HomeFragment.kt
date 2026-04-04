@@ -1,6 +1,7 @@
 package com.home.lexa.ui.home
 
 
+import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.home.lexa.R
@@ -21,7 +22,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private val featuredCourseAdapter by lazy {
         FeaturedCourseAdapter(
             onCardClick = { course ->
-                findNavController().navigate(R.id.action_homeFragment_to_courseDetailFragment)
+                val bundle = Bundle().apply {
+                    putLong("courseId", course.id)
+                }
+                findNavController().navigate(R.id.action_homeFragment_to_courseDetailFragment,
+                    bundle)
             },
             onFavoriteToggle = { course, isFavorite ->
 
@@ -33,8 +38,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private val topStudiedCourseAdapter by lazy {
         FeaturedCourseAdapter(
             onCardClick = { course ->
-                findNavController().navigate(R.id.action_homeFragment_to_courseDetailFragment)
-
+                val bundle = Bundle().apply {
+                    putLong("courseId", course.id)
+                }
+                findNavController().navigate(R.id.action_homeFragment_to_courseDetailFragment,
+                    bundle)
             },
             onFavoriteToggle = { course, isFavorite ->
                 // Gọi API lưu trạng thái yêu thích
@@ -46,8 +54,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private val studyingAdapter by lazy {
         StudyingCourseAdapter(
             onCardClick = { course ->
-                findNavController().navigate(R.id.action_homeFragment_to_courseDetailFragment)
-
+                val bundle = Bundle().apply {
+                    putLong("courseId", course.id)
+                }
+                findNavController().navigate(R.id.action_homeFragment_to_courseDetailFragment,
+                    bundle)
             }
         )
     }

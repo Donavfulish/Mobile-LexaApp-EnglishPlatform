@@ -6,9 +6,11 @@ import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.domain.models.SpeakingCourseDetailDto
 import com.home.lexa.domain.models.GetFeaturedCourseResponse
 import com.home.lexa.domain.models.GetStudyingCourseResponse
+import com.home.lexa.domain.models.Topic
 
 interface CourseRepository {
     suspend fun getAllCourses(): Result<List<ShortCourseDto>>
+    suspend fun getAllTopics(): Result<List<Topic>>
     suspend fun createCourse(request: CreateCourseRequest): Result<Long>
     suspend fun editCourse(courseId: Long, request: EditCourseRequest): Result<Boolean>
     suspend fun deleteCourse(courseId: Long): Result<Boolean>

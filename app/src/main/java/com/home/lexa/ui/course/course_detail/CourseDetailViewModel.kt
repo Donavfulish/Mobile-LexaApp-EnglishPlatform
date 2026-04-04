@@ -10,11 +10,17 @@ import com.home.lexa.domain.models.SpeakingCourseDetailDto
 import com.home.lexa.domain.repository.CourseRepository
 import com.home.lexa.domain.repository.FlashcardRepository
 import kotlinx.coroutines.launch
+import com.home.lexa.domain.models.EditCourseRequest
+import com.home.lexa.domain.models.Topic
 
 class CourseDetailViewModel(
     private val courseRepository: CourseRepository,
     private val flashcardRepository: FlashcardRepository
 ) : ViewModel() {
+    private val _updateStatus = MutableLiveData<Result<Unit>?>()
+    val updateStatus: LiveData<Result<Unit>?> get() = _updateStatus
+    private val _topicData = MutableLiveData<List<Topic>>()
+    val topicData: LiveData<List<Topic>> get() = _topicData
     private val _courseDetailData = MutableLiveData<SpeakingCourseDetailDto?>()
     val courseDetailData: LiveData<SpeakingCourseDetailDto?> get() = _courseDetailData
     private val _flashcardDetailData = MutableLiveData<List<DetailFlashcard>>()
@@ -27,6 +33,7 @@ class CourseDetailViewModel(
         _flashcardDetailData.value = flashcard
         _isLoading.value = false
     }
+
     fun loadCourseDetail(courseId: Long) {
         viewModelScope.launch {
             try {
@@ -61,5 +68,21 @@ class CourseDetailViewModel(
                 _flashcardDetailData.value = emptyList()
             }
         }
+    }
+
+    fun editCourse(courseId: Long, request: EditCourseRequest){
+        viewModelScope.launch {
+            val result = courseRepository.editCourse(courseId, request)
+            result.onSuccess {
+                AppMemoryCache.remove("speakingCourseDetail_${courseId}")
+                _updateStatus.value = Result.success(Unit)
+            }.onFailure {
+                _updateStatus.value = Result.failure(it)
+            }
+        }
+    }
+
+    fun resetUpdateStatus() {
+        _updateStatus.value = null
     }
 }
