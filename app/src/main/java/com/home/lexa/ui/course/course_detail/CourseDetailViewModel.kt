@@ -52,7 +52,9 @@ class CourseDetailViewModel(
                     _isLoading.value = false
                     if (data != null){
                         AppMemoryCache.put("speakingCourseDetail_${data.id}", data)
-                        fetchFlashcardsInBackground(data.id, data.deckId)
+                        if(data.deckId != null) {
+                            fetchFlashcardsInBackground(data.id, data.deckId)
+                        }
                     }
                 }.onFailure {
                     _courseDetailData.value = null
