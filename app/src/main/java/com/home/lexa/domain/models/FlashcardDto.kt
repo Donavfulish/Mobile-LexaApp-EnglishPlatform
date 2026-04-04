@@ -1,4 +1,5 @@
 package com.home.lexa.domain.models
+
 import kotlinx.serialization.Serializable
 
 @Serializable

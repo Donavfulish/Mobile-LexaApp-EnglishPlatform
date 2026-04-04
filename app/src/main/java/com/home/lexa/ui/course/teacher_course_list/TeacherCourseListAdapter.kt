@@ -2,9 +2,7 @@ package com.home.lexa.ui.course.teacher_course_list
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.home.lexa.domain.models.DeckDto
 import com.home.lexa.domain.models.ShortCourseDto
-import com.home.lexa.ui.components.CourseData
 import com.home.lexa.ui.components.DeckCard
 
 class TeacherCourseListAdapter(

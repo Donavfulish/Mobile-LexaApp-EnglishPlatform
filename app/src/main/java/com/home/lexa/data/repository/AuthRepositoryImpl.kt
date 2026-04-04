@@ -1,22 +1,15 @@
 package com.home.lexa.data.repository
 
-import android.net.Uri
-import com.google.gson.Gson
 import com.home.lexa.data.remote.AuthApiService
 import com.home.lexa.domain.models.AuthResult
 import com.home.lexa.domain.models.LoginRequest
-import com.home.lexa.domain.models.OAuthRegisterRequest
 import com.home.lexa.domain.models.OtpRequest
 import com.home.lexa.domain.models.OtpVerify
-import com.home.lexa.domain.models.SignUpRequest
 import com.home.lexa.domain.repository.AuthRespository
-import com.home.lexa.ui.utils.MediaUtils
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 
-class AuthRespositoryImpl(private val apiService: AuthApiService) : AuthRespository {
+class AuthRepositoryImpl(private val apiService: AuthApiService) : AuthRespository {
     override suspend fun login(request: LoginRequest): Result<AuthResult> {
         return try {
             val response = apiService.login(request)

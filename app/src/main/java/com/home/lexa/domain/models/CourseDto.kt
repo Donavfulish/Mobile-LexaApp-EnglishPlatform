@@ -17,7 +17,7 @@ data class Course(
 data class ShortCourseDto(
     val id: Long,
     val thumbnail_url: String?,
-    val topic: TopicDto,
+    val topic: Topic,
     val is_favorite: Boolean? = null,
     val title: String,
     val description: String,
@@ -31,7 +31,7 @@ data class ShortCourseDto(
 data class GetFeaturedCourseResponse(
     val id: Long,
     val thumbnail_url: String?,
-    val topic: TopicDto,
+    val topic: Topic,
     val is_favorite: Boolean? = null,
     val title: String,
     val creator_name: String,
@@ -42,7 +42,7 @@ data class GetFeaturedCourseResponse(
 data class GetStudyingCourseResponse(
     val id: Long,
     val title: String,
-    val topic: TopicDto,
+    val topic: Topic,
     val progress: Int,
     val thumbnail_url: String?
 )

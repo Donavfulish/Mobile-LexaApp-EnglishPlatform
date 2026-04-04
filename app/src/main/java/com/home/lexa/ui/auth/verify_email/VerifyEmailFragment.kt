@@ -1,20 +1,15 @@
 package com.home.lexa.ui.auth.verify_email
 
-
-
 import android.os.CountDownTimer
 import android.widget.Toast
-import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColorInt
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentVerifyEmailBinding
-import com.home.lexa.ui.auth.login.AuthState
-import com.home.lexa.ui.auth.login.AuthViewModel
-import com.home.lexa.ui.auth.signup.SignupFragmentDirections
+import com.home.lexa.ui.auth.AuthState
+import com.home.lexa.ui.auth.AuthViewModel
 import com.home.lexa.ui.utils.StringUtils
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
@@ -70,6 +65,8 @@ class VerifyEmailFragment : BaseFragment<FragmentVerifyEmailBinding>(FragmentVer
                         binding.otpInputs.setInputEnabled(true)
                         Toast.makeText(requireContext(), "OTP sai hoặc đã hết hạn", Toast.LENGTH_LONG).show()
                     }
+
+                    else -> {}
                 }
             }
         }

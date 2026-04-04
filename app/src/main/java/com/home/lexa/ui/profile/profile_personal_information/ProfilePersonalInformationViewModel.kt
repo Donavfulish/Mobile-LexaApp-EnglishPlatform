@@ -1,6 +1,5 @@
 package com.home.lexa.ui.profile.profile_personal_information
 
-
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,7 +8,6 @@ import com.home.lexa.data.local.UserManager
 import com.home.lexa.domain.models.Profile
 import com.home.lexa.domain.models.UpdateProfileRequest
 import com.home.lexa.domain.repository.ProfileRepository
-import com.home.lexa.ui.auth.login.AuthState
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale

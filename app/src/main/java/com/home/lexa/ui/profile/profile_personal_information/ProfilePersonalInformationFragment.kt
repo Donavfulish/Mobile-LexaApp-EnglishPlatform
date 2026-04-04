@@ -10,7 +10,7 @@ import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.data.local.UserManager
 import com.home.lexa.databinding.FragmentProfilePersonalInformationBinding
 import com.home.lexa.domain.models.UpdateProfileRequest
-import com.home.lexa.ui.profile.ProfileViewModel
+import com.home.lexa.ui.profile.profile.ProfileViewModel
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import java.text.SimpleDateFormat

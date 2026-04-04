@@ -7,9 +7,9 @@ import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.domain.models.SpeakingCourseDetailDto
 import com.home.lexa.domain.models.GetStudyingCourseResponse
-import com.home.lexa.domain.models.UserRole
 import com.home.lexa.domain.repository.CourseRepository
 import com.home.lexa.domain.models.GetFeaturedCourseResponse
+
 class CourseRepositoryImpl(
     private val apiService: CourseApiService
 ) : CourseRepository {

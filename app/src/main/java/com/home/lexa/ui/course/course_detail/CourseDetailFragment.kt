@@ -1,8 +1,5 @@
 package com.home.lexa.ui.course.course_detail
 
-
-
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.home.lexa.R

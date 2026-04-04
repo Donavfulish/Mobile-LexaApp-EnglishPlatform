@@ -1,7 +1,5 @@
 package com.home.lexa.ui.course
 
-
-
 import androidx.fragment.app.commit
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentCourseBinding

@@ -1,4 +1,4 @@
-package com.home.lexa.ui.profile
+package com.home.lexa.ui.profile.profile
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

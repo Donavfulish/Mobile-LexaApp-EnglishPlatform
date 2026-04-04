@@ -1,7 +1,5 @@
 package com.home.lexa.domain.models
 
-import androidx.compose.ui.semantics.Role
-
 enum class UserRole { TEACHER, STUDENT }
 enum class ProviderType { GOOGLE, FACEBOOK, GITHUB }
 

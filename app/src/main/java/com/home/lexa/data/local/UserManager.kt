@@ -3,7 +3,6 @@ package com.home.lexa.data.local
 import android.content.Context
 import com.home.lexa.domain.models.UserInfo
 import com.home.lexa.domain.models.UserRole
-import okhttp3.internal.userAgent
 
 object PreferenceKeys {
     const val USER_ID = "user_id"

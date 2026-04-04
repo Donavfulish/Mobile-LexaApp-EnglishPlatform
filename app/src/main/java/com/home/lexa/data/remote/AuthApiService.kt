@@ -3,11 +3,9 @@ package com.home.lexa.data.remote
 import com.home.lexa.core.network.ApiResponse
 import com.home.lexa.domain.models.AuthResult
 import com.home.lexa.domain.models.LoginRequest
-import com.home.lexa.domain.models.OAuthRegisterRequest
 import com.home.lexa.domain.models.OtpRequest
 import com.home.lexa.domain.models.OtpVerify
 import com.home.lexa.domain.models.RefreshRequest
-import com.home.lexa.domain.models.SignUpRequest
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call

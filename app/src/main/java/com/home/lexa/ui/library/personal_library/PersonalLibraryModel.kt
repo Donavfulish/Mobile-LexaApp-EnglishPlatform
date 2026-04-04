@@ -6,13 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.home.lexa.domain.models.CreateDeckRequest
 import com.home.lexa.domain.models.DeckDto
-import com.home.lexa.domain.models.IntroData
 import com.home.lexa.domain.models.mockUserInfo
 import com.home.lexa.domain.repository.DeckRepository
-import com.home.lexa.domain.repository.IntroRepository
 import kotlinx.coroutines.launch
-
-
 
 class PersonalLibraryModel(private val repository: DeckRepository) : ViewModel() {
 

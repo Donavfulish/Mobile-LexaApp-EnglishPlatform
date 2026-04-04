@@ -1,22 +1,13 @@
 package com.home.lexa.ui.flashcard.flashcard_edit_add
 
-import android.os.Bundle
-import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.fragment.findNavController
-import coil.load
-import com.home.lexa.core.base.BaseFragment
-import com.home.lexa.databinding.FragmentAddEditFlashcardBinding
 import com.home.lexa.domain.models.CreateFlashcardRequest
-import com.home.lexa.domain.models.DeckResult
 import com.home.lexa.domain.models.DetailFlashcard
 import com.home.lexa.domain.models.UpdateFlashcardRequest
-import com.home.lexa.domain.repository.DeckRepository
 import com.home.lexa.domain.repository.FlashcardRepository
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class FlashcardEditAddViewModel(

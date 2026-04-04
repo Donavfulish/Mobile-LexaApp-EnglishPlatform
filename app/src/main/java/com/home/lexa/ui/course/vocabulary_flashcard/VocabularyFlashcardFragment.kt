@@ -1,14 +1,11 @@
 package com.home.lexa.ui.course.vocabulary_flashcard
 
-
-
 import android.util.Log
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
@@ -20,8 +17,6 @@ import com.home.lexa.ui.components.FlashcardMini
 import com.home.lexa.ui.components.Popup
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBinding>(FragmentVocabularyFlashcardBinding::inflate) {
     private val viewModel: VocabularyFlashcardViewModel by viewModel()
     val deck = DeckDto(

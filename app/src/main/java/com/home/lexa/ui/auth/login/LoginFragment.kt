@@ -2,24 +2,19 @@ package com.home.lexa.ui.auth.login
 
 import android.content.Intent
 import android.graphics.Color
-import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
-import com.home.lexa.data.local.UserManager
 import com.home.lexa.databinding.FragmentLoginBinding
 import com.home.lexa.domain.models.LoginRequest
-import com.home.lexa.domain.models.ProviderType
+import com.home.lexa.ui.auth.AuthState
+import com.home.lexa.ui.auth.AuthViewModel
 import com.home.lexa.ui.auth.GoogleUrls
-import com.home.lexa.ui.auth.signup.SignupFragmentDirections
-import com.home.lexa.ui.auth.verify_email.IS_EMAIL_VERIFY_STRING
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
 
@@ -131,6 +126,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                         binding.btnLogin.setText("Đăng Nhập", Color.WHITE) // Khôi phục nút
                         Toast.makeText(requireContext(), "Tài khoản chưa được đăng ký hoặc không hợp lệ", Toast.LENGTH_LONG).show()
                     }
+
+                    else -> {}
                 }
             }
         }

@@ -21,15 +21,12 @@ import com.home.lexa.domain.models.ProviderType
 import com.home.lexa.domain.models.SignUpRequest
 import com.home.lexa.domain.models.UserRole
 import com.home.lexa.ui.auth.GoogleUrls
-import com.home.lexa.ui.auth.login.AuthState
-import com.home.lexa.ui.auth.login.AuthViewModel
+import com.home.lexa.ui.auth.AuthState
+import com.home.lexa.ui.auth.AuthViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
-import android.provider.OpenableColumns
-import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import coil.load
-import coil.size.ViewSizeResolver
 import com.home.lexa.ui.auth.verify_email.IS_EMAIL_VERIFY_STRING
 import com.home.lexa.ui.utils.DateUtils
 import com.home.lexa.ui.utils.MediaUtils
@@ -329,6 +326,8 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                         binding.btnSignup.setText("Đăng Ký", Color.WHITE) // Khôi phục nút
                         Toast.makeText(requireContext(), "Tài khoản đã tồn tại hoặc không hợp lệ", Toast.LENGTH_LONG).show()
                     }
+
+                    else -> {}
                 }
             }
         }

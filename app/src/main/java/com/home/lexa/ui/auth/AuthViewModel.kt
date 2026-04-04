@@ -1,10 +1,9 @@
-package com.home.lexa.ui.auth.login
+package com.home.lexa.ui.auth
 
 import android.app.Application
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.home.lexa.data.local.TokenManager
@@ -16,16 +15,12 @@ import com.home.lexa.domain.models.OAuthRegisterRequest
 import com.home.lexa.domain.models.SignUpRequest
 import com.home.lexa.domain.repository.AuthRespository
 import com.home.lexa.ui.utils.MediaUtils
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
-import javax.inject.Inject
-import dagger.hilt.android.internal.Contexts.getApplication
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.AndroidViewModel
 import com.home.lexa.domain.models.OtpRequest
 import com.home.lexa.domain.models.OtpVerify
@@ -87,9 +82,11 @@ class AuthViewModel (
                 if (authResult.ok) {
                     saveUserAndToken(authResult)
 
-                    _loginState.value = AuthState.Success(authResult.message ?: "Đăng nhập thành công")
+                    _loginState.value =
+                        AuthState.Success(authResult.message ?: "Đăng nhập thành công")
                 } else {
-                    _loginState.value = AuthState.Error(authResult.message ?: "Sai email hoặc mật khẩu")
+                    _loginState.value =
+                        AuthState.Error(authResult.message ?: "Sai email hoặc mật khẩu")
                 }
             }.onFailure { error ->
                 _loginState.value = AuthState.Error(error.message ?: "Có lỗi xảy ra")
@@ -118,7 +115,8 @@ class AuthViewModel (
                 if (authResult.ok) {
                     saveUserAndToken(authResult)
 
-                    _signupState.value = AuthState.Success(authResult.message ?: "Đăng ký thành công")
+                    _signupState.value =
+                        AuthState.Success(authResult.message ?: "Đăng ký thành công")
                 } else {
                     _signupState.value = AuthState.Error(authResult.message ?: "Lỗi đăng ký")
                 }
@@ -151,9 +149,11 @@ class AuthViewModel (
                 if (authResult.ok) {
                     saveUserAndToken(authResult)
 
-                    _signupState.value = AuthState.Success(authResult.message ?: "Đăng ký với Google thành công")
+                    _signupState.value =
+                        AuthState.Success(authResult.message ?: "Đăng ký với Google thành công")
                 } else {
-                    _signupState.value = AuthState.Error(authResult.message ?: "Lỗi đăng ký bằng Google")
+                    _signupState.value =
+                        AuthState.Error(authResult.message ?: "Lỗi đăng ký bằng Google")
                 }
             }.onFailure { error ->
                 _signupState.value = AuthState.Error(error.message ?: "Có lỗi xảy ra")
@@ -172,9 +172,11 @@ class AuthViewModel (
                 if (authResult.ok) {
                     saveUserAndToken(authResult)
 
-                    _loginState.value = AuthState.Success(authResult.message ?: "Đăng nhập bằng Google thành công")
+                    _loginState.value =
+                        AuthState.Success(authResult.message ?: "Đăng nhập bằng Google thành công")
                 } else {
-                    _loginState.value = AuthState.Error(authResult.message ?: "Sai thông tin tài khoản Google")
+                    _loginState.value =
+                        AuthState.Error(authResult.message ?: "Sai thông tin tài khoản Google")
                 }
             }.onFailure { error ->
                 _loginState.value = AuthState.Error(error.message ?: "Có lỗi xảy ra")

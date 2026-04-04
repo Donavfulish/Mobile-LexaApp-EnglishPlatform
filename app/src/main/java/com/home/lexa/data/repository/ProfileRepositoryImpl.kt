@@ -11,11 +11,11 @@ class ProfileRepositoryImpl(private val apiService: ProfileApiService) : Profile
 
     override suspend fun getProfile(): Result<Profile> {
         return try {
-                val profile: Profile? = AppMemoryCache.get("getProfile");
-                Log.d("ProfileCache", profile.toString())
-                if (profile != null){
-                    return Result.success(profile);
-                }
+            val profile: Profile? = AppMemoryCache.get("getProfile");
+            Log.d("ProfileCache", profile.toString())
+            if (profile != null){
+                return Result.success(profile);
+            }
 
             val response = apiService.getProfile();
             val body = response.body()
