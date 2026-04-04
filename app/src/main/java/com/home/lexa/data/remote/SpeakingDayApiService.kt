@@ -23,9 +23,9 @@ interface SpeakingDayApiService {
     suspend fun createSpeakingDay(@Body request: CreateSpeakingDayRequest): Response<ApiResponse<Long>>
 
     @PATCH("api/users/me/speaking-day/{speakingDayId}")
-    suspend fun editSpeakingDay(@Path("speakingDayId") speakingDayId: Long, @Body request: EditSpeakingDayRequest): Response<ApiResponse<Map<String, Any>>>
+    suspend fun editSpeakingDay(@Path("speakingDayId") speakingDayId: Long, @Body request: EditSpeakingDayRequest): Response<ApiResponse<Any>>
 
     @DELETE("api/users/me/speaking-day/{speakingDayId}")
-    suspend fun deleteSpeakingDay(@Path("speakingDayId") speakingDayId: Long): Response<ApiResponse<Map<String, Any>>>
+    suspend fun deleteSpeakingDay(@Path("speakingDayId") speakingDayId: Long): Response<ApiResponse<Any>>
 
 }

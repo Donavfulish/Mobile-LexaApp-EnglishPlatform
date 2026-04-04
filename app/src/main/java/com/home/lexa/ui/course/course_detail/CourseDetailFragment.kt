@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import coil.load
 import com.home.lexa.MainActivity
 import com.home.lexa.core.base.BaseFragment
+import com.home.lexa.data.local.UserManager
 import com.home.lexa.databinding.FragmentCourseDetailBinding
 import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.ColorLabel
@@ -28,55 +29,36 @@ import com.home.lexa.ui.components.PopUpInput
 import com.home.lexa.ui.components.StudentSpeakingDayCard
 import com.home.lexa.ui.components.TeacherSpeakingDayCard
 import com.home.lexa.ui.components.ToggleSwitch
+import org.koin.android.ext.android.inject
 
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentCourseDetailBinding::inflate) {
     private val viewModel: CourseDetailViewModel by viewModel()
     private var isSpeakingMode = true
-    private var isTeacher = true
+    private var isOwner = true
     private var isPublic = true
     private var selectedTopicId: Int? = null
     var courseId = 17L
     private lateinit var list_topic: List<Topic>
+    private val activityBinding by lazy { (requireActivity() as MainActivity).binding }
+
+
+    private val userManager: UserManager by inject()
     override fun setupViews() {
 
         val courseId = arguments?.getLong("courseId") ?: -1L
-
         if (courseId == -1L) {
             viewModel.loadTopics()
         } else {
             viewModel.loadCourseDetail(courseId)
         }
 
-        val activityBinding = (requireActivity() as MainActivity).binding
         activityBinding.appBarLayout.apply {
             removeCustomView()
             setOnClickBack()
         }
-        activityBinding.appBarLayout.apply {
-            val linearLayout = LinearLayout(requireContext()).apply {
-                orientation = LinearLayout.HORIZONTAL
-                gravity = android.view.Gravity.CENTER_VERTICAL
-            }
-            val publicTitleView = TextView(requireContext()).apply {
-                setText("Public")
-                setTextSize(android.util.TypedValue.COMPLEX_UNIT_DIP, 14f)
 
-                val typeface = androidx.core.content.res.ResourcesCompat.getFont(requireContext(), R.font.archivo_bold)
-                setTypeface(typeface)
-                setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-                setPadding(0, 0, 20, 0)
-            }
-            val publicToggleView = ToggleSwitch(requireContext())
-            publicToggleView.isChecked = isPublic
-            publicToggleView.onCheckedChangeListener = { isChecked ->
-                isPublic = isChecked
-            }
-            linearLayout.addView(publicTitleView)
-            linearLayout.addView(publicToggleView)
-            insertCustomeViewRight(linearLayout)
-        }
         activityBinding.appBarLayout.apply {
             setText("Chi tiết khoá học");
             setBackButtonVisible(true);
@@ -129,13 +111,6 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
         }
 
 
-        // =============================================ROLE SETUP==========================================
-        if(isTeacher){
-            setUpTeacher()
-        } else {
-            setUpStudent()
-        }
-
         binding.topic.setOnClickAction {
             AppMemoryCache.remove("speakingCourseDetail_${courseId}")
             AppMemoryCache.remove("vocabularyList_${courseId}")
@@ -156,7 +131,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 binding.shimmerLayout.stopShimmer()
                 binding.shimmerLayout.visibility = View.GONE
                 binding.contentScroll.visibility = View.VISIBLE
-                if(isTeacher){
+                if(isOwner){
                     binding.addBtn.visibility = View.VISIBLE
                     binding.topLayoutTeacher.visibility = View.VISIBLE
                     binding.middleLayoutTeacher.visibility = View.VISIBLE
@@ -186,6 +161,11 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             val list_topic_name = list_topic?.map { it.name }
             val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, list_topic_name!!)
             binding.topicInput.setAdapter(adapter)
+            if(isOwner){
+                setUpTeacher()
+            } else {
+                setUpStudent()
+            }
         }
 
         // THEO DOI TINH TRANG KHOA HOC TRA VE
@@ -193,6 +173,15 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             if (course == null){
                 Toast.makeText(requireContext(), "Không tìm thấy dữ liệu khóa học", Toast.LENGTH_SHORT).show()
                 return@observe
+            }
+            if(course.creator.id != userManager.getUserId()){
+                isOwner = false
+            }
+            // =============================================ROLE SETUP==========================================
+            if(isOwner){
+                setUpTeacher()
+            } else {
+                setUpStudent()
             }
             list_topic = viewModel.courseDetailData.value?.list_topic!!
             val list_topic_name = list_topic?.map { it.name }
@@ -214,7 +203,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             binding.speakingNum.text = "${course.list_speaking_day.size} Bài học"
             binding.speakingDayLayout.removeAllViews()
 
-            if(isTeacher){
+            if(isOwner){
                 selectedTopicId = course.list_topic.find { it.name == course.type }?.id
                 binding.topicInput.setTextSize(14f)
                 binding.topicInput.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
@@ -238,7 +227,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             }
 
             course.list_speaking_day.forEachIndexed {index, day ->
-                val dayCard = if (isTeacher) {
+                val dayCard = if (isOwner) {
                     TeacherSpeakingDayCard(requireContext()).apply {
                         setData(
                             _day = index + 1,
@@ -303,7 +292,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                     setMargins(16, 16, 16, 16)
                 }
                 card.layoutParams = params
-                if (isTeacher){
+                if (isOwner){
                     binding.vocabularyGrid2.addView(card)
                 } else {
                     binding.vocabularyGrid.addView(card)
@@ -389,6 +378,31 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
     }
 
     private fun setUpTeacher(){
+
+        activityBinding.appBarLayout.apply {
+            val linearLayout = LinearLayout(requireContext()).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = android.view.Gravity.CENTER_VERTICAL
+            }
+            val publicTitleView = TextView(requireContext()).apply {
+                setText("Public")
+                setTextSize(android.util.TypedValue.COMPLEX_UNIT_DIP, 14f)
+
+                val typeface = androidx.core.content.res.ResourcesCompat.getFont(requireContext(), R.font.archivo_bold)
+                setTypeface(typeface)
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                setPadding(0, 0, 20, 0)
+            }
+            val publicToggleView = ToggleSwitch(requireContext())
+            publicToggleView.isChecked = isPublic
+            publicToggleView.onCheckedChangeListener = { isChecked ->
+                isPublic = isChecked
+            }
+            linearLayout.addView(publicTitleView)
+            linearLayout.addView(publicToggleView)
+            insertCustomeViewRight(linearLayout)
+        }
+
         binding.editToggle.onCheckedChangeListener = { isChecked ->
             for (i in 0 until binding.vocabularyGrid2.childCount) {
                 val child = binding.vocabularyGrid2.getChildAt(i)
