@@ -7,6 +7,7 @@ import com.home.lexa.domain.models.OAuthRegisterRequest
 import com.home.lexa.domain.models.OtpRequest
 import com.home.lexa.domain.models.OtpVerify
 import com.home.lexa.domain.models.SignUpRequest
+import com.home.lexa.domain.models.UserInfo
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
@@ -17,6 +18,7 @@ interface AuthRespository {
         languagePart: MultipartBody.Part?,
         pedagogyPart: MultipartBody.Part?
     ): Result<AuthResult>
+    suspend fun getMe(): Result<UserInfo?>
     suspend fun loginGoogle(): Result<AuthResult>
     suspend fun signupGoogle(
          dataPart: RequestBody,

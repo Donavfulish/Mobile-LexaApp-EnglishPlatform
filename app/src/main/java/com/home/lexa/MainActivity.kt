@@ -1,6 +1,7 @@
 package com.home.lexa
 
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -21,12 +22,15 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import kotlin.getValue
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.home.lexa.data.local.TokenManager
 import com.home.lexa.data.remote.AuthApiService
 import com.home.lexa.data.repository.AuthRespositoryImpl
 import com.home.lexa.domain.models.GoogleUserInfo
 import com.home.lexa.domain.models.OAuthGoogleResult
+import com.home.lexa.ui.auth.login.AuthState
 import com.home.lexa.ui.auth.login.AuthViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.Retrofit
@@ -34,12 +38,19 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
     private val authViewModel: AuthViewModel by viewModel()
+    private var isFirstAuthenticated: Boolean = false
 
     // binding: tuơng tác giao diện thay vì dùng findViewById
     private val userManager: UserManager by inject()
     lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        splashScreen.setKeepOnScreenCondition { !isFirstAuthenticated }
+
+        authViewModel.getMe()
+
         /*
         + ActivityMainBinding: là một class tự động sinh ra dựa trêm file activity_main.xml
         + inflate: hàm dịch file XML tĩnh thành các View động
@@ -48,13 +59,14 @@ class MainActivity : AppCompatActivity() {
          */
         binding = ActivityMainBinding.inflate(layoutInflater)
 
-
         /*
         binding.root: thẻ gốc -> thẻ <androidx.constraintlayout.widget.ConstraintLayout
         setContentView(View view): Hiển thị giao diện view lên màn hình điện thoại
          */
         setContentView(binding.root)
         setupNavigation()
+
+        observeData()
 
         handleIntent(intent)
 
@@ -183,6 +195,34 @@ class MainActivity : AppCompatActivity() {
                             ).show()
                         }
                     }
+                }
+            }
+        }
+    }
+
+    private fun observeData() {
+        this.lifecycleScope.launch {
+            authViewModel.loginState.collect { state ->
+                val navHostFragment = supportFragmentManager
+                    .findFragmentById(R.id.fragmentContainer) as NavHostFragment
+                val navController = navHostFragment.navController
+
+                val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
+
+                when (state) {
+                    is AuthState.Success -> {
+                        isFirstAuthenticated = true
+                        authViewModel.resetState()
+                        navGraph.setStartDestination(R.id.homeFragment)
+                        navController.graph = navGraph
+                    }
+                    is AuthState.Error -> {
+                        isFirstAuthenticated = true
+                        authViewModel.resetState()
+                        navGraph.setStartDestination(R.id.loginFragment)
+                        navController.graph = navGraph
+                    }
+                    else -> {}
                 }
             }
         }

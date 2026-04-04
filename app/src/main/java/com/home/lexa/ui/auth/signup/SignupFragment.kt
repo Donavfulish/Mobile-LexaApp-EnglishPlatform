@@ -30,6 +30,7 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import coil.load
 import coil.size.ViewSizeResolver
+import com.google.firebase.auth.OAuthProvider
 import com.home.lexa.ui.auth.verify_email.IS_EMAIL_VERIFY_STRING
 import com.home.lexa.ui.utils.DateUtils
 import com.home.lexa.ui.utils.MediaUtils
@@ -73,8 +74,6 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
             viewModel.resetOAuth()
             findNavController().popBackStack()
         }
-
-        handleNavigation()
     }
 
     private fun setupRoleToggle() {
@@ -324,8 +323,10 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                         binding.btnSignup.setText("Đang xử lý...", Color.WHITE)
                     }
                     is AuthState.Success -> {
-                        Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
-                        findNavController().navigate(R.id.action_signupFragment_to_homeFragment)
+                        if (oauthProvider != null) {
+                            Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                            findNavController().navigate(R.id.action_signupFragment_to_homeFragment)
+                        }
                         viewModel.resetState()
                     }
                     is AuthState.Error -> {
@@ -366,15 +367,5 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
         val action = SignupFragmentDirections.actionSignupFragmentToVerifyEmail(email)
 
         findNavController().navigate(action)
-    }
-
-    private fun handleNavigation() {
-        val navBackStackEntry = findNavController().currentBackStackEntry
-
-        navBackStackEntry?.savedStateHandle?.getLiveData<Boolean>(IS_EMAIL_VERIFY_STRING)
-            ?.observe(viewLifecycleOwner) {
-                navBackStackEntry.savedStateHandle.remove<Boolean>(IS_EMAIL_VERIFY_STRING)
-                findNavController().popBackStack()
-            }
     }
 }

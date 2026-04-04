@@ -14,7 +14,6 @@ import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentVerifyEmailBinding
 import com.home.lexa.ui.auth.login.AuthState
 import com.home.lexa.ui.auth.login.AuthViewModel
-import com.home.lexa.ui.auth.signup.SignupFragmentDirections
 import com.home.lexa.ui.utils.StringUtils
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
@@ -32,9 +31,7 @@ class VerifyEmailFragment : BaseFragment<FragmentVerifyEmailBinding>(FragmentVer
         val maskedEmail = StringUtils.maskEmail(email)
 
         binding.btnBack.setOnClickListener {
-            val navController = findNavController()
-            navController.previousBackStackEntry?.savedStateHandle?.set(IS_EMAIL_VERIFY_STRING, false)
-            navController.popBackStack()
+            findNavController().popBackStack()
         }
 
         binding.tvSubtitle.text = "Mở hộp thư ${maskedEmail} để lấy mã"
@@ -66,8 +63,9 @@ class VerifyEmailFragment : BaseFragment<FragmentVerifyEmailBinding>(FragmentVer
                         findNavController().navigate(action)
                     }
                     is AuthState.Error -> {
-                        binding.otpInputs.showError()
                         binding.otpInputs.setInputEnabled(true)
+                        binding.otpInputs.showError()
+
                         Toast.makeText(requireContext(), "OTP sai hoặc đã hết hạn", Toast.LENGTH_LONG).show()
                     }
                 }

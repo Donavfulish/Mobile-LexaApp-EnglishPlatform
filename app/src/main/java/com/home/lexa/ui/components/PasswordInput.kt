@@ -1,7 +1,9 @@
 package com.home.lexa.ui.components
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
+import android.util.SparseArray
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.core.widget.doOnTextChanged
@@ -19,6 +21,16 @@ class PasswordInput @JvmOverloads constructor(
     init {
         binding.etInput.transformationMethod = android.text.method.PasswordTransformationMethod.getInstance()
         setupPasswordToggle()
+    }
+
+    override fun dispatchSaveInstanceState(container: SparseArray<Parcelable>) {
+        // Chặn không cho các view con (EditText) tự lưu theo ID chung của tụi nó
+        dispatchFreezeSelfOnly(container)
+    }
+
+    override fun dispatchRestoreInstanceState(container: SparseArray<Parcelable>) {
+        // Chặn không cho các view con tự khôi phục theo ID chung
+        dispatchThawSelfOnly(container)
     }
 
     private fun setupPasswordToggle() {

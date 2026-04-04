@@ -128,6 +128,26 @@ class AuthViewModel (
         }
     }
 
+    fun getMe() {
+        viewModelScope.launch {
+            _loginState.value = AuthState.Loading
+
+            val result = repository.getMe()
+
+            result.onSuccess { user ->
+                if (user != null) {
+                    userManager.saveUser(user)
+
+                    _loginState.value = AuthState.Success("Lấy thông tin User thành công")
+                } else {
+                    _loginState.value = AuthState.Error("Người dùng chưa đăng nhập")
+                }
+            }.onFailure { error ->
+                _loginState.value = AuthState.Error(error.message ?: "Có lỗi xảy ra")
+            }
+        }
+    }
+
     fun setLanguageUri(uri: Uri?) { selectedLanguageUri = uri }
     fun setPedagogyUri(uri: Uri?) { selectedPedagogyUri = uri }
 

@@ -8,6 +8,7 @@ import com.home.lexa.domain.models.OtpRequest
 import com.home.lexa.domain.models.OtpVerify
 import com.home.lexa.domain.models.RefreshRequest
 import com.home.lexa.domain.models.SignUpRequest
+import com.home.lexa.domain.models.UserInfo
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -38,6 +39,9 @@ interface AuthApiService {
     )
     @POST("api/auth/refresh")
     fun refreshToken(@Body request: RefreshRequest): Call<ApiResponse<AuthResult>>
+
+    @GET("api/auth/me")
+    suspend fun getMe(): Response<ApiResponse<UserInfo?>>
 
     @GET("/api/auth/google/check")
     suspend fun loginGoogle(): Response<ApiResponse<AuthResult>>

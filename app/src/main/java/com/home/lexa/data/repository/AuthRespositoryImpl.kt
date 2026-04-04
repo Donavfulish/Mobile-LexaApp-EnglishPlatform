@@ -9,6 +9,7 @@ import com.home.lexa.domain.models.OAuthRegisterRequest
 import com.home.lexa.domain.models.OtpRequest
 import com.home.lexa.domain.models.OtpVerify
 import com.home.lexa.domain.models.SignUpRequest
+import com.home.lexa.domain.models.UserInfo
 import com.home.lexa.domain.repository.AuthRespository
 import com.home.lexa.ui.utils.MediaUtils
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -51,6 +52,25 @@ class AuthRespositoryImpl(private val apiService: AuthApiService) : AuthResposit
                 } else {
                     // Nếu BE trả success = false, lấy message lỗi từ ApiResponse
                     Result.failure(Exception(body.message ?: "Đăng nhập thất bại từ server"))
+                }
+            } else {
+                Result.failure(Exception("Lỗi máy chủ: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(Exception("Lỗi kết nối mạng: ${e.message}"))
+        }
+    }
+
+    override suspend fun getMe(): Result<UserInfo?> {
+        return try {
+            val response = apiService.getMe()
+            val body = response.body()
+
+            if (response.isSuccessful && body != null) {
+                if (body.success == true && body.data != null) {
+                    Result.success(body.data)
+                } else {
+                    Result.failure(Exception(body.message ?: "Người dùng chưa đăng nhập"))
                 }
             } else {
                 Result.failure(Exception("Lỗi máy chủ: ${response.code()}"))

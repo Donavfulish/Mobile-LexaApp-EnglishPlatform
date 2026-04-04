@@ -2,7 +2,9 @@ package com.home.lexa.ui.components
 
 import android.content.Context
 import android.graphics.PorterDuff
+import android.os.Parcelable
 import android.util.AttributeSet
+import android.util.SparseArray
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +22,16 @@ class NormalInput @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val binding = InputNormalBinding.inflate(LayoutInflater.from(context), this, true)
+
+    override fun dispatchSaveInstanceState(container: SparseArray<Parcelable>) {
+        // Chặn không cho các view con (EditText) tự lưu theo ID chung của tụi nó
+        dispatchFreezeSelfOnly(container)
+    }
+
+    override fun dispatchRestoreInstanceState(container: SparseArray<Parcelable>) {
+        // Chặn không cho các view con tự khôi phục theo ID chung
+        dispatchThawSelfOnly(container)
+    }
 
     // Set giá trị label và hiển`    thị Label trên ô Input
     fun setLabel(text: String?) {

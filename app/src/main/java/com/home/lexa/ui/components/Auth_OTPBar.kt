@@ -25,6 +25,7 @@ class Auth_OTPBar @JvmOverloads constructor(
     private var lastCompletedOtp: String = ""
 
     init {
+        clearError()
         setupOtpListener()
 
         // Khi click vào vùng đệm xung quanh PinView
@@ -47,7 +48,8 @@ class Auth_OTPBar @JvmOverloads constructor(
 
                     // Optional: Tự động ẩn bàn phím khi xong
                     // hideKeyboard()
-                } else if (otp.length < 6) {
+                } else if (otp.length == 5) {
+                    clearError()
                     lastCompletedOtp = ""
                 }
             }
@@ -69,7 +71,7 @@ class Auth_OTPBar @JvmOverloads constructor(
             isFocusable = enabled
             isFocusableInTouchMode = enabled
             isCursorVisible = enabled
-            alpha = 1.0f
+            alpha = if (enabled) 1.0f else 0.5f
 
             if (enabled) {
 //                inputType = InputType.TYPE_CLASS_NUMBER
@@ -94,8 +96,9 @@ class Auth_OTPBar @JvmOverloads constructor(
     fun showError() {
         val errorColor = Color.parseColor("#FF0000")
         binding.pinview.apply {
+            alpha = 1.0f
             setLineColor(errorColor)
-            setItemBackgroundColor(Color.WHITE)
+            // setItemBackgroundColor(Color.WHITE)
             // Lắc nhẹ máy để báo lỗi (User sẽ hiểu là sai mà không cần nhìn màu xám)
             animate().translationX(10f).setDuration(50).setInterpolator(android.view.animation.CycleInterpolator(3f)).start()
         }

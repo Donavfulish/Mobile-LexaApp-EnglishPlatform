@@ -133,4 +133,7 @@ dependencies {
 
     //12. Upload & Hiển thị ảnh
     implementation("io.coil-kt:coil:2.5.0")
+
+    //13. Splash Screen
+    implementation("androidx.core:core-splashscreen:1.0.1")
 }
