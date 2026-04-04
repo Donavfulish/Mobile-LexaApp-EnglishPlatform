@@ -1,4 +1,4 @@
-package com.home.lexa.ui.profile
+package com.home.lexa.ui.profile.profile
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,7 +8,6 @@ import com.home.lexa.data.local.UserManager
 import com.home.lexa.domain.models.Profile
 import com.home.lexa.domain.models.UpdateProfileRequest
 import com.home.lexa.domain.repository.ProfileRepository
-import com.home.lexa.ui.auth.login.AuthState
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
@@ -24,7 +23,10 @@ class ProfileViewModel(
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
-    fun fetchProfile() {
+    private val _updateSuccess = MutableLiveData<Boolean>()
+    val updateSuccess: LiveData<Boolean> = _updateSuccess
+
+    fun fetchProfile(forceRefresh: Boolean = false) {
         val userId = userManager.getUserId()
         if (userId == -1) {
             _error.value = "Không tìm thấy User ID"
@@ -32,38 +34,31 @@ class ProfileViewModel(
         }
 
         viewModelScope.launch {
-            // repository.getProfile giờ trả về Result<Profile>
-            val result = repository.getProfile(userId)
-
+            _isLoading.value = true
+            val result = repository.getProfile()
             result.onSuccess { profile ->
                 _profileData.value = profile
             }.onFailure { exception ->
                 _error.value = exception.message ?: "Lỗi không xác định"
             }
+            _isLoading.value = false
         }
     }
 
     fun updateProfile(data: UpdateProfileRequest) {
         viewModelScope.launch {
-             _isLoading.value = true
-
+            _isLoading.value = true
             val result = repository.updateProfile(data)
-
             result.onSuccess {
-                val currentProfile = _profileData.value ?: return@onSuccess
-
-                val updatedProfile = currentProfile.copy(
-                    fullName = data.fullName,
-                    DoB = data.DoB,
-                    address = data.address
-                )
-
-                _profileData.value = updatedProfile
+                _updateSuccess.value = true
             }.onFailure { exception ->
                 _error.value = exception.message ?: "Lỗi không xác định"
             }
-
             _isLoading.value = false
         }
+    }
+
+    fun resetUpdateStatus() {
+        _updateSuccess.value = false
     }
 }

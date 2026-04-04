@@ -1,9 +1,7 @@
 package com.home.lexa.data.remote
 
 import com.home.lexa.core.network.ApiResponse
-import com.home.lexa.domain.models.CreateCourseRequest
 import com.home.lexa.domain.models.CreateSpeakingDayRequest
-import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.EditSpeakingDayRequest
 import retrofit2.Response
 import retrofit2.http.Body

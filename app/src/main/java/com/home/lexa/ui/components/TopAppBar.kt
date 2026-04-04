@@ -19,7 +19,9 @@ class TopAppBar @JvmOverloads constructor(
     fun setText(text: String){
         binding.title.text = text
     }
-
+    fun setBottomBorderVisible(isVisible: Boolean) {
+        binding.bottomBorder.visibility = if (isVisible) View.VISIBLE else View.GONE
+    }
     fun setBackButtonVisible(isVisible: Boolean){
         binding.leftBtn.visibility = if (isVisible) android.view.View.VISIBLE else android.view.View.GONE
     }

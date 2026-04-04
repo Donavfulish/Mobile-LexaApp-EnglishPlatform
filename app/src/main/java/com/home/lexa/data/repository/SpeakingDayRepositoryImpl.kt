@@ -1,10 +1,7 @@
 package com.home.lexa.data.repository
 
-import com.home.lexa.data.remote.CourseApiService
 import com.home.lexa.data.remote.SpeakingDayApiService
-import com.home.lexa.domain.models.CreateCourseRequest
 import com.home.lexa.domain.models.CreateSpeakingDayRequest
-import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.EditSpeakingDayRequest
 import com.home.lexa.domain.repository.SpeakingDayRepository
 

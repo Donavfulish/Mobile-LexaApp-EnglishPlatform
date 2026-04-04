@@ -1,10 +1,12 @@
 package com.home.lexa.ui.course.vocabulary_flashcard
 
-
-
+import android.util.Log
+import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.observe
+import androidx.core.os.bundleOf
+import androidx.navigation.fragment.findNavController
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentVocabularyFlashcardBinding
@@ -12,8 +14,8 @@ import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.DeckDto
 import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.ui.components.FlashcardMini
+import com.home.lexa.ui.components.Popup
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBinding>(FragmentVocabularyFlashcardBinding::inflate) {
     private val viewModel: VocabularyFlashcardViewModel by viewModel()
@@ -24,8 +26,15 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
         createdAt = "2 Ngày trước"
     )
     private var vocabLearning = 0
+    private val deckId by lazy { arguments?.getLong("DECK_ID_KEY") }
+    private val deckTitle by lazy { arguments?.getString("DECK_TITLE_KEY") }
+    private val deckVocabNum by lazy { arguments?.getInt("DECK_VOCAB_NUMBER_KEY") }
+
     override fun setupViews() {
-        binding.deckTitle.text = deck.title
+
+        if(deckId == null || deckId == 0L) return
+
+        binding.deckTitle.text = deckTitle
 
         binding.startBtn.apply {
             setIconPadding(10)
@@ -34,6 +43,11 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play_circle))
             setIconColor(ContextCompat.getColor(requireContext(), R.color.white))
             setBackground(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
+
+            setOnClickAction {
+                Log.d("LEXA_DEBUG", "Đã ấn nút startBtn 1")
+                navigateToExerciseMode()
+            }
         }
         binding.startBtn2.apply {
             setIconPadding(10)
@@ -42,6 +56,12 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play_circle))
             setIconColor(ContextCompat.getColor(requireContext(), R.color.white))
             setBackground(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
+
+
+            setOnClickAction {
+                Log.d("LEXA_DEBUG", "Đã ấn nút startBtn 2")
+                navigateToExerciseMode()
+            }
         }
         binding.vocabularyIconBtn.apply {
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_book)!!)
@@ -59,7 +79,43 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
                 }
             }
         }
-        viewModel.loadFlashcardDetail(deck.id)
+        binding.vocabularyIconBtn.setOnClickAction {
+            val bundle = Bundle().apply {
+                putBoolean("IS_EDIT_KEY", false)
+                putLong("DECK_ID_KEY", deckId!!)
+
+            }
+            findNavController().navigate(R.id.action_vocabularyFlashcardFragment_to_flashcardAddEditFragment,bundle)
+        }
+        viewModel.loadFlashcardDetail(deckId!!)
+    }
+
+    private fun navigateToExerciseMode() {
+        Log.d("LEXA_DEBUG", "Hàm navigateToExerciseMode được gọi")
+
+        try {
+            val forgotten = deck.vocabNumber - vocabLearning
+            Log.d("LEXA_DEBUG", "Dữ liệu chuẩn bị chuyển: deckId=${deck.id}, rem=$vocabLearning, forg=$forgotten, total=${deck.vocabNumber}")
+
+            val bundle = bundleOf(
+                "deckId" to deck.id,
+                "rememberedCount" to vocabLearning,
+                "forgottenCount" to forgotten,
+                "totalCards" to deck.vocabNumber
+            )
+
+            Log.d("LEXA_DEBUG", "Bắt đầu gọi findNavController().navigate...")
+            findNavController().navigate(
+                R.id.action_vocabularyFlashcardFragment_to_exerciseModeFragment,
+                bundle
+            )
+            Log.d("LEXA_DEBUG", "Chuyển trang thành công!")
+
+        } catch (e: Exception) {
+            // Nếu có lỗi do Nav Graph chưa mapping đúng, nó sẽ văng vào đây
+            Log.e("LEXA_DEBUG", "LỖI CHUYỂN TRANG: ${e.message}", e)
+            Toast.makeText(requireContext(), "Lỗi chuyển trang: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun observeData() {
@@ -77,10 +133,17 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
 
         viewModel.flashcardDetailData.observe(viewLifecycleOwner) { flashcards ->
             if (flashcards.isNullOrEmpty()) return@observe
-            val vocabNumber = deck.vocabNumber
-            val percentage = vocabLearning * 100 / vocabNumber
-            binding.progressText.text = "Tiến độ: ${percentage}%"
-            binding.progress.setProgressVocabulary(percentage, vocabNumber, vocabLearning)
+            val vocabNumber = deckVocabNum
+
+           if(vocabNumber != null){
+               val percentage = vocabLearning * 100 / vocabNumber
+               binding.progressText.text = "Tiến độ: ${percentage}%"
+               binding.progress.setProgressVocabulary(percentage, vocabNumber, vocabLearning)
+           }else{
+               binding.progressText.text = "Tiến độ: 0%"
+               binding.progress.setProgressVocabulary(0, 0, 0)
+           }
+
             binding.flashcardNum.text = "${flashcards.size}"
             binding.vocabularyGrid.removeAllViews()
             flashcards.forEach { item ->
@@ -96,7 +159,44 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
                     example = item.example ?: ""
                 )
                 card.setData(vocab)
+                card.onDeleteClick = {
 
+                    val deletePopup = Popup(requireContext())
+
+
+                    deletePopup.showDialog(
+                        title = "Xóa từ vựng",
+                        subTitle = "Bạn có chắc chắn muốn xóa từ '${item.word}' không? Dữ liệu bị xóa sẽ không thể khôi phục.",
+                        isWarning = true, // Bật cờ này lên để chữ và nút Xác nhận thành màu đỏ
+                        confirmText = "Xóa",
+                        onConfirm = {
+
+                            viewModel.deleteFlashcard(item.id,deckId !!)
+                        },
+                        onCancel = {
+
+                        }
+                    )
+
+                }
+                card.onEditClick = {
+
+                    val bundle = Bundle().apply {
+                        putBoolean("IS_EDIT_KEY", true)
+                        putString("WORD_KEY", item.word)
+                        putString("TRANS_KEY", item.transcription)
+                        putString("MEANING", item.meaning)
+                        putString("EXAMPLE_KEY", item.example)
+                        putString("POS_KEY", item.partOfSpeech)
+                        putLong("FLASHCARD_ID_KEY", item.id)
+                        putString("IMAGE_URL_KEY", item.imageUrl)
+                        putString("TYPE_KEY", item.type)
+                        putLong("DECK_ID_KEY", deckId!!)
+
+                    }
+                    findNavController().navigate(R.id.action_vocabularyFlashcardFragment_to_flashcardAddEditFragment,bundle)
+
+                }
                 val params = androidx.gridlayout.widget.GridLayout.LayoutParams().apply {
                     width = 0
                     height = androidx.gridlayout.widget.GridLayout.LayoutParams.WRAP_CONTENT
@@ -113,5 +213,13 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
                 vocabLearning = result.rememberedCount!!
             }
         }
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("RELOAD_DATA")
+            ?.observe(viewLifecycleOwner) { shouldReload ->
+                if (shouldReload) {
+
+                    viewModel.loadFlashcardDetail(deckId!!)
+                    findNavController().currentBackStackEntry?.savedStateHandle?.remove<Boolean>("RELOAD_DATA")
+                }
+            }
     }
 }

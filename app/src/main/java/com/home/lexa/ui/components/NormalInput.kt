@@ -9,14 +9,11 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
-import androidx.annotation.ColorInt
-import androidx.compose.ui.graphics.Color
+import androidx.annotation.DrawableRes
 import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
 import com.home.lexa.databinding.InputNormalBinding
-import com.home.lexa.databinding.ButtonLexaBinding
 
-// Kế thừa FrameLayout để bọc component XML lại
 class NormalInput @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
@@ -43,15 +40,12 @@ class NormalInput @JvmOverloads constructor(
         }
     }
 
-    // Cài đặt nội dung hint
     fun setPlaceHolderText(text: String?) {
         if (text.isNullOrEmpty()) return
-
         binding.etInput.hint = text
     }
 
-    // Cài đặt icon đầu ô Input (resId: id của drawable resource, colorHex: "#123456")
-    fun setIcon(resId: Int?, colorHex: String? = "#575E6B") {
+    fun setIcon(@DrawableRes resId: Int?, colorHex: String? = "#575E6B") {
         if (resId == null || resId == -1) {
             // Nếu không có icon hoặc id không hợp lệ, ẩn ImageView đi để EditText tràn ra
             binding.ivIcon.visibility = View.GONE
@@ -62,6 +56,29 @@ class NormalInput @JvmOverloads constructor(
 
             binding.ivIcon.visibility = View.VISIBLE
         }
+    }
+
+    fun setEndIcon(@DrawableRes resId: Int?, colorHex: String? = "#575E6B") {
+        if (resId == null || resId == -1) {
+            binding.ivEndIcon.visibility = View.GONE
+        } else {
+            binding.ivEndIcon.setImageResource(resId)
+            binding.ivEndIcon.setColorFilter(colorHex!!.toColorInt(), PorterDuff.Mode.SRC_IN)
+            binding.ivEndIcon.visibility = View.VISIBLE
+        }
+    }
+
+    fun setOnEndIconClickListener(onClick: () -> Unit) {
+        binding.ivEndIcon.setOnClickListener {
+            onClick.invoke()
+        }
+    }
+
+    fun setOnInputClickListener(onClick: () -> Unit) {
+        binding.etInput.isFocusable = false
+        binding.etInput.isClickable = true
+        binding.etInput.setOnClickListener { onClick() }
+        binding.containerInput.setOnClickListener { onClick() }
     }
 
     fun getText(): String = binding.etInput.text.toString()

@@ -1,16 +1,8 @@
 package com.home.lexa.ui.library
 
-
-
-import android.graphics.Color
-import androidx.core.graphics.toColor
 import com.google.android.material.tabs.TabLayoutMediator
-import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentLibraryBinding
-import com.home.lexa.ui.library.favorite_library.FavoriteLibraryFragment
-import com.home.lexa.ui.library.personal_library.PersonalLibraryFragment
-
 
 class LibraryFragment : BaseFragment<FragmentLibraryBinding>(FragmentLibraryBinding::inflate) {
 

@@ -1,6 +1,5 @@
 package com.home.lexa.ui.library.personal_library
 
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.home.lexa.domain.models.DeckDto

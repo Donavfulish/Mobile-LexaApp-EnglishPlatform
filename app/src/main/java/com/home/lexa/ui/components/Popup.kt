@@ -25,6 +25,10 @@ class Popup @JvmOverloads constructor(
 
         binding = ViewPopupBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        window?.setLayout(
+            (context.resources.displayMetrics.widthPixels * 0.9).toInt(), // Chiều rộng bằng 90% màn hình
+            android.view.ViewGroup.LayoutParams.WRAP_CONTENT // Chiều cao tự động bọc nội dung
+        )
     }
 
     /**

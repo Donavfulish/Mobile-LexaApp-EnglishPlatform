@@ -6,13 +6,9 @@ import androidx.lifecycle.lifecycleScope
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentHomeBinding
-import com.home.lexa.ui.components.CourseData
-import com.home.lexa.ui.components.CourseProgressData
-import com.home.lexa.ui.components.Popup
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlinx.coroutines.launch
 import com.home.lexa.ui.adapter.FeaturedCourseAdapter
-import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.home.lexa.ui.adapter.StudyingCourseAdapter
 
@@ -89,7 +85,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
         binding.cardVocabulary.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_libraryFragment)
-
         }
         binding.cardLessons.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_libraryFragment)

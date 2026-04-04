@@ -21,12 +21,10 @@ import com.home.lexa.domain.models.ProviderType
 import com.home.lexa.domain.models.SignUpRequest
 import com.home.lexa.domain.models.UserRole
 import com.home.lexa.ui.auth.GoogleUrls
-import com.home.lexa.ui.auth.login.AuthState
-import com.home.lexa.ui.auth.login.AuthViewModel
+import com.home.lexa.ui.auth.AuthState
+import com.home.lexa.ui.auth.AuthViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
-import android.provider.OpenableColumns
-import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import coil.load
 import coil.size.ViewSizeResolver

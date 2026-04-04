@@ -1,7 +1,5 @@
 package com.home.lexa.domain.models
 
-import android.graphics.drawable.Drawable
-import android.media.Image
 import kotlinx.serialization.Serializable
 
 @Serializable

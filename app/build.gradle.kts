@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.androidx.navigation.safeargs)
     id("com.google.dagger.hilt.android")
     kotlin("kapt")
+
+
 }
 
 android {
@@ -87,7 +89,7 @@ dependencies {
     // 2. Networking: Retrofit & OkHttp & Kotlinx Serialization
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
 
     // 3. Local Caching: Room Database

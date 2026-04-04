@@ -1,17 +1,11 @@
 package com.home.lexa.ui.library.favorite_library
 
-
-
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentFavoriteLibraryBinding
-import com.home.lexa.databinding.FragmentLoginBinding
-import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.ui.library.LibraryFragment
-import com.home.lexa.ui.library.personal_library.PersonalLibraryAdapter
-import com.home.lexa.ui.library.personal_library.PersonalLibraryModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
 

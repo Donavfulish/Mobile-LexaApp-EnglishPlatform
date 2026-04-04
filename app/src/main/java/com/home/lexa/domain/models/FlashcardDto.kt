@@ -1,13 +1,14 @@
 package com.home.lexa.domain.models
+
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class DetailFlashcard(
-    val id: Int,
+    val id: Long,
     val word: String,
     val transcription: String,
     val type: String,
-    val deckId: Int,
+    val deckId: Long,
     val imageUrl: String?,
     val audioUrl: String?,
     val meaning: String,
@@ -15,13 +16,21 @@ data class DetailFlashcard(
     val partOfSpeech: String
 )
 
+
+@Serializable
+data class DetailFlashcardWithResult (
+    val flashCard: DetailFlashcard,
+    val result: String,
+)
+
 @Serializable
 data class CreateFlashcardRequest(
     val word: String,
     val transcription: String,
     val typeId: Int,
-    val deckId: Int,
+    val deckId: Long,
     val imageUrl: String? = null,
+    val audioUrl: String? = null,
     val meaning: String,
     val example: String? = null,
     val partOfSpeechId: Int
@@ -30,6 +39,7 @@ data class CreateFlashcardRequest(
 @Serializable
 data class UpdateFlashcardRequest(
     val flashcardId: Long,
+    val deckId: Long,
     val word: String? = null,
     val transcription: String? = null,
     val typeId: Int? = null,
@@ -38,4 +48,16 @@ data class UpdateFlashcardRequest(
     val meaning: String? = null,
     val example: String? = null,
     val partOfSpeechId: Int? = null
+)
+
+@Serializable
+data class FlashcardResultItem(
+    val flashcardId: Long,
+    val status: String?
+)
+
+@Serializable
+data class UpdateFlashcardResultRequest(
+    val deckId: Long,
+    val results: List<FlashcardResultItem>
 )

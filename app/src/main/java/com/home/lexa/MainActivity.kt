@@ -27,11 +27,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.home.lexa.data.local.TokenManager
 import com.home.lexa.data.remote.AuthApiService
-import com.home.lexa.data.repository.AuthRespositoryImpl
+import com.home.lexa.data.repository.AuthRepositoryImpl
 import com.home.lexa.domain.models.GoogleUserInfo
 import com.home.lexa.domain.models.OAuthGoogleResult
-import com.home.lexa.ui.auth.login.AuthState
-import com.home.lexa.ui.auth.login.AuthViewModel
+import com.home.lexa.ui.auth.AuthState
+import com.home.lexa.ui.auth.AuthViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

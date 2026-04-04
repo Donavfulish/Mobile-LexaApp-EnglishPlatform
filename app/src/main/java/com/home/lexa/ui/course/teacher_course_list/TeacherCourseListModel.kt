@@ -5,20 +5,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.home.lexa.domain.models.DeckDto
-import com.home.lexa.domain.models.IntroData
 import com.home.lexa.domain.models.ShortCourseDto
-import com.home.lexa.domain.models.mockUserInfo
 import com.home.lexa.domain.repository.CourseRepository
-import com.home.lexa.domain.repository.DeckRepository
-import com.home.lexa.domain.repository.IntroRepository
 import kotlinx.coroutines.launch
+
 enum class TeacherCourseFilter {
     ALL,
     FAVORITE,
     LEARNING,
     MYCOURSE
 }
+
 class StudentCourseListModel(private val repository: CourseRepository) : ViewModel() {
 
     lateinit var filter: TeacherCourseFilter

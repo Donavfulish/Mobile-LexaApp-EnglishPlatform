@@ -1,23 +1,19 @@
 package com.home.lexa.ui.course.student_course_list
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.home.lexa.domain.models.DeckDto
-import com.home.lexa.domain.models.IntroData
 import com.home.lexa.domain.models.ShortCourseDto
-import com.home.lexa.domain.models.mockUserInfo
 import com.home.lexa.domain.repository.CourseRepository
-import com.home.lexa.domain.repository.DeckRepository
-import com.home.lexa.domain.repository.IntroRepository
 import kotlinx.coroutines.launch
+
 enum class CourseFilter {
     ALL,
     FAVORITE,
     LEARNING
 }
+
 class StudentCourseListModel(private val repository: CourseRepository) : ViewModel() {
 
     lateinit var filter: CourseFilter
@@ -42,7 +38,7 @@ class StudentCourseListModel(private val repository: CourseRepository) : ViewMod
             val result = when (_currentFilter.value) {
                 CourseFilter.ALL -> repository.getAllCourses()
                 CourseFilter.FAVORITE -> repository.getFavoriteDecks()
-                CourseFilter.LEARNING -> repository.getLearningCourses() // nếu có API
+                CourseFilter.LEARNING -> repository.getLearningCourses()
             }
 
             result.onSuccess { list ->

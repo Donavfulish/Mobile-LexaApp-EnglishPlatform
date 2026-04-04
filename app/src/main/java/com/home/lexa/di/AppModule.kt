@@ -10,29 +10,29 @@ import com.home.lexa.data.remote.ProfileApiService
 import com.home.lexa.data.remote.FlashcardApiService
 import com.home.lexa.data.remote.DeckApiService
 import com.home.lexa.data.remote.ParagraphApiService
-import com.home.lexa.data.repository.AuthRespositoryImpl
+import com.home.lexa.data.repository.AuthRepositoryImpl
 import com.home.lexa.data.repository.CourseRepositoryImpl
 import com.home.lexa.data.repository.DeckRepositoryImpl
 import com.home.lexa.data.repository.FlashcardRepositoryImpl
-import com.home.lexa.data.repository.IntroRepositoryImpl
 import com.home.lexa.data.repository.ParagraphRepositoryImpl
 import com.home.lexa.data.repository.ProfileRepositoryImpl
 import com.home.lexa.domain.repository.AuthRespository
 import com.home.lexa.domain.repository.CourseRepository
 import com.home.lexa.domain.repository.DeckRepository
 import com.home.lexa.domain.repository.FlashcardRepository
-import com.home.lexa.domain.repository.IntroRepository
 import com.home.lexa.domain.repository.ParagraphRepository
 import com.home.lexa.domain.repository.ProfileRepository
-import com.home.lexa.ui.auth.login.AuthViewModel
+import com.home.lexa.ui.auth.AuthViewModel
 import com.home.lexa.ui.course.course_detail.CourseDetailViewModel
 import com.home.lexa.ui.course.vocabulary_flashcard.VocabularyFlashcardViewModel
 import com.home.lexa.ui.home.HomeViewModel
-import com.home.lexa.ui.intro.IntroViewModel
-import com.home.lexa.ui.profile.ProfileViewModel
+import com.home.lexa.ui.profile.profile.ProfileViewModel
 import com.home.lexa.ui.library.favorite_library.FavoriteLibraryModel
 import com.home.lexa.ui.library.personal_library.PersonalLibraryModel
 import com.home.lexa.ui.course.student_course_list.StudentCourseListModel
+import com.home.lexa.ui.flashcard.flashcard_edit_add.FlashcardEditAddViewModel
+import com.home.lexa.ui.flashcard.exercise_mode.ExerciseModeViewModel
+import com.home.lexa.ui.flashcard.exercise_result.ExerciseResultViewModel
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -85,8 +85,7 @@ val appModule = module {
     // 3. Khởi tạo Repository
     // Koin dùng get() để lấy CourseApiService nhét vào CourseRepositoryImpl
     single<CourseRepository> { CourseRepositoryImpl(get()) }
-    single<IntroRepository> { IntroRepositoryImpl() }
-    single<AuthRespository>{ AuthRespositoryImpl(get()) }
+    single<AuthRespository>{ AuthRepositoryImpl(get()) }
     single<ProfileRepository> { ProfileRepositoryImpl(get()) }
     single<DeckRepository>{ DeckRepositoryImpl(get()) }
     single<FlashcardRepository> { FlashcardRepositoryImpl(get()) }
@@ -95,7 +94,6 @@ val appModule = module {
 
     // 4. Khởi tạo ViewModel (Koin lấy Repository tương ứng nhét vào)
     viewModel { HomeViewModel(get<CourseRepository>()) }
-    viewModel { IntroViewModel(get()) }
     viewModel { AuthViewModel(androidApplication(), get(), get(), get()) }
     viewModel { ProfileViewModel(get(), get()) }
     viewModel { FavoriteLibraryModel(get()) }
@@ -104,4 +102,8 @@ val appModule = module {
 
     viewModel { CourseDetailViewModel(get(), get())}
     viewModel { VocabularyFlashcardViewModel(get(), get())}
+    viewModel { ExerciseModeViewModel(get())}
+    viewModel { ExerciseResultViewModel(get(), get())}
+    viewModel { FlashcardEditAddViewModel(get())}
+
 }

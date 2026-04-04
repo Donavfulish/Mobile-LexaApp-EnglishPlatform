@@ -4,25 +4,12 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.content.Context
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.DecelerateInterpolator
-import android.widget.FrameLayout
-import android.widget.TextView
-import android.widget.Toast
-import androidx.core.graphics.ColorUtils
-import androidx.core.graphics.toColorInt
-import com.home.lexa.R
-import com.home.lexa.databinding.FlashcardBinding
 import com.home.lexa.databinding.FlashcardMiniBinding
 import com.home.lexa.databinding.ViewLayoutFlashcardZoomBinding
-import com.home.lexa.databinding.ButtonLexaBinding
-import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.domain.models.mockVocabularyData
 
@@ -30,6 +17,8 @@ import com.home.lexa.domain.models.mockVocabularyData
 class FlashcardMini @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ScalableContainer(context, attrs) {
+    var onEditClick: ((Vocabulary) -> Unit)? = null
+    var onDeleteClick: ((Vocabulary) -> Unit)? = null
     private val binding = FlashcardMiniBinding.inflate(LayoutInflater.from(context), this)
     private var isFront = true
     private var isAnimating = false
@@ -51,8 +40,8 @@ class FlashcardMini @JvmOverloads constructor(
         binding.layoutBack.root.cameraDistance = scale
 
         binding.layoutFront.btnZoom.setOnClickListener { zoom() }
-        binding.layoutFront.btnEdit.setOnClickListener { onClickEdit() }
-        binding.layoutFront.btnDelete.setOnClickListener { onClickDelete() }
+        binding.layoutFront.btnEdit.setOnClickListener { onEditClick?.invoke(data) }
+        binding.layoutFront.btnDelete.setOnClickListener { onDeleteClick?.invoke(data) }
         binding.layoutBack.btnSound.setOnClickListener { pronounce() }
         setOnClickListener { flipCard() }
     }
@@ -112,14 +101,6 @@ class FlashcardMini @JvmOverloads constructor(
     }
 
     // Bắt sự kiện bấm nút Edit
-    fun onClickEdit() {
-        // TODO chuyển tới trang Edit Flashcard
-    }
-
-    // Bắt sự kiện bấm nút Delete
-    fun onClickDelete() {
-        // TODO hiện confirmBox xóa flashcard
-    }
 
     // Tác vụ phát âm khi bấm nút
     fun pronounce() {

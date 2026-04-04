@@ -1,33 +1,45 @@
 package com.home.lexa.data.repository
 
 import com.home.lexa.data.remote.CourseApiService
+import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.CreateCourseRequest
 import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.domain.models.SpeakingCourseDetailDto
 import com.home.lexa.domain.models.GetStudyingCourseResponse
-import com.home.lexa.domain.models.UserRole
 import com.home.lexa.domain.repository.CourseRepository
 import com.home.lexa.domain.models.GetFeaturedCourseResponse
+
 class CourseRepositoryImpl(
     private val apiService: CourseApiService
 ) : CourseRepository {
 
     override suspend fun getAllCourses(): Result<List<ShortCourseDto>> {
         return try {
-            val response = apiService.getCourses()
-            val body = response.body()
-
-            if (response.isSuccessful && body?.success == true) {
-                // Thành công: bóc tách dữ liệu ra và trả về
-                Result.success(body.data ?: emptyList())
-            } else {
-                // Thất bại từ Backend (Ví dụ lỗi 400 do validation)
-                Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ"))
+            val courses: List<ShortCourseDto>? = AppMemoryCache.get("getAllCourses");
+            if (courses != null){
+                 Result.success(courses);
             }
+            else {
+                val response = apiService.getCourses()
+                val body = response.body()
+
+                if (response.isSuccessful && body?.success == true) {
+                    // Thành công: bóc tách dữ liệu ra và trả về
+                    val data = body.data ?: emptyList()
+                    AppMemoryCache.put("getAllCourses", data);
+                    Result.success(data);
+
+
+                } else {
+                    // Thất bại từ Backend (Ví dụ lỗi 400 do validation)
+                     Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ"))
+                }
+            }
+
         } catch (e: Exception) {
             // Lỗi do mất mạng, không connect được server...
-            Result.failure(Exception("Không thể kết nối. Vui lòng kiểm tra mạng!"))
+             Result.failure(Exception("Không thể kết nối. Vui lòng kiểm tra mạng!"))
         }
     }
 
@@ -77,11 +89,18 @@ class CourseRepositoryImpl(
     }
     override  suspend fun getFeaturedCourses(): Result<List<GetFeaturedCourseResponse>>{
         return try {
+            val courses: List<GetFeaturedCourseResponse>? = AppMemoryCache.get("getFeaturedCourses");
+            if (courses != null){
+               return Result.success(courses);
+            }
+
             val response = apiService.getFeaturedCourses()
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
-                Result.success(body.data ?: emptyList())
+                val data = body.data ?: emptyList();
+                AppMemoryCache.put("getFeaturedCourses", data);
+                Result.success(data);
             } else {
                 Result.failure(Exception(body?.message ?: "Lấy khóa học nổi bật thất bại"))
             }
@@ -91,11 +110,17 @@ class CourseRepositoryImpl(
     }
     override suspend fun getStudyingCourses():Result<List<GetStudyingCourseResponse>>{
         return try {
+            val courses: List<GetStudyingCourseResponse>? = AppMemoryCache.get("getStudyingCourses");
+            if (courses != null){
+               return Result.success(courses);
+            }
             val response = apiService.getStudyingCourses()
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
-                Result.success(body.data ?: emptyList())
+                val data = body.data ?: emptyList();
+                AppMemoryCache.put("getStudyingCourses", data);
+                Result.success(data);
             } else {
                 Result.failure(Exception(body?.message ?: "Lấy khóa học đang học thất bại"))
             }
@@ -105,11 +130,18 @@ class CourseRepositoryImpl(
     }
     override suspend fun getTopStudiedCourses():Result<List<GetFeaturedCourseResponse>>{
         return try {
+            val courses: List<GetFeaturedCourseResponse>? = AppMemoryCache.get("getTopStudiedCourses");
+            if (courses != null){
+                return Result.success(courses);
+            }
             val response = apiService.getTopStudiedCourses()
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
-                Result.success(body.data ?: emptyList())
+                val data = body.data ?: emptyList();
+                AppMemoryCache.put("getTopStudiedCourses", data);
+                Result.success(data);
+
             } else {
                 Result.failure(Exception(body?.message ?: "Lấy khóa học đang học thất bại"))
             }
@@ -120,11 +152,17 @@ class CourseRepositoryImpl(
 
     override suspend fun getSpeakingDayCourse(courseId: Long): Result<SpeakingCourseDetailDto?> {
         return try {
+            val courses: SpeakingCourseDetailDto? = AppMemoryCache.get("getSpeakingDayCourse_${courseId}");
+            if (courses != null){
+                return Result.success(courses);
+            }
             val response = apiService.getSpeakingDayCourse(courseId)
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
-                Result.success(body.data)
+                val data = body.data;
+                AppMemoryCache.put("getTopStudiedCourses_${courseId}", data as Any);
+                Result.success(data);
             } else {
                 Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ"))
             }
@@ -135,12 +173,19 @@ class CourseRepositoryImpl(
 
     override suspend fun getFavoriteDecks(): Result<List<ShortCourseDto>> {
         return try {
+            val courses: List<ShortCourseDto>? = AppMemoryCache.get("getFavoriteDecks");
+            if (courses != null){
+                return Result.success(courses);
+            }
             val response = apiService.getFavoriteDecks()
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
                 // Thành công: bóc tách dữ liệu ra và trả về
-                Result.success(body.data ?: emptyList())
+
+                val data = body.data ?: emptyList();
+                AppMemoryCache.put("getFavoriteDecks", data);
+                Result.success(data);
             } else {
                 // Thất bại từ Backend (Ví dụ lỗi 400 do validation)
                 Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ"))
@@ -153,12 +198,18 @@ class CourseRepositoryImpl(
 
     override  suspend fun getLearningCourses(): Result<List<ShortCourseDto>>{
         return try {
+            val courses: List<ShortCourseDto>? = AppMemoryCache.get("getLearningCourses");
+            if (courses != null){
+                return Result.success(courses);
+            }
             val response = apiService.getLearningCourses();
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
                 // Thành công: bóc tách dữ liệu ra và trả về
-                Result.success(body.data ?: emptyList())
+                val data = body.data ?: emptyList();
+                AppMemoryCache.put("getLearningCourses", data);
+                Result.success(data);
             } else {
                 // Thất bại từ Backend (Ví dụ lỗi 400 do validation)
                 Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ"))
@@ -171,12 +222,18 @@ class CourseRepositoryImpl(
 
     override suspend fun getMyCourses(): Result<List<ShortCourseDto>> {
         return try {
+            val courses: List<ShortCourseDto>? = AppMemoryCache.get("getMyCourses");
+            if (courses != null){
+                return Result.success(courses);
+            }
             val response = apiService.getMyCourses();
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
                 // Thành công: bóc tách dữ liệu ra và trả về
-                Result.success(body.data ?: emptyList())
+                val data = body.data ?: emptyList();
+                AppMemoryCache.put("getMyCourses", data);
+                Result.success(data);
             } else {
                 // Thất bại từ Backend (Ví dụ lỗi 400 do validation)
                 Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ"))

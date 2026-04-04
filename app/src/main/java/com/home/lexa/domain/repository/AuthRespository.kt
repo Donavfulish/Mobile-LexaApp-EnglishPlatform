@@ -1,9 +1,7 @@
 package com.home.lexa.domain.repository
 
-import android.net.Uri
 import com.home.lexa.domain.models.AuthResult
 import com.home.lexa.domain.models.LoginRequest
-import com.home.lexa.domain.models.OAuthRegisterRequest
 import com.home.lexa.domain.models.OtpRequest
 import com.home.lexa.domain.models.OtpVerify
 import com.home.lexa.domain.models.SignUpRequest

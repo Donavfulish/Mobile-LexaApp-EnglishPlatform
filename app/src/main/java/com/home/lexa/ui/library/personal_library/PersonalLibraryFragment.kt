@@ -1,15 +1,12 @@
 package com.home.lexa.ui.library.personal_library
 
-
-
+import android.os.Bundle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
-import com.home.lexa.databinding.FragmentLoginBinding
 import com.home.lexa.databinding.FragmentPersonalLibraryBinding
-import com.home.lexa.domain.models.DeckDto
-import com.home.lexa.ui.home.HomeViewModel
+import com.home.lexa.ui.components.DeckInput
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
 
@@ -17,8 +14,15 @@ class PersonalLibraryFragment : BaseFragment<FragmentPersonalLibraryBinding>(Fra
     private val viewModel: PersonalLibraryModel by viewModel()
     private val deckAdapter by lazy {
         PersonalLibraryAdapter(emptyList())
-        { course ->
-            findNavController().navigate(R.id.courseDetailFragment)
+        { deck ->
+
+            val bundle = Bundle().apply {
+                putLong("DECK_ID_KEY", deck.id)
+                putString("DECK_TITLE_KEY", deck.title)
+                putInt("DECK_VOCAB_NUMBER_KEY", deck.vocabNumber)
+            }
+
+            findNavController().navigate(R.id.action_libraryFragment_to_vocabularyFlashcardFragment, bundle)
         }
     }
     override fun setupViews() {
@@ -28,6 +32,19 @@ class PersonalLibraryFragment : BaseFragment<FragmentPersonalLibraryBinding>(Fra
         }
 
         viewModel.fetchAllDecks()
+
+        binding.btnAdd.setOnClickAction {
+            // Khi người dùng bấm nút +, khởi tạo và show Popup
+            val popup = DeckInput(requireContext()) // Dùng 'this' nếu bạn đang ở Activity
+
+            popup.showDialog(
+                title = "Tạo bộ từ vựng mới",
+                confirmText = "Tạo",
+                onConfirm = { vocabName ->
+                    viewModel.createDeck(vocabName)
+                }
+            )
+        }
     }
 
     override fun observeData() {
