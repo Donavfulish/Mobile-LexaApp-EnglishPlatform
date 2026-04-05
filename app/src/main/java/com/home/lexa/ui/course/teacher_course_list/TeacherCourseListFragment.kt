@@ -1,5 +1,6 @@
 package com.home.lexa.ui.course.teacher_course_list
 
+import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
@@ -27,7 +28,10 @@ class TeacherCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
     private val courseAdapter by lazy {
         StudentCourseListAdapter(emptyList())
         { course ->
-            findNavController().navigate(R.id.action_courseFragment_to_courseDetailFragment)
+            val bundle = Bundle().apply {
+                putLong("courseId", course.id)
+            }
+            findNavController().navigate(R.id.action_courseFragment_to_courseDetailFragment, bundle)
         }
     }
 
