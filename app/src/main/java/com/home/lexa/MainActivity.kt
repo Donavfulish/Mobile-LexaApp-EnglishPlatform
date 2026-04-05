@@ -28,6 +28,7 @@ import androidx.navigation.navOptions
 import com.home.lexa.data.local.TokenManager
 import com.home.lexa.data.remote.AuthApiService
 import com.home.lexa.data.repository.AuthRepositoryImpl
+import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.GoogleUserInfo
 import com.home.lexa.domain.models.OAuthGoogleResult
 import com.home.lexa.ui.auth.AuthState
@@ -174,6 +175,7 @@ class MainActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 AuthEventBus.events.collect { event ->
                     if (event == AuthEvent.LOGOUT || event == AuthEvent.TOKEN_EXPIRED) {
+                        AppMemoryCache.clearAll()
                         authViewModel.logout()
 
                         val navHostFragment = supportFragmentManager
