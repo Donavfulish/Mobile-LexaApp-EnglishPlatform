@@ -73,6 +73,7 @@ class FlashcardRepositoryImpl(
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
+                AppMemoryCache.remove("getAllFlashcard_${request.deckId}")
                 Result.success(body.data ?: true)
             } else {
                 Result.failure(Exception(body?.message ?: "Lỗi khi cập nhật flashcard"))

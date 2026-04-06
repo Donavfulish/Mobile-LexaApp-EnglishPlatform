@@ -177,7 +177,7 @@ class CourseRepositoryImpl(
 
             if (response.isSuccessful && body?.success == true) {
                 val data = body.data;
-                AppMemoryCache.put("getTopStudiedCourses_${courseId}", data as Any);
+                AppMemoryCache.put("getSpeakingDayCourse_${courseId}", data as Any);
                 Result.success(data);
             } else {
                 Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ"))
