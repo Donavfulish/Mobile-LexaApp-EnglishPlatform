@@ -1,46 +1,40 @@
 package com.home.lexa.ui.course.course_detail
 
 
-import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import com.home.lexa.R
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
-import androidx.navigation.fragment.findNavController
 import coil.load
 import com.home.lexa.MainActivity
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.data.local.UserManager
 import com.home.lexa.databinding.FragmentCourseDetailBinding
-import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.ColorLabel
-import com.home.lexa.domain.models.CreateSpeakingDayRequest
-import com.home.lexa.domain.models.EditCourseRequest
-import com.home.lexa.domain.models.SpeakingCourseDetailDto
 import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.ui.components.FlashcardMini
-import com.home.lexa.ui.components.NormalInput
-import com.home.lexa.ui.components.PopUpInput
-import com.home.lexa.ui.components.StudentSpeakingDayCard
-import com.home.lexa.ui.components.TeacherSpeakingDayCard
-import com.home.lexa.ui.components.ToggleSwitch
 import org.koin.android.ext.android.inject
 
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentCourseDetailBinding::inflate) {
+    private var handler: CourseDetailHandler? = null
+        set(value) {
+            if(field == null && value != null){
+                // =====================================THONG TIN VIEW MODEL RIENG CUA TUNG ROLE=====================================
+                value.observerViewModel()
+            }
+            field = value
+        }
     private val viewModel: CourseDetailViewModel by viewModel()
-    private var isSpeakingMode = true
-    private var isOwner = true
-    private var isPublic = true
-    private var selectedTopicId: Int? = null
-    var courseId = 17L
-    private lateinit var list_topic: List<Topic>
+    internal var isSpeakingMode = true
+    internal var isOwner = true
+    internal var isPublic = true
+    internal var selectedTopicId: Int? = null
+    internal var courseId = 17L
+    internal lateinit var list_topic: List<Topic>
     private val activityBinding by lazy { (requireActivity() as MainActivity).binding }
 
 
@@ -109,14 +103,6 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 binding.vocabularyLayout.visibility = View.VISIBLE
             }
         }
-
-
-        binding.topic.setOnClickAction {
-            AppMemoryCache.remove("speakingCourseDetail_${courseId}")
-            AppMemoryCache.remove("vocabularyList_${courseId}")
-            val check:SpeakingCourseDetailDto?  = AppMemoryCache.get("speakingCourseDetail_17")
-            Log.e("DEBUG_CACHE", "Cache after remove: $check")
-        }
     }
 
     override fun observeData() {
@@ -155,17 +141,18 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             }
         }
 
-        // THEO DOI DS TOPIC
+        // THEO DOI DS TOPIC (CHO VIỆC TẠO MỚI)
         viewModel.topicData.observe(viewLifecycleOwner) { topics ->
             list_topic = viewModel.topicData.value!!
             val list_topic_name = list_topic?.map { it.name }
             val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, list_topic_name!!)
             binding.topicInput.setAdapter(adapter)
-            if(isOwner){
-                setUpTeacher()
+            handler = if(isOwner){
+                CourseDetailTeacher(this, binding, viewModel, activityBinding)
             } else {
-                setUpStudent()
+                CourseDetailStudent(this, binding, viewModel, activityBinding)
             }
+            handler?.setupViews()
         }
 
         // THEO DOI TINH TRANG KHOA HOC TRA VE
@@ -174,21 +161,17 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 Toast.makeText(requireContext(), "Không tìm thấy dữ liệu khóa học", Toast.LENGTH_SHORT).show()
                 return@observe
             }
-            if(course.creator.id != userManager.getUserId()){
-                isOwner = false
+            if(handler == null){
+                isOwner = (course.creator.id == userManager.getUserId())
+                handler = if(isOwner){
+                    CourseDetailTeacher(this, binding, viewModel, activityBinding)
+                } else {
+                    CourseDetailStudent(this, binding, viewModel, activityBinding)
+                }
+                handler?.setupViews()
             }
-            // =============================================ROLE SETUP==========================================
-            if(isOwner){
-                setUpTeacher()
-            } else {
-                setUpStudent()
-            }
-            list_topic = viewModel.courseDetailData.value?.list_topic!!
-            val list_topic_name = list_topic?.map { it.name }
-            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, list_topic_name!!)
-            binding.topicInput.setAdapter(adapter)
 
-            // giao vien
+            // =====================================THANH THONG TIN CHUNG=====================================
             if(course.creator.image != null) {
                 binding.imgTeacher.load(course.creator.image) {
                     crossfade(true)
@@ -199,71 +182,14 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             binding.teacherNameCourse.text = course.creator.name
             binding.studentNumCourse.text = course.studying_user_count.toString()
             binding.favoriteNumCourse.text = course.favorite_user_count.toString()
-
             binding.speakingNum.text = "${course.list_speaking_day.size} Bài học"
             binding.speakingDayLayout.removeAllViews()
 
-            if(isOwner){
-                selectedTopicId = course.list_topic.find { it.name == course.type }?.id
-                binding.topicInput.setTextSize(14f)
-                binding.topicInput.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
-                updateTopicColor(course.typeColor ?: list_topic[0].colorHex)
-                binding.topicInput.post {
-                    binding.topicInput.setText(course.type, false)
-                    binding.topicInput.clearFocus()
-                }
+            // =====================================THONG TIN HIEN THI KHOA HOC=====================================
+            handler?.bindCourseData(course)
 
-                binding.courseTitleInput.setText(course.title)
-                binding.introductionInput.setText(course.description)
-            } else {
-                // Khoa hoc
-                binding.titleCourse.text = course.title
-                binding.topic.apply {
-                    setTextSize(12f)
-                    setText(course.type!!, ContextCompat.getColor(requireContext(), android.R.color.white))
-                    setBackground( android.graphics.Color.parseColor(course.typeColor))
-                }
-                binding.introduction.text = course.description ?: ""
-            }
-
-            course.list_speaking_day.forEachIndexed {index, day ->
-                val dayCard = if (isOwner) {
-                    TeacherSpeakingDayCard(requireContext()).apply {
-                        setData(
-                            _day = index + 1,
-                            _title = day.title,
-                            _paragraphNum = day.paragraphNum
-                        )
-                        setOnClickAction {
-                            val bundle = bundleOf(
-                                "speakingDayId" to day.speakingDayId,
-                                "order" to index
-                            )
-                            findNavController().navigate(
-                                R.id.action_courseDetailFragment_to_speakingPracticeFragment,
-                                bundle
-                            )
-                        }
-                    }
-                } else {
-                    StudentSpeakingDayCard(requireContext()).apply {
-                        setData(
-                            _day = index + 1,
-                            _title = day.title,
-                            _progressPercent = day.completed
-                        )
-                    }
-                }
-
-                val params = android.widget.LinearLayout.LayoutParams(
-                    android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
-                    android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
-                ).apply {
-                    setMargins(0, 0, 0, 32) // Khoảng cách dưới 32px (hoặc dùng dp)
-                }
-                dayCard.layoutParams = params
-                binding.speakingDayLayout.addView(dayCard)
-            }
+            // =====================================THONG TIN HIEN THI SPEAKING DAY=====================================
+            handler?.bindSpeakingData(course)
         }
 
         // THEO DOI TINH TRANG FLASHCARD TRA VE
@@ -292,42 +218,12 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                     setMargins(16, 16, 16, 16)
                 }
                 card.layoutParams = params
-                if (isOwner){
-                    binding.vocabularyGrid2.addView(card)
-                } else {
-                    binding.vocabularyGrid.addView(card)
-                }
-            }
-        }
-
-        // THEO DOI TINH TRANG CAP NHAT TT KHOA HOCC
-        viewModel.updateStatus.observe(viewLifecycleOwner) { result ->
-            result?.onSuccess {
-                Toast.makeText(requireContext(), "Cập nhật thành công!", Toast.LENGTH_SHORT).show()
-                viewModel.resetUpdateStatus()
-                binding.saveBtn.setText("Lưu thông tin", ContextCompat.getColor(requireContext(), R.color.white))
-            }?.onFailure {
-                Toast.makeText(requireContext(), "Lỗi: ${it.message}", Toast.LENGTH_SHORT).show()
-                viewModel.resetUpdateStatus()
-                binding.saveBtn.setText("Lưu thông tin", ContextCompat.getColor(requireContext(), R.color.white))
-            }
-        }
-
-        // THEO DOI TINH TRANG THEM MOI NGAY HOC
-        viewModel.createStatus.observe(viewLifecycleOwner){ result ->
-            result?.onSuccess {
-                Toast.makeText(requireContext(), "Thêm ngày học mới thành công!", Toast.LENGTH_SHORT).show()
-                viewModel.resetCreateStatus()
-                viewModel.loadCourseDetail(courseId)
-            }?.onFailure {
-                Toast.makeText(requireContext(), "Lỗi: ${it.message}", Toast.LENGTH_SHORT).show()
-                Log.e("CREATE_STATUS", "Lỗi: ${it.message}", it)
-                viewModel.resetCreateStatus()
+                handler?.bindFlashcardData(card)
             }
         }
     }
 
-    private fun updateToggleUI() {
+    internal fun updateToggleUI() {
         if (isSpeakingMode) {
             binding.speakingBtn.apply {
                 setIconColor(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
@@ -350,127 +246,6 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 setBackground(ContextCompat.getColor(requireContext(), R.color.white))
                 setText("Từ vựng", ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
             }
-        }
-    }
-
-    private fun updateTopicColor(colorHex: String?) {
-        if (colorHex.isNullOrEmpty()) return
-        try {
-            val colorInt = android.graphics.Color.parseColor(colorHex)
-            binding.topicInputLayout.apply {
-                boxBackgroundColor = colorInt
-                setBoxStrokeColorStateList(android.content.res.ColorStateList.valueOf(colorInt))
-            }
-            binding.topicInput.apply {
-                setTextColor(android.graphics.Color.WHITE)
-            }
-        } catch (e: Exception) {
-            Log.e("COLOR_ERROR", "Mã màu $colorHex không hợp lệ")
-        }
-    }
-
-    private fun setUpStudent(){
-        binding.learningBtn.apply {
-            setTextSize(20f)
-            setText("Tiếp tục học ngay", ContextCompat.getColor(requireContext(), R.color.white))
-            setBackground(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
-        }
-    }
-
-    private fun setUpTeacher(){
-
-        activityBinding.appBarLayout.apply {
-            val linearLayout = LinearLayout(requireContext()).apply {
-                orientation = LinearLayout.HORIZONTAL
-                gravity = android.view.Gravity.CENTER_VERTICAL
-            }
-            val publicTitleView = TextView(requireContext()).apply {
-                setText("Public")
-                setTextSize(android.util.TypedValue.COMPLEX_UNIT_DIP, 14f)
-
-                val typeface = androidx.core.content.res.ResourcesCompat.getFont(requireContext(), R.font.archivo_bold)
-                setTypeface(typeface)
-                setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-                setPadding(0, 0, 20, 0)
-            }
-            val publicToggleView = ToggleSwitch(requireContext())
-            publicToggleView.isChecked = isPublic
-            publicToggleView.onCheckedChangeListener = { isChecked ->
-                isPublic = isChecked
-            }
-            linearLayout.addView(publicTitleView)
-            linearLayout.addView(publicToggleView)
-            insertCustomeViewRight(linearLayout)
-        }
-
-        binding.editToggle.onCheckedChangeListener = { isChecked ->
-            for (i in 0 until binding.vocabularyGrid2.childCount) {
-                val child = binding.vocabularyGrid2.getChildAt(i)
-                if (child is FlashcardMini) {
-                    child.setIsEditable(isChecked)
-                }
-            }
-        }
-
-        binding.topicInput.setOnItemClickListener{_, _, position, _->
-            selectedTopicId = list_topic[position].id
-            updateTopicColor(list_topic[position].colorHex)
-            binding.topicInput.setText(list_topic[position].name, false)
-            binding.topicInput.clearFocus()
-        }
-
-        binding.saveBtn.setOnClickAction {
-            val newTitle = binding.courseTitleInput.text.toString()
-            val newDesc = binding.introductionInput.text.toString()
-            val newTopicId = selectedTopicId
-
-            val request = EditCourseRequest(
-                topicId = newTopicId,
-                title = newTitle,
-                description = newDesc,
-                privacy = if (isPublic) "PUBLIC" else "PRIVATE",
-                thumbnailUrl = viewModel.courseDetailData.value?.thumbnail_url ?: null
-            )
-            
-            binding.saveBtn.setText("Đang lưu thông tin...", ContextCompat.getColor(requireContext(), R.color.white))
-
-            if (newTitle.isNotBlank()) {
-                viewModel.editCourse(courseId, request)
-            }
-        }
-
-        binding.cameraBtn.apply{
-            setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_camera)!!)
-            setBackground(ContextCompat.getColor(requireContext(), R.color.white_opacity))
-        }
-        binding.addBtn.apply {
-            setBackground(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
-        }
-        binding.saveBtn.apply{
-            setBackground(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
-            setText("Lưu thông tin", ContextCompat.getColor(requireContext(), R.color.white))
-        }
-
-        val popUpInput = PopUpInput(requireContext())
-        val speakingDayTitle = NormalInput(requireContext()).apply {
-            setLabel("Tiêu đề")
-            setPlaceHolderText("Nhập tiêu đề ngày học...")
-        }
-        popUpInput.insertNormalInput(speakingDayTitle)
-        binding.addBtn.setOnClickAction {
-            popUpInput.showDialog(
-                dialogTitle = "Tạo ngày học mới",
-                confirmText = "Tạo ngay",
-                onConfirm = { dataList ->
-                    viewModel.createSpeakingDay(CreateSpeakingDayRequest(
-                        courseId = courseId,
-                        title = dataList[0]
-                    ))
-                },
-                onCancel = {
-                    Log.d("DEBUG_POPUP", "Đã hủy bỏ")
-                }
-            )
         }
     }
 }
