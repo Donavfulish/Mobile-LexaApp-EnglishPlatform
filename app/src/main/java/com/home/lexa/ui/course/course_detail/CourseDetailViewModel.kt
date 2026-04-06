@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.home.lexa.di.AppMemoryCache
+import com.home.lexa.domain.models.CreateDeckRequest
 import com.home.lexa.domain.models.CreateFlashcardRequest
 import com.home.lexa.domain.models.CreateSpeakingDayRequest
 import com.home.lexa.domain.models.DetailFlashcard
@@ -15,12 +16,14 @@ import com.home.lexa.domain.repository.FlashcardRepository
 import kotlinx.coroutines.launch
 import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.Topic
+import com.home.lexa.domain.models.mockUserInfo
+import com.home.lexa.domain.repository.DeckRepository
 import com.home.lexa.domain.repository.SpeakingDayRepository
 
 class CourseDetailViewModel(
     private val courseRepository: CourseRepository,
     private val flashcardRepository: FlashcardRepository,
-    private val speakingDayRepository: SpeakingDayRepository
+    private val speakingDayRepository: SpeakingDayRepository,
 ) : ViewModel() {
     private val _createStatus = MutableLiveData<Result<Unit>?>()
     val createStatus: LiveData<Result<Unit>?> get() = _createStatus
@@ -32,16 +35,10 @@ class CourseDetailViewModel(
     val flashcardDetailData: LiveData<List<DetailFlashcard>> get() = _flashcardDetailData
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
-
     private val _topicData = MutableLiveData<List<Topic>>()
     val topicData: LiveData<List<Topic>> get() = _topicData
-
-    fun setCourseAndFlashcard(course: SpeakingCourseDetailDto, flashcard: List<DetailFlashcard>){
-        _courseDetailData.value = course
-        _flashcardDetailData.value = flashcard
-        _isLoading.value = false
-    }
-
+    private val _deckStatus = MutableLiveData<Result<Unit>?>()
+    val deckStatus : LiveData<Result<Unit>?> get() = _deckStatus
 
     fun loadCourseDetail(courseId: Long) {
         viewModelScope.launch {

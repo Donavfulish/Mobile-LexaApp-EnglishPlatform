@@ -163,7 +163,9 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
                         val popUpEdit = PopUpInput(requireContext())
                         val editInput = NormalInput(requireContext()).apply {
                             setLabel("Nội dung đoạn văn")
-                            setText(paragraph.paragraph)
+                            post {
+                                setText(paragraph.paragraph)
+                            }
                         }
                         popUpEdit.insertNormalInput(editInput)
                         popUpEdit.showDialog(

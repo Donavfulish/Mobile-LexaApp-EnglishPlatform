@@ -78,7 +78,6 @@ data class CreateCourseRequest(
     val title: String,
     val description: String? = null,
     val privacy: String,
-    val deckId: Long?,
     val thumbnailUrl: String? = null
 )
 @Serializable

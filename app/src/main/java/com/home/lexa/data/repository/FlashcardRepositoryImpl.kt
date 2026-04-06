@@ -1,5 +1,6 @@
 package com.home.lexa.data.repository
 
+import android.util.Log
 import com.home.lexa.data.remote.FlashcardApiService
 import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.CreateFlashcardRequest
@@ -56,7 +57,6 @@ class FlashcardRepositoryImpl(
         return try {
             val response = apiService.createFlashcard(request.deckId.toLong(), request)
             val body = response.body()
-
             if (response.isSuccessful && body?.success == true && body.data != null) {
                 Result.success(body.data)
             } else {

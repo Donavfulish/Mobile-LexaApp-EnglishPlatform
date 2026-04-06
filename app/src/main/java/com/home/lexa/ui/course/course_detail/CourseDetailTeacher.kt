@@ -143,6 +143,9 @@ class CourseDetailTeacher(
                 )
             }
             else {
+                if(course.deckId == null){
+
+                }
                 val bundle = Bundle().apply {
                     putBoolean("IS_EDIT_KEY", false)
                     putLong("DECK_ID_KEY", course.deckId!!)
