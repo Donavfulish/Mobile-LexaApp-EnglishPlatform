@@ -1,5 +1,6 @@
 package com.home.lexa.ui.course.course_detail
 
+import android.view.View
 import androidx.core.content.ContextCompat
 import com.home.lexa.R
 import com.home.lexa.databinding.ActivityMainBinding

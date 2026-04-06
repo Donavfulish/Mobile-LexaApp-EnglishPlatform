@@ -33,7 +33,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
     internal var isOwner = true
     internal var isPublic = true
     internal var selectedTopicId: Int? = 0
-    internal var courseId = 17L
+    internal var courseId: Long = 1L
     internal lateinit var list_topic: List<Topic>
     private val activityBinding by lazy { (requireActivity() as MainActivity).binding }
 
@@ -44,8 +44,8 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
         handler = null
     }
     override fun setupViews() {
-
-        val courseId = arguments?.getLong("courseId") ?: -1L
+        isOwner = true
+        courseId = arguments?.getLong("courseId") ?: -1L
         if (courseId == -1L) {
             viewModel.loadTopics()
         } else {
@@ -96,6 +96,9 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 updateToggleUI()
                 binding.vocabularyLayout.visibility = View.GONE
                 binding.speakingLayout.visibility = View.VISIBLE
+                if(!isOwner){
+                    binding.learningBtn.visibility = View.VISIBLE
+                }
             }
         }
 
@@ -105,6 +108,9 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 updateToggleUI()
                 binding.speakingLayout.visibility = View.GONE
                 binding.vocabularyLayout.visibility = View.VISIBLE
+                if(!isOwner){
+                    binding.learningBtn.visibility = View.GONE
+                }
             }
         }
         syncTabUI()
@@ -122,27 +128,6 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 binding.shimmerLayout.stopShimmer()
                 binding.shimmerLayout.visibility = View.GONE
                 binding.contentScroll.visibility = View.VISIBLE
-                if(isOwner){
-                    binding.addBtn.visibility = View.VISIBLE
-                    binding.topLayoutTeacher.visibility = View.VISIBLE
-                    binding.middleLayoutTeacher.visibility = View.VISIBLE
-                    binding.bottomLayoutTeacher.visibility = View.VISIBLE
-
-                    binding.learningBtn.visibility = View.GONE
-                    binding.topLayoutStudent.visibility = View.GONE
-                    binding.middleLayoutStudent.visibility = View.GONE
-                    binding.bottomLayoutStudent.visibility = View.GONE
-                } else {
-                    binding.learningBtn.visibility = View.VISIBLE
-                    binding.topLayoutStudent.visibility = View.VISIBLE
-                    binding.middleLayoutStudent.visibility = View.VISIBLE
-                    binding.bottomLayoutStudent.visibility = View.VISIBLE
-
-                    binding.addBtn.visibility = View.GONE
-                    binding.topLayoutTeacher.visibility = View.GONE
-                    binding.middleLayoutTeacher.visibility = View.GONE
-                    binding.bottomLayoutTeacher.visibility = View.GONE
-                }
             }
         }
 
@@ -166,14 +151,38 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 Toast.makeText(requireContext(), "Không tìm thấy dữ liệu khóa học", Toast.LENGTH_SHORT).show()
                 return@observe
             }
+            isOwner = (course.creator.id == userManager.getUserId())
+            if (course.deckId == null && !isOwner){
+                binding.vocabularyListLayout.visibility = View.GONE
+            }
             if(handler == null){
-                isOwner = (course.creator.id == userManager.getUserId())
                 handler = if(isOwner){
                     CourseDetailTeacher(this, binding, viewModel, activityBinding)
                 } else {
                     CourseDetailStudent(this, binding, viewModel, activityBinding)
                 }
                 handler?.setupViews()
+            }
+            if(isOwner){
+                binding.addBtn.visibility = View.VISIBLE
+                binding.topLayoutTeacher.visibility = View.VISIBLE
+                binding.middleLayoutTeacher.visibility = View.VISIBLE
+                binding.bottomLayoutTeacher.visibility = View.VISIBLE
+
+                binding.learningBtn.visibility = View.GONE
+                binding.topLayoutStudent.visibility = View.GONE
+                binding.middleLayoutStudent.visibility = View.GONE
+                binding.bottomLayoutStudent.visibility = View.GONE
+            } else {
+                binding.learningBtn.visibility = View.VISIBLE
+                binding.topLayoutStudent.visibility = View.VISIBLE
+                binding.middleLayoutStudent.visibility = View.VISIBLE
+                binding.bottomLayoutStudent.visibility = View.VISIBLE
+
+                binding.addBtn.visibility = View.GONE
+                binding.topLayoutTeacher.visibility = View.GONE
+                binding.middleLayoutTeacher.visibility = View.GONE
+                binding.bottomLayoutTeacher.visibility = View.GONE
             }
 
             // =====================================THANH THONG TIN CHUNG=====================================
@@ -199,7 +208,16 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
 
         // THEO DOI TINH TRANG FLASHCARD TRA VE
         viewModel.flashcardDetailData.observe(viewLifecycleOwner) { flashcards ->
-            if (flashcards.isNullOrEmpty()) return@observe
+            if (flashcards.isNullOrEmpty()){
+                if(!isOwner){
+                    binding.vocabularyListLayout.visibility = View.GONE
+                }
+                return@observe
+            } else {
+                if(!isOwner){
+                    binding.vocabularyListLayout.visibility = View.VISIBLE
+                }
+            }
             binding.flashcardNum.text = "${flashcards.size}"
             binding.vocabularyGrid.removeAllViews()
             binding.vocabularyGrid2.removeAllViews()

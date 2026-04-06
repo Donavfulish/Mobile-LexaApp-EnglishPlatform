@@ -86,7 +86,8 @@ class CourseDetailViewModel(
 
     private fun fetchFlashcardsInBackground(courseId: Long, deckId: Long) {
         viewModelScope.launch {
-            flashcardRepository.getAllFlashcard(deckId).onSuccess { list ->
+            flashcardRepository.getAllFlashcard(deckId)
+                .onSuccess { list ->
                 _flashcardDetailData.value = list ?: emptyList()
                 if(!list.isNullOrEmpty()){
                     AppMemoryCache.put("vocabularyList_${courseId}", list)
