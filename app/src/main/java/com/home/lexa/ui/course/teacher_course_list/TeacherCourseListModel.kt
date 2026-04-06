@@ -16,13 +16,13 @@ enum class TeacherCourseFilter {
     MYCOURSE
 }
 
-class StudentCourseListModel(private val repository: CourseRepository) : ViewModel() {
+class TeacherCourseListModel(private val repository: CourseRepository) : ViewModel() {
 
     lateinit var filter: TeacherCourseFilter
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
-    private val _currentFilter = MutableLiveData(TeacherCourseFilter.ALL)
+    private val _currentFilter = MutableLiveData(TeacherCourseFilter.MYCOURSE)
     val currentFilter: LiveData<TeacherCourseFilter> = _currentFilter
     // LiveData để chứa danh sách Decks
     private val _courses = MutableLiveData<List<ShortCourseDto>>(emptyList())

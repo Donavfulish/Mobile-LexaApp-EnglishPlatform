@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentFavoriteLibraryBinding
 import com.home.lexa.databinding.FragmentLoginBinding
+import com.home.lexa.databinding.FragmentTeacherCourseListBinding
 import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.ui.course.student_course_list.CourseFilter
 import com.home.lexa.ui.course.student_course_list.StudentCourseListAdapter
@@ -23,8 +24,8 @@ import com.home.lexa.ui.library.personal_library.PersonalLibraryModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
 
-class TeacherCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>(FragmentStudentCourseListBinding::inflate) {
-    private val viewModel: StudentCourseListModel by viewModel()
+class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>(FragmentTeacherCourseListBinding::inflate) {
+        private val viewModel: TeacherCourseListModel by viewModel()
     private val courseAdapter by lazy {
         StudentCourseListAdapter(emptyList())
         { course ->
@@ -35,7 +36,7 @@ class TeacherCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
         }
     }
 
-    private fun updateFilterUI(filter: CourseFilter) {
+    private fun updateFilterUI(filter: TeacherCourseFilter) {
 
         fun setActive(btn: Button) {
             btn.setBackgroundResource(R.drawable.bg_filter_active)
@@ -50,17 +51,19 @@ class TeacherCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
         setInactive(binding.btnAll)
         setInactive(binding.btnFavorite)
         setInactive(binding.btnLearning)
+        setInactive(binding.btnMyCourse)
 
         when (filter) {
-            CourseFilter.ALL -> setActive(binding.btnAll)
-            CourseFilter.FAVORITE -> setActive(binding.btnFavorite)
-            CourseFilter.LEARNING -> setActive(binding.btnLearning)
+            TeacherCourseFilter.MYCOURSE -> setActive(binding.btnMyCourse)
+            TeacherCourseFilter.ALL -> setActive(binding.btnAll)
+            TeacherCourseFilter.FAVORITE -> setActive(binding.btnFavorite)
+            TeacherCourseFilter.LEARNING -> setActive(binding.btnLearning)
         }
     }
 
     override fun setupViews() {
         binding.headerSection.setHeaderData(
-            title = "Tất cả khoá học",
+            title = "Khoá học của tôi",
             actionText = "4 tất cả",
             onActionClick = {}
         )
@@ -72,16 +75,20 @@ class TeacherCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
             layoutManager = LinearLayoutManager(context)
         }
         binding.btnAll.setOnClickListener {
-            viewModel.changeFilter(CourseFilter.ALL)
+            viewModel.changeFilter(TeacherCourseFilter.ALL)
+        }
+
+        binding.btnMyCourse.setOnClickListener {
+            viewModel.changeFilter(TeacherCourseFilter.MYCOURSE)
         }
 
         binding.btnFavorite.setOnClickListener {
-            viewModel.changeFilter(CourseFilter.FAVORITE)
+            viewModel.changeFilter(TeacherCourseFilter.FAVORITE)
         }
 
         binding.btnLearning.setOnClickListener {
             Log.d("LEARNING", "123");
-            viewModel.changeFilter(CourseFilter.LEARNING)
+            viewModel.changeFilter(TeacherCourseFilter.LEARNING)
         }
 
         viewModel.fetchAllCourses()
@@ -91,12 +98,13 @@ class TeacherCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
         viewModel.courses.observe(viewLifecycleOwner) { list ->
             courseAdapter.updateData(list)
 
-            val filter = viewModel.currentFilter.value ?: CourseFilter.ALL
+            val filter = viewModel.currentFilter.value ?: TeacherCourseFilter.MYCOURSE
 
             val title = when (filter) {
-                CourseFilter.ALL -> "Tất cả khoá học"
-                CourseFilter.FAVORITE -> "Khoá học yêu thích của tôi"
-                CourseFilter.LEARNING -> "Khoá học đang học"
+                TeacherCourseFilter.MYCOURSE -> "Khoá học của tôi"
+                TeacherCourseFilter.ALL -> "Tất cả khoá học"
+                TeacherCourseFilter.FAVORITE -> "Khoá học yêu thích của tôi"
+                TeacherCourseFilter.LEARNING -> "Khoá học đang học"
             }
 
 
