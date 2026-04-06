@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.CreateParagraphRequest
 import com.home.lexa.domain.models.EditSpeakingDayRequest
 import com.home.lexa.domain.models.ShortParagraphSpeakingDayDto
@@ -115,10 +116,11 @@ class SpeakingPracticeViewModel(
         }
     }
 
-    fun deleteSpeakingDay(speakingDayId: Long) {
+    fun deleteSpeakingDay(speakingDayId: Long, courseId: Long) {
         viewModelScope.launch {
             _isLoading.value = true
             val result = speakingDayRepository.deleteSpeakingDay(speakingDayId)
+            AppMemoryCache.remove("getSpeakingDayCourse_${courseId}")
             result.onSuccess {
                 _deleteSpeakingDayStatus.value = Result.success(Unit)
             }.onFailure {

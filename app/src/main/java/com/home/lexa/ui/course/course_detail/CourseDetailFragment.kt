@@ -32,7 +32,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
     internal var isSpeakingMode = true
     internal var isOwner = true
     internal var isPublic = true
-    internal var selectedTopicId: Int? = null
+    internal var selectedTopicId: Int? = 0
     internal var courseId = 17L
     internal lateinit var list_topic: List<Topic>
     private val activityBinding by lazy { (requireActivity() as MainActivity).binding }

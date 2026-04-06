@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.home.lexa.di.AppMemoryCache
+import com.home.lexa.domain.models.CreateFlashcardRequest
 import com.home.lexa.domain.models.CreateSpeakingDayRequest
 import com.home.lexa.domain.models.DetailFlashcard
 import com.home.lexa.domain.models.SpeakingCourseDetailDto
@@ -100,7 +101,7 @@ class CourseDetailViewModel(
         viewModelScope.launch {
             val result = courseRepository.editCourse(courseId, request)
             result.onSuccess {
-                AppMemoryCache.remove("speakingCourseDetail_${courseId}")
+                AppMemoryCache.remove("getSpeakingDayCourse_${courseId}")
                 _updateStatus.value = Result.success(Unit)
             }.onFailure {
                 _updateStatus.value = Result.failure(it)
@@ -116,11 +117,11 @@ class CourseDetailViewModel(
         viewModelScope.launch {
             val result = speakingDayRepository.createSpeakingDay(request)
             result.onSuccess {
-                AppMemoryCache.remove("speakingCourseDetail_${request.courseId}")
-                _updateStatus.value = Result.success(Unit)
+                AppMemoryCache.remove("getSpeakingDayCourse_${request.courseId}")
+                _createStatus.value = Result.success(Unit)
             }.onFailure {
                 Log.e("CREATE_STATUS", "Lỗi: ${it.message}", it)
-                _updateStatus.value = Result.failure(it)
+                _createStatus.value = Result.failure(it)
             }
         }
     }
@@ -133,6 +134,7 @@ class CourseDetailViewModel(
         viewModelScope.launch {
             val result = flashcardRepository.deleteFlashcard(flashcardId)
             result.onSuccess {
+                AppMemoryCache.remove("getAllFlashcard_${deckId}")
                 _updateStatus.value = Result.success(Unit)
             }.onFailure {
                 Log.e("DELETE_FLASHCARD", "Lỗi: ${it.message}", it)
@@ -140,5 +142,4 @@ class CourseDetailViewModel(
             }
         }
     }
-
 }

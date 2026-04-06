@@ -239,6 +239,10 @@
         android:name="com.home.lexa.ui.speaking.speaking_practice.SpeakingPracticeFragment"
         android:label="SpeakingPracticeFragment">
         <argument
+            android:name="courseId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+        <argument
             android:name="speakingDayId"
             app:argType="long"
             android:defaultValue="-1L" />

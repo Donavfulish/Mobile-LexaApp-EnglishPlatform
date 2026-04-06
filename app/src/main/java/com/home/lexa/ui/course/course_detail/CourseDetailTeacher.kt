@@ -101,28 +101,6 @@ class CourseDetailTeacher(
             setBackground(ContextCompat.getColor(fragment.requireContext(), R.color.purple_paragraph))
             setText("Lưu thông tin", ContextCompat.getColor(fragment.requireContext(), R.color.white))
         }
-
-        val popUpInput = PopUpInput(fragment.requireContext())
-        val speakingDayTitle = NormalInput(fragment.requireContext()).apply {
-            setLabel("Tiêu đề")
-            setPlaceHolderText("Nhập tiêu đề ngày học...")
-        }
-        popUpInput.insertNormalInput(speakingDayTitle)
-        binding.addBtn.setOnClickAction {
-            popUpInput.showDialog(
-                dialogTitle = "Tạo ngày học mới",
-                confirmText = "Tạo ngay",
-                onConfirm = { dataList ->
-                    viewModel.createSpeakingDay(CreateSpeakingDayRequest(
-                        courseId = fragment.courseId,
-                        title = dataList[0]
-                    ))
-                },
-                onCancel = {
-                    Log.d("DEBUG_POPUP", "Đã hủy bỏ")
-                }
-            )
-        }
     }
 
     override fun bindCourseData(course: SpeakingCourseDetailDto) {
@@ -141,6 +119,37 @@ class CourseDetailTeacher(
         }
         binding.courseTitleInput.setText(course.title)
         binding.introductionInput.setText(course.description)
+
+        val popUpInput = PopUpInput(fragment.requireContext())
+        val speakingDayTitle = NormalInput(fragment.requireContext()).apply {
+            setLabel("Tiêu đề")
+            setPlaceHolderText("Nhập tiêu đề ngày học...")
+        }
+        popUpInput.insertNormalInput(speakingDayTitle)
+        binding.addBtn.setOnClickAction {
+            if(fragment.isSpeakingMode){
+                popUpInput.showDialog(
+                    dialogTitle = "Tạo ngày học mới",
+                    confirmText = "Tạo ngay",
+                    onConfirm = { dataList ->
+                        viewModel.createSpeakingDay(CreateSpeakingDayRequest(
+                            courseId = fragment.courseId,
+                            title = dataList[0]
+                        ))
+                    },
+                    onCancel = {
+                        Log.d("DEBUG_POPUP", "Đã hủy bỏ")
+                    }
+                )
+            }
+            else {
+                val bundle = Bundle().apply {
+                    putBoolean("IS_EDIT_KEY", false)
+                    putLong("DECK_ID_KEY", course.deckId!!)
+                }
+                fragment.findNavController().navigate(R.id.action_courseDetailFragment_to_flashcardAddEditFragment,bundle)
+            }
+        }
     }
 
     override fun bindSpeakingData(course: SpeakingCourseDetailDto) {
@@ -153,6 +162,7 @@ class CourseDetailTeacher(
                     )
                     setOnClickAction {
                         val bundle = bundleOf(
+                            "courseId" to course.id,
                             "speakingDayId" to day.speakingDayId,
                             "order" to index
                         )
@@ -235,10 +245,10 @@ class CourseDetailTeacher(
             }
         }
 
-        // THEO DOI TINH TRANG THEM MOI NGAY HOC
+        // THEO DOI TINH TRANG KHI THEM DU LIEU MOI
         viewModel.createStatus.observe(fragment.viewLifecycleOwner){ result ->
             result?.onSuccess {
-                Toast.makeText(fragment.requireContext(), "Thêm ngày học mới thành công!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(fragment.requireContext(), "Thêm dữ liệu thành công!", Toast.LENGTH_SHORT).show()
                 viewModel.resetCreateStatus()
                 viewModel.loadCourseDetail(fragment.courseId)
             }?.onFailure {

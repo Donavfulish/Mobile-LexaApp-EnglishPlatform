@@ -22,8 +22,10 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(FragmentSpeakingPracticeBinding::inflate) {
     private val viewModel: SpeakingPracticeViewModel by viewModel()
     private var speakingDayId = -1L
+    private var courseId = -1L
     private var order = 0
     override fun setupViews() {
+        courseId = arguments?.getLong("courseId") ?: -1L
         speakingDayId = arguments?.getLong("speakingDayId") ?: -1L
         order = arguments?.getInt("order") ?: 0
 
@@ -45,7 +47,7 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
                     confirmText = "Xóa toàn bộ",
                     onConfirm = {
 
-                        viewModel.deleteSpeakingDay(speakingDayId)
+                        viewModel.deleteSpeakingDay(speakingDayId, courseId)
                     }
                 )
             }
