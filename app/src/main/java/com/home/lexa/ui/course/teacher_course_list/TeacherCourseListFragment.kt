@@ -87,6 +87,10 @@ class TeacherCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
         viewModel.fetchAllCourses()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.fetchAllCourses();
+    }
     override fun observeData() {
         viewModel.courses.observe(viewLifecycleOwner) { list ->
             courseAdapter.updateData(list)

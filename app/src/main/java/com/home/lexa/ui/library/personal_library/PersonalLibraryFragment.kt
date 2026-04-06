@@ -1,6 +1,7 @@
 package com.home.lexa.ui.library.personal_library
 
 import android.os.Bundle
+import android.util.Log
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.home.lexa.R
@@ -46,6 +47,15 @@ class PersonalLibraryFragment : BaseFragment<FragmentPersonalLibraryBinding>(Fra
                 }
             )
         }
+    }
+
+    override fun onResume() {
+
+        super.onResume()
+        // Mỗi khi quay lại màn hình Profile (từ màn hình chỉnh sửa), gọi lại API
+        Log.d("Di vao day cua personal", "Di bo");
+        viewModel.fetchAllDecks()
+
     }
 
     override fun observeData() {

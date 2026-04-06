@@ -77,7 +77,7 @@ class ExerciseModeViewModel(
     }
 
     // GỌI API Ở ĐÂY
-    private fun fetchFlashcardsFromApi() {
+    public fun fetchFlashcardsFromApi() {
         viewModelScope.launch {
             try {
                 val result = repository.getAllFlashcardWithResult(deckId)

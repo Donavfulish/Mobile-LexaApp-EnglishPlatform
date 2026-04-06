@@ -49,6 +49,10 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.fetchAllCourses();
+    }
     override fun setupViews() {
 
         binding.rvCourses.apply {

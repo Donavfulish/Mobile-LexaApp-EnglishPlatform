@@ -1,5 +1,6 @@
 package com.home.lexa.ui.library.personal_library
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,7 +22,6 @@ class PersonalLibraryModel(private val repository: DeckRepository) : ViewModel()
 
     // Hàm này không cần suspend, gọi phát chạy luôn
     fun fetchAllDecks() {
-        if (_decks.value.isNotEmpty()) return
         viewModelScope.launch {
             _isLoading.value = true
 
@@ -45,6 +45,7 @@ class PersonalLibraryModel(private val repository: DeckRepository) : ViewModel()
                 creatorId = mockUserInfo.id
             )
 
+            Log.d("Da fetch nhe ban", "fetching")
             val result = repository.createDeck(request)
 
             fetchAllDecks()

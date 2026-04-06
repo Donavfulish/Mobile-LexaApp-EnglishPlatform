@@ -6,6 +6,7 @@ import com.home.lexa.databinding.FragmentLibraryBinding
 
 class LibraryFragment : BaseFragment<FragmentLibraryBinding>(FragmentLibraryBinding::inflate) {
 
+
     override fun setupViews() {
         val adapter = LibraryPagerAdapter(this)
         binding.viewPager.adapter = adapter

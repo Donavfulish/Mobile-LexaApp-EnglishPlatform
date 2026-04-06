@@ -1,8 +1,11 @@
 package com.home.lexa.data.repository
 
+import android.util.Log
 import com.home.lexa.data.remote.SpeakingDayApiService
+import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.CreateSpeakingDayRequest
 import com.home.lexa.domain.models.EditSpeakingDayRequest
+import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.domain.models.ShortParagraphSpeakingDayDto
 import com.home.lexa.domain.repository.SpeakingDayRepository
 
@@ -12,10 +15,16 @@ class SpeakingDayRepositoryImpl(
 
     override suspend fun getParagraphSpeakingDay(speakingDayId: Long): Result<ShortParagraphSpeakingDayDto?> {
         return try {
+            val speakingDay: ShortParagraphSpeakingDayDto? = AppMemoryCache.get("getParagraphSpeakingDay");
+            if (speakingDay != null){
+                return Result.success(speakingDay);
+            }
             val response = apiService.getParagraphSpeakingDay(speakingDayId)
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
+                val data = body.data;
+                AppMemoryCache.put("getParagraphSpeakingDay", data as Any);
                 Result.success(body.data ?: null)
             } else {
                 Result.failure(Exception(body?.message ?: "Lấy danh sách bài học thất bại"))
@@ -31,6 +40,8 @@ class SpeakingDayRepositoryImpl(
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
+                Log.d("Đã xoá cache create", "Cache create đã được xoá")
+                AppMemoryCache.remove("getParagraphSpeakingDay");
                 val newId = body.data ?: throw Exception("Không lấy được ID")
                 Result.success(newId)
             } else {
@@ -46,7 +57,8 @@ class SpeakingDayRepositoryImpl(
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
-
+                Log.d("Đã xoá cache update", "Cache update đã được xoá")
+                AppMemoryCache.remove("getParagraphSpeakingDay");
                 Result.success(true)
             } else {
                 Result.failure(Exception(body?.message ?: "Chỉnh sửa bài học thất bại"))
@@ -61,6 +73,8 @@ class SpeakingDayRepositoryImpl(
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
+                Log.d("Đã xoá cache delete", "Cache delete đã được xoá")
+                AppMemoryCache.remove("getParagraphSpeakingDay");
                 Result.success(true)
             } else {
                 Result.failure(Exception(body?.message ?: "Xóa bài học thất bại"))

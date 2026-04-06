@@ -1,5 +1,6 @@
 package com.home.lexa.data.repository
 
+import android.util.Log
 import com.home.lexa.data.remote.CourseApiService
 import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.CreateCourseRequest
@@ -65,6 +66,13 @@ class CourseRepositoryImpl(
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
+                Log.d("Đã xoá cache create", "Cache create đã được xoá")
+                AppMemoryCache.remove("getAllCourses");
+                AppMemoryCache.remove("getMyCourses");
+                AppMemoryCache.remove("getLearningCourses");
+                AppMemoryCache.remove("getFeaturedCourses");
+                AppMemoryCache.remove("getStudyingCourses");
+                AppMemoryCache.remove("getTopStudiedCourses");
                 val newId = body.data?.get("id") ?: throw Exception("Không lấy được ID")
                 Result.success(newId)
             } else {
@@ -81,6 +89,13 @@ class CourseRepositoryImpl(
 
             if (response.isSuccessful && body?.success == true) {
 
+                Log.d("Đã xoá cache update", "Cache update đã được xoá")
+                AppMemoryCache.remove("getAllCourses");
+                AppMemoryCache.remove("getMyCourses");
+                AppMemoryCache.remove("getLearningCourses");
+                AppMemoryCache.remove("getFeaturedCourses");
+                AppMemoryCache.remove("getStudyingCourses");
+                AppMemoryCache.remove("getTopStudiedCourses");
                 Result.success(true)
             } else {
                 Result.failure(Exception(body?.message ?: "Chỉnh sửa khóa học thất bại"))
@@ -95,6 +110,13 @@ class CourseRepositoryImpl(
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
+                Log.d("Đã xoá cache delete", "Cache delete đã được xoá")
+                AppMemoryCache.remove("getAllCourses");
+                AppMemoryCache.remove("getMyCourses");
+                AppMemoryCache.remove("getLearningCourses");
+                AppMemoryCache.remove("getFeaturedCourses");
+                AppMemoryCache.remove("getStudyingCourses");
+                AppMemoryCache.remove("getTopStudiedCourses");
                 Result.success(true)
             } else {
                 Result.failure(Exception(body?.message ?: "Xóa khóa học thất bại"))

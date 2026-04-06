@@ -62,6 +62,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             }
         )
     }
+
     override fun setupViews() {
         binding.rvFeaturedCoursesCard.apply {
             adapter = featuredCourseAdapter
@@ -104,6 +105,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Mỗi khi quay lại màn hình Profile (từ màn hình chỉnh sửa), gọi lại API
+        viewModel.fetchFeaturedCourses()
+        viewModel.fetchStudyingCourses()
+        viewModel.fetchTopStudiedCourses()
+    }
     override fun observeData() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.featuredCoursesFlow.collect { courses ->

@@ -1,5 +1,6 @@
 package com.home.lexa.data.repository
 
+import android.util.Log
 import com.home.lexa.data.remote.DeckApiService
 import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.CreateDeckRequest
@@ -18,6 +19,7 @@ class DeckRepositoryImpl(
     override suspend fun getAllDecks(): Result<List<DeckDto>> {
         return try {
             val decks: List<DeckDto>? = AppMemoryCache.get("getAllDecks");
+            Log.d("Gia tri deck", "deck $decks")
             if (decks != null){
                 return Result.success(decks);
             }
@@ -88,15 +90,21 @@ class DeckRepositoryImpl(
 
     override suspend fun createDeck(request: CreateDeckRequest): Result<Long> {
         return try {
-            val response = apiService.createDeck(request)
-            val body = response.body()
 
-            if (response.isSuccessful && body?.success == true && body.data != null) {
-                Result.success(body.data)
+            Log.d("Trang thai create", "Di vao")
+            val response = apiService.createDeck(request)
+            Log.d("Trang thai create", response.toString() )
+
+            if (response.isSuccessful ) {
+                Log.d("Đã xoá cache create", "Cache create đã được xoá")
+                AppMemoryCache.remove("getAllDecks");
+                val newId: Long = 1;
+                Result.success(newId)
             } else {
-                Result.failure(Exception(body?.message ?: "Lỗi khi tạo deck"))
+                Result.failure(Exception( "Lỗi khi tạo deck"))
             }
         } catch (e: Exception) {
+            Log.e("CREATE_DECK_ERROR", "Error here", e)
             Result.failure(Exception("Lỗi kết nối: ${e.message}"))
         }
     }
@@ -107,8 +115,11 @@ class DeckRepositoryImpl(
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
+                Log.d("Đã xoá cache update", "Cache update đã được xoá")
+                AppMemoryCache.remove("getAllDecks");
                 Result.success(body.data ?: true)
             } else {
+
                 Result.failure(Exception(body?.message ?: "Lỗi khi cập nhật deck"))
             }
         } catch (e: Exception) {
@@ -122,6 +133,8 @@ class DeckRepositoryImpl(
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
+                Log.d("Đã xoá cache delete", "Cache delete đã được xoá")
+                AppMemoryCache.remove("getAllDecks");
                 Result.success(body.data ?: true)
             } else {
                 Result.failure(Exception(body?.message ?: "Lỗi khi xóa deck"))
@@ -136,6 +149,8 @@ class DeckRepositoryImpl(
             val response = apiService.createDeckResult(request.deckId, request)
             val body = response.body()
             if (response.isSuccessful && body?.success == true) {
+                Log.d("Đã xoá cache create result", "Cache create result đã được xoá")
+                AppMemoryCache.remove("getDeckResult_${request.deckId}");
                 Result.success(body.data ?: true)
             } else {
                 Result.failure(Exception(body?.message ?: "Lỗi khi tạo kết quả deck"))
@@ -150,6 +165,8 @@ class DeckRepositoryImpl(
             val response = apiService.updateDeckResult(request.deckId, request)
             val body = response.body()
             if (response.isSuccessful && body?.success == true) {
+                Log.d("Đã xoá cache update  result", "Cache update result đã được xoá")
+                AppMemoryCache.remove("getDeckResult_${request.deckId}");
                 Result.success(body.data ?: true)
             } else {
                 Result.failure(Exception(body?.message ?: "Lỗi khi cập nhật kết quả deck"))

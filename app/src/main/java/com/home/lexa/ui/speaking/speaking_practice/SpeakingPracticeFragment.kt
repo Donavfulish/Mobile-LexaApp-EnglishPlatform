@@ -27,6 +27,7 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
         speakingDayId = arguments?.getLong("speakingDayId") ?: -1L
         order = arguments?.getInt("order") ?: 0
 
+
         val activityBinding = (requireActivity() as MainActivity).binding
         activityBinding.appBarLayout.apply {
             removeCustomView()
@@ -34,6 +35,8 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
             setText("Ngày ${order + 1}")
             setBackButtonVisible(true)
         }
+
+
         activityBinding.appBarLayout.apply {
             setIconRightButton(ContextCompat.getDrawable(requireContext(), R.drawable.trash)!!)
             setOnClickToggleRightButton { _ ->
@@ -44,7 +47,6 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
                     isWarning = true,
                     confirmText = "Xóa toàn bộ",
                     onConfirm = {
-
                         viewModel.deleteSpeakingDay(speakingDayId)
                     }
                 )
@@ -55,10 +57,20 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
         if (speakingDayId != -1L) {
             viewModel.loadParagraphList(speakingDayId)
         }
-        
-        binding.saveBtn.apply{
+
+
+        binding.saveBtn.apply {
             setBackground(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
             setText("Lưu thông tin", ContextCompat.getColor(requireContext(), R.color.white))
+        }
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        // Mỗi khi quay lại màn hình Profile (từ màn hình chỉnh sửa), gọi lại API
+        if (speakingDayId != -1L) {
+            viewModel.loadParagraphList(speakingDayId)
         }
     }
 

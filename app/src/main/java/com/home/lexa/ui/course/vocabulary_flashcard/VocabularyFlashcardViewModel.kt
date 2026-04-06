@@ -35,6 +35,7 @@ class VocabularyFlashcardViewModel(
             try {
                 _isLoading.value = true
 
+                Log.d("loadFlashcardDetail", "detailid: $deckId")
                 val flashcardsDeferred = async { flashcardRepository.getAllFlashcard(deckId) }
                 val deckResultDeferred = async { deckRepository.getDeckResult(deckId) }
 
@@ -76,7 +77,7 @@ class VocabularyFlashcardViewModel(
     fun deleteFlashcard(flashcardId: Long, deckId: Long) { // Hoặc kiểu Int/String tùy cấu trúc của bạn
         viewModelScope.launch {
             try {
-                flashcardRepository.deleteFlashcard(flashcardId) // Gọi hàm xóa từ Repository
+                flashcardRepository.deleteFlashcard(flashcardId, deckId) // Gọi hàm xóa từ Repository
                 loadFlashcardDetail(deckId)
 
             } catch (e: Exception) {

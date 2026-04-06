@@ -16,7 +16,7 @@ enum class TeacherCourseFilter {
     MYCOURSE
 }
 
-class StudentCourseListModel(private val repository: CourseRepository) : ViewModel() {
+class TeacherCourseListModel(private val repository: CourseRepository) : ViewModel() {
 
     lateinit var filter: TeacherCourseFilter
     private val _isLoading = MutableLiveData<Boolean>()
