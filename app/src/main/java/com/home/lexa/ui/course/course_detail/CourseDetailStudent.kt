@@ -4,6 +4,7 @@ import androidx.core.content.ContextCompat
 import com.home.lexa.R
 import com.home.lexa.databinding.ActivityMainBinding
 import com.home.lexa.databinding.FragmentCourseDetailBinding
+import com.home.lexa.domain.models.DetailFlashcard
 import com.home.lexa.domain.models.SpeakingCourseDetailDto
 import com.home.lexa.ui.components.FlashcardMini
 import com.home.lexa.ui.components.Popup
@@ -54,11 +55,17 @@ class CourseDetailStudent(
         }
     }
 
-    override fun bindFlashcardData(card: FlashcardMini) {
+    override fun bindFlashcardData(item: DetailFlashcard, card: FlashcardMini) {
+        val params = androidx.gridlayout.widget.GridLayout.LayoutParams().apply {
+            width = 0
+            height = androidx.gridlayout.widget.GridLayout.LayoutParams.WRAP_CONTENT
+            columnSpec = androidx.gridlayout.widget.GridLayout.spec(androidx.gridlayout.widget.GridLayout.UNDEFINED, 1f)
+            setMargins(16, 16, 16, 16)
+        }
+        card.layoutParams = params
         binding.vocabularyGrid.addView(card)
     }
 
     override fun observerViewModel() {
-        TODO("Not yet implemented")
     }
 }

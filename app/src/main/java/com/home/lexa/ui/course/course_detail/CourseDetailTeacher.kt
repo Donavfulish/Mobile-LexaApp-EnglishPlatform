@@ -1,5 +1,6 @@
 package com.home.lexa.ui.course.course_detail
 
+import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
@@ -12,6 +13,7 @@ import com.home.lexa.R
 import com.home.lexa.databinding.ActivityMainBinding
 import com.home.lexa.databinding.FragmentCourseDetailBinding
 import com.home.lexa.domain.models.CreateSpeakingDayRequest
+import com.home.lexa.domain.models.DetailFlashcard
 import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.SpeakingCourseDetailDto
 import com.home.lexa.ui.components.FlashcardMini
@@ -172,7 +174,49 @@ class CourseDetailTeacher(
         }
     }
 
-    override fun bindFlashcardData(card: FlashcardMini) {
+    override fun bindFlashcardData(item: DetailFlashcard, card: FlashcardMini) {
+        card.onDeleteClick = {
+
+            val deletePopup = Popup(fragment.requireContext())
+
+            deletePopup.showDialog(
+                title = "Xóa từ vựng",
+                subTitle = "Bạn có chắc chắn muốn xóa từ '${item.word}' không? Dữ liệu bị xóa sẽ không thể khôi phục.",
+                isWarning = true, // Bật cờ này lên để chữ và nút Xác nhận thành màu đỏ
+                confirmText = "Xóa",
+                onConfirm = {
+                    viewModel.deleteFlashcard(fragment.courseId, item.id,item.deckId !!)
+                },
+                onCancel = {
+                }
+            )
+
+        }
+        card.onEditClick = {
+
+            val bundle = Bundle().apply {
+                putBoolean("IS_EDIT_KEY", true)
+                putString("WORD_KEY", item.word)
+                putString("TRANS_KEY", item.transcription)
+                putString("MEANING", item.meaning)
+                putString("EXAMPLE_KEY", item.example)
+                putString("POS_KEY", item.partOfSpeech)
+                putLong("FLASHCARD_ID_KEY", item.id)
+                putString("IMAGE_URL_KEY", item.imageUrl)
+                putString("TYPE_KEY", item.type)
+                putLong("DECK_ID_KEY", item.deckId!!)
+
+            }
+            fragment.findNavController().navigate(R.id.action_courseDetailFragment_to_flashcardAddEditFragment,bundle)
+
+        }
+        val params = androidx.gridlayout.widget.GridLayout.LayoutParams().apply {
+            width = 0
+            height = androidx.gridlayout.widget.GridLayout.LayoutParams.WRAP_CONTENT
+            columnSpec = androidx.gridlayout.widget.GridLayout.spec(androidx.gridlayout.widget.GridLayout.UNDEFINED, 1f)
+            setMargins(16, 16, 16, 16)
+        }
+        card.layoutParams = params
         binding.vocabularyGrid2.addView(card)
     }
 
@@ -181,6 +225,7 @@ class CourseDetailTeacher(
         viewModel.updateStatus.observe(fragment.viewLifecycleOwner) { result ->
             result?.onSuccess {
                 Toast.makeText(fragment.requireContext(), "Cập nhật thành công!", Toast.LENGTH_SHORT).show()
+                viewModel.loadCourseDetail(fragment.courseId)
                 viewModel.resetUpdateStatus()
                 binding.saveBtn.setText("Lưu thông tin", ContextCompat.getColor(fragment.requireContext(), R.color.white))
             }?.onFailure {

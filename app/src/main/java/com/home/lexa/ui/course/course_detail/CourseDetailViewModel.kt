@@ -51,7 +51,6 @@ class CourseDetailViewModel(
                     _courseDetailData.value = data
                     _isLoading.value = false
                     if (data != null){
-                        AppMemoryCache.put("speakingCourseDetail_${data.id}", data)
                         if(data.deckId != null) {
                             fetchFlashcardsInBackground(data.id, data.deckId)
                         }
@@ -128,6 +127,18 @@ class CourseDetailViewModel(
 
     fun resetCreateStatus() {
         _createStatus.value = null
+    }
+
+    fun deleteFlashcard(courseId: Long, flashcardId: Long, deckId: Long) {
+        viewModelScope.launch {
+            val result = flashcardRepository.deleteFlashcard(flashcardId)
+            result.onSuccess {
+                _updateStatus.value = Result.success(Unit)
+            }.onFailure {
+                Log.e("DELETE_FLASHCARD", "Lỗi: ${it.message}", it)
+                _updateStatus.value = Result.failure(it)
+            }
+        }
     }
 
 }

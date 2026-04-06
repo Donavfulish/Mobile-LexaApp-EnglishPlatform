@@ -22,7 +22,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentCourseDetailBinding::inflate) {
     private var handler: CourseDetailHandler? = null
         set(value) {
-            if(field == null && value != null){
+            if(value != null){
                 // =====================================THONG TIN VIEW MODEL RIENG CUA TUNG ROLE=====================================
                 value.observerViewModel()
             }
@@ -39,6 +39,10 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
 
 
     private val userManager: UserManager by inject()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        handler = null
+    }
     override fun setupViews() {
 
         val courseId = arguments?.getLong("courseId") ?: -1L
@@ -103,6 +107,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 binding.vocabularyLayout.visibility = View.VISIBLE
             }
         }
+        syncTabUI()
     }
 
     override fun observeData() {
@@ -197,6 +202,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             if (flashcards.isNullOrEmpty()) return@observe
             binding.flashcardNum.text = "${flashcards.size}"
             binding.vocabularyGrid.removeAllViews()
+            binding.vocabularyGrid2.removeAllViews()
             flashcards.forEach { item ->
                 val card = FlashcardMini(requireContext())
                 val vocab = Vocabulary(
@@ -210,15 +216,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                     example = item.example ?: ""
                 )
                 card.setData(vocab)
-
-                val params = androidx.gridlayout.widget.GridLayout.LayoutParams().apply {
-                    width = 0
-                    height = androidx.gridlayout.widget.GridLayout.LayoutParams.WRAP_CONTENT
-                    columnSpec = androidx.gridlayout.widget.GridLayout.spec(androidx.gridlayout.widget.GridLayout.UNDEFINED, 1f)
-                    setMargins(16, 16, 16, 16)
-                }
-                card.layoutParams = params
-                handler?.bindFlashcardData(card)
+                handler?.bindFlashcardData(item, card)
             }
         }
     }
@@ -246,6 +244,17 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 setBackground(ContextCompat.getColor(requireContext(), R.color.white))
                 setText("Từ vựng", ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
             }
+        }
+    }
+
+    private fun syncTabUI() {
+        updateToggleUI()
+        if (isSpeakingMode) {
+            binding.vocabularyLayout.visibility = View.GONE
+            binding.speakingLayout.visibility = View.VISIBLE
+        } else {
+            binding.speakingLayout.visibility = View.GONE
+            binding.vocabularyLayout.visibility = View.VISIBLE
         }
     }
 }

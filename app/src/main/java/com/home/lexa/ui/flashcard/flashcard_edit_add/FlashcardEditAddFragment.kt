@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import coil.load
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentAddEditFlashcardBinding
+import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.CreateFlashcardRequest
 
@@ -191,6 +192,7 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
         viewModel.saveSuccess.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
                 Toast.makeText(requireContext(), "Lưu thành công!", Toast.LENGTH_SHORT).show()
+                AppMemoryCache.remove("getAllFlashcard_${deckId}")
                 findNavController().previousBackStackEntry?.savedStateHandle?.set("RELOAD_DATA", true)
                 findNavController().navigateUp()
             } else {
