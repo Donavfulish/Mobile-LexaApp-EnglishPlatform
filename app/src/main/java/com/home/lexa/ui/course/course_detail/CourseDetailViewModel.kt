@@ -6,17 +6,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.home.lexa.di.AppMemoryCache
-import com.home.lexa.domain.models.CreateDeckRequest
-import com.home.lexa.domain.models.CreateFlashcardRequest
 import com.home.lexa.domain.models.CreateSpeakingDayRequest
 import com.home.lexa.domain.models.DetailFlashcard
 import com.home.lexa.domain.models.SpeakingCourseDetailDto
 import com.home.lexa.domain.repository.CourseRepository
 import com.home.lexa.domain.repository.FlashcardRepository
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.async
 import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.Topic
-import com.home.lexa.domain.models.mockUserInfo
 import com.home.lexa.domain.repository.DeckRepository
 import com.home.lexa.domain.repository.SpeakingDayRepository
 
@@ -24,6 +22,7 @@ class CourseDetailViewModel(
     private val courseRepository: CourseRepository,
     private val flashcardRepository: FlashcardRepository,
     private val speakingDayRepository: SpeakingDayRepository,
+    private val deckRepository: DeckRepository
 ) : ViewModel() {
     private val _createStatus = MutableLiveData<Result<Unit>?>()
     val createStatus: LiveData<Result<Unit>?> get() = _createStatus
@@ -37,8 +36,8 @@ class CourseDetailViewModel(
     val isLoading: LiveData<Boolean> get() = _isLoading
     private val _topicData = MutableLiveData<List<Topic>>()
     val topicData: LiveData<List<Topic>> get() = _topicData
-    private val _deckStatus = MutableLiveData<Result<Unit>?>()
-    val deckStatus : LiveData<Result<Unit>?> get() = _deckStatus
+    private val _favortieStatus = MutableLiveData<Result<Unit>?>()
+    val favoriteStatus: LiveData<Result<Unit>?> get() = _favortieStatus
 
     fun loadCourseDetail(courseId: Long) {
         viewModelScope.launch {
@@ -139,5 +138,50 @@ class CourseDetailViewModel(
                 _updateStatus.value = Result.failure(it)
             }
         }
+    }
+
+    fun setFavorite(courseId: Long, deckId: Long) {
+        viewModelScope.launch {
+            try {
+            val courseFavDeferred = async { courseRepository.favoriteCourse(courseId) }
+            val deckFavDeferred = async { deckRepository.favoriteDeck(deckId) } // Giả định flashcardRepository có hàm này
+
+            val courseResult = courseFavDeferred.await()
+            val deckResult = deckFavDeferred.await()
+
+            if (courseResult.isSuccess && deckResult.isSuccess) {
+                _favortieStatus.value = Result.success(Unit)
+                AppMemoryCache.remove("getSpeakingDayCourse_${courseId}")
+            } else {
+                _favortieStatus.value =  Result.failure(Exception("Lỗi cập nhật"))
+            }
+        } catch (e: Exception) {
+                _favortieStatus.value =  Result.failure(Exception("Lỗi cập nhật"))
+            }
+        }
+    }
+
+    fun removeFavorite(courseId: Long, deckId: Long) {
+        viewModelScope.launch {
+            try {
+                val courseUnfavDeferred = async { courseRepository.disFavoriteCourse(courseId) }
+                val deckUnfavDeferred = async { deckRepository.disFavoriteDeck(deckId) }
+
+                val courseResult = courseUnfavDeferred.await()
+                val deckResult = deckUnfavDeferred.await()
+
+                if (courseResult.isSuccess && deckResult.isSuccess) {
+                    _favortieStatus.value = Result.success(Unit)
+                    AppMemoryCache.remove("getSpeakingDayCourse_${courseId}")
+                } else {
+                    _favortieStatus.value =  Result.failure(Exception("Lỗi cập nhật"))
+                }
+            } catch (e: Exception) {
+                _favortieStatus.value =  Result.failure(Exception("Lỗi cập nhật"))
+            }
+        }
+    }
+    fun resetFavoriteStatus() {
+        _favortieStatus.value = null
     }
 }

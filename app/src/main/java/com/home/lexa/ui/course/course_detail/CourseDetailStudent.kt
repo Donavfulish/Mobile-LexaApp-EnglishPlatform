@@ -1,6 +1,9 @@
 package com.home.lexa.ui.course.course_detail
 
 import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.home.lexa.R
 import com.home.lexa.databinding.ActivityMainBinding
@@ -10,12 +13,13 @@ import com.home.lexa.domain.models.SpeakingCourseDetailDto
 import com.home.lexa.ui.components.FlashcardMini
 import com.home.lexa.ui.components.Popup
 import com.home.lexa.ui.components.StudentSpeakingDayCard
+import com.home.lexa.ui.components.ToggleSwitch
 
 class CourseDetailStudent(
     private val fragment: CourseDetailFragment,
     private val binding: FragmentCourseDetailBinding,
     private val viewModel: CourseDetailViewModel,
-    private val activity: ActivityMainBinding
+    private val activityBinding: ActivityMainBinding
 ): CourseDetailHandler {
     override fun setupViews() {
         binding.learningBtn.apply {
@@ -26,7 +30,19 @@ class CourseDetailStudent(
     }
 
     override fun bindCourseData(course: SpeakingCourseDetailDto) {
-        binding.titleCourse.text = course.title
+        android.util.Log.e("DEBUG_FAVORITE", "Course ID: ${course.id}, is_favorite: ${course.is_favorite}")
+        var isFavorite = course.is_favorite ?: false
+        activityBinding.appBarLayout.apply {
+            setIconRightButton(ContextCompat.getDrawable(fragment.requireContext(), R.drawable.ic_selector_favorite_btn)!!)
+            setRightButtonSelected(!isFavorite)
+            setOnClickToggleRightButton { isActivated ->
+                if(isActivated){
+                    viewModel.removeFavorite(course.id, course.deckId!!)
+                } else {
+                    viewModel.setFavorite(course.id, course.deckId!!)
+                }
+            }
+        }
         binding.topic.apply {
             setTextSize(12f)
             setText(course.type!!, ContextCompat.getColor(fragment.requireContext(), android.R.color.white))
@@ -68,5 +84,15 @@ class CourseDetailStudent(
     }
 
     override fun observerViewModel() {
+        viewModel.favoriteStatus.observe(fragment.viewLifecycleOwner){
+                result ->
+            result?.onSuccess {
+                Toast.makeText(fragment.requireContext(), "Cập nhật thành công!", Toast.LENGTH_SHORT).show()
+                viewModel.resetFavoriteStatus()
+            }?.onFailure {
+                Toast.makeText(fragment.requireContext(), "Lỗi: ${it.message}", Toast.LENGTH_SHORT).show()
+                viewModel.resetFavoriteStatus()
+            }
+        }
     }
 }
