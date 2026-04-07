@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorLong
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.home.lexa.R
@@ -99,8 +100,8 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
 
             // --- GIÁO VIÊN ACTIVE ---
             binding.btnRoleTeacher.setTextColor(colorPrimary)
-            binding.btnRoleTeacher.setIconTintResource(R.color.lexa_primary)
-            binding.btnRoleTeacher.strokeColor = ContextCompat.getColorStateList(requireContext(), R.color.lexa_primary)
+            binding.btnRoleTeacher.iconTint = ColorStateList.valueOf(colorPrimary) //R.color.lexa_primary)
+            binding.btnRoleTeacher.strokeColor = ColorStateList.valueOf(colorPrimary)
             binding.btnRoleTeacher.backgroundTintList = ColorStateList.valueOf(colorLightPrimary) // Đổi nền tím nhạt
 
             // --- HỌC SINH INACTIVE ---
@@ -117,7 +118,9 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
             binding.tvSubtitle.text = getString(R.string.signup_desc)
 
             // --- HỌC SINH ACTIVE ---
-            binding.btnRoleStudent.setTextColor(colorPrimary)
+            binding.btnRoleStudent.setTextColor(
+                ContextCompat.getColor(requireContext(), R.color.lexa_primary)
+            )
             binding.btnRoleStudent.setIconTintResource(R.color.lexa_primary)
             binding.btnRoleStudent.strokeColor = ContextCompat.getColorStateList(requireContext(), R.color.lexa_primary)
             binding.btnRoleStudent.backgroundTintList = ColorStateList.valueOf(colorLightPrimary) // Đổi nền tím nhạt
@@ -157,7 +160,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
 
     private fun setupSocialButtons() {
         binding.btnGoogle.apply {
-            setText("Google", colorTextDark)
+            setText(" Đăng ký bằng Google", colorTextDark)
             setBackground(Color.WHITE)
             setStroke(1, colorBorder)
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_google))
@@ -200,6 +203,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
         }
 
         binding.inputAddress.apply {
+            setMultipleLines(true)
             setLabel("Địa chỉ")
             setPlaceHolderText("Nhập địa chỉ của bạn...")
             setIcon(R.drawable.ic_location)
@@ -324,11 +328,12 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                             Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
                             findNavController().navigate(R.id.action_signupFragment_to_homeFragment)
                         }
+                        viewModel.resetOAuth()
                         viewModel.resetState()
                     }
                     is AuthState.Error -> {
                         binding.btnSignup.setText("Đăng Ký", Color.WHITE) // Khôi phục nút
-                        Toast.makeText(requireContext(), "Tài khoản đã tồn tại hoặc không hợp lệ", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), "Tài khoản đăng ký không hợp lệ", Toast.LENGTH_LONG).show()
                     }
                 }
             }
@@ -337,7 +342,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
         viewModel.oauthGoogleResult.observe(viewLifecycleOwner) { data ->
             data?.let {
                 if (data.registered) {
-                    Toast.makeText(requireContext(), "Tài khoản không hợp lệ hoặc đã được sử dụng", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Tài khoản đã được sử dụng", Toast.LENGTH_SHORT).show()
                     return@observe
                 }
                 // Vô hiệu hóa các nút đăng ký OAuth và các UI không cần thiết
@@ -347,6 +352,9 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                 binding.inputConfirmPassword.visibility = View.GONE
                 binding.tvSocialLabel.visibility = View.GONE
                 binding.tvEnterInformation.text = "Register with Google"
+
+                binding.inputPassword.setText(null)
+                binding.inputConfirmPassword.setText(null)
 
                 // Tự động nhập liệu thông tin người dùng bằng dữ liệu bên thứ 3
                 binding.inputEmail.setText(it.user?.email ?: "")

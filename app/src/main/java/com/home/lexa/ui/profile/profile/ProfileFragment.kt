@@ -41,7 +41,14 @@ class ProfileFragment : Fragment() {
         observeData()
 
         binding.btnLogout.setOnClickListener {
-            handleLogout()
+            requireContext().showConfirmDialog(
+                title = "Đăng xuất",
+                message = "Dữ liệu chưa lưu có thể bị mất. Bạn vẫn muốn đăng xuất?",
+                onConfirm = {
+                    handleLogout()
+                },
+                acceptLabel = "Đăng xuất"
+            )
         }
     }
 

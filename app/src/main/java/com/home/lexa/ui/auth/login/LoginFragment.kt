@@ -66,7 +66,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
         // Nút Google
         binding.btnGoogle.apply {
-            setText("Google", colorTextDark)
+            setText(" Đăng nhập bằng Google", colorTextDark)
             setBackground(Color.WHITE)
             setStroke(1, colorBorder)
             // Thay R.drawable.ic_google bằng icon thực tế của bạn
@@ -109,24 +109,23 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                         binding.btnLogin.setText("Đang xử lý...", Color.WHITE)
                     }
                     is AuthState.Success -> {
+                        viewModel.resetState()
+
                         Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
 
                         if (!viewModel.isEmailVerified()) {
                             val email = binding.inputEmail.getText().trim()
                             viewModel.sendOTP(email)
 
-                            viewModel.resetState()
-
                             val action = LoginFragmentDirections.actionSignupFragmentToVerifyEmail(email)
                             findNavController().navigate(action)
                         } else {
                             findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
-                            viewModel.resetState()
                         }
                     }
                     is AuthState.Error -> {
                         binding.btnLogin.setText("Đăng Nhập", Color.WHITE) // Khôi phục nút
-                        Toast.makeText(requireContext(), "Tài khoản chưa được đăng ký hoặc không hợp lệ", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), "Tài khoản chưa được đăng ký", Toast.LENGTH_LONG).show()
                     }
 
                     else -> {}
@@ -138,6 +137,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             data?.let {
                 viewModel.setAccessToken(it.accessToken?: "")
                 viewModel.loginGoogle()
+                viewModel.resetOAuth()
             }
         }
     }

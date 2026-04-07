@@ -128,7 +128,10 @@ class AuthViewModel (
 
     fun logout() {
         viewModelScope.launch {
+            resetState()
             repository.logout()
+            userManager.clearUser()
+            tokenManager.clearTokens()
         }
     }
 

@@ -31,7 +31,10 @@ class TokenAuthenticator(
             // 1. KIỂM TRA QUAN TRỌNG:
             // Nếu token trong máy đã khác token cũ, nghĩa là thread khác đã refresh xong rồi
             val currentAccessToken = tokenManager.getAccessToken()
-            if (currentAccessToken != oldAccessToken && currentAccessToken != null) {
+
+            if (currentAccessToken.isNullOrBlank()) return null
+
+            if (currentAccessToken != oldAccessToken) {
                 return response.request.newBuilder()
                     .header("Authorization", "Bearer $currentAccessToken")
                     .build()

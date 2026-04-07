@@ -2,9 +2,12 @@ package com.home.lexa.ui.components
 
 import android.content.Context
 import android.os.Parcelable
+import android.text.InputType
 import android.util.AttributeSet
 import android.util.SparseArray
+import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.inputmethod.EditorInfo
 import android.widget.FrameLayout
 import androidx.core.widget.doOnTextChanged
 import com.home.lexa.R
@@ -21,6 +24,7 @@ class PasswordInput @JvmOverloads constructor(
     init {
         binding.etInput.transformationMethod = android.text.method.PasswordTransformationMethod.getInstance()
         setupPasswordToggle()
+        setMultipleLines(false)
     }
 
     override fun dispatchSaveInstanceState(container: SparseArray<Parcelable>) {
@@ -37,21 +41,23 @@ class PasswordInput @JvmOverloads constructor(
         binding.ivShowPassword.setOnClickListener {
             _isPasswordHidden = !_isPasswordHidden
 
-            if (_isPasswordHidden) {
-                // 1. Đổi icon sang "Mắt mở"
-                binding.ivShowPassword.setImageResource(R.drawable.ic_close_eye)
-                // 2. Hiện mật khẩu
-                binding.etInput.transformationMethod = android.text.method.HideReturnsTransformationMethod.getInstance()
-            } else {
-                // 1. Đổi icon sang "Mắt đóng"
-                binding.ivShowPassword.setImageResource(R.drawable.ic_open_eye)
-                // 2. Ẩn mật khẩu (dùng PasswordTransformationMethod)
-                binding.etInput.transformationMethod = android.text.method.PasswordTransformationMethod.getInstance()
-            }
-
-            // Di chuyển con trỏ về cuối text để không bị nhảy khi đổi mode
-            binding.etInput.setSelection(binding.etInput.text.length)
+            if (_isPasswordHidden)
+                hidePassword()
+            else
+                showPassword()
         }
+    }
+
+    private fun hidePassword() {
+        binding.ivShowPassword.setImageResource(R.drawable.ic_close_eye)
+        binding.etInput.transformationMethod = android.text.method.HideReturnsTransformationMethod.getInstance()
+        binding.etInput.setSelection(binding.etInput.text.length)
+    }
+
+    private fun showPassword() {
+        binding.ivShowPassword.setImageResource(R.drawable.ic_open_eye)
+        binding.etInput.transformationMethod = android.text.method.PasswordTransformationMethod.getInstance()
+        binding.etInput.setSelection(binding.etInput.text.length)
     }
 
     // Set giá trị label và hiển thị Label trên ô Input
@@ -81,6 +87,41 @@ class PasswordInput @JvmOverloads constructor(
     fun onTextChanged(action: (String) -> Unit) {
         binding.etInput.doOnTextChanged { text, start, before, count ->
             action(text.toString())
+        }
+    }
+
+    fun setMultipleLines(isMultiLine: Boolean) {
+        binding.etInput.apply {
+            if (isMultiLine) {
+                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+                isSingleLine = false
+
+                maxLines = 5
+
+                setHorizontallyScrolling(false)
+
+                gravity = Gravity.TOP
+
+                imeOptions = EditorInfo.IME_ACTION_NONE
+            } else {
+                inputType = InputType.TYPE_CLASS_TEXT
+                isSingleLine = true
+
+                maxLines = 1
+
+                setHorizontallyScrolling(true)
+
+                gravity = Gravity.CENTER_VERTICAL
+
+                imeOptions = EditorInfo.IME_ACTION_DONE
+            }
+
+            if (_isPasswordHidden)
+                hidePassword()
+            else
+                showPassword()
+
+            requestLayout()
         }
     }
 

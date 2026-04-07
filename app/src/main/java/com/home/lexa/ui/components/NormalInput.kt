@@ -3,11 +3,13 @@ package com.home.lexa.ui.components
 import android.content.Context
 import android.graphics.PorterDuff
 import android.os.Parcelable
+import android.text.InputType
 import android.util.AttributeSet
 import android.util.SparseArray
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.FrameLayout
 import androidx.annotation.DrawableRes
 import androidx.core.graphics.toColorInt
@@ -28,6 +30,10 @@ class NormalInput @JvmOverloads constructor(
     override fun dispatchRestoreInstanceState(container: SparseArray<Parcelable>) {
         // Chặn không cho các view con tự khôi phục theo ID chung
         dispatchThawSelfOnly(container)
+    }
+
+    init {
+        setMultipleLines(false)
     }
 
     // Set giá trị label và hiển`    thị Label trên ô Input
@@ -108,6 +114,36 @@ class NormalInput @JvmOverloads constructor(
 
     fun setEnable(isEnable: Boolean) {
         binding.etInput.isEnabled = isEnable
+    }
+
+    fun setMultipleLines(isMultiLine: Boolean) {
+        binding.etInput.apply {
+            if (isMultiLine) {
+                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+                isSingleLine = false
+
+                maxLines = 5
+
+                setHorizontallyScrolling(false)
+
+                gravity = Gravity.TOP
+
+                imeOptions = EditorInfo.IME_ACTION_NONE
+            } else {
+                inputType = InputType.TYPE_CLASS_TEXT
+                isSingleLine = true
+
+                maxLines = 1
+
+                setHorizontallyScrolling(true)
+
+                gravity = Gravity.CENTER_VERTICAL
+
+                imeOptions = EditorInfo.IME_ACTION_DONE
+            }
+
+            requestLayout()
+        }
     }
 
     // Hàm nhận function (callback) xử lý click
