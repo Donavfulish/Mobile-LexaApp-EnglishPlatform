@@ -69,11 +69,21 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
         )
 
 
+        val filterArg = arguments?.getString("filter")
+
+        val initialFilter = try {
+            TeacherCourseFilter.valueOf(filterArg ?: "MYCOURSE")
+        } catch (e: Exception) {
+            TeacherCourseFilter.MYCOURSE
+        }
+
+        viewModel.changeFilter(initialFilter)
 
         binding.rvCourses.apply {
             adapter = courseAdapter
             layoutManager = LinearLayoutManager(context)
         }
+
         binding.btnAll.setOnClickListener {
             viewModel.changeFilter(TeacherCourseFilter.ALL)
         }
@@ -87,7 +97,6 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
         }
 
         binding.btnLearning.setOnClickListener {
-            Log.d("LEARNING", "123");
             viewModel.changeFilter(TeacherCourseFilter.LEARNING)
         }
 

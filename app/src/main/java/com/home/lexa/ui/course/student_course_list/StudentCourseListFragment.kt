@@ -51,10 +51,20 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
 
     override fun setupViews() {
 
+        val filterArg = arguments?.getString("filter")
+        val initialFilter = try {
+            CourseFilter.valueOf(filterArg ?: "ALL")
+        } catch (e: Exception) {
+            CourseFilter.ALL
+        }
+
+        viewModel.changeFilter(initialFilter)
+
         binding.rvCourses.apply {
             adapter = courseAdapter
             layoutManager = LinearLayoutManager(context)
         }
+
         binding.btnAll.setOnClickListener {
             viewModel.changeFilter(CourseFilter.ALL)
         }
