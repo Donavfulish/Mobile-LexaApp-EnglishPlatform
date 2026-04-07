@@ -19,7 +19,6 @@ class FavoriteLibraryModel(private val repository: CourseRepository) : ViewModel
 
     // Hàm này không cần suspend, gọi phát chạy luôn
     fun fetchAllCourses() {
-        if (_courses.value.isNotEmpty()) return
         viewModelScope.launch {
             _isLoading.value = true
 

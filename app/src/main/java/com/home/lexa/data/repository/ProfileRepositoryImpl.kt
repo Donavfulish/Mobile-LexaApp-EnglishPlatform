@@ -43,7 +43,7 @@ class ProfileRepositoryImpl(private val apiService: ProfileApiService) : Profile
             val body = response.body()
 
 
-            Log.d("ProfileCacheBody", body.toString())
+
             if (response.isSuccessful && body != null) {
                 if (body.success == true) {
                     // Xoá cache sau khi update thành công

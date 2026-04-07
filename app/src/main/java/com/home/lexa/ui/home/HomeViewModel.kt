@@ -52,7 +52,7 @@ class HomeViewModel(private val repository: CourseRepository) : ViewModel() {
         }
     }
 
-    private fun fetchFeaturedCourses() {
+    public fun fetchFeaturedCourses() {
         viewModelScope.launch {
             val result = repository.getFeaturedCourses()
             result.onSuccess { dtoList ->
@@ -63,7 +63,7 @@ class HomeViewModel(private val repository: CourseRepository) : ViewModel() {
         }
     }
 
-    private fun fetchStudyingCourses() {
+    public fun fetchStudyingCourses() {
         viewModelScope.launch {
             val result = repository.getStudyingCourses()
             result.onSuccess { dtoList ->
@@ -74,7 +74,7 @@ class HomeViewModel(private val repository: CourseRepository) : ViewModel() {
         }
     }
 
-    private fun fetchTopStudiedCourses() {
+    public fun fetchTopStudiedCourses() {
         viewModelScope.launch {
             val result = repository.getTopStudiedCourses()
             result.onSuccess { dtoList ->

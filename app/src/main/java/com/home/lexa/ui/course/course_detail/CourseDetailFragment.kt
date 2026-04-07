@@ -119,6 +119,10 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadCourseDetail(courseId)
+    }
     override fun observeData() {
 
         // THEO DOI LOADING CHUNG
@@ -174,7 +178,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 Toast.makeText(requireContext(), "Không tìm thấy dữ liệu khóa học", Toast.LENGTH_SHORT).show()
                 return@observe
             }
-            if(course.creator.id != userManager.getUserId()){
+            if(course.creator.id != userManager.getUserId()) {
                 isOwner = false
             }
             // =============================================ROLE SETUP==========================================

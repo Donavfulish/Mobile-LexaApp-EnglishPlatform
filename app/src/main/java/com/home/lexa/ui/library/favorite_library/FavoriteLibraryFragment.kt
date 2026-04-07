@@ -43,6 +43,13 @@ class FavoriteLibraryFragment : BaseFragment<FragmentFavoriteLibraryBinding>(Fra
         viewModel.fetchAllCourses()
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Mỗi khi quay lại màn hình Profile (từ màn hình chỉnh sửa), gọi lại API
+        viewModel.fetchAllCourses()
+
+    }
+
     override fun observeData() {
         viewModel.courses.observe(viewLifecycleOwner) { list ->
             deckAdapter.updateData(list)

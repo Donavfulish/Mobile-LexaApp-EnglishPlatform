@@ -19,7 +19,6 @@ class ExerciseModeFragment : BaseFragment<FragmentExerciseModeBinding>(FragmentE
         val rememberedCount = arguments?.getInt("rememberedCount") ?: 0
         val forgottenCount = arguments?.getInt("forgottenCount") ?: 0
         val totalCards = arguments?.getInt("totalCards") ?: 0
-
         // Cờ xác định xem đang luyện tiếp từ Cache hay là mới vào lần đầu
         val isRetryForgotten = arguments?.getBoolean("isRetryForgotten") ?: false
         val isRetryAll = arguments?.getBoolean("isRetryAll") ?: false
@@ -85,6 +84,11 @@ class ExerciseModeFragment : BaseFragment<FragmentExerciseModeBinding>(FragmentE
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.fetchFlashcardsFromApi();
+    }
     private fun resetFlashcardView() {
         binding.flashcardView.animate()
             .x(0f)

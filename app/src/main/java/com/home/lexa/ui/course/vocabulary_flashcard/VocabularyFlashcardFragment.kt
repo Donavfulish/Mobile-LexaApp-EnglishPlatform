@@ -111,6 +111,10 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
         viewModel.loadTopics()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadFlashcardDetail(deck.id);
+    }
     private fun navigateToExerciseMode() {
         Log.d("LEXA_DEBUG", "Hàm navigateToExerciseMode được gọi")
 
@@ -193,11 +197,14 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
                         onConfirm = {
 
                             viewModel.deleteFlashcard(item.id,deckId !!)
+                            binding.editToggle.isChecked = false
                         },
                         onCancel = {
 
                         }
                     )
+
+
 
                 }
                 card.onEditClick = {
