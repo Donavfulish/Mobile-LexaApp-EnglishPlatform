@@ -65,7 +65,7 @@ class CourseDetailTeacher(
 
         binding.topicInput.setOnItemClickListener{_, _, position, _->
             fragment.selectedTopicId = fragment.list_topic[position].id
-            updateTopicColor(fragment.list_topic[position].colorHex)
+            fragment.updateTopicColor(fragment.list_topic[position].colorHex)
             binding.topicInput.setText(fragment.list_topic[position].name, false)
             binding.topicInput.clearFocus()
         }
@@ -109,10 +109,10 @@ class CourseDetailTeacher(
         val adapter = ArrayAdapter(fragment.requireContext(), android.R.layout.simple_list_item_1, list_topic_name!!)
         binding.topicInput.setAdapter(adapter)
 
-        fragment.selectedTopicId = course.list_topic.find { it.name == course.type }?.id
+        fragment.selectedTopicId = course.list_topic.find { it.name == course.type }?.id ?: 0
         binding.topicInput.setTextSize(14f)
         binding.topicInput.setTextColor(ContextCompat.getColor(fragment.requireContext(), android.R.color.white))
-        updateTopicColor(course.typeColor ?: fragment.list_topic[0].colorHex)
+        fragment.updateTopicColor(course.typeColor ?: fragment.list_topic[0].colorHex)
         binding.topicInput.post {
             binding.topicInput.setText(course.type, false)
             binding.topicInput.clearFocus()
@@ -143,9 +143,6 @@ class CourseDetailTeacher(
                 )
             }
             else {
-                if(course.deckId == null){
-
-                }
                 val bundle = Bundle().apply {
                     putBoolean("IS_EDIT_KEY", false)
                     putLong("DECK_ID_KEY", course.deckId!!)
@@ -221,7 +218,6 @@ class CourseDetailTeacher(
 
             }
             fragment.findNavController().navigate(R.id.action_courseDetailFragment_to_flashcardAddEditFragment,bundle)
-
         }
         val params = androidx.gridlayout.widget.GridLayout.LayoutParams().apply {
             width = 0
@@ -259,22 +255,6 @@ class CourseDetailTeacher(
                 Log.e("CREATE_STATUS", "Lỗi: ${it.message}", it)
                 viewModel.resetCreateStatus()
             }
-        }
-    }
-
-    fun updateTopicColor(colorHex: String?) {
-        if (colorHex.isNullOrEmpty()) return
-        try {
-            val colorInt = android.graphics.Color.parseColor(colorHex)
-            binding.topicInputLayout.apply {
-                boxBackgroundColor = colorInt
-                setBoxStrokeColorStateList(android.content.res.ColorStateList.valueOf(colorInt))
-            }
-            binding.topicInput.apply {
-                setTextColor(android.graphics.Color.WHITE)
-            }
-        } catch (e: Exception) {
-            Log.e("COLOR_ERROR", "Mã màu $colorHex không hợp lệ")
         }
     }
 }

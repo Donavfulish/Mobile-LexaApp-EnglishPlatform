@@ -3,6 +3,7 @@ package com.home.lexa.ui.course.teacher_course_list
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.home.lexa.databinding.FragmentStudentCourseListBinding
 import com.home.lexa.R
@@ -92,6 +93,11 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
         }
 
         viewModel.fetchAllCourses()
+
+        binding.addBtn.setOnClickAction {
+            findNavController().navigate(
+                R.id.action_courseFragment_to_courseDetailFragment)
+        }
     }
 
     override fun observeData() {
@@ -106,7 +112,6 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
                 TeacherCourseFilter.FAVORITE -> "Khoá học yêu thích của tôi"
                 TeacherCourseFilter.LEARNING -> "Khoá học đang học"
             }
-
 
 
             binding.headerSection.setHeaderData(

@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.home.lexa.di.AppMemoryCache
+import com.home.lexa.domain.models.CreateCourseRequest
 import com.home.lexa.domain.models.CreateSpeakingDayRequest
 import com.home.lexa.domain.models.DetailFlashcard
 import com.home.lexa.domain.models.SpeakingCourseDetailDto
@@ -24,6 +25,8 @@ class CourseDetailViewModel(
     private val speakingDayRepository: SpeakingDayRepository,
     private val deckRepository: DeckRepository
 ) : ViewModel() {
+    private val _createCourseStatus = MutableLiveData<Result<Long>?>()
+    val createCourseStatus: LiveData<Result<Long>?> get() = _createCourseStatus
     private val _createStatus = MutableLiveData<Result<Unit>?>()
     val createStatus: LiveData<Result<Unit>?> get() = _createStatus
     private val _updateStatus = MutableLiveData<Result<Unit>?>()
@@ -38,6 +41,55 @@ class CourseDetailViewModel(
     val topicData: LiveData<List<Topic>> get() = _topicData
     private val _favortieStatus = MutableLiveData<Result<Unit>?>()
     val favoriteStatus: LiveData<Result<Unit>?> get() = _favortieStatus
+
+//    LOGIC TAO MOI KHOA HOC
+    fun loadTopics() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val result = courseRepository.getAllTopics()
+            try {
+                result.onSuccess { list ->
+                    _topicData.value = list
+                    _isLoading.value = false
+                }.onFailure {
+                    _topicData.value = emptyList()
+                    _isLoading.value = false
+                    Log.e("DEBUG_VM", "Load Topics failed: ${it.message}")
+                }
+            } catch (e: Exception){
+                _topicData.value = emptyList()
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun resetTopicData(){
+        _topicData.value = emptyList()
+    }
+
+    fun createCourse(request: CreateCourseRequest){
+        viewModelScope.launch {
+            val result = courseRepository.createCourse(request)
+            try {
+                result
+                    .onSuccess { courseId ->
+                    _createCourseStatus.value = Result.success(courseId)
+                }
+                    .onFailure {
+                        _createCourseStatus.value = Result.failure(it)
+                    }
+            } catch (e: Exception){
+                _createCourseStatus.value = Result.failure(e)
+            }
+        }
+    }
+
+    fun resetCreateCourseStatus() {
+        _createCourseStatus.value = null
+    }
+
+    // LOGIC XU LY VAI TRO GIAO VIEN
+
 
     fun loadCourseDetail(courseId: Long) {
         viewModelScope.launch {
@@ -63,31 +115,11 @@ class CourseDetailViewModel(
         }
     }
 
-    fun loadTopics() {
-        viewModelScope.launch {
-            val result = courseRepository.getAllTopics()
-            try {
-            result.onSuccess { list ->
-                _topicData.value = list
-            }.onFailure {
-                _topicData.value = emptyList()
-                Log.e("DEBUG_VM", "Load Topics failed: ${it.message}")
-            }
-        } catch (e: Exception){
-                _topicData.value = emptyList()
-                _isLoading.value = false
-            }
-        }
-    }
-
     private fun fetchFlashcardsInBackground(courseId: Long, deckId: Long) {
         viewModelScope.launch {
             flashcardRepository.getAllFlashcard(deckId)
                 .onSuccess { list ->
                 _flashcardDetailData.value = list ?: emptyList()
-                if(!list.isNullOrEmpty()){
-                    AppMemoryCache.put("vocabularyList_${courseId}", list)
-                }
             }.onFailure {
                 _flashcardDetailData.value = emptyList()
             }

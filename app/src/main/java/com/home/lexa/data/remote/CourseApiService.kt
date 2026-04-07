@@ -34,8 +34,8 @@ interface CourseApiService {
     @GET("api/courses/top-studied")
     suspend fun getTopStudiedCourses(): Response<ApiResponse<List<GetFeaturedCourseResponse>>>
     // Gọi @GET("api/courses/studying")
-    @POST("api/courses")
-    suspend fun createCourse(@Body request: CreateCourseRequest): Response<ApiResponse<Map<String, Long>>>
+    @POST("api/users/me/courses")
+    suspend fun createCourse(@Body request: CreateCourseRequest): Response<ApiResponse<Long>>
 
     @PATCH("api/users/me/courses/{courseId}")
     suspend fun editCourse(@Path("courseId") courseId: Long, @Body request: EditCourseRequest): Response<ApiResponse<Map<String, Any>>>

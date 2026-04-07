@@ -75,6 +75,10 @@
         <action
             android:id="@+id/action_courseDetailFragment_to_flashcardAddEditFragment"
             app:destination="@id/flashcardAddEditFragment" />
+        <action
+            android:id="@+id/action_courseDetailFragment_to_courseDetailFragment"
+            app:destination="@+id/courseDetailFragment"
+            />
     </fragment>
     
     
