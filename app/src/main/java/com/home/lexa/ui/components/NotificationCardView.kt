@@ -1,6 +1,7 @@
 package com.home.lexa.ui.components
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -77,5 +78,13 @@ class NotificationCardView @JvmOverloads constructor(
 
     fun setToggleState(isOn: Boolean) {
         binding.toggleMode.isChecked = isOn
+    }
+    fun setIconBackgroundTint(colorHex: String) {
+        try {
+            val color = Color.parseColor(colorHex)
+            ivIcon.backgroundTintList = ColorStateList.valueOf(color)
+        } catch (e: IllegalArgumentException) {
+            e.printStackTrace()
+        }
     }
 }

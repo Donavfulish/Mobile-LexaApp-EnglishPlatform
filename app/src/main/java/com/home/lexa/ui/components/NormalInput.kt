@@ -3,6 +3,7 @@ package com.home.lexa.ui.components
 import android.content.Context
 import android.graphics.PorterDuff
 import android.os.Parcelable
+import android.text.InputFilter
 import android.util.AttributeSet
 import android.util.SparseArray
 import android.view.Gravity
@@ -109,7 +110,21 @@ class NormalInput @JvmOverloads constructor(
     fun setEnable(isEnable: Boolean) {
         binding.etInput.isEnabled = isEnable
     }
+    fun setHorizontalScroll() {
+            binding.etInput.isSingleLine = true
+            binding.etInput.setHorizontallyScrolling(true)
+            binding.etInput.maxLines = 1
+    }
+    fun setMaxLength(maxLength: Int) {
 
+        val currentFilters = binding.etInput.filters
+        val newFilters = currentFilters.toMutableList()
+
+        newFilters.removeAll { it is InputFilter.LengthFilter }
+        newFilters.add(InputFilter.LengthFilter(maxLength))
+
+        binding.etInput.filters = newFilters.toTypedArray()
+    }
     // Hàm nhận function (callback) xử lý click
     /*fun setOnLexaClickListener(onClick: () -> Unit) {
         binding.root.setOnClickListener {

@@ -1,6 +1,8 @@
 package com.home.lexa.ui.flashcard.exercise_mode
 
 import android.app.AlertDialog
+import android.util.Log
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.home.lexa.R
@@ -14,12 +16,14 @@ class ExerciseModeFragment : BaseFragment<FragmentExerciseModeBinding>(FragmentE
     private val viewModel: ExerciseModeViewModel by viewModel()
 
     override fun setupViews() {
+
         // Hứng data từ Navigation Bundle
         val deckId = arguments?.getLong("deckId") ?: -1L
         val rememberedCount = arguments?.getInt("rememberedCount") ?: 0
         val forgottenCount = arguments?.getInt("forgottenCount") ?: 0
         val totalCards = arguments?.getInt("totalCards") ?: 0
 
+        Toast.makeText(requireContext(), "nhận được từ màn trước là:$rememberedCount $forgottenCount $totalCards", Toast.LENGTH_SHORT).show()
         // Cờ xác định xem đang luyện tiếp từ Cache hay là mới vào lần đầu
         val isRetryForgotten = arguments?.getBoolean("isRetryForgotten") ?: false
         val isRetryAll = arguments?.getBoolean("isRetryAll") ?: false
@@ -29,7 +33,7 @@ class ExerciseModeFragment : BaseFragment<FragmentExerciseModeBinding>(FragmentE
 
         binding.btnStop.setOnClickListener { showExitConfirmDialog() }
 
-        binding.flashcardView.setOnTouchListener(SwipeTouchListener(
+        val swipeListener = SwipeTouchListener(
             onSwipeLeft = {
                 viewModel.handleSwipe(isRemembered = false)
                 resetFlashcardView()
@@ -38,7 +42,26 @@ class ExerciseModeFragment : BaseFragment<FragmentExerciseModeBinding>(FragmentE
                 viewModel.handleSwipe(isRemembered = true)
                 resetFlashcardView()
             }
-        ))
+        )
+
+        // 2. Set listener cho FlashcardView
+        binding.flashcardView.setOnTouchListener { view, event ->
+            // A. XỬ LÝ CHỐNG NHIỄU SCROLLVIEW
+            when (event.actionMasked) {
+                android.view.MotionEvent.ACTION_DOWN -> {
+                    // Khi vừa chạm ngón tay vào thẻ -> Cấm ScrollView cuộn lên xuống
+                    view.parent.requestDisallowInterceptTouchEvent(true)
+                }
+                android.view.MotionEvent.ACTION_UP, android.view.MotionEvent.ACTION_CANCEL -> {
+                    // Khi nhấc ngón tay lên -> Trả lại quyền cuộn cho ScrollView
+                    view.parent.requestDisallowInterceptTouchEvent(false)
+                }
+            }
+
+            // B. TRUYỀN SỰ KIỆN CHO SWIPE LISTENER XỬ LÝ TIẾP
+            // Trả về true/false dựa vào kết quả xử lý của class SwipeTouchListener
+            swipeListener.onTouch(view, event)
+        }
     }
 
     override fun observeData() {

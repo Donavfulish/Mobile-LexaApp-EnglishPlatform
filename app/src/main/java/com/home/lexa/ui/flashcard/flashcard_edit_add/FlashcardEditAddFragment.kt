@@ -71,6 +71,7 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
             inputDefinition.setPlaceHolderText("Nhập định nghĩa...")
             
             inputExample.setPlaceHolderText("Nhập câu ví dụ...")
+            inputExample.setMaxLength(100)
             inputExample.setInputHeight(100)
             dropdownWordType.apply {
                 setTile("Loại từ")

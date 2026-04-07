@@ -76,7 +76,18 @@ class PasswordInput @JvmOverloads constructor(
     fun setText(text: String?) {
         binding.etInput.setText(text)
     }
-
+    fun setHorizontalScroll() {
+        binding.etInput.isSingleLine = true
+        binding.etInput.setHorizontallyScrolling(true)
+        binding.etInput.maxLines = 1
+        if (_isPasswordHidden) {
+            // Trạng thái đang hiện mật khẩu
+            binding.etInput.transformationMethod = android.text.method.HideReturnsTransformationMethod.getInstance()
+        } else {
+            // Trạng thái đang ẩn mật khẩu (mặc định)
+            binding.etInput.transformationMethod = android.text.method.PasswordTransformationMethod.getInstance()
+        }
+    }
     // Giúp ViewModel lắng nghe được sự thay đổi của text
     fun onTextChanged(action: (String) -> Unit) {
         binding.etInput.doOnTextChanged { text, start, before, count ->

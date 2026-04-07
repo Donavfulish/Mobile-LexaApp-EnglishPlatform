@@ -184,18 +184,26 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
             setLabel("Email *")
             setPlaceHolderText("example@lingua.com")
             setIcon(R.drawable.ic_email)
+            setHorizontalScroll()
+            setMaxLength(255)
+
         }
 
         binding.inputName.apply {
             setLabel("Họ và tên *")
             setPlaceHolderText("Nguyễn Văn A")
             setIcon(R.drawable.user_profile)
+            setHorizontalScroll()
+            setMaxLength(255)
+
         }
 
         binding.inputDob.apply {
             setLabel("Ngày sinh")
             setPlaceHolderText("dd/mm/yyyy")
             setIcon(R.drawable.ic_calendar)
+            setHorizontalScroll()
+
             // TODO: Mở DatePickerDialog khi click
         }
 
@@ -203,16 +211,22 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
             setLabel("Địa chỉ")
             setPlaceHolderText("Nhập địa chỉ của bạn...")
             setIcon(R.drawable.ic_location)
+            setHorizontalScroll()
+
         }
 
         binding.inputPassword.apply {
             setLabel("Mật khẩu *")
             setPlaceHolderText("........")
+            setHorizontalScroll()
+
         }
 
         binding.inputConfirmPassword.apply {
             setLabel("Xác nhận mật khẩu *")
             setPlaceHolderText("........")
+            setHorizontalScroll()
+
         }
     }
 

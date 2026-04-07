@@ -13,6 +13,7 @@ import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentVocabularyFlashcardBinding
 import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.DeckDto
+import com.home.lexa.domain.models.DetailFlashcardWithResult
 import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.models.UpdateDeckRequest
 import com.home.lexa.domain.models.Vocabulary
@@ -23,12 +24,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBinding>(FragmentVocabularyFlashcardBinding::inflate) {
     private val viewModel: VocabularyFlashcardViewModel by viewModel()
-    val deck = DeckDto(
-        id= 1,
-        title= "TOEFL Essentials",
-        vocabNumber = 5,
-        createdAt = "2 Ngày trước"
-    )
+
     private var vocabLearning = 0
     private val deckId by lazy { arguments?.getLong("DECK_ID_KEY") }
     private val deckTitle by lazy { arguments?.getString("DECK_TITLE_KEY") }
@@ -107,7 +103,8 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
             findNavController().navigate(R.id.action_vocabularyFlashcardFragment_to_flashcardAddEditFragment,bundle)
         }
 
-        viewModel.loadFlashcardDetail(deckId!!)
+
+        viewModel.loadFlashcardsWithResult(deckId!!)
         viewModel.loadTopics()
     }
 
@@ -115,14 +112,14 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
         Log.d("LEXA_DEBUG", "Hàm navigateToExerciseMode được gọi")
 
         try {
-            val forgotten = deck.vocabNumber - vocabLearning
-            Log.d("LEXA_DEBUG", "Dữ liệu chuẩn bị chuyển: deckId=${deck.id}, rem=$vocabLearning, forg=$forgotten, total=${deck.vocabNumber}")
+            val forgotten = deckVocabNum?.minus(vocabLearning)
+            Log.d("LEXA_DEBUG", "Dữ liệu chuẩn bị chuyển: deckId=${deckId}, rem=$vocabLearning, forg=$forgotten, total=${deckVocabNum}")
 
             val bundle = bundleOf(
-                "deckId" to deck.id,
+                "deckId" to deckId,
                 "rememberedCount" to vocabLearning,
                 "forgottenCount" to forgotten,
-                "totalCards" to deck.vocabNumber
+                "totalCards" to deckVocabNum
             )
 
             Log.d("LEXA_DEBUG", "Bắt đầu gọi findNavController().navigate...")
@@ -151,82 +148,9 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
                 binding.contentScroll.visibility = View.VISIBLE
             }
         }
-
-        viewModel.flashcardDetailData.observe(viewLifecycleOwner) { flashcards ->
-            if (flashcards.isNullOrEmpty()) return@observe
-            val vocabNumber = deckVocabNum
-
-           if(vocabNumber != null){
-               val percentage = vocabLearning * 100 / vocabNumber
-               binding.progressText.text = "Tiến độ: ${percentage}%"
-               binding.progress.setProgressVocabulary(percentage, vocabNumber, vocabLearning)
-           }else{
-               binding.progressText.text = "Tiến độ: 0%"
-               binding.progress.setProgressVocabulary(0, 0, 0)
-           }
-
-            binding.flashcardNum.text = "${flashcards.size}"
-            binding.vocabularyGrid.removeAllViews()
-            flashcards.forEach { item ->
-                val card = FlashcardMini(requireContext())
-                val vocab = Vocabulary(
-                    level = ColorLabel(item.type, "#E0E0E5"),
-                    image = 0,
-                    word = item.word,
-                    pronunciation_url = item.audioUrl ?: "",
-                    transciption = item.transcription,
-                    part_of_speech = ColorLabel(item.partOfSpeech, "#636AE8"),
-                    definition = item.meaning,
-                    example = item.example ?: ""
-                )
-                card.setData(vocab)
-                card.onDeleteClick = {
-
-                    val deletePopup = Popup(requireContext())
-
-
-                    deletePopup.showDialog(
-                        title = "Xóa từ vựng",
-                        subTitle = "Bạn có chắc chắn muốn xóa từ '${item.word}' không? Dữ liệu bị xóa sẽ không thể khôi phục.",
-                        isWarning = true, // Bật cờ này lên để chữ và nút Xác nhận thành màu đỏ
-                        confirmText = "Xóa",
-                        onConfirm = {
-
-                            viewModel.deleteFlashcard(item.id,deckId !!)
-                        },
-                        onCancel = {
-
-                        }
-                    )
-
-                }
-                card.onEditClick = {
-
-                    val bundle = Bundle().apply {
-                        putBoolean("IS_EDIT_KEY", true)
-                        putString("WORD_KEY", item.word)
-                        putString("TRANS_KEY", item.transcription)
-                        putString("MEANING", item.meaning)
-                        putString("EXAMPLE_KEY", item.example)
-                        putString("POS_KEY", item.partOfSpeech)
-                        putLong("FLASHCARD_ID_KEY", item.id)
-                        putString("IMAGE_URL_KEY", item.imageUrl)
-                        putString("TYPE_KEY", item.type)
-                        putLong("DECK_ID_KEY", deckId!!)
-
-                    }
-                    findNavController().navigate(R.id.action_vocabularyFlashcardFragment_to_flashcardAddEditFragment,bundle)
-
-                }
-                val params = androidx.gridlayout.widget.GridLayout.LayoutParams().apply {
-                    width = 0
-                    height = androidx.gridlayout.widget.GridLayout.LayoutParams.WRAP_CONTENT
-                    columnSpec = androidx.gridlayout.widget.GridLayout.spec(androidx.gridlayout.widget.GridLayout.UNDEFINED, 1f)
-                    setMargins(16, 16, 16, 16)
-                }
-                card.layoutParams = params
-                binding.vocabularyGrid.addView(card)
-            }
+        viewModel.flashcardWithResultData.observe(viewLifecycleOwner) { list ->
+            renderFlashcards(list)
+            updateProgress(list.size)
         }
 
         viewModel.deckResultData.observe(viewLifecycleOwner){result ->
@@ -253,5 +177,74 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
                     findNavController().currentBackStackEntry?.savedStateHandle?.remove<Boolean>("RELOAD_DATA")
                 }
             }
+    }
+    private fun renderFlashcards(list: List<DetailFlashcardWithResult>) {
+        binding.flashcardNum.text = "${list.size}"
+        binding.vocabularyGrid.removeAllViews()
+
+
+        vocabLearning = list.count { it.result == "REMEMBER" }
+
+        list.forEach { item ->
+            val card = FlashcardMini(requireContext())
+            val vocab = Vocabulary(
+                level = ColorLabel(item.flashCard.type, "#E0E0E5"),
+                word = item.flashCard.word,
+                pronunciation_url = item.flashCard.audioUrl ?: "",
+                transciption = item.flashCard.transcription,
+                part_of_speech = ColorLabel(item.flashCard.partOfSpeech, "#636AE8"),
+                definition = item.flashCard.meaning,
+                example = item.flashCard.example ?: "",
+                image = 0,
+            )
+            card.setData(vocab)
+            card.setIsEditable(binding.editToggle.isChecked)
+
+            card.onDeleteClick = {
+                Popup(requireContext()).showDialog(
+                    title = "Xóa từ vựng",
+                    subTitle = "Bạn có chắc muốn xóa '${item.flashCard.word}'?",
+                    isWarning = true,
+                    confirmText = "Xóa",
+                    onConfirm = { viewModel.deleteFlashcard(item.flashCard.id, deckId!!) }
+                )
+            }
+
+            card.onEditClick = {
+                val bundle = Bundle().apply {
+                    putBoolean("IS_EDIT_KEY", true)
+                    putString("WORD_KEY", item.flashCard.word)
+                    putString("TRANS_KEY", item.flashCard.transcription)
+                    putString("MEANING", item.flashCard.meaning)
+                    putString("EXAMPLE_KEY", item.flashCard.example)
+                    putString("POS_KEY", item.flashCard.partOfSpeech)
+                    putLong("FLASHCARD_ID_KEY", item.flashCard.id)
+                    putString("IMAGE_URL_KEY", item.flashCard.imageUrl)
+                    putString("TYPE_KEY", item.flashCard.type)
+                    putLong("DECK_ID_KEY", deckId!!)
+
+                }
+                findNavController().navigate(R.id.action_vocabularyFlashcardFragment_to_flashcardAddEditFragment, bundle)
+            }
+
+            val params = androidx.gridlayout.widget.GridLayout.LayoutParams().apply {
+                width = 0
+                columnSpec = androidx.gridlayout.widget.GridLayout.spec(androidx.gridlayout.widget.GridLayout.UNDEFINED, 1f)
+                setMargins(16, 16, 16, 16)
+            }
+            card.layoutParams = params
+            binding.vocabularyGrid.addView(card)
+        }
+    }
+
+    private fun updateProgress(total: Int) {
+        if (total > 0) {
+            val percentage = (vocabLearning * 100) / total
+            binding.progressText.text = "Tiến độ: $percentage%"
+            binding.progress.setProgressVocabulary(percentage, total, vocabLearning)
+        } else {
+            binding.progressText.text = "Tiến độ: 0%"
+            binding.progress.setProgressVocabulary(0, 0, 0)
+        }
     }
 }
