@@ -22,11 +22,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(FragmentSpeakingPracticeBinding::inflate) {
     private val viewModel: SpeakingPracticeViewModel by viewModel()
     private var speakingDayId = -1L
+    private var courseId = -1L
     private var order = 0
     override fun setupViews() {
+        courseId = arguments?.getLong("courseId") ?: -1L
         speakingDayId = arguments?.getLong("speakingDayId") ?: -1L
         order = arguments?.getInt("order") ?: 0
-
 
         val activityBinding = (requireActivity() as MainActivity).binding
         activityBinding.appBarLayout.apply {
@@ -35,8 +36,6 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
             setText("Ngày ${order + 1}")
             setBackButtonVisible(true)
         }
-
-
         activityBinding.appBarLayout.apply {
             setIconRightButton(ContextCompat.getDrawable(requireContext(), R.drawable.trash)!!)
             setOnClickToggleRightButton { _ ->
@@ -47,7 +46,8 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
                     isWarning = true,
                     confirmText = "Xóa toàn bộ",
                     onConfirm = {
-                        viewModel.deleteSpeakingDay(speakingDayId)
+
+                        viewModel.deleteSpeakingDay(speakingDayId, courseId)
                     }
                 )
             }
@@ -58,8 +58,7 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
             viewModel.loadParagraphList(speakingDayId)
         }
 
-
-        binding.saveBtn.apply {
+        binding.saveBtn.apply{
             setBackground(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
             setText("Lưu thông tin", ContextCompat.getColor(requireContext(), R.color.white))
         }
@@ -173,7 +172,9 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
                         val popUpEdit = PopUpInput(requireContext())
                         val editInput = NormalInput(requireContext()).apply {
                             setLabel("Nội dung đoạn văn")
-                            setText(paragraph.paragraph)
+                            post {
+                                setText(paragraph.paragraph)
+                            }
                         }
                         popUpEdit.insertNormalInput(editInput)
                         popUpEdit.showDialog(

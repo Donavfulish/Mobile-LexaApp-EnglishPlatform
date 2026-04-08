@@ -72,6 +72,13 @@
         <action
             android:id="@+id/action_courseDetailFragment_to_speakingPracticeFragment"
             app:destination="@id/speakingPracticeFragment" />
+        <action
+            android:id="@+id/action_courseDetailFragment_to_flashcardAddEditFragment"
+            app:destination="@id/flashcardAddEditFragment" />
+        <action
+            android:id="@+id/action_courseDetailFragment_to_courseDetailFragment"
+            app:destination="@+id/courseDetailFragment"
+            />
     </fragment>
     
     
@@ -235,6 +242,10 @@
         android:id="@+id/speakingPracticeFragment"
         android:name="com.home.lexa.ui.speaking.speaking_practice.SpeakingPracticeFragment"
         android:label="SpeakingPracticeFragment">
+        <argument
+            android:name="courseId"
+            app:argType="long"
+            android:defaultValue="-1L" />
         <argument
             android:name="speakingDayId"
             app:argType="long"

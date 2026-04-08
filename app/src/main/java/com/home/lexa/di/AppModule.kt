@@ -33,6 +33,7 @@ import com.home.lexa.ui.profile.profile.ProfileViewModel
 import com.home.lexa.ui.library.favorite_library.FavoriteLibraryModel
 import com.home.lexa.ui.library.personal_library.PersonalLibraryModel
 import com.home.lexa.ui.course.student_course_list.StudentCourseListModel
+import com.home.lexa.ui.course.teacher_course_list.TeacherCourseListModel
 import com.home.lexa.ui.speaking.speaking_practice.SpeakingPracticeViewModel
 import com.home.lexa.ui.flashcard.flashcard_edit_add.FlashcardEditAddViewModel
 import com.home.lexa.ui.flashcard.exercise_mode.ExerciseModeViewModel
@@ -100,7 +101,8 @@ val appModule = module {
     viewModel { FavoriteLibraryModel(get()) }
     viewModel { PersonalLibraryModel(get()) }
     viewModel { StudentCourseListModel (get()) }
-    viewModel { CourseDetailViewModel(get(), get(), get())}
+    viewModel { TeacherCourseListModel(get()) }
+    viewModel { CourseDetailViewModel(get(), get(), get(), get())}
     viewModel { VocabularyFlashcardViewModel(get(), get())}
     viewModel { ExerciseModeViewModel(get())}
     viewModel { ExerciseResultViewModel(get(), get())}

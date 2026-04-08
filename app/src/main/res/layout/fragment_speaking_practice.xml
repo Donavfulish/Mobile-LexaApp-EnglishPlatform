@@ -115,13 +115,63 @@
                 app:layout_constraintStart_toEndOf="@id/titleParagraph"
                 app:layout_constraintTop_toTopOf="@id/titleParagraph" />
 
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/rememberCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/gray_E0E0E5"
+                app:cardBackgroundColor="@color/gray_F4F4F6"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/titleParagraph">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:id="@+id/icon_remember"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/bg_white_circle"
+                        android:padding="6dp"
+                        android:src="@drawable/ic_priority"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Vuốt trái để chỉnh sửa, Vuốt phải để xoá doạn văn"
+                        android:textSize="13dp"
+                        android:textStyle=""
+                        android:fontFamily="@font/archivo_regular"
+                        android:layout_marginStart="25dp"
+                        android:lineHeight="18dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/icon_remember"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <LinearLayout
                 android:id="@+id/paragraphLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:orientation="vertical"
-                app:layout_constraintTop_toBottomOf="@+id/titleParagraph"
+                app:layout_constraintTop_toBottomOf="@+id/rememberCard"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:paddingBottom="80dp"/>

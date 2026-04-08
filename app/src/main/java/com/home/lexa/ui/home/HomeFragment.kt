@@ -147,10 +147,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                     binding.tvFirstNumber.text = "${stats.weeklyHours} h"
                     binding.tvSecondNumber.text = "${stats.monthlyHours} h"
                 }
-
             }
         }
-
-
     }
 }

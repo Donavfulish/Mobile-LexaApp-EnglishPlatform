@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.domain.repository.CourseRepository
 import kotlinx.coroutines.launch
@@ -28,28 +29,45 @@ class TeacherCourseListModel(private val repository: CourseRepository) : ViewMod
     private val _courses = MutableLiveData<List<ShortCourseDto>>(emptyList())
     val courses: LiveData<List<ShortCourseDto>> get() = _courses
 
+    var lastId: Long? = null
+    var isLastPage = false
+    var currentPages = 0
+    var totalPages = 0
+
     // Hàm này không cần suspend, gọi phát chạy luôn
-    fun changeFilter(filter: TeacherCourseFilter) {
+    fun changeFilter(filter: TeacherCourseFilter, searchInfo: SearchInfo, nextCursor: Long?) {
         Log.d("File filter", filter.toString());
         if (_currentFilter.value == filter) return
         _currentFilter.value = filter
-        fetchAllCourses()
+        fetchAllCourses(true, searchInfo, nextCursor)
     }
-    fun fetchAllCourses() {
+    fun fetchAllCourses(isLoadMore: Boolean, searchInfo: SearchInfo, nextCursor: Long?) {
+        if (isLoadMore && (isLastPage || _isLoading.value == true)) return
+
+        if (!isLoadMore) {
+            isLastPage = false
+            lastId = null
+        }
+
         viewModelScope.launch {
             _isLoading.value = true
 
-            val result = when (_currentFilter.value) {
-                TeacherCourseFilter.ALL -> repository.getAllCourses()
-                TeacherCourseFilter.FAVORITE -> repository.getFavoriteDecks()
-                TeacherCourseFilter.LEARNING -> repository.getLearningCourses() // nếu có API
-                TeacherCourseFilter.MYCOURSE -> repository.getMyCourses() // nếu có API
-            }
-
+//            val result = when (_currentFilter.value) {
+//                TeacherCourseFilter.ALL -> repository.getAllCourses(searchInfo, nextCursor)
+//                TeacherCourseFilter.FAVORITE -> repository.getFavoriteDecks()
+//                TeacherCourseFilter.LEARNING -> repository.getLearningCourses()
+//                TeacherCourseFilter.MYCOURSE -> repository.getMyCourses()
+//            }
+            val result = repository.getAllCourses(searchInfo, nextCursor)
             result.onSuccess { list ->
-                _courses.value = list
-                Log.d("Filter: ", currentFilter.toString());
-                Log.d("Value: ", list.toString());
+                currentPages += list.data.size
+                totalPages = list.totalItem.toInt()
+                lastId = list.nextCursor
+                _courses.value = list.data
+                if(currentPages.toLong() == list.totalItem){
+                    isLastPage = true
+                    lastId = null
+                }
             }.onFailure {
                 _courses.value = emptyList()
             }

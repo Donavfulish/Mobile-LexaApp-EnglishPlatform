@@ -3,6 +3,7 @@ package com.home.lexa.data.repository
 import android.util.Log
 import com.home.lexa.data.remote.CourseApiService
 import com.home.lexa.di.AppMemoryCache
+import com.home.lexa.domain.models.AllCoursePaginationResponse
 import com.home.lexa.domain.models.CreateCourseRequest
 import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.ShortCourseDto
@@ -11,37 +12,64 @@ import com.home.lexa.domain.models.GetStudyingCourseResponse
 import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.repository.CourseRepository
 import com.home.lexa.domain.models.GetFeaturedCourseResponse
+import com.home.lexa.domain.models.SearchInfo
 
 class CourseRepositoryImpl(
     private val apiService: CourseApiService
 ) : CourseRepository {
 
-    override suspend fun getAllCourses(): Result<List<ShortCourseDto>> {
+    private fun generateCacheKey(searchInfo: SearchInfo): String {
+        val q = searchInfo.query ?: ""
+        val sort = searchInfo.sortBy ?: ""
+        val order = searchInfo.order ?: ""
+        return "courses_${q}_${sort}_${order}"
+    }
+
+    override suspend fun getAllCourses(
+        searchInfo: SearchInfo,
+        nextCursor: Long?
+    ): Result<AllCoursePaginationResponse> {
         return try {
-            val courses: List<ShortCourseDto>? = AppMemoryCache.get("getAllCourses");
-            if (courses != null){
-                 Result.success(courses);
-            }
-            else {
-                val response = apiService.getCourses()
-                val body = response.body()
+            val cacheKey = generateCacheKey(searchInfo)
+            val isFirstPage = nextCursor == null
 
-                if (response.isSuccessful && body?.success == true) {
-                    // Thành công: bóc tách dữ liệu ra và trả về
-                    val data = body.data ?: emptyList()
-                    AppMemoryCache.put("getAllCourses", data);
-                    Result.success(data);
-
-
-                } else {
-                    // Thất bại từ Backend (Ví dụ lỗi 400 do validation)
-                     Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ"))
+            if (isFirstPage) {
+                val cachedResponse: AllCoursePaginationResponse? = AppMemoryCache.get(cacheKey)
+                if (cachedResponse != null && cachedResponse.data.isNotEmpty()) {
+                    return Result.success(cachedResponse)
                 }
             }
 
+            val response = apiService.getCourses(
+                query = searchInfo.query,
+                sort = searchInfo.sortBy,
+                order = searchInfo.order,
+                limit = searchInfo.limit?.toString(),
+                next_id = nextCursor?.toString(),
+            )
+            val body = response.body()
+
+            if (response.isSuccessful && body?.success == true) {
+                val apiPaginationData = body.data ?: throw Exception("Dữ liệu data trong body bị null")
+                val newCourses = apiPaginationData.data
+
+                val finalCourses = if (isFirstPage) {
+                    newCourses
+                } else {
+                    val oldCache: AllCoursePaginationResponse? = AppMemoryCache.get(cacheKey)
+                    val oldCourses = oldCache?.data ?: emptyList()
+                    oldCourses + newCourses
+                }
+                val updatedResponse = apiPaginationData.copy(data = finalCourses)
+                AppMemoryCache.put(cacheKey, updatedResponse)
+                Result.success(updatedResponse)
+            } else {
+                val errorMsg = body?.message ?: "Lỗi từ máy chủ: ${response.code()}"
+                Result.failure(Exception(errorMsg))
+            }
         } catch (e: Exception) {
-            // Lỗi do mất mạng, không connect được server...
-             Result.failure(Exception("Không thể kết nối. Vui lòng kiểm tra mạng!"))
+            Log.e("DEBUG_LEXA", "CourseRepositoryImpl.getAllCourses EXCEPTION: ${e.message}", e)
+            Result.failure(e)
         }
     }
 
@@ -73,7 +101,7 @@ class CourseRepositoryImpl(
                 AppMemoryCache.remove("getFeaturedCourses");
                 AppMemoryCache.remove("getStudyingCourses");
                 AppMemoryCache.remove("getTopStudiedCourses");
-                val newId = body.data?.get("id") ?: throw Exception("Không lấy được ID")
+                val newId = body.data ?: throw Exception("Không lấy được ID")
                 Result.success(newId)
             } else {
                 Result.failure(Exception(body?.message ?: "Tạo khóa học thất bại"))
@@ -88,7 +116,6 @@ class CourseRepositoryImpl(
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
-
                 Log.d("Đã xoá cache update", "Cache update đã được xoá")
                 AppMemoryCache.remove("getAllCourses");
                 AppMemoryCache.remove("getMyCourses");
@@ -199,7 +226,7 @@ class CourseRepositoryImpl(
 
             if (response.isSuccessful && body?.success == true) {
                 val data = body.data;
-                AppMemoryCache.put("getTopStudiedCourses_${courseId}", data as Any);
+                AppMemoryCache.put("getSpeakingDayCourse_${courseId}", data as Any);
                 Result.success(data);
             } else {
                 Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ"))
@@ -230,7 +257,7 @@ class CourseRepositoryImpl(
             }
         } catch (e: Exception) {
             // Lỗi do mất mạng, không connect được server...
-            Result.failure(Exception("Không thể kết nối. Vui lòng kiểm tra mạng!"))
+            Result.failure(e)
         }
     }
 
@@ -254,7 +281,7 @@ class CourseRepositoryImpl(
             }
         } catch (e: Exception) {
             // Lỗi do mất mạng, không connect được server...
-            Result.failure(Exception("Không thể kết nối. Vui lòng kiểm tra mạng!"))
+            Result.failure(e)
         }
     }
 
@@ -278,7 +305,7 @@ class CourseRepositoryImpl(
             }
         } catch (e: Exception) {
             // Lỗi do mất mạng, không connect được server...
-            Result.failure(Exception("Không thể kết nối. Vui lòng kiểm tra mạng!"))
+            Result.failure(e)
         }
 
 

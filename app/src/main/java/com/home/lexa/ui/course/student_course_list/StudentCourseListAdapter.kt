@@ -1,6 +1,7 @@
 package com.home.lexa.ui.course.student_course_list
 
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.home.lexa.domain.models.DeckDto
 import com.home.lexa.domain.models.GetFeaturedCourseResponse
@@ -47,8 +48,37 @@ class StudentCourseListAdapter(
         return courses.size
     }
 
+//    fun updateData(newList: List<ShortCourseDto>) {
+//        if (this.courses == newList) return
+//
+//        this.courses = newList
+//        notifyDataSetChanged()
+//    }
+
     fun updateData(newList: List<ShortCourseDto>) {
+        // 1. Tạo một bộ so sánh nội bộ
+        val diffCallback = object : DiffUtil.Callback() {
+            override fun getOldListSize(): Int = courses.size
+            override fun getNewListSize(): Int = newList.size
+
+            // So sánh xem 2 item có phải là 1 khóa học không (dựa vào ID)
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return courses[oldItemPosition].id == newList[newItemPosition].id
+            }
+
+            // So sánh xem nội dung của khóa học đó có bị thay đổi không
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return courses[oldItemPosition] == newList[newItemPosition]
+            }
+        }
+
+        // 2. Tính toán sự khác biệt giữa list cũ và list mới
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+
+        // 3. Gán data mới
         this.courses = newList
-        notifyDataSetChanged()
+
+        // 4. Áp dụng sự thay đổi (Dòng này THAY THẾ HOÀN TOÀN notifyDataSetChanged)
+        diffResult.dispatchUpdatesTo(this)
     }
 }

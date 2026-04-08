@@ -1,6 +1,7 @@
 package com.home.lexa.data.remote
 
 import com.home.lexa.core.network.ApiResponse
+import com.home.lexa.domain.models.AllCoursePaginationResponse
 import com.home.lexa.domain.models.CreateCourseRequest
 import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.SpeakingCourseDetailDto
@@ -15,15 +16,21 @@ import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface CourseApiService {
-
     @GET("api/topics")
     suspend fun getTopics(): Response<ApiResponse<List<Topic>>>
 
     // Gọi GET /api/courses
     @GET("api/courses")
-    suspend fun getCourses(): Response<ApiResponse<List<ShortCourseDto>>>
+    suspend fun getCourses(
+        @Query("query") query: String? = null,
+        @Query("sort") sort: String? = null,
+        @Query("order") order: String? = null,
+        @Query("limit") limit: String? = null,
+        @Query("next_id") next_id: String? = null,
+        ): Response<ApiResponse<AllCoursePaginationResponse>>
 
     // Gọi GET /api/courses/featured
     @GET("api/courses/featured")
@@ -34,8 +41,8 @@ interface CourseApiService {
     @GET("api/courses/top-studied")
     suspend fun getTopStudiedCourses(): Response<ApiResponse<List<GetFeaturedCourseResponse>>>
     // Gọi @GET("api/courses/studying")
-    @POST("api/courses")
-    suspend fun createCourse(@Body request: CreateCourseRequest): Response<ApiResponse<Map<String, Long>>>
+    @POST("api/users/me/courses")
+    suspend fun createCourse(@Body request: CreateCourseRequest): Response<ApiResponse<Long>>
 
     @PATCH("api/users/me/courses/{courseId}")
     suspend fun editCourse(@Path("courseId") courseId: Long, @Body request: EditCourseRequest): Response<ApiResponse<Map<String, Any>>>
