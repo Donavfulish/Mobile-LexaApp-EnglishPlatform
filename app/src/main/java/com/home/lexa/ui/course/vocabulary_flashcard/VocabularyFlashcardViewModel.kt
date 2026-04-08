@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.home.lexa.domain.models.DeckResult
 import com.home.lexa.domain.models.DetailFlashcard
+import com.home.lexa.domain.models.DetailFlashcardWithResult
 import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.models.UpdateDeckRequest
 import com.home.lexa.domain.repository.DeckRepository
@@ -23,6 +24,8 @@ class VocabularyFlashcardViewModel(
 
     private val _flashcardDetailData = MutableLiveData<List<DetailFlashcard>>()
     val flashcardDetailData: LiveData<List<DetailFlashcard>> get() = _flashcardDetailData
+    private val _flashcardWithResultData = MutableLiveData<List<DetailFlashcardWithResult>>()
+    val flashcardWithResultData: LiveData<List<DetailFlashcardWithResult>> get() = _flashcardWithResultData
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
@@ -100,6 +103,27 @@ class VocabularyFlashcardViewModel(
                 }
             } catch (e: Exception){
                 _topicData.value = emptyList()
+                _isLoading.value = false
+            }
+        }
+    }
+    fun loadFlashcardsWithResult(deckId: Long) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                // Gọi API từ Repository
+                val result = flashcardRepository.getAllFlashcardWithResult(deckId)
+
+                result.onSuccess { list ->
+                    _flashcardWithResultData.value = list ?: emptyList()
+                }.onFailure {
+                    _flashcardWithResultData.value = emptyList()
+                    Log.e("DEBUG_VM", "Lỗi load FlashcardWithResult: ${it.message}")
+                }
+            } catch (e: Exception) {
+                _flashcardWithResultData.value = emptyList()
+                Log.e("DEBUG_VM", "Exception load FlashcardWithResult: ${e.message}")
+            } finally {
                 _isLoading.value = false
             }
         }

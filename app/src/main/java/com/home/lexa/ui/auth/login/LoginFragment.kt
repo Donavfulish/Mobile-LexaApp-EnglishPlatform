@@ -34,11 +34,16 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             setLabel("Email")
             setIcon(R.drawable.ic_email)
             setPlaceHolderText("example@lingua.com")
+            setHorizontalScroll()
+            setMaxLength(255)
+
         }
 
         binding.inputPassword.apply {
             setLabel("Mật khẩu")
             setPlaceHolderText("........")
+            setHorizontalScroll()
+
         }
     }
 

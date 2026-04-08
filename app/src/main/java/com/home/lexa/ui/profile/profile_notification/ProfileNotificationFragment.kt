@@ -30,6 +30,7 @@ class ProfileNotificationFragment : BaseFragment<FragmentProfileNotificationBind
             setDescription("Nhắc nhở bạn duy trì chuỗi học tập hàng ngày để không bỏ lỡ tiến độ.")
             setIcon(R.drawable.ic_fire_outline, Color.parseColor("#FF9800"))
             setToggleState(false)
+            setIconBackgroundTint("#FFF4E5")
         }
 
         binding.studyHourNotification.apply {

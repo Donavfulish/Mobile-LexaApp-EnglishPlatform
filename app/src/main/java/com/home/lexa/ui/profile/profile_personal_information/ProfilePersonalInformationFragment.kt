@@ -62,6 +62,9 @@ class ProfilePersonalInformationFragment : BaseFragment<FragmentProfilePersonalI
         binding.fullNameInput.apply {
             setLabel("HỌ VÀ TÊN")
             setPlaceHolderText("Nhập họ và tên...")
+            setHorizontalScroll()
+            setMaxLength(255)
+
         }
 
         binding.birthDateInput.apply {

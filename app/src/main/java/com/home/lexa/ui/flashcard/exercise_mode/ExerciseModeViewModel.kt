@@ -124,9 +124,10 @@ class ExerciseModeViewModel(
             val item = practiceQueue[index]
             _currentCard.value = mapToVocabulary(item)
 
-            val learnedInDeck = allCards.count { it.result == RESULT_REMEMBER || it.result == RESULT_FORGOTTEN }
-            _progress.value = learnedInDeck
+            val alreadyLearnedOutsideQueue = allCards.size - practiceQueue.size
+            _progress.value = alreadyLearnedOutsideQueue + index
         } else {
+            _progress.value = allCards.size
             _isFinished.value = true
         }
     }
