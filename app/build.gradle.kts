@@ -138,4 +138,6 @@ dependencies {
 
     //13. Splash Screen
     implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+
 }

@@ -88,3 +88,21 @@ data class EditCourseRequest(
     val privacy: String,
     val thumbnailUrl: String? = null
 )
+
+// Pagination, sort, query and filter.
+@Serializable
+data class AllCoursePaginationResponse(
+    val data: List<ShortCourseDto>,
+    val searchInfo: SearchInfo,
+    val nextCursor: Long?= null,
+    val totalItem: Long)
+
+@Serializable
+data class SearchInfo(
+    val query: String ?= null,
+    val sortBy: String ?= null,
+    val order: String ?= null,
+    val limit: Int ?= null
+)
+
+

@@ -2,8 +2,10 @@ package com.home.lexa.ui.course.teacher_course_list
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import androidx.core.os.bundleOf
+import androidx.lifecycle.ViewModel
 import androidx.navigation.fragment.findNavController
 import com.home.lexa.databinding.FragmentStudentCourseListBinding
 import com.home.lexa.R
@@ -11,10 +13,13 @@ import com.home.lexa.R
 
 
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.room.util.query
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentFavoriteLibraryBinding
 import com.home.lexa.databinding.FragmentLoginBinding
 import com.home.lexa.databinding.FragmentTeacherCourseListBinding
+import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.ui.course.student_course_list.CourseFilter
 import com.home.lexa.ui.course.student_course_list.StudentCourseListAdapter
@@ -26,7 +31,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
 
 class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>(FragmentTeacherCourseListBinding::inflate) {
-        private val viewModel: TeacherCourseListModel by viewModel()
+    private val viewModel: TeacherCourseListModel by viewModel()
     private val courseAdapter by lazy {
         StudentCourseListAdapter(emptyList())
         { course ->
@@ -34,6 +39,8 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
                 putLong("courseId", course.id)
             }
             findNavController().navigate(R.id.action_courseFragment_to_courseDetailFragment, bundle)
+        }.apply {
+            stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         }
     }
 
@@ -69,38 +76,102 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
             onActionClick = {}
         )
 
-
-
-        binding.rvCourses.apply {
-            adapter = courseAdapter
-            layoutManager = LinearLayoutManager(context)
-        }
         binding.btnAll.setOnClickListener {
-            viewModel.changeFilter(TeacherCourseFilter.ALL)
+            viewModel.changeFilter(
+                TeacherCourseFilter.ALL,
+                SearchInfo(
+                    query= "",
+                    sortBy= "",
+                    order= "",
+                    limit = 10
+                ),
+                null)
         }
 
         binding.btnMyCourse.setOnClickListener {
-            viewModel.changeFilter(TeacherCourseFilter.MYCOURSE)
+            viewModel.changeFilter(TeacherCourseFilter.MYCOURSE,
+                SearchInfo(
+                    query= "",
+                    sortBy= "",
+                    order= "",
+                    limit = 10
+                ),
+                null)
         }
 
         binding.btnFavorite.setOnClickListener {
-            viewModel.changeFilter(TeacherCourseFilter.FAVORITE)
+            viewModel.changeFilter(TeacherCourseFilter.FAVORITE,
+                SearchInfo(
+                    query= "",
+                    sortBy= "",
+                    order= "",
+                    limit = 10
+                ),
+                null)
         }
 
         binding.btnLearning.setOnClickListener {
             Log.d("LEARNING", "123");
-            viewModel.changeFilter(TeacherCourseFilter.LEARNING)
+            viewModel.changeFilter(TeacherCourseFilter.LEARNING,
+                SearchInfo(
+                    query= "",
+                    sortBy= "",
+                    order= "",
+                    limit = 10
+                ),
+                null)
         }
 
-        viewModel.fetchAllCourses()
+        if (viewModel.courses.value.isNullOrEmpty()) {
+            viewModel.fetchAllCourses(
+                isLoadMore = false,
+                searchInfo = SearchInfo(query = "", limit = 10),
+                nextCursor = null
+            )
+        }
 
         binding.addBtn.setOnClickAction {
             findNavController().navigate(
                 R.id.action_courseFragment_to_courseDetailFragment)
         }
+
+        val layoutManager = LinearLayoutManager(context)
+        binding.rvCourses.apply {
+            adapter = courseAdapter
+            this.layoutManager = layoutManager
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    // dy > 0 nghĩa là đang lướt xuống
+                    if (dy > 0) {
+                        val visibleItemCount = layoutManager.childCount
+                        val totalItemCount = layoutManager.itemCount
+                        val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+
+                        val threshold = 3
+                        if (!viewModel.isLoading.value!! && !viewModel.isLastPage) {
+                            if ((visibleItemCount + firstVisibleItemPosition) >= (totalItemCount - threshold)) {
+
+                                viewModel.fetchAllCourses(
+                                    isLoadMore = true,
+                                    searchInfo = SearchInfo(limit = 10),
+                                    nextCursor = viewModel.lastId
+                                )
+                            }
+                        }
+                    }
+                }
+            })
+        }
     }
 
     override fun observeData() {
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+
         viewModel.courses.observe(viewLifecycleOwner) { list ->
             courseAdapter.updateData(list)
 
@@ -116,7 +187,7 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
 
             binding.headerSection.setHeaderData(
                 title = title,
-                actionText = "${list.size} tất cả",
+                actionText = "${viewModel.totalPages} tất cả",
                 onActionClick = {}
             )
         }

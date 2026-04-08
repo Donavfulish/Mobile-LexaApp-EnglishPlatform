@@ -36,7 +36,7 @@ class StudentCourseListModel(private val repository: CourseRepository) : ViewMod
             _isLoading.value = true
 
             val result = when (_currentFilter.value) {
-                CourseFilter.ALL -> repository.getAllCourses()
+                CourseFilter.ALL -> repository.getFavoriteDecks()
                 CourseFilter.FAVORITE -> repository.getFavoriteDecks()
                 CourseFilter.LEARNING -> repository.getLearningCourses()
             }

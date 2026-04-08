@@ -1,15 +1,17 @@
 package com.home.lexa.domain.repository
 
+import com.home.lexa.domain.models.AllCoursePaginationResponse
 import com.home.lexa.domain.models.CreateCourseRequest
 import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.domain.models.SpeakingCourseDetailDto
 import com.home.lexa.domain.models.GetFeaturedCourseResponse
 import com.home.lexa.domain.models.GetStudyingCourseResponse
+import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.Topic
 
 interface CourseRepository {
-    suspend fun getAllCourses(): Result<List<ShortCourseDto>>
+    suspend fun getAllCourses(searchInfo: SearchInfo, nextCursor: Long?): Result<AllCoursePaginationResponse>
     suspend fun getAllTopics(): Result<List<Topic>>
     suspend fun createCourse(request: CreateCourseRequest): Result<Long>
     suspend fun editCourse(courseId: Long, request: EditCourseRequest): Result<Boolean>
