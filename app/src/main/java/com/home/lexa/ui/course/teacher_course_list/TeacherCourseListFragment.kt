@@ -76,6 +76,28 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
             onActionClick = {}
         )
 
+
+        val filterArg = arguments?.getString("filter")
+
+        val initialFilter = try {
+            TeacherCourseFilter.valueOf(filterArg ?: "MYCOURSE")
+        } catch (e: Exception) {
+            TeacherCourseFilter.MYCOURSE
+        }
+
+        viewModel.changeFilter(initialFilter, SearchInfo(
+            query= "",
+            sortBy= "",
+            order= "",
+            limit = 10
+        ),
+            null)
+
+        binding.rvCourses.apply {
+            adapter = courseAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
+
         binding.btnAll.setOnClickListener {
             viewModel.changeFilter(
                 TeacherCourseFilter.ALL,
@@ -169,7 +191,11 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchAllCourses();
+        viewModel.fetchAllCourses(
+            isLoadMore = false,
+            searchInfo = SearchInfo(query = "", limit = 10),
+            nextCursor = null
+        )
     }
     override fun observeData() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
@@ -187,6 +213,7 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
                 TeacherCourseFilter.FAVORITE -> "Khoá học yêu thích của tôi"
                 TeacherCourseFilter.LEARNING -> "Khoá học đang học"
             }
+
 
 
             binding.headerSection.setHeaderData(

@@ -80,18 +80,29 @@
             app:destination="@+id/courseDetailFragment"
             />
     </fragment>
-    
-    
+
+
 
     <fragment
         android:id="@+id/studentCourseListFragment"
         android:name="com.home.lexa.ui.course.student_course_list.StudentCourseListFragment"
-        android:label="studentCourseListFragment" />
+        android:label="studentCourseListFragment">
+
+        <argument
+            android:name="filter"
+            app:argType="string"
+            android:defaultValue="ALL" />
+    </fragment>
 
     <fragment
         android:id="@+id/teacherCourseListFragment"
         android:name="com.home.lexa.ui.course.teacher_course_list.TeacherCourseListFragment"
-        android:label="teacherCourseListFragment" />
+        android:label="teacherCourseListFragment">
+        <argument
+            android:name="filter"
+            app:argType="string"
+            android:defaultValue="ALL" />
+    </fragment>
 
     <fragment
         android:id="@+id/vocabularyFlashcardFragment"

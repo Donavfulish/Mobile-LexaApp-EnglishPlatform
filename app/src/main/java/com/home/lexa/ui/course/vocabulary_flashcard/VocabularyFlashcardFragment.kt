@@ -8,8 +8,10 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
+import com.home.lexa.MainActivity
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
+import com.home.lexa.core.ui.setTopBarTitle
 import com.home.lexa.databinding.FragmentVocabularyFlashcardBinding
 import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.DeckDto
@@ -24,12 +26,18 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBinding>(FragmentVocabularyFlashcardBinding::inflate) {
     private val viewModel: VocabularyFlashcardViewModel by viewModel()
-
+    val deck = DeckDto(
+        id= 1,
+        title= "TOEFL Essentials",
+        vocabNumber = 5,
+        createdAt = "2 Ngày trước"
+    )
     private var vocabLearning = 0
     private val deckId by lazy { arguments?.getLong("DECK_ID_KEY") }
     private val deckTitle by lazy { arguments?.getString("DECK_TITLE_KEY") }
     private val deckVocabNum by lazy { arguments?.getInt("DECK_VOCAB_NUMBER_KEY") }
     private val deckTopicName by lazy { arguments?.getString("DECK_TOPIC_NAME_KEY") }
+    private val activityBinding by lazy { (requireActivity() as MainActivity).binding }
 
     private var deckTopics: List<Topic> = listOf()
     private var topicColorMap: MutableMap<String, String> = mutableMapOf<String, String>()
@@ -39,6 +47,12 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
         if(deckId == null || deckId == 0L) return
 
         binding.deckTitle.text = deckTitle
+
+        activityBinding.appBarLayout.apply {
+            setText(deckTitle ?: "Flashcard");
+            setBackButtonVisible(true);
+        }
+
 
         binding.diTopic.apply {
             setTile("Chủ đề")
@@ -102,7 +116,6 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
             }
             findNavController().navigate(R.id.action_vocabularyFlashcardFragment_to_flashcardAddEditFragment,bundle)
         }
-
 
         viewModel.loadFlashcardsWithResult(deckId!!)
         viewModel.loadTopics()
@@ -252,5 +265,24 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
             binding.progressText.text = "Tiến độ: 0%"
             binding.progress.setProgressVocabulary(0, 0, 0)
         }
+
+        viewModel.topicData.observe(viewLifecycleOwner) { topics ->
+            deckTopics = topics
+            binding.diTopic.setUpOptions(topics.map { it ->
+                topicColorMap[it.name] = it.colorHex
+                it.name
+            })
+            binding.diTopic.setSelection(deckTopicName ?: "None")
+            binding.diTopic.setFrameColor(topicColorMap[deckTopicName] ?: "#FFFFFF")
+        }
+
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("RELOAD_DATA")
+            ?.observe(viewLifecycleOwner) { shouldReload ->
+                if (shouldReload) {
+
+                    viewModel.loadFlashcardDetail(deckId!!)
+                    findNavController().currentBackStackEntry?.savedStateHandle?.remove<Boolean>("RELOAD_DATA")
+                }
+            }
     }
 }

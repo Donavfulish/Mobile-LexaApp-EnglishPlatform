@@ -22,6 +22,9 @@ class VocabularyFlashcardViewModel(
     private val _deckResultData = MutableLiveData<DeckResult?>()
     val deckResultData: LiveData<DeckResult?> get() = _deckResultData
 
+    private val _deleteResult = MutableLiveData<Result<Unit>>()
+    val deleteResult: LiveData<Result<Unit>> get() = _deleteResult
+
     private val _flashcardDetailData = MutableLiveData<List<DetailFlashcard>>()
     val flashcardDetailData: LiveData<List<DetailFlashcard>> get() = _flashcardDetailData
     private val _flashcardWithResultData = MutableLiveData<List<DetailFlashcardWithResult>>()
@@ -77,16 +80,18 @@ class VocabularyFlashcardViewModel(
         }
     }
 
-    fun deleteFlashcard(flashcardId: Long, deckId: Long) { // Hoặc kiểu Int/String tùy cấu trúc của bạn
+    fun deleteFlashcard(flashcardId: Long, deckId: Long) {
         viewModelScope.launch {
             try {
+                flashcardRepository.deleteFlashcard(flashcardId)
+
+                _deleteResult.postValue(Result.success(Unit))
+
                 flashcardRepository.deleteFlashcard(flashcardId, deckId) // Gọi hàm xóa từ Repository
                 loadFlashcardDetail(deckId)
 
             } catch (e: Exception) {
-                // Xử lý lỗi (báo lỗi qua LiveData/SharedFlow để Fragment hiện Toast)
-            } finally {
-                // _isLoading.value = false
+                _deleteResult.postValue(Result.failure(e))
             }
         }
     }

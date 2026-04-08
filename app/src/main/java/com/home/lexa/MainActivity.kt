@@ -75,74 +75,85 @@ class MainActivity : AppCompatActivity() {
 
     }
     private fun setupNavigation() {
-
-        /*
-        + navHostFragment: là container chứa các Fragment của app.
-        + navController: dùng để di chuyển giữa các Fragment theo nav graph.
-         */
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.fragmentContainer) as NavHostFragment
         val navController = navHostFragment.navController
 
-
-        /*
-        + bindding.bottomNavigation: lấy thành phần bottomNavigation trong file main_activity.xml
-        + setOnItemSelectedListener: hàm lắng nghe sự kiện khi ấn một item trong bottomNavigation
-        + itemId: ID của tab vừa bấm
-        +  navController.navigate(itemId): điều hướng chuyển đến fragment có id là itemId
-         */
         binding.bottomNavigationMain.setOnItemSelectedListener { itemId ->
             navController.navigate(itemId)
         }
 
-        /*
-        + addOnDestinationChangedListener: hàm bắt sự kiện khi app chuyển sang màn hình mới
-        + binding.bottomNavigation.setSelectedTab(destination.id): set lại id của tab được chọn hiện tại
-         */
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            binding.bottomNavigationMain.setSelectedTab(destination.id)
-            if (destination.id == R.id.loginFragment || destination.id == R.id.signUpFragment || destination.id == R.id.verifyEmail) {
-                binding.bottomNavigationMain.visibility = View.GONE
-                binding.appBarLayout.visibility = View.GONE
-            } else {
-                binding.bottomNavigationMain.visibility = View.VISIBLE
-                binding.appBarLayout.visibility = View.VISIBLE
-            }
+            handleBottomBar(destination.id)
+            handleTopBar(destination.id)
         }
-        navController.addOnDestinationChangedListener { _, destination, _ ->
 
-            val headerView = LayoutInflater.from(this).inflate(R.layout.logo_header, null)
-            val tvTitle = headerView.findViewById<TextView>(R.id.tvHeaderTitle)
-
-            when (destination.id) {
-                R.id.homeFragment -> {
-                    tvTitle.text = "Chào ${userManager.getUserName() ?: "Alex"}"
-                    binding.appBarLayout.setBackButtonVisible(false)
-                }
-
-                R.id.libraryFragment -> {
-                    tvTitle.text = "Thư viện"
-                    binding.appBarLayout.setBackButtonVisible(false)
-                }
-
-                R.id.courseFragment -> {
-                    tvTitle.text = "Khóa học"
-                    binding.appBarLayout.setBackButtonVisible(false)
-                    binding.appBarLayout.setOnClickBack()
-                }
-
-                R.id.profileFragment -> {
-                    tvTitle.text = "Hồ sơ cá nhân"
-
-                    binding.appBarLayout.setBackButtonVisible(false)
-                    binding.appBarLayout.setOnClickBack()
+        navController.currentBackStackEntry
+            ?.savedStateHandle
+            ?.getLiveData<String>(com.home.lexa.core.ui.TopBarKeys.TITLE)
+            ?.observe(this) { title ->
+                if (!title.isNullOrEmpty()) {
+                    binding.appBarLayout.setText(title)
                 }
             }
+    }
 
-
-            binding.appBarLayout.insertCustomeView(headerView)
+    private fun handleBottomBar(destinationId: Int) {
+        if (
+            destinationId == R.id.loginFragment ||
+            destinationId == R.id.signUpFragment ||
+            destinationId == R.id.verifyEmail
+        ) {
+            binding.bottomNavigationMain.visibility = View.GONE
+            binding.appBarLayout.visibility = View.GONE
+        } else {
+            binding.bottomNavigationMain.visibility = View.VISIBLE
+            binding.appBarLayout.visibility = View.VISIBLE
         }
     }
+
+    private fun handleTopBar(destinationId: Int) {
+
+        // reset state
+        binding.appBarLayout.removeCustomView()
+        binding.appBarLayout.setBackButtonVisible(false)
+
+        val headerView = LayoutInflater.from(this)
+            .inflate(R.layout.logo_header, null)
+
+        val tvTitle = headerView.findViewById<TextView>(R.id.tvHeaderTitle)
+
+        when (destinationId) {
+
+            R.id.homeFragment -> {
+                tvTitle.text = "Chào ${userManager.getUserName() ?: "Alex"}"
+                binding.appBarLayout.insertCustomeView(headerView)
+            }
+
+            R.id.libraryFragment -> {
+                tvTitle.text = "Thư viện"
+                binding.appBarLayout.insertCustomeView(headerView)
+            }
+
+            R.id.courseFragment -> {
+                tvTitle.text = "Khóa học"
+                binding.appBarLayout.insertCustomeView(headerView)
+            }
+
+            R.id.profileFragment -> {
+                tvTitle.text = "Hồ sơ cá nhân"
+                binding.appBarLayout.insertCustomeView(headerView)
+            }
+
+            // CASE QUAN TRỌNG tiêu đề động
+            R.id.vocabularyFlashcardFragment -> {
+                binding.appBarLayout.setBackButtonVisible(true)
+                binding.appBarLayout.setOnClickBack()
+
+            }
+        }
+    }
+
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
