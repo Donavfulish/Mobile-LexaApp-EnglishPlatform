@@ -124,14 +124,14 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
         Log.d("LEXA_DEBUG", "Hàm navigateToExerciseMode được gọi")
 
         try {
-            val forgotten = deck.vocabNumber - vocabLearning
+            val forgotten = deckVocabNum!! - vocabLearning
             Log.d("LEXA_DEBUG", "Dữ liệu chuẩn bị chuyển: deckId=${deck.id}, rem=$vocabLearning, forg=$forgotten, total=${deck.vocabNumber}")
 
             val bundle = bundleOf(
-                "deckId" to deck.id,
+                "deckId" to deckId,
                 "rememberedCount" to vocabLearning,
                 "forgottenCount" to forgotten,
-                "totalCards" to deck.vocabNumber
+                "totalCards" to deckVocabNum
             )
 
             Log.d("LEXA_DEBUG", "Bắt đầu gọi findNavController().navigate...")
@@ -235,6 +235,14 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
                 }
                 card.layoutParams = params
                 binding.vocabularyGrid.addView(card)
+            }
+        }
+
+        viewModel.deleteResult.observe(viewLifecycleOwner) { result ->
+            result.onSuccess {
+                Toast.makeText(requireContext(), "Xóa thành công", Toast.LENGTH_SHORT).show()
+            }.onFailure {
+                Toast.makeText(requireContext(), "Xóa thất bại: ${it.message}", Toast.LENGTH_SHORT).show()
             }
         }
 

@@ -75,7 +75,7 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
             dropdownWordType.apply {
                 setTile("Loại từ")
                 setSelection("Chọn loại từ")
-                setUpOptions(listOf("NOUN", "Động từ", "Tính từ", "Trạng từ"))
+                setUpOptions(listOf("Danh từ", "Động từ", "Tính từ", "Trạng từ"))
             }
 
             dropdownLevel.apply {
@@ -239,7 +239,7 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
     //TODO: Chinh lai map
     private fun mapPartOfSpeechToId(posText: String): Int {
         return when (posText) {
-            "NOUN" -> 1
+            "Danh từ" -> 1
             "Động từ" -> 2
             "Tính từ" -> 3
             "Trạng từ" -> 4
