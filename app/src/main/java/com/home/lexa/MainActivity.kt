@@ -151,6 +151,12 @@ class MainActivity : AppCompatActivity() {
                 binding.appBarLayout.setOnClickBack()
 
             }
+            R.id.exerciseModeFragment->{
+                binding.appBarLayout.visibility = View.GONE
+            }
+            R.id.exerciseResultFragment->{
+                binding.appBarLayout.visibility = View.GONE
+            }
         }
     }
 
