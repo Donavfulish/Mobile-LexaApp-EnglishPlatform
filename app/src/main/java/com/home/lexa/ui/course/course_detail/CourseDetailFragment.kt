@@ -76,11 +76,6 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             setOnClickBack()
         }
 
-        activityBinding.appBarLayout.apply {
-            setText("Chi tiết khoá học");
-            setBackButtonVisible(true);
-        }
-
 
         // =============================================GENERAL SETUP==========================================
         binding.searchBarVocabulary.apply {
@@ -140,10 +135,12 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
         syncTabUI()
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.loadCourseDetail(courseId)
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        if(courseId != -1L){
+//            viewModel.loadCourseDetail(courseId)
+//        }
+//    }
     override fun observeData() {
 
         // THEO DOI LOADING CHUNG
@@ -295,6 +292,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                     "Lưu thông tin",
                     ContextCompat.getColor(requireContext(), R.color.white)
                 )
+                AppMemoryCache.removePrefix("getAllCourses_")
                 val bundle = bundleOf("courseId" to newId)
                 findNavController().navigate(R.id.courseDetailFragment, bundle,
                     NavOptions.Builder()

@@ -22,7 +22,7 @@ class CourseRepositoryImpl(
         val q = searchInfo.query ?: ""
         val sort = searchInfo.sortBy ?: ""
         val order = searchInfo.order ?: ""
-        return "courses_${q}_${sort}_${order}"
+        return "getAllCourses_${q}_${sort}_${order}"
     }
 
     override suspend fun getAllCourses(
