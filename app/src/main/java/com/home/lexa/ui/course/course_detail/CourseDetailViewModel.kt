@@ -161,7 +161,7 @@ class CourseDetailViewModel(
 
     fun deleteFlashcard(courseId: Long, flashcardId: Long, deckId: Long) {
         viewModelScope.launch {
-            val result = flashcardRepository.deleteFlashcard(flashcardId)
+            val result = flashcardRepository.deleteFlashcard(flashcardId, deckId)
             result.onSuccess {
                 AppMemoryCache.remove("getAllFlashcard_${deckId}")
                 _updateStatus.value = Result.success(Unit)

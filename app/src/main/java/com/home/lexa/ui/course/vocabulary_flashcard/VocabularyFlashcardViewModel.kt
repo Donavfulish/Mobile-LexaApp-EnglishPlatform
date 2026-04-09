@@ -83,7 +83,7 @@ class VocabularyFlashcardViewModel(
     fun deleteFlashcard(flashcardId: Long, deckId: Long) {
         viewModelScope.launch {
             try {
-                flashcardRepository.deleteFlashcard(flashcardId)
+                flashcardRepository.deleteFlashcard(flashcardId, deckId)
 
                 _deleteResult.postValue(Result.success(Unit))
 

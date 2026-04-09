@@ -37,7 +37,7 @@ class NormalInput @JvmOverloads constructor(
         setMultipleLines(false)
     }
 
-    // Set giá trị label và hiển`    thị Label trên ô Input
+    // Set giá trị label và hiển thị Label trên ô Input
     fun setLabel(text: String?) {
         if (text.isNullOrEmpty()) {
             binding.tvLabel.visibility = View.GONE
@@ -109,7 +109,7 @@ class NormalInput @JvmOverloads constructor(
 
         // Nếu chiều cao lớn, cho chữ lên phía trên cho đẹp
         if (heightInDp > 60) {
-            binding.etInput.gravity = Gravity.TOP
+            binding.etInput.gravity = Gravity.TOP or Gravity.START
         }
     }
 
@@ -141,7 +141,7 @@ class NormalInput @JvmOverloads constructor(
 
                 setHorizontallyScrolling(false)
 
-                gravity = Gravity.TOP
+                setGravity(Gravity.TOP or Gravity.START)
 
                 imeOptions = EditorInfo.IME_ACTION_NONE
             } else {

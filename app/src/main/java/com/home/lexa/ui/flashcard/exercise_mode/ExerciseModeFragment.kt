@@ -23,7 +23,7 @@ class ExerciseModeFragment : BaseFragment<FragmentExerciseModeBinding>(FragmentE
         val forgottenCount = arguments?.getInt("forgottenCount") ?: 0
         val totalCards = arguments?.getInt("totalCards") ?: 0
 
-        Toast.makeText(requireContext(), "nhận được từ màn trước là:$rememberedCount $forgottenCount $totalCards", Toast.LENGTH_SHORT).show()
+        // Toast.makeText(requireContext(), "nhận được từ màn trước là:$rememberedCount $forgottenCount $totalCards", Toast.LENGTH_SHORT).show()
         // Cờ xác định xem đang luyện tiếp từ Cache hay là mới vào lần đầu
         val isRetryForgotten = arguments?.getBoolean("isRetryForgotten") ?: false
         val isRetryAll = arguments?.getBoolean("isRetryAll") ?: false
