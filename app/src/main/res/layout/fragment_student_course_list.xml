@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -11,7 +12,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginHorizontal="16dp" />
-
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,6 +27,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tất cả"
+            android:textStyle="bold"
+            android:fontFamily="@font/archivo_bold"
+            app:backgroundTint="@color/purple_paragraph"
+            app:icon="@drawable/ic_book_2"
             android:backgroundTint="@null"
             />
 
@@ -33,18 +41,39 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
             android:text="Yêu thích"
+            android:textStyle="bold"
+            android:fontFamily="@font/archivo_bold"
+            app:backgroundTint="@color/purple_paragraph"
+            app:icon="@drawable/ic_favorite_border_btn"
             android:backgroundTint="@null"
             />
+
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLearning"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Đang học"
+            android:textStyle="bold"
+            android:fontFamily="@font/archivo_bold"
+            app:backgroundTint="@color/purple_paragraph"
+            app:icon="@drawable/ic_clock_outline"
             android:backgroundTint="@null"
             />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnFinished"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Đã hoàn thành"
+            android:textStyle="bold"
+            android:fontFamily="@font/archivo_bold"
+            app:backgroundTint="@color/purple_paragraph"
+            app:icon="@drawable/ic_lightning"
+            android:backgroundTint="@null" />
     </LinearLayout>
+    </HorizontalScrollView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

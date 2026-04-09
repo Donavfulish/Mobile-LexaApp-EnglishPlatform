@@ -1,39 +1,23 @@
 package com.home.lexa.ui.course.teacher_course_list
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import androidx.core.os.bundleOf
-import androidx.lifecycle.ViewModel
+import com.google.android.material.button.MaterialButton
 import androidx.navigation.fragment.findNavController
-import com.home.lexa.databinding.FragmentStudentCourseListBinding
 import com.home.lexa.R
-
-
-
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.util.query
 import com.home.lexa.core.base.BaseFragment
-import com.home.lexa.databinding.FragmentFavoriteLibraryBinding
-import com.home.lexa.databinding.FragmentLoginBinding
 import com.home.lexa.databinding.FragmentTeacherCourseListBinding
 import com.home.lexa.domain.models.SearchInfo
-import com.home.lexa.domain.models.ShortCourseDto
-import com.home.lexa.ui.course.student_course_list.CourseFilter
-import com.home.lexa.ui.course.student_course_list.StudentCourseListAdapter
-import com.home.lexa.ui.course.student_course_list.StudentCourseListModel
-import com.home.lexa.ui.library.LibraryFragment
-import com.home.lexa.ui.library.personal_library.PersonalLibraryAdapter
-import com.home.lexa.ui.library.personal_library.PersonalLibraryModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.getValue
 
 class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>(FragmentTeacherCourseListBinding::inflate) {
     private val viewModel: TeacherCourseListModel by viewModel()
     private val courseAdapter by lazy {
-        StudentCourseListAdapter(emptyList())
+        TeacherCourseListAdapter(emptyList())
         { course ->
             val bundle = Bundle().apply {
                 putLong("courseId", course.id)
@@ -46,14 +30,18 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
 
     private fun updateFilterUI(filter: TeacherCourseFilter) {
 
-        fun setActive(btn: Button) {
+        fun setActive(btn: MaterialButton) {
             btn.setBackgroundResource(R.drawable.bg_filter_active)
+            btn.backgroundTintList = null
             btn.setTextColor(resources.getColor(R.color.white, null))
+            btn.iconTint = ColorStateList.valueOf(resources.getColor(R.color.white, null))
         }
 
-        fun setInactive(btn: Button) {
+        fun setInactive(btn: MaterialButton) {
             btn.setBackgroundResource(R.drawable.bg_filter_inactive)
+            btn.backgroundTintList = null
             btn.setTextColor(resources.getColor(R.color.black, null))
+            btn.iconTint = ColorStateList.valueOf(resources.getColor(R.color.black, null))
         }
 
         setInactive(binding.btnAll)
@@ -76,13 +64,11 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
             onActionClick = {}
         )
 
-
         val filterArg = arguments?.getString("filter")
-
         val initialFilter = try {
-            TeacherCourseFilter.valueOf(filterArg ?: "MYCOURSE")
+            TeacherCourseFilter.valueOf(filterArg ?: "ALL")
         } catch (e: Exception) {
-            TeacherCourseFilter.MYCOURSE
+            TeacherCourseFilter.ALL
         }
 
         viewModel.changeFilter(initialFilter, SearchInfo(
@@ -133,7 +119,7 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
         }
 
         binding.btnLearning.setOnClickListener {
-            Log.d("LEARNING", "123");
+            Log.d("LEARNING", "123")
             viewModel.changeFilter(TeacherCourseFilter.LEARNING,
                 SearchInfo(
                     query= "",
@@ -166,14 +152,13 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
 
-                    // dy > 0 nghĩa là đang lướt xuống
                     if (dy > 0) {
                         val visibleItemCount = layoutManager.childCount
                         val totalItemCount = layoutManager.itemCount
                         val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
                         val threshold = 3
-                        if (!viewModel.isLoading.value!! && !viewModel.isLastPage) {
+                        if (viewModel.isLoading.value == false && !viewModel.isLastPage) {
                             if ((visibleItemCount + firstVisibleItemPosition) >= (totalItemCount - threshold)) {
 
                                 viewModel.fetchAllCourses(
@@ -197,6 +182,7 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
             nextCursor = null
         )
     }
+
     override fun observeData() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
@@ -210,11 +196,9 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
             val title = when (filter) {
                 TeacherCourseFilter.MYCOURSE -> "Khoá học của tôi"
                 TeacherCourseFilter.ALL -> "Tất cả khoá học"
-                TeacherCourseFilter.FAVORITE -> "Khoá học yêu thích của tôi"
+                TeacherCourseFilter.FAVORITE -> "Khoá học yêu thích"
                 TeacherCourseFilter.LEARNING -> "Khoá học đang học"
             }
-
-
 
             binding.headerSection.setHeaderData(
                 title = title,

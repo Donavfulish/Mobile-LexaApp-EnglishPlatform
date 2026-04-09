@@ -1,5 +1,6 @@
 package com.home.lexa.ui.course.student_course_list
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -10,6 +11,7 @@ import com.home.lexa.R
 
 
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.button.MaterialButton
 import com.home.lexa.core.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
@@ -28,14 +30,18 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
 
     private fun updateFilterUI(filter: CourseFilter) {
 
-        fun setActive(btn: Button) {
+        fun setActive(btn: MaterialButton) {
             btn.setBackgroundResource(R.drawable.bg_filter_active)
+            btn.backgroundTintList = null
             btn.setTextColor(resources.getColor(R.color.white, null))
+            btn.iconTint = ColorStateList.valueOf(resources.getColor(R.color.white, null))
         }
 
-        fun setInactive(btn: Button) {
+        fun setInactive(btn: MaterialButton) {
             btn.setBackgroundResource(R.drawable.bg_filter_inactive)
+            btn.backgroundTintList = null
             btn.setTextColor(resources.getColor(R.color.black, null))
+            btn.iconTint = ColorStateList.valueOf(resources.getColor(R.color.black, null))
         }
 
         setInactive(binding.btnAll)
@@ -92,7 +98,7 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
 
             val title = when (filter) {
                 CourseFilter.ALL -> "Tất cả khoá học"
-                CourseFilter.FAVORITE -> "Khoá học yêu thích của tôi"
+                CourseFilter.FAVORITE -> "Khoá học yêu thích"
                 CourseFilter.LEARNING -> "Khoá học đang học"
             }
 

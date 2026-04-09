@@ -38,14 +38,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Khoá học của tôi"
+                android:textStyle="bold"
+                android:fontFamily="@font/archivo_bold"
                 android:layout_marginEnd="10dp"
-                android:backgroundTint="@null" />
+                app:icon="@drawable/ic_person"
+                android:backgroundTint="@null"
+                app:backgroundTint="@color/purple_paragraph"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tất cả"
+                android:textStyle="bold"
+                android:fontFamily="@font/archivo_bold"
+                app:backgroundTint="@color/purple_paragraph"
+                app:icon="@drawable/ic_book_2"
                 android:backgroundTint="@null" />
 
             <com.google.android.material.button.MaterialButton
@@ -53,14 +61,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
+                android:backgroundTint="@null"
+                android:textStyle="bold"
+                android:fontFamily="@font/archivo_bold"
                 android:text="Yêu thích"
-                android:backgroundTint="@null" />
+                app:backgroundTint="@color/purple_paragraph"
+                app:icon="@drawable/ic_favorite_border_btn" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLearning"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Đang học"
+                android:textStyle="bold"
+                android:fontFamily="@font/archivo_bold"
+                app:backgroundTint="@color/purple_paragraph"
+                app:icon="@drawable/ic_clock_outline"
                 android:backgroundTint="@null" />
         </LinearLayout>
     </HorizontalScrollView>
