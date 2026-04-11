@@ -29,6 +29,7 @@ class TeacherCourseCard @JvmOverloads constructor(
 
         binding.tvCourseTitle.text = data.title
         binding.tvCourseDesc.text = data.description
+        binding.tvAuthorName.text = data.creator_name
         binding.tvHeartCount.text = data.studying_user_count.toString()
         binding.tvUserCount.text = data.studying_user_count.toString()
 
@@ -40,6 +41,11 @@ class TeacherCourseCard @JvmOverloads constructor(
         )
 
         binding.ivThumbnail.load(data.thumbnail_url) {
+            crossfade(true) // Hiệu ứng mờ dần khi ảnh tải xong cho đẹp
+            placeholder(R.drawable.ic_launcher_background) // Ảnh hiển thị tạm trong lúc chờ tải
+            error(R.drawable.ic_launcher_background) // Ảnh hiển thị nếu link bị lỗi/mất mạng
+        }
+        binding.ivAuthorAvatar.load(data.creator_avatar_url) {
             crossfade(true) // Hiệu ứng mờ dần khi ảnh tải xong cho đẹp
             placeholder(R.drawable.ic_launcher_background) // Ảnh hiển thị tạm trong lúc chờ tải
             error(R.drawable.ic_launcher_background) // Ảnh hiển thị nếu link bị lỗi/mất mạng

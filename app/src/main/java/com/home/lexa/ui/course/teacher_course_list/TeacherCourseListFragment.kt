@@ -60,15 +60,15 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
     override fun setupViews() {
         binding.headerSection.setHeaderData(
             title = "Khoá học của tôi",
-            actionText = "4 tất cả",
+            actionText = "0 tất cả",
             onActionClick = {}
         )
 
         val filterArg = arguments?.getString("filter")
         val initialFilter = try {
-            TeacherCourseFilter.valueOf(filterArg ?: "ALL")
+            TeacherCourseFilter.valueOf(filterArg ?: "MYCOURSE")
         } catch (e: Exception) {
-            TeacherCourseFilter.ALL
+            TeacherCourseFilter.MYCOURSE
         }
 
         viewModel.changeFilter(initialFilter, SearchInfo(
@@ -85,6 +85,13 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
         }
 
         binding.btnAll.setOnClickListener {
+            if(viewModel.currentFilter.value == TeacherCourseFilter.ALL)
+                return@setOnClickListener
+            binding.headerSection.setHeaderData(
+                title = "Khoá học của tôi",
+                actionText = "0 tất cả",
+                onActionClick = {}
+            )
             viewModel.changeFilter(
                 TeacherCourseFilter.ALL,
                 SearchInfo(
@@ -97,6 +104,13 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
         }
 
         binding.btnMyCourse.setOnClickListener {
+            if(viewModel.currentFilter.value == TeacherCourseFilter.MYCOURSE)
+                return@setOnClickListener
+            binding.headerSection.setHeaderData(
+                title = "Khoá học của tôi",
+                actionText = "0 tất cả",
+                onActionClick = {}
+            )
             viewModel.changeFilter(TeacherCourseFilter.MYCOURSE,
                 SearchInfo(
                     query= "",
@@ -108,6 +122,13 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
         }
 
         binding.btnFavorite.setOnClickListener {
+            if(viewModel.currentFilter.value == TeacherCourseFilter.FAVORITE)
+                return@setOnClickListener
+            binding.headerSection.setHeaderData(
+                title = "Khoá học của tôi",
+                actionText = "0 tất cả",
+                onActionClick = {}
+            )
             viewModel.changeFilter(TeacherCourseFilter.FAVORITE,
                 SearchInfo(
                     query= "",
@@ -119,6 +140,13 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
         }
 
         binding.btnLearning.setOnClickListener {
+            if(viewModel.currentFilter.value == TeacherCourseFilter.LEARNING)
+                return@setOnClickListener
+            binding.headerSection.setHeaderData(
+                title = "Khoá học của tôi",
+                actionText = "0 tất cả",
+                onActionClick = {}
+            )
             Log.d("LEARNING", "123")
             viewModel.changeFilter(TeacherCourseFilter.LEARNING,
                 SearchInfo(

@@ -39,7 +39,8 @@ class TeacherCourseListModel(private val repository: CourseRepository) : ViewMod
         Log.d("File filter", filter.toString());
         if (_currentFilter.value == filter) return
         _currentFilter.value = filter
-        fetchAllCourses(true, searchInfo, nextCursor)
+
+        fetchAllCourses(false, searchInfo, nextCursor)
     }
     fun fetchAllCourses(isLoadMore: Boolean, searchInfo: SearchInfo, nextCursor: Long?) {
         if (isLoadMore && (isLastPage || _isLoading.value == true)) return
@@ -47,18 +48,19 @@ class TeacherCourseListModel(private val repository: CourseRepository) : ViewMod
         if (!isLoadMore) {
             isLastPage = false
             lastId = null
+            currentPages = 0
+            _courses.value = emptyList()
         }
 
         viewModelScope.launch {
             _isLoading.value = true
 
-//            val result = when (_currentFilter.value) {
-//                TeacherCourseFilter.ALL -> repository.getAllCourses(searchInfo, nextCursor)
-//                TeacherCourseFilter.FAVORITE -> repository.getFavoriteDecks()
-//                TeacherCourseFilter.LEARNING -> repository.getLearningCourses()
-//                TeacherCourseFilter.MYCOURSE -> repository.getMyCourses()
-//            }
-            val result = repository.getAllCourses(searchInfo, nextCursor)
+            val result = when (_currentFilter.value) {
+                TeacherCourseFilter.ALL -> repository.getAllCourses(searchInfo, nextCursor)
+                TeacherCourseFilter.FAVORITE -> repository.getFavoriteCourses(searchInfo, nextCursor)
+                TeacherCourseFilter.LEARNING -> repository.getLearningCourses(searchInfo, nextCursor)
+                TeacherCourseFilter.MYCOURSE -> repository.getMyCourses(searchInfo, nextCursor)
+            }
             result.onSuccess { list ->
                 currentPages += list.data.size
                 totalPages = list.totalItem.toInt()
