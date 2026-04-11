@@ -18,11 +18,11 @@ class CourseRepositoryImpl(
     private val apiService: CourseApiService
 ) : CourseRepository {
 
-    private fun generateCacheKey(searchInfo: SearchInfo): String {
+    private fun generateCacheKey(type: String, searchInfo: SearchInfo): String {
         val q = searchInfo.query ?: ""
         val sort = searchInfo.sortBy ?: ""
         val order = searchInfo.order ?: ""
-        return "getAllCourses_${q}_${sort}_${order}"
+        return "${type}_${q}_${sort}_${order}"
     }
 
     override suspend fun getAllCourses(
@@ -30,7 +30,7 @@ class CourseRepositoryImpl(
         nextCursor: Long?
     ): Result<AllCoursePaginationResponse> {
         return try {
-            val cacheKey = generateCacheKey(searchInfo)
+            val cacheKey = generateCacheKey("getAllCourses", searchInfo)
             val isFirstPage = nextCursor == null
 
             if (isFirstPage) {
@@ -68,7 +68,6 @@ class CourseRepositoryImpl(
                 Result.failure(Exception(errorMsg))
             }
         } catch (e: Exception) {
-            Log.e("DEBUG_LEXA", "CourseRepositoryImpl.getAllCourses EXCEPTION: ${e.message}", e)
             Result.failure(e)
         }
     }
@@ -261,55 +260,149 @@ class CourseRepositoryImpl(
         }
     }
 
-    override  suspend fun getLearningCourses(): Result<List<ShortCourseDto>>{
+    override suspend fun getFavoriteCourses(
+        searchInfo: SearchInfo,
+        nextCursor: Long?
+    ): Result<AllCoursePaginationResponse> {
         return try {
-            val courses: List<ShortCourseDto>? = AppMemoryCache.get("getLearningCourses");
-            if (courses != null){
-                return Result.success(courses);
+            val cacheKey = generateCacheKey("getFavoriteCourses", searchInfo)
+            val isFirstPage = nextCursor == null
+
+            if (isFirstPage) {
+                val cachedResponse: AllCoursePaginationResponse? = AppMemoryCache.get(cacheKey)
+                if (cachedResponse != null && cachedResponse.data.isNotEmpty()) {
+                    return Result.success(cachedResponse)
+                }
             }
-            val response = apiService.getLearningCourses();
+
+            val response = apiService.getFavoriteCourses(
+                query = searchInfo.query,
+                sort = searchInfo.sortBy,
+                order = searchInfo.order,
+                limit = searchInfo.limit?.toString(),
+                next_id = nextCursor?.toString(),
+            )
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
-                // Thành công: bóc tách dữ liệu ra và trả về
-                val data = body.data ?: emptyList();
-                AppMemoryCache.put("getLearningCourses", data);
-                Result.success(data);
+                val apiPaginationData = body.data ?: throw Exception("Dữ liệu data trong body bị null")
+                val newCourses = apiPaginationData.data
+
+                val finalCourses = if (isFirstPage) {
+                    newCourses
+                } else {
+                    val oldCache: AllCoursePaginationResponse? = AppMemoryCache.get(cacheKey)
+                    val oldCourses = oldCache?.data ?: emptyList()
+                    oldCourses + newCourses
+                }
+                val updatedResponse = apiPaginationData.copy(data = finalCourses)
+                AppMemoryCache.put(cacheKey, updatedResponse)
+                Result.success(updatedResponse)
             } else {
-                // Thất bại từ Backend (Ví dụ lỗi 400 do validation)
-                Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ"))
+                val errorMsg = body?.message ?: "Lỗi từ máy chủ: ${response.code()}"
+                Result.failure(Exception(errorMsg))
             }
         } catch (e: Exception) {
-            // Lỗi do mất mạng, không connect được server...
             Result.failure(e)
         }
     }
 
-    override suspend fun getMyCourses(): Result<List<ShortCourseDto>> {
+
+
+    override suspend fun getLearningCourses(
+        searchInfo: SearchInfo,
+        nextCursor: Long?
+    ): Result<AllCoursePaginationResponse> {
         return try {
-            val courses: List<ShortCourseDto>? = AppMemoryCache.get("getMyCourses");
-            if (courses != null){
-                return Result.success(courses);
+            val cacheKey = generateCacheKey("getLearningCourses", searchInfo)
+            val isFirstPage = nextCursor == null
+
+            if (isFirstPage) {
+                val cachedResponse: AllCoursePaginationResponse? = AppMemoryCache.get(cacheKey)
+                if (cachedResponse != null && cachedResponse.data.isNotEmpty()) {
+                    return Result.success(cachedResponse)
+                }
             }
-            val response = apiService.getMyCourses();
+
+            val response = apiService.getLearningCourses(
+                query = searchInfo.query,
+                sort = searchInfo.sortBy,
+                order = searchInfo.order,
+                limit = searchInfo.limit?.toString(),
+                next_id = nextCursor?.toString(),
+            )
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
-                // Thành công: bóc tách dữ liệu ra và trả về
-                val data = body.data ?: emptyList();
-                AppMemoryCache.put("getMyCourses", data);
-                Result.success(data);
+                val apiPaginationData = body.data ?: throw Exception("Dữ liệu data trong body bị null")
+                val newCourses = apiPaginationData.data
+
+                val finalCourses = if (isFirstPage) {
+                    newCourses
+                } else {
+                    val oldCache: AllCoursePaginationResponse? = AppMemoryCache.get(cacheKey)
+                    val oldCourses = oldCache?.data ?: emptyList()
+                    oldCourses + newCourses
+                }
+                val updatedResponse = apiPaginationData.copy(data = finalCourses)
+                AppMemoryCache.put(cacheKey, updatedResponse)
+                Result.success(updatedResponse)
             } else {
-                // Thất bại từ Backend (Ví dụ lỗi 400 do validation)
-                Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ"))
+                val errorMsg = body?.message ?: "Lỗi từ máy chủ: ${response.code()}"
+                Result.failure(Exception(errorMsg))
             }
         } catch (e: Exception) {
-            // Lỗi do mất mạng, không connect được server...
             Result.failure(e)
         }
-
-
     }
+
+    override suspend fun getMyCourses(
+        searchInfo: SearchInfo,
+        nextCursor: Long?
+    ): Result<AllCoursePaginationResponse> {
+        return try {
+            val cacheKey = generateCacheKey("getMyCourses", searchInfo)
+            val isFirstPage = nextCursor == null
+
+            if (isFirstPage) {
+                val cachedResponse: AllCoursePaginationResponse? = AppMemoryCache.get(cacheKey)
+                if (cachedResponse != null && cachedResponse.data.isNotEmpty()) {
+                    return Result.success(cachedResponse)
+                }
+            }
+
+            val response = apiService.getMyCourses(
+                query = searchInfo.query,
+                sort = searchInfo.sortBy,
+                order = searchInfo.order,
+                limit = searchInfo.limit?.toString(),
+                next_id = nextCursor?.toString(),
+            )
+            val body = response.body()
+
+            if (response.isSuccessful && body?.success == true) {
+                val apiPaginationData = body.data ?: throw Exception("Dữ liệu data trong body bị null")
+                val newCourses = apiPaginationData.data
+
+                val finalCourses = if (isFirstPage) {
+                    newCourses
+                } else {
+                    val oldCache: AllCoursePaginationResponse? = AppMemoryCache.get(cacheKey)
+                    val oldCourses = oldCache?.data ?: emptyList()
+                    oldCourses + newCourses
+                }
+                val updatedResponse = apiPaginationData.copy(data = finalCourses)
+                AppMemoryCache.put(cacheKey, updatedResponse)
+                Result.success(updatedResponse)
+            } else {
+                val errorMsg = body?.message ?: "Lỗi từ máy chủ: ${response.code()}"
+                Result.failure(Exception(errorMsg))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     override suspend fun favoriteCourse(courseId: Long): Result<Boolean> {
         return try {
             val response = apiService.favoriteCourse(courseId)

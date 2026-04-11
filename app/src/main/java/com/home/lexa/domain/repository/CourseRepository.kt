@@ -18,13 +18,14 @@ interface CourseRepository {
     suspend fun deleteCourse(courseId: Long): Result<Boolean>
 
     suspend fun getFavoriteDecks(): Result<List<ShortCourseDto>>
+    suspend fun getFavoriteCourses(searchInfo: SearchInfo, nextCursor: Long?): Result<AllCoursePaginationResponse>
     suspend fun getSpeakingDayCourse(courseId: Long): Result<SpeakingCourseDetailDto?>
     suspend fun getFeaturedCourses(): Result<List<GetFeaturedCourseResponse>>
     suspend fun getTopStudiedCourses(): Result<List<GetFeaturedCourseResponse>>
     suspend fun getStudyingCourses(): Result<List<GetStudyingCourseResponse>>
 
-    suspend fun getMyCourses(): Result<List<ShortCourseDto>>
-    suspend fun getLearningCourses(): Result<List<ShortCourseDto>>
+    suspend fun getMyCourses(searchInfo: SearchInfo, nextCursor: Long?): Result<AllCoursePaginationResponse>
+    suspend fun getLearningCourses(searchInfo: SearchInfo, nextCursor: Long?): Result<AllCoursePaginationResponse>
     suspend fun favoriteCourse(courseId: Long ): Result<Boolean>
     suspend fun disFavoriteCourse(courseId: Long): Result<Boolean>
 }

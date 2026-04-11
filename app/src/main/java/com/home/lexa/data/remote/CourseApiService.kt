@@ -50,14 +50,37 @@ interface CourseApiService {
     @DELETE("api/users/me/courses/{courseId}")
     suspend fun deleteCourse(@Path("courseId") courseId: Long): Response<ApiResponse<Map<String, Any>>>
 
-    // Gọi GET /api/user/me/course/favorite"
+
     @GET("/api/user/me/deck/favorite")
     suspend fun getFavoriteDecks(): Response<ApiResponse<List<ShortCourseDto>>>
 
+    @GET("/api/user/me/course/favorite")
+    suspend fun getFavoriteCourses(
+        @Query("query") query: String? = null,
+        @Query("sort") sort: String? = null,
+        @Query("order") order: String? = null,
+        @Query("limit") limit: String? = null,
+        @Query("next_id") next_id: String? = null,
+    ): Response<ApiResponse<AllCoursePaginationResponse>>
+
+    @GET("/api/user/me/course/learning")
+    suspend fun getLearningCourses(
+        @Query("query") query: String? = null,
+        @Query("sort") sort: String? = null,
+        @Query("order") order: String? = null,
+        @Query("limit") limit: String? = null,
+        @Query("next_id") next_id: String? = null,
+    ): Response<ApiResponse<AllCoursePaginationResponse>>
+
+
     @GET("/api/users/me/courses")
-    suspend fun getMyCourses(): Response<ApiResponse<List<ShortCourseDto>>>
-    @GET("/api/courses/studying")
-    suspend fun getLearningCourses():  Response<ApiResponse<List<ShortCourseDto>>>
+    suspend fun getMyCourses(
+        @Query("query") query: String? = null,
+        @Query("sort") sort: String? = null,
+        @Query("order") order: String? = null,
+        @Query("limit") limit: String? = null,
+        @Query("next_id") next_id: String? = null,
+    ): Response<ApiResponse<AllCoursePaginationResponse>>
 
     @GET("/api/courses/{courseId}/speaking-days")
     suspend fun getSpeakingDayCourse(

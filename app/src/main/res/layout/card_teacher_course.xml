@@ -93,6 +93,46 @@
             app:barrierDirection="bottom"
             app:constraint_referenced_ids="cvThumbnail,tvCourseDesc" />
 
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cvAvatar"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/barrier">
+
+            <ImageView
+                android:id="@+id/ivAuthorAvatar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_launcher_background" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/tvAuthorName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="John Smith"
+            android:textColor="#5F6368"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMinTextSize="10sp"
+            app:autoSizeMaxTextSize="13sp"
+            app:autoSizeStepGranularity="1sp"
+            app:layout_constraintBottom_toBottomOf="@+id/cvAvatar"
+            app:layout_constraintEnd_toStartOf="@+id/ivUsers"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/cvAvatar"
+            app:layout_constraintTop_toTopOf="@+id/cvAvatar" />
+
         <TextView
             android:id="@+id/tvHeartCount"
             android:layout_width="wrap_content"
