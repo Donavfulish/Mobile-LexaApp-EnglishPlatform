@@ -1,5 +1,6 @@
 package com.home.lexa.domain.repository
 
+import android.net.Uri
 import com.home.lexa.domain.models.AllCoursePaginationResponse
 import com.home.lexa.domain.models.CreateCourseRequest
 import com.home.lexa.domain.models.EditCourseRequest
@@ -9,12 +10,14 @@ import com.home.lexa.domain.models.GetFeaturedCourseResponse
 import com.home.lexa.domain.models.GetStudyingCourseResponse
 import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.Topic
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 interface CourseRepository {
     suspend fun getAllCourses(searchInfo: SearchInfo, nextCursor: Long?): Result<AllCoursePaginationResponse>
     suspend fun getAllTopics(): Result<List<Topic>>
-    suspend fun createCourse(request: CreateCourseRequest): Result<Long>
-    suspend fun editCourse(courseId: Long, request: EditCourseRequest): Result<Boolean>
+    suspend fun createCourse(dataPart: RequestBody, imagePart: MultipartBody.Part?): Result<Long>
+    suspend fun editCourse(courseId: Long, dataPart: RequestBody, imagePart: MultipartBody.Part?): Result<Boolean>
     suspend fun deleteCourse(courseId: Long): Result<Boolean>
 
     suspend fun getFavoriteDecks(): Result<List<ShortCourseDto>>

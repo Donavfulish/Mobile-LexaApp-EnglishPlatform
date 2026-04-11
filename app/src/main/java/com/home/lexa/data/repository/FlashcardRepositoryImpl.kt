@@ -9,6 +9,8 @@ import com.home.lexa.domain.models.DetailFlashcardWithResult
 import com.home.lexa.domain.models.UpdateFlashcardRequest
 import com.home.lexa.domain.models.UpdateFlashcardResultRequest
 import com.home.lexa.domain.repository.FlashcardRepository
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 class FlashcardRepositoryImpl(
     private val apiService: FlashcardApiService
@@ -59,15 +61,15 @@ class FlashcardRepositoryImpl(
         }
     }
 
-    override suspend fun createFlashcard(request: CreateFlashcardRequest): Result<Long> {
+    override suspend fun createFlashcard(deckId: Long, request: RequestBody, imageUri: MultipartBody.Part?): Result<Long> {
         return try {
-            val response = apiService.createFlashcard(request.deckId.toLong(), request)
+            val response = apiService.createFlashcard(deckId, request, imageUri)
             val body = response.body()
             Log.d("FlashcardRepositoryImpl", "Response body: $body")
 
             if (response.isSuccessful && body?.success == true && body.data != null) {
-                Log.d("Đã xoá cache create", "Cache create đã được xoá_${request.deckId}")
-                AppMemoryCache.remove("getAllFlashcard_${request.deckId}");
+                Log.d("Đã xoá cache create", "Cache create đã được xoá_${deckId}")
+                AppMemoryCache.remove("getAllFlashcard_${deckId}");
                 AppMemoryCache.remove("getAllDecks");
                 Result.success(body.data)
             } else {
@@ -79,14 +81,14 @@ class FlashcardRepositoryImpl(
         }
     }
 
-    override suspend fun updateFlashcard(request: UpdateFlashcardRequest): Result<Boolean> {
+    override suspend fun updateFlashcard(deckId: Long, request: RequestBody, imageUri: MultipartBody.Part?): Result<Boolean> {
         return try {
-            val response = apiService.updateFlashcard(request.deckId, request)
+            val response = apiService.updateFlashcard(deckId, request, imageUri)
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
                 Log.d("Đã xoá cache update", "Cache update đã được xoá")
-                AppMemoryCache.remove("getAllFlashcard_${request.deckId}");
+                AppMemoryCache.remove("getAllFlashcard_${deckId}");
                 Result.success(body.data ?: true)
             } else {
                 Result.failure(Exception(body?.message ?: "Lỗi khi cập nhật flashcard"))
@@ -98,7 +100,7 @@ class FlashcardRepositoryImpl(
 
     override suspend fun deleteFlashcard(flashcardId: Long, deckId: Long): Result<Boolean> {
         return try {
-            val response = apiService.deleteFlashcard(flashcardId)
+            val response = apiService.deleteFlashcard(deckId, flashcardId)
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {

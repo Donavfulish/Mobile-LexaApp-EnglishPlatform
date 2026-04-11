@@ -1,12 +1,15 @@
 package com.home.lexa.ui.course.course_detail
 
 
+import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import com.home.lexa.R
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -46,14 +49,27 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
     internal var selectedTopicId =  0
     internal var courseId: Long = -1L
     internal lateinit var list_topic: List<Topic>
+    internal var courseImageUri: Uri? = null
     private val activityBinding by lazy { (requireActivity() as MainActivity).binding }
 
-
     private val userManager: UserManager by inject()
+
     override fun onDestroyView() {
         super.onDestroyView()
         handler = null
     }
+
+    internal val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        if (uri != null) {
+            courseImageUri = uri
+            binding.backgroundCourse.load(uri) {
+                crossfade(true)
+            }
+        } else {
+            // Người dùng đóng thư viện mà không chọn ảnh
+        }
+    }
+
     override fun setupViews() {
         isOwner = true
         courseId = arguments?.getLong("courseId") ?: -1L
@@ -109,6 +125,10 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             setBackground(ContextCompat.getColor(requireContext(), R.color.gray_E0E0E5))
         }
 
+        binding.cameraBtn.setOnClickAction {
+            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+
         binding.speakingBtn.setOnClickAction {
             if (!isSpeakingMode) {
                 isSpeakingMode = true
@@ -129,7 +149,6 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 binding.vocabularyLayout.visibility = View.VISIBLE
             }
         }
-
 
         binding.topic.setOnClickAction {
             AppMemoryCache.remove("speakingCourseDetail_${courseId}")
@@ -196,7 +215,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 )
                 binding.saveBtn.setText("Đang lưu thông tin...", ContextCompat.getColor(requireContext(), R.color.white))
                 if (newTitle.isNotBlank() || newDesc.isNotBlank()) {
-                    viewModel.createCourse(request)
+                    viewModel.createCourse(request, courseImageUri)
                 } else {
                     Toast.makeText(requireContext(), "Vui lòng điền đầy đủ thông tin!", Toast.LENGTH_LONG).show()
                 }
@@ -271,7 +290,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 val card = FlashcardMini(requireContext())
                 val vocab = Vocabulary(
                     level = ColorLabel(item.type, "#E0E0E5"),
-                    image = 0,
+                    imageUrl = item.imageUrl,
                     word = item.word,
                     pronunciation_url = item.audioUrl ?: "",
                     transciption = item.transcription,

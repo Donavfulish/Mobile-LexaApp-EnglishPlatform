@@ -66,9 +66,9 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
         // Cấu hình cho NormalInput (Custom View)
         binding.apply {
             inputVocab.setPlaceHolderText("Ví dụ: Ephemeral")
-            
+
             inputPronunciation.setPlaceHolderText("Ví dụ: əˈfem(ə)rəl")
-            
+
             inputDefinition.setPlaceHolderText("Nhập định nghĩa...")
 
             inputExample.setPlaceHolderText("Nhập câu ví dụ...")
@@ -103,7 +103,7 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
             }else{
                 dropdownWordType.setSelection(partOfSpeech!!)
             }
-            
+
             ivFlashcard.load(imageUrl) {
                 crossfade(true)
             }
@@ -168,7 +168,7 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
                 deckId = deckId!!,
 
             )
-            viewModel.updateFlashcard(request)
+            viewModel.updateFlashcard(request, selectedLocalImageUri)
 
         } else {
             val request = CreateFlashcardRequest(
@@ -181,7 +181,7 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
                 example = inputExample,
                 partOfSpeechId = posId
             )
-            viewModel.createFlashcard(request)
+            viewModel.createFlashcard(request, selectedLocalImageUri)
         }
     }
 
@@ -222,12 +222,11 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
 
         // 3. Đóng gói thành model Vocabulary (giống cấu trúc thẻ thật)
         val previewVocab = Vocabulary(
-
             level = ColorLabel(
                 selectedLevelStr,
                 "#E0E0E5"
             ), // Màu nền xám (như bạn đã setup ở màn Flashcard)
-            image = 0,
+            imageUrl = imageUrl ?: "",
             word = inputWord,
             pronunciation_url = "",
             transciption = inputTrans,

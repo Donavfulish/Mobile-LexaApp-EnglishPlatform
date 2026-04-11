@@ -9,12 +9,16 @@ import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.domain.models.GetFeaturedCourseResponse
 import com.home.lexa.domain.models.GetStudyingCourseResponse
 import com.home.lexa.domain.models.Topic
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -41,11 +45,20 @@ interface CourseApiService {
     @GET("api/courses/top-studied")
     suspend fun getTopStudiedCourses(): Response<ApiResponse<List<GetFeaturedCourseResponse>>>
     // Gọi @GET("api/courses/studying")
+    @Multipart
     @POST("api/users/me/courses")
-    suspend fun createCourse(@Body request: CreateCourseRequest): Response<ApiResponse<Long>>
+    suspend fun createCourse(
+        @Part("data") request: RequestBody,
+        @Part imageUri: MultipartBody.Part?
+    ): Response<ApiResponse<Long>>
 
+    @Multipart
     @PATCH("api/users/me/courses/{courseId}")
-    suspend fun editCourse(@Path("courseId") courseId: Long, @Body request: EditCourseRequest): Response<ApiResponse<Map<String, Any>>>
+    suspend fun editCourse(
+        @Path("courseId") courseId: Long,
+        @Part("data") request: RequestBody,
+        @Part imageUri: MultipartBody.Part?
+    ): Response<ApiResponse<Map<String, Any>>>
 
     @DELETE("api/users/me/courses/{courseId}")
     suspend fun deleteCourse(@Path("courseId") courseId: Long): Response<ApiResponse<Map<String, Any>>>

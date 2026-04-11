@@ -10,7 +10,7 @@ data class ColorLabel(
 @Serializable
 data class Vocabulary(
     val level: ColorLabel,
-    val image: Int,
+    val imageUrl: String?,
     val word: String,
     val pronunciation_url: String,
     val transciption: String,
@@ -21,7 +21,7 @@ data class Vocabulary(
 
 var mockVocabularyData = Vocabulary(
     ColorLabel("C1", "#6366F1"),
-    0,
+    "",
     "Ephemeral",
     "",
     "/əˈfem(ə)rəl/",

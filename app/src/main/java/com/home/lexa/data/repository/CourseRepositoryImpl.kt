@@ -1,5 +1,6 @@
 package com.home.lexa.data.repository
 
+import android.net.Uri
 import android.util.Log
 import com.home.lexa.data.remote.CourseApiService
 import com.home.lexa.di.AppMemoryCache
@@ -13,6 +14,8 @@ import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.repository.CourseRepository
 import com.home.lexa.domain.models.GetFeaturedCourseResponse
 import com.home.lexa.domain.models.SearchInfo
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 class CourseRepositoryImpl(
     private val apiService: CourseApiService
@@ -88,9 +91,9 @@ class CourseRepositoryImpl(
         }
     }
 
-    override suspend fun createCourse(request: CreateCourseRequest): Result<Long> {
+    override suspend fun createCourse(dataPart: RequestBody, imagePart: MultipartBody.Part?): Result<Long> {
         return try {
-            val response = apiService.createCourse(request)
+            val response = apiService.createCourse(dataPart, imagePart)
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
@@ -110,9 +113,9 @@ class CourseRepositoryImpl(
             Result.failure(e)
         }
     }
-    override suspend fun editCourse(courseId: Long, request: EditCourseRequest): Result<Boolean> {
+    override suspend fun editCourse(courseId: Long, dataPart: RequestBody, imagePart: MultipartBody.Part?): Result<Boolean> {
         return try {
-            val response = apiService.editCourse(courseId, request)
+            val response = apiService.editCourse(courseId, dataPart, imagePart)
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {

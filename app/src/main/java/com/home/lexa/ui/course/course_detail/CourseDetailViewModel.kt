@@ -1,10 +1,14 @@
 package com.home.lexa.ui.course.course_detail
 
+import android.app.Application
+import android.net.Uri
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.CreateCourseRequest
 import com.home.lexa.domain.models.CreateSpeakingDayRequest
@@ -18,13 +22,17 @@ import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.repository.DeckRepository
 import com.home.lexa.domain.repository.SpeakingDayRepository
+import com.home.lexa.ui.utils.MediaUtils
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 
 class CourseDetailViewModel(
+    application: Application,
     private val courseRepository: CourseRepository,
     private val flashcardRepository: FlashcardRepository,
     private val speakingDayRepository: SpeakingDayRepository,
     private val deckRepository: DeckRepository
-) : ViewModel() {
+) : AndroidViewModel(application) {
     private val _createCourseStatus = MutableLiveData<Result<Long>?>()
     val createCourseStatus: LiveData<Result<Long>?> get() = _createCourseStatus
     private val _createStatus = MutableLiveData<Result<Unit>?>()
@@ -67,9 +75,13 @@ class CourseDetailViewModel(
         _topicData.value = emptyList()
     }
 
-    fun createCourse(request: CreateCourseRequest){
+    fun createCourse(request: CreateCourseRequest, courseImageUri: Uri?){
         viewModelScope.launch {
-            val result = courseRepository.createCourse(request)
+            val context = getApplication<Application>().applicationContext
+            val dataPart = Gson().toJson(request).toRequestBody("application/json".toMediaTypeOrNull())
+            val imagePart = courseImageUri?.let { MediaUtils.prepareFilePart(context, "courseImage", it) }
+
+            val result = courseRepository.createCourse(dataPart, imagePart)
             try {
                 result
                     .onSuccess { courseId ->
@@ -126,9 +138,13 @@ class CourseDetailViewModel(
         }
     }
 
-    fun editCourse(courseId: Long, request: EditCourseRequest){
+    fun editCourse(courseId: Long, request: EditCourseRequest, courseImageUri: Uri?){
         viewModelScope.launch {
-            val result = courseRepository.editCourse(courseId, request)
+            val context = getApplication<Application>().applicationContext
+            val dataPart = Gson().toJson(request).toRequestBody("application/json".toMediaTypeOrNull())
+            val imagePart = courseImageUri?.let { MediaUtils.prepareFilePart(context, "courseImage", it) }
+
+            val result = courseRepository.editCourse(courseId, dataPart, imagePart)
             result.onSuccess {
                 AppMemoryCache.remove("getSpeakingDayCourse_${courseId}")
                 _updateStatus.value = Result.success(Unit)

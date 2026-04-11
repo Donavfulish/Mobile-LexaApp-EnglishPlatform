@@ -16,6 +16,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.toColorInt
+import com.bumptech.glide.Glide
 import com.home.lexa.databinding.FlashcardBinding
 import com.home.lexa.databinding.ButtonLexaBinding
 import com.home.lexa.domain.models.ColorLabel
@@ -91,8 +92,18 @@ class Flashcard @JvmOverloads constructor(
                 setVocabularyStyle(data.level.colorString)
             }
 
-            if (data.image > 0) ivIllustration.setImageResource(data.image)
-            else ivIllustration.visibility = View.INVISIBLE
+            if (!data.imageUrl.isNullOrBlank()) {
+                ivIllustration.visibility = View.VISIBLE
+
+                Glide.with(ivIllustration.context)
+                    .load(data.imageUrl)
+                    //.placeholder(R.drawable.ephemeral_image) // Ảnh hiển thị trong lúc đợi tải
+                    //.error(R.drawable.error_placeholder)      // Ảnh hiển thị nếu URL lỗi
+                    .centerCrop()
+                    .into(ivIllustration)
+            } else {
+                ivIllustration.visibility = View.INVISIBLE
+            }
 
             tvWord.text = data.word
             tvTranscription.text = data.transciption

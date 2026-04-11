@@ -1,14 +1,18 @@
 package com.home.lexa.ui.course.course_detail
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
+import coil.load
 import com.home.lexa.R
 import com.home.lexa.databinding.ActivityMainBinding
 import com.home.lexa.databinding.FragmentCourseDetailBinding
@@ -86,13 +90,21 @@ class CourseDetailTeacher(
             binding.saveBtn.setText("Đang lưu thông tin...", ContextCompat.getColor(fragment.requireContext(), R.color.white))
 
             if (newTitle.isNotBlank()) {
-                viewModel.editCourse(fragment.courseId, request)
+                viewModel.editCourse(fragment.courseId, request, fragment.courseImageUri)
             }
+        }
+
+        binding.backgroundCourse.load(fragment.courseImageUri) {
+            crossfade(true)
+            lifecycle(fragment.viewLifecycleOwner)
         }
 
         binding.cameraBtn.apply{
             setIcon(ContextCompat.getDrawable(fragment.requireContext(), R.drawable.ic_camera)!!)
             setBackground(ContextCompat.getColor(fragment.requireContext(), R.color.white_opacity))
+            setOnClickAction {
+                fragment.pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            }
         }
         binding.addBtn.apply {
             setBackground(ContextCompat.getColor(fragment.requireContext(), R.color.purple_paragraph))

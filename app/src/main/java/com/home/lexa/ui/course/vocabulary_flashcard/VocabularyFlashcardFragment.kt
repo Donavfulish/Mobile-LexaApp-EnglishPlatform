@@ -214,7 +214,7 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
                 part_of_speech = ColorLabel(item.flashCard.partOfSpeech, "#636AE8"),
                 definition = item.flashCard.meaning,
                 example = item.flashCard.example ?: "",
-                image = 0,
+                imageUrl = item.flashCard.imageUrl,
             )
             card.setData(vocab)
             card.setIsEditable(binding.editToggle.isChecked)

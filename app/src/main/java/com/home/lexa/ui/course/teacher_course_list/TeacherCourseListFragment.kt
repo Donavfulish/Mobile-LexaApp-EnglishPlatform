@@ -1,5 +1,6 @@
 package com.home.lexa.ui.course.teacher_course_list
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
