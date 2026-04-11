@@ -1,8 +1,11 @@
 package com.home.lexa
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
@@ -11,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -22,6 +26,7 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import kotlin.getValue
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
@@ -40,11 +45,23 @@ import retrofit2.converter.gson.GsonConverterFactory
 class MainActivity : AppCompatActivity() {
     private val authViewModel: AuthViewModel by viewModel()
     private var isFirstAuthenticated: Boolean = false
-
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            // Quyền đã được cấp. App của bạn đã sẵn sàng hiển thị push notification!
+            Toast.makeText(this, "Đã cấp quyền nhận thông báo", Toast.LENGTH_SHORT).show()
+        } else {
+            // Người dùng từ chối.
+            // Lưu ý: Nếu họ từ chối, thông báo FCM gửi xuống tự động bị hệ thống chặn lại (không hiện popup).
+            Toast.makeText(this, "Bạn đã từ chối nhận thông báo", Toast.LENGTH_SHORT).show()
+        }
+    }
     // binding: tuơng tác giao diện thay vì dùng findViewById
     private val userManager: UserManager by inject()
     lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
+        askNotificationPermission()
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
@@ -251,6 +268,38 @@ class MainActivity : AppCompatActivity() {
 
                     navController.graph = navGraph
                     navController.setGraph(navGraph, null)
+                }
+            }
+        }
+    }
+    private fun askNotificationPermission() {
+        // Chỉ chạy logic này nếu thiết bị đang dùng Android 13 (TIRAMISU / API 33) trở lên
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+
+            when {
+                // Trường hợp 1: Người dùng đã cấp quyền từ trước rồi
+                ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED -> {
+                    // Không cần làm gì thêm, cứ thế dùng thôi
+                }
+
+                // Trường hợp 2: Người dùng từng từ chối trước đó, cần giải thích lý do
+                shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
+                    /*
+                     TODO: Theo chuẩn UX của Google, ở đây bạn nên hiện một Dialog nhỏ (AlertDialog)
+                     giải thích thân thiện: "App cần quyền này để báo cho bạn khi có tin nhắn mới...".
+                     Nếu người dùng bấm "Đồng ý" trên Dialog đó, bạn mới gọi dòng launch bên dưới.
+
+                     Để code chạy nhanh gọn, tôi gọi thẳng hàm launch luôn:
+                    */
+                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+
+                // Trường hợp 3: Lần đầu tiên mở app, bung popup mặc định của hệ thống lên hỏi luôn
+                else -> {
+                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
             }
         }
