@@ -1,5 +1,4 @@
 package com.home.lexa.domain.models
-
 import kotlinx.serialization.Serializable
 
 // Model hứng data từ luồng GET
@@ -12,7 +11,26 @@ data class Course(
     val privacy: String?
 )
 
+interface BaseCourseFilter
+
 // Model đẩy data lên cho luồng POST
+enum class StudentCourseFilter : BaseCourseFilter {
+    ALL,
+    FAVORITE,
+    LEARNING
+}
+
+enum class TeacherCourseFilter : BaseCourseFilter {
+    ALL,
+    FAVORITE,
+    LEARNING,
+    MYCOURSE
+}
+
+data class ShortCourse(
+    val data: List<ShortCourseDto>,
+    val status: BaseCourseFilter
+)
 
 data class ShortCourseDto(
     val id: Long,
@@ -104,5 +122,3 @@ data class SearchInfo(
     val order: String ?= null,
     val limit: Int ?= null
 )
-
-

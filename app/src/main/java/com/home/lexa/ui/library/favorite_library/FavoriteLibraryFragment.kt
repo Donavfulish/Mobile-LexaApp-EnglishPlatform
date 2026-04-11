@@ -8,7 +8,7 @@ import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.data.local.UserManager
 import com.home.lexa.databinding.FragmentFavoriteLibraryBinding
 import com.home.lexa.domain.models.UserRole
-import com.home.lexa.ui.course.student_course_list.CourseFilter
+import com.home.lexa.domain.models.StudentCourseFilter
 import com.home.lexa.ui.library.LibraryFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
@@ -36,7 +36,7 @@ class FavoriteLibraryFragment : BaseFragment<FragmentFavoriteLibraryBinding>(Fra
                 val role = userManager.getUserRole()
 
                 val bundle = Bundle().apply {
-                    putString("filter", CourseFilter.FAVORITE.name)
+                    putString("filter", StudentCourseFilter.FAVORITE.name)
                 }
 
                 when (role) {

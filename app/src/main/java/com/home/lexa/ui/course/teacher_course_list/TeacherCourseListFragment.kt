@@ -13,6 +13,8 @@ import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentTeacherCourseListBinding
 import com.home.lexa.domain.models.SearchInfo
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.home.lexa.domain.models.TeacherCourseFilter
+
 
 class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>(FragmentTeacherCourseListBinding::inflate) {
     private val viewModel: TeacherCourseListModel by viewModel()
@@ -158,7 +160,7 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
                 null)
         }
 
-        if (viewModel.courses.value.isNullOrEmpty()) {
+        if (viewModel.courses.value.data.isNullOrEmpty()) {
             viewModel.fetchAllCourses(
                 isLoadMore = false,
                 searchInfo = SearchInfo(query = "", limit = 10),
@@ -217,7 +219,10 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
         }
 
         viewModel.courses.observe(viewLifecycleOwner) { list ->
-            courseAdapter.updateData(list)
+            if(list.status != viewModel.currentFilter.value){
+                return@observe
+            }
+            courseAdapter.updateData(list.data)
 
             val filter = viewModel.currentFilter.value ?: TeacherCourseFilter.MYCOURSE
 

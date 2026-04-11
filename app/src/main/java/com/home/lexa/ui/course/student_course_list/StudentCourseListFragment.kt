@@ -12,6 +12,7 @@ import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentStudentCourseListBinding
 import com.home.lexa.domain.models.SearchInfo
+import com.home.lexa.domain.models.StudentCourseFilter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>(FragmentStudentCourseListBinding::inflate) {
@@ -27,7 +28,7 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
         }
     }
 
-    private fun updateFilterUI(filter: CourseFilter) {
+    private fun updateFilterUI(filter: StudentCourseFilter) {
         fun setActive(btn: MaterialButton) {
             btn.setBackgroundResource(R.drawable.bg_filter_active)
             btn.backgroundTintList = null
@@ -47,9 +48,9 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
         setInactive(binding.btnLearning)
 
         when (filter) {
-            CourseFilter.ALL -> setActive(binding.btnAll)
-            CourseFilter.FAVORITE -> setActive(binding.btnFavorite)
-            CourseFilter.LEARNING -> setActive(binding.btnLearning)
+            StudentCourseFilter.ALL -> setActive(binding.btnAll)
+            StudentCourseFilter.FAVORITE -> setActive(binding.btnFavorite)
+            StudentCourseFilter.LEARNING -> setActive(binding.btnLearning)
         }
     }
 
@@ -62,9 +63,9 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
 
         val filterArg = arguments?.getString("filter")
         val initialFilter = try {
-            CourseFilter.valueOf(filterArg ?: "ALL")
+            StudentCourseFilter.valueOf(filterArg ?: "ALL")
         } catch (e: Exception) {
-            CourseFilter.ALL
+            StudentCourseFilter.ALL
         }
 
         viewModel.changeFilter(initialFilter, SearchInfo(
@@ -80,9 +81,8 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
             layoutManager = LinearLayoutManager(context)
         }
 
-
         binding.btnAll.setOnClickListener {
-            if(viewModel.currentFilter.value == CourseFilter.ALL)
+            if(viewModel.currentFilter.value == StudentCourseFilter.ALL)
                 return@setOnClickListener
             binding.headerSection.setHeaderData(
                 title = "Khoá học của tôi",
@@ -90,7 +90,7 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
                 onActionClick = {}
             )
             viewModel.changeFilter(
-                CourseFilter.ALL,
+                StudentCourseFilter.ALL,
                 SearchInfo(
                     query= "",
                     sortBy= "",
@@ -101,14 +101,14 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
         }
 
         binding.btnFavorite.setOnClickListener {
-            if(viewModel.currentFilter.value == CourseFilter.FAVORITE)
+            if(viewModel.currentFilter.value == StudentCourseFilter.FAVORITE)
                 return@setOnClickListener
             binding.headerSection.setHeaderData(
                 title = "Khoá học của tôi",
                 actionText = "0 tất cả",
                 onActionClick = {}
             )
-            viewModel.changeFilter(CourseFilter.FAVORITE,
+            viewModel.changeFilter(StudentCourseFilter.FAVORITE,
                 SearchInfo(
                     query= "",
                     sortBy= "",
@@ -119,14 +119,14 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
         }
 
         binding.btnLearning.setOnClickListener {
-            if(viewModel.currentFilter.value == CourseFilter.LEARNING)
+            if(viewModel.currentFilter.value == StudentCourseFilter.LEARNING)
                 return@setOnClickListener
             binding.headerSection.setHeaderData(
                 title = "Khoá học của tôi",
                 actionText = "0 tất cả",
                 onActionClick = {}
             )
-            viewModel.changeFilter(CourseFilter.LEARNING,
+            viewModel.changeFilter(StudentCourseFilter.LEARNING,
                 SearchInfo(
                     query= "",
                     sortBy= "",
@@ -134,14 +134,6 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
                     limit = 10
                 ),
                 null)
-        }
-
-        if (viewModel.courses.value.isNullOrEmpty()) {
-            viewModel.fetchAllCourses(
-                isLoadMore = false,
-                searchInfo = SearchInfo(query = "", limit = 10),
-                nextCursor = null
-            )
         }
 
         val layoutManager = LinearLayoutManager(context)
@@ -186,14 +178,19 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
 
-        viewModel.courses.observe(viewLifecycleOwner) { list ->
-            courseAdapter.updateData(list)
+        viewModel.courses.observe(viewLifecycleOwner) { shortCourse ->
+            courseAdapter.updateData(shortCourse.data)
 
-            val filter = viewModel.currentFilter.value ?: CourseFilter.ALL
+            val filter = shortCourse.status
             val title = when (filter) {
-                CourseFilter.ALL -> "Tất cả khoá học"
-                CourseFilter.FAVORITE -> "Khoá học yêu thích"
-                CourseFilter.LEARNING -> "Khoá học đang học"
+                is StudentCourseFilter -> {
+                    when (filter) {
+                        StudentCourseFilter.ALL -> "Tất cả khoá học"
+                        StudentCourseFilter.FAVORITE -> "Khoá học yêu thích"
+                        StudentCourseFilter.LEARNING -> "Khoá học đang học"
+                    }
+                }
+                else -> "Khoá học"
             }
 
             binding.headerSection.setHeaderData(
