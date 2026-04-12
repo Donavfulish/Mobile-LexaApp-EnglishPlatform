@@ -17,17 +17,9 @@ class Tag @JvmOverloads constructor(
 
     private val binding = ViewTagBinding.inflate(LayoutInflater.from(context), this)
 
-    /**
-     * Hàm set dữ liệu cho Tag
-     * @param text: Chữ hiển thị (VD: "Ngày 04")
-     * @param colorHex: Mã màu của chữ (VD: "#6A65E9")
-     * @param hasBorder: Có muốn hiển thị viền không?
-     */
     fun setTagData(text: String, colorHex: String, hasBorder: Boolean = false) {
 
         val baseColor = Color.parseColor(colorHex)
-
-
         val backgroundColor = ColorUtils.setAlphaComponent(baseColor, 38)
 
         binding.tvTagName.text = text

@@ -9,31 +9,14 @@ import com.home.lexa.R
 import com.home.lexa.databinding.CardStudentCourseBinding
 import com.home.lexa.domain.models.ShortCourseDto
 
-data class CourseProgressData(
-    val title: String,
-    val description: String,
-    val authorName: String,
-    val userCount: Int,
-    val heartCount: Int,
-    val progressPercent: Int,
-    val actionText: String = "HỌC NGAY",
-    val tagTitle: String,
-    val tagColorHex: String,
-    val thumbnail: String,
-    val authorAvatar: String
-)
+
 class StudentCourseCard @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val binding = CardStudentCourseBinding.inflate(LayoutInflater.from(context), this, true)
 
-    /**
-     * @param data: Dữ liệu truyền vào
-     * @param onActionClick: Hàm callback khi user bấm vào nút "HỌC NGAY"
-     * @param onCardClick: Hàm callback khi user bấm vào phần thân thẻ
-     * @param onOptionsClick: Hàm callback khi user bấm vào icon 3 chấm
-     */
+
     fun setCourseData(
         data: ShortCourseDto,
         onActionClick: () -> Unit,
@@ -58,14 +41,14 @@ class StudentCourseCard @JvmOverloads constructor(
         )
 
         binding.ivThumbnail.load(data.creator_avatar_url) {
-            crossfade(true) // Hiệu ứng mờ dần khi ảnh tải xong cho đẹp
-            placeholder(R.drawable.ic_launcher_background) // Ảnh hiển thị tạm trong lúc chờ tải
-            error(R.drawable.ic_launcher_background) // Ảnh hiển thị nếu link bị lỗi/mất mạng
+            crossfade(true)
+            placeholder(R.drawable.ic_launcher_background)
+            error(R.drawable.ic_launcher_background)
         }
         binding.ivAuthorAvatar.load(data.thumbnail_url) {
-            crossfade(true) // Hiệu ứng mờ dần khi ảnh tải xong cho đẹp
-            placeholder(R.drawable.ic_launcher_background) // Ảnh hiển thị tạm trong lúc chờ tải
-            error(R.drawable.ic_launcher_background) // Ảnh hiển thị nếu link bị lỗi/mất mạng
+            crossfade(true)
+            placeholder(R.drawable.ic_launcher_background)
+            error(R.drawable.ic_launcher_background)
         }
 
         binding.btnAction.setOnClickListener {
