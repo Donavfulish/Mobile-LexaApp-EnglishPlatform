@@ -11,7 +11,6 @@ import com.home.lexa.databinding.FragmentAddEditFlashcardBinding
 import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.CreateFlashcardRequest
-
 import com.home.lexa.domain.models.UpdateFlashcardRequest
 import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.ui.components.FlashcardMini
@@ -36,15 +35,13 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
 
     private var selectedLocalImageUri: Uri? = null
 
-    // Launcher dùng để mở Thư viện ảnh (Photo Picker hiện đại)
+
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
             selectedLocalImageUri = uri
             binding.ivFlashcard.load(uri) {
                 crossfade(true)
             }
-        } else {
-            // Người dùng đóng thư viện mà không chọn ảnh
         }
     }
 
@@ -63,7 +60,7 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
 
 
     private fun setupInputs() {
-        // Cấu hình cho NormalInput (Custom View)
+
         binding.apply {
             inputVocab.setPlaceHolderText("Ví dụ: Ephemeral")
 
@@ -149,7 +146,7 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
             return
         }
 
-        // 3. Map String sang ID (theo format của API)
+        //  Map String sang ID
         val levelId = mapLevelToId(selectedLevelStr)
         val posId = mapPartOfSpeechToId(selectedPosStr)
 
@@ -220,25 +217,25 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
             return
         }
 
-        // 3. Đóng gói thành model Vocabulary (giống cấu trúc thẻ thật)
+
         val previewVocab = Vocabulary(
             level = ColorLabel(
                 selectedLevelStr,
                 "#E0E0E5"
-            ), // Màu nền xám (như bạn đã setup ở màn Flashcard)
+            ),
             imageUrl = imageUrl ?: "",
             word = inputWord,
             pronunciation_url = "",
             transciption = inputTrans,
-            part_of_speech = ColorLabel(selectedPosStr, "#636AE8"), // Màu nền tím
+            part_of_speech = ColorLabel(selectedPosStr, "#636AE8"),
             definition = inputMeaning,
             example = inputExample
         )
 
-        // 4. Khởi tạo thẻ tạm và gọi hàm Zoom để bật Dialog
+
         val previewCard = FlashcardMini(requireContext())
         previewCard.setData(previewVocab)
-        previewCard.zoom() // Mở popup thẻ to ở giữa màn hình!
+        previewCard.zoom()
     }
     //TODO: Chinh lai map
     private fun mapPartOfSpeechToId(posText: String): Int {

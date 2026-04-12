@@ -105,7 +105,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             findNavController().navigate(R.id.action_homeFragment_to_libraryFragment)
         }
         binding.cardLessons.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_libraryFragment)
+            findNavController().navigate(R.id.action_homeFragment_to_courseFragment)
 
         }
 
