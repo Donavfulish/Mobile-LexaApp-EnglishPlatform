@@ -94,11 +94,6 @@ class CourseDetailTeacher(
             }
         }
 
-        binding.backgroundCourse.load(fragment.courseImageUri) {
-            crossfade(true)
-            lifecycle(fragment.viewLifecycleOwner)
-        }
-
         binding.cameraBtn.apply{
             setIcon(ContextCompat.getDrawable(fragment.requireContext(), R.drawable.ic_camera)!!)
             setBackground(ContextCompat.getColor(fragment.requireContext(), R.color.white_opacity))
@@ -128,6 +123,9 @@ class CourseDetailTeacher(
         binding.topicInput.post {
             binding.topicInput.setText(course.type, false)
             binding.topicInput.clearFocus()
+        }
+        binding.backgroundCourse.load(course.thumbnail_url) {
+            crossfade(true)
         }
         binding.courseTitleInput.setText(course.title)
         binding.introductionInput.setText(course.description)
