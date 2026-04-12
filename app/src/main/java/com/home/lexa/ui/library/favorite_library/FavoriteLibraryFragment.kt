@@ -3,10 +3,12 @@ package com.home.lexa.ui.library.favorite_library
 import android.os.Bundle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.data.local.UserManager
 import com.home.lexa.databinding.FragmentFavoriteLibraryBinding
+import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.UserRole
 import com.home.lexa.domain.models.StudentCourseFilter
 import com.home.lexa.ui.library.LibraryFragment
@@ -60,19 +62,54 @@ class FavoriteLibraryFragment : BaseFragment<FragmentFavoriteLibraryBinding>(Fra
             }
         }
 
-        binding.rvCourses.apply {
-            adapter = deckAdapter
-            layoutManager = LinearLayoutManager(context)
+        if (viewModel.courses.value.isNullOrEmpty()) {
+            viewModel.fetchAllCourses(
+                isLoadMore = false,
+                searchInfo = SearchInfo(query = "", limit = 10),
+                nextCursor = null
+            )
         }
 
-        viewModel.fetchAllCourses()
+        val layoutManager = LinearLayoutManager(context)
+        binding.rvCourses.apply {
+            adapter = deckAdapter
+            this.layoutManager = layoutManager
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    if (dy > 0) {
+                        val visibleItemCount = layoutManager.childCount
+                        val totalItemCount = layoutManager.itemCount
+                        val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+
+                        val threshold = 3
+                        if (viewModel.isLoading.value == false && !viewModel.isLastPage) {
+                            if ((visibleItemCount + firstVisibleItemPosition) >= (totalItemCount - threshold)) {
+
+                                viewModel.fetchAllCourses(
+                                    isLoadMore = true,
+                                    searchInfo = SearchInfo(limit = 10),
+                                    nextCursor = viewModel.lastId
+                                )
+                            }
+                        }
+                    }
+                }
+            })
+        }
     }
 
     override fun onResume() {
         super.onResume()
         // Mỗi khi quay lại màn hình Profile (từ màn hình chỉnh sửa), gọi lại API
-        viewModel.fetchAllCourses()
-
+        viewModel.fetchAllCourses(true, SearchInfo(
+            query= "",
+            sortBy= "",
+            order= "",
+            limit = 10
+        ), null)
     }
 
     override fun observeData() {
