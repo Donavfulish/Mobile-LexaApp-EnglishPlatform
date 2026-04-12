@@ -44,6 +44,8 @@
             app:layout_constraintStart_toEndOf="@+id/cvThumbnail"
             app:layout_constraintTop_toTopOf="@+id/cvThumbnail" />
 
+        <!-- Tìm đến đoạn ImageView ivOptions và sửa/thêm như sau -->
+
         <ImageView
             android:id="@+id/ivOptions"
             android:layout_width="24dp"
@@ -56,6 +58,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="#888888" />
+
+        <ImageView
+            android:id="@+id/ivDelete"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="4dp"
+            android:visibility="gone"
+            app:srcCompat="@drawable/trash"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="#FF4D4D"
+            tools:visibility="visible"/>
 
         <TextView
             android:id="@+id/tvCourseTitle"

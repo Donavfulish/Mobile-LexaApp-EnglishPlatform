@@ -73,8 +73,7 @@ class PersonalLibraryFragment : BaseFragment<FragmentPersonalLibraryBinding>(Fra
         }
 
         binding.btnAdd.setOnClickAction {
-            // Khi người dùng bấm nút +, khởi tạo và show Popup
-            val popup = DeckInput(requireContext()) // Dùng 'this' nếu bạn đang ở Activity
+            val popup = DeckInput(requireContext())
 
             popup.showDialog(
                 title = "Tạo bộ từ vựng mới",
@@ -89,7 +88,6 @@ class PersonalLibraryFragment : BaseFragment<FragmentPersonalLibraryBinding>(Fra
     override fun onResume() {
 
         super.onResume()
-        // Mỗi khi quay lại màn hình Profile (từ màn hình chỉnh sửa), gọi lại API
         Log.d("Di vao day cua personal", "Di bo");
         viewModel.fetchAllDecks(true, SearchInfo(
             query= "",

@@ -3,6 +3,7 @@ package com.home.lexa.ui.components
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
 import com.home.lexa.databinding.CardTeacherCourseBinding
 import coil.load
@@ -13,26 +14,18 @@ class TeacherCourseCard @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    // Nạp file XML thu gọn vào đây
     private val binding = CardTeacherCourseBinding.inflate(LayoutInflater.from(context), this, true)
 
-    /**
-     * @param data: Dùng lại model CourseData đã tạo ở thẻ trước
-     * @param onCardClick: Hàm callback khi user bấm vào toàn bộ thẻ
-     * @param onOptionsClick: Hàm callback khi user bấm vào icon 3 chấm
-     */
     fun setCourseData(
         data: ShortCourseDto,
         onCardClick: () -> Unit,
         onOptionsClick: () -> Unit
     ) {
-
         binding.tvCourseTitle.text = data.title
         binding.tvCourseDesc.text = data.description
         binding.tvAuthorName.text = data.creator_name
-        binding.tvHeartCount.text = data.studying_user_count.toString()
+        binding.tvHeartCount.text = data.favorite_user_count.toString()
         binding.tvUserCount.text = data.studying_user_count.toString()
-
 
         binding.tagCategory.setTagData(
             text = data.topic.name,
@@ -41,14 +34,14 @@ class TeacherCourseCard @JvmOverloads constructor(
         )
 
         binding.ivThumbnail.load(data.thumbnail_url) {
-            crossfade(true) // Hiệu ứng mờ dần khi ảnh tải xong cho đẹp
-            placeholder(R.drawable.ic_launcher_background) // Ảnh hiển thị tạm trong lúc chờ tải
-            error(R.drawable.ic_launcher_background) // Ảnh hiển thị nếu link bị lỗi/mất mạng
+            crossfade(true)
+            placeholder(R.drawable.ic_launcher_background)
+            error(R.drawable.ic_launcher_background)
         }
         binding.ivAuthorAvatar.load(data.creator_avatar_url) {
-            crossfade(true) // Hiệu ứng mờ dần khi ảnh tải xong cho đẹp
-            placeholder(R.drawable.ic_launcher_background) // Ảnh hiển thị tạm trong lúc chờ tải
-            error(R.drawable.ic_launcher_background) // Ảnh hiển thị nếu link bị lỗi/mất mạng
+            crossfade(true)
+            placeholder(R.drawable.ic_launcher_background)
+            error(R.drawable.ic_launcher_background)
         }
 
         binding.ivOptions.setOnClickListener {
@@ -57,6 +50,13 @@ class TeacherCourseCard @JvmOverloads constructor(
 
         binding.root.setOnClickListener {
             onCardClick.invoke()
+        }
+    }
+    fun ToggleDeleteMode(status: Boolean, onDeleteClick: () -> Unit) {
+        binding.ivOptions.visibility = if (status) View.GONE else View.VISIBLE
+        binding.ivDelete.visibility = if (status) View.VISIBLE else View.GONE
+        binding.ivDelete.setOnClickListener { 
+            onDeleteClick.invoke()
         }
     }
 }

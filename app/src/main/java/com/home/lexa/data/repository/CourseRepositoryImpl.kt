@@ -137,9 +137,9 @@ class CourseRepositoryImpl(
 
             if (response.isSuccessful && body?.success == true) {
                 Log.d("Đã xoá cache delete", "Cache delete đã được xoá")
-                AppMemoryCache.remove("getAllCourses");
-                AppMemoryCache.remove("getMyCourses");
-                AppMemoryCache.remove("getLearningCourses");
+                AppMemoryCache.removePrefix("getAllCourses");
+                AppMemoryCache.removePrefix("getMyCourses");
+                AppMemoryCache.removePrefix("getLearningCourses");
                 AppMemoryCache.remove("getFeaturedCourses");
                 AppMemoryCache.remove("getStudyingCourses");
                 AppMemoryCache.remove("getTopStudiedCourses");

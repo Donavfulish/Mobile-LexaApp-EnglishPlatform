@@ -1,5 +1,6 @@
 package com.home.lexa.ui.course.teacher_course_list
 
+import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.home.lexa.domain.models.ShortCourseDto
@@ -62,4 +63,21 @@ class TeacherCourseListAdapter(
         this.courses = newList
         notifyDataSetChanged()
     }
+
+    fun ToggleDeleteBtn(recyclerView: RecyclerView, status: Boolean){
+        for(i in 0 until recyclerView.childCount){
+            val child = recyclerView.getChildAt(i)
+            val holder = recyclerView.getChildViewHolder(child) as? TeacherCourseListAdapter.ViewHolder
+            holder?.let{
+                if(status){
+                    it.favoriteDeckCard.ToggleDeleteMode(true) {
+                        Log.e("DEBUG", "hello")
+                    }
+                } else {
+                    it.favoriteDeckCard.ToggleDeleteMode(false){}
+                }
+            }
+        }
+    }
+
 }

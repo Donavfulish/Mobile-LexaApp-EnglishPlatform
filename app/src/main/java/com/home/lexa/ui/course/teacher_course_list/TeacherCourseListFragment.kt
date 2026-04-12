@@ -149,7 +149,6 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
                 actionText = "0 tất cả",
                 onActionClick = {}
             )
-            Log.d("LEARNING", "123")
             viewModel.changeFilter(TeacherCourseFilter.LEARNING,
                 SearchInfo(
                     query= "",
@@ -223,7 +222,15 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
                 return@observe
             }
             courseAdapter.updateData(list.data)
-
+            if(list.status == TeacherCourseFilter.MYCOURSE){
+                binding.rvCourses.post{
+                    courseAdapter.ToggleDeleteBtn(binding.rvCourses, true)
+                }
+            } else {
+                binding.rvCourses.post{
+                    courseAdapter.ToggleDeleteBtn(binding.rvCourses, false)
+                }
+            }
             val filter = viewModel.currentFilter.value ?: TeacherCourseFilter.MYCOURSE
 
             val title = when (filter) {
@@ -240,6 +247,7 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
             )
         }
         viewModel.currentFilter.observe(viewLifecycleOwner) { filter ->
+
             updateFilterUI(filter)
         }
     }
