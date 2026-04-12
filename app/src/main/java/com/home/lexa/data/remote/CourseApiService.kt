@@ -2,17 +2,13 @@ package com.home.lexa.data.remote
 
 import com.home.lexa.core.network.ApiResponse
 import com.home.lexa.domain.models.AllCoursePaginationResponse
-import com.home.lexa.domain.models.CreateCourseRequest
-import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.CourseDetailDto
-import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.domain.models.GetFeaturedCourseResponse
 import com.home.lexa.domain.models.GetStudyingCourseResponse
 import com.home.lexa.domain.models.Topic
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
-import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
@@ -25,8 +21,6 @@ import retrofit2.http.Query
 interface CourseApiService {
     @GET("api/topics")
     suspend fun getTopics(): Response<ApiResponse<List<Topic>>>
-
-    // Gọi GET /api/courses
     @GET("api/courses")
     suspend fun getCourses(
         @Query("query") query: String? = null,
@@ -35,16 +29,12 @@ interface CourseApiService {
         @Query("limit") limit: String? = null,
         @Query("next_id") next_id: String? = null,
         ): Response<ApiResponse<AllCoursePaginationResponse>>
-
-    // Gọi GET /api/courses/featured
     @GET("api/courses/featured")
     suspend fun getFeaturedCourses(): Response<ApiResponse<List<GetFeaturedCourseResponse>>>
-    // Gọi GET /api/courses/studying
     @GET("api/courses/studying")
     suspend fun getStudyingCourses(): Response<ApiResponse<List<GetStudyingCourseResponse>>>
     @GET("api/courses/top-studied")
     suspend fun getTopStudiedCourses(): Response<ApiResponse<List<GetFeaturedCourseResponse>>>
-    // Gọi @GET("api/courses/studying")
     @Multipart
     @POST("api/users/me/courses")
     suspend fun createCourse(
