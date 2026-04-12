@@ -4,6 +4,10 @@ import android.content.Context
 import com.home.lexa.domain.models.LoginRequest
 import com.home.lexa.domain.models.UserInfo
 import com.home.lexa.domain.models.UserRole
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 object PreferenceKeys {
     const val USER_ID = "user_id"
@@ -14,6 +18,8 @@ object PreferenceKeys {
     const val REMEMBERED_EMAIL = "remembered_email"
     const val REMEMBERED_PASSWORD = "remembered_password"
     const val IS_REMEMBERED = "is_remembered"
+    const val STREAK_COUNT = "streak_count"
+    const val LAST_ACTIVE_DATE = "last_active_date"
 }
 
 class UserManager(context: Context) {
@@ -29,6 +35,46 @@ class UserManager(context: Context) {
             .putString(PreferenceKeys.USER_ROLE, user.role.name)
             .putBoolean(PreferenceKeys.IS_EMAIL_VERIFIED, user.isEmailVerified ?: false)
             .apply()
+    }
+
+    fun updateUserName(name: String) {
+        prefs.edit()
+            .putString(PreferenceKeys.USER_NAME, name)
+            .apply()
+    }
+
+
+    fun updateStreak() {
+        val today = getTodayString()
+        val lastDate = prefs.getString(PreferenceKeys.LAST_ACTIVE_DATE, "")
+        var currentStreak = prefs.getInt(PreferenceKeys.STREAK_COUNT, 0)
+
+        if (lastDate == today) {
+            return
+        }
+
+        if (lastDate == getYesterdayString()) {
+            currentStreak++
+        } else {
+            currentStreak = 1
+        }
+
+        prefs.edit()
+            .putInt(PreferenceKeys.STREAK_COUNT, currentStreak)
+            .putString(PreferenceKeys.LAST_ACTIVE_DATE, today)
+            .apply()
+    }
+
+    fun getStreakCount(): Int = prefs.getInt(PreferenceKeys.STREAK_COUNT, 0)
+
+    private fun getTodayString(): String {
+        return SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
+    }
+
+    private fun getYesterdayString(): String {
+        val cal = Calendar.getInstance()
+        cal.add(Calendar.DATE, -1)
+        return SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(cal.time)
     }
 
     fun getUserId(): Int = prefs.getInt(PreferenceKeys.USER_ID, -1)

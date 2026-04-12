@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import com.home.lexa.databinding.ActivityMainBinding
@@ -64,6 +65,9 @@ class MainActivity : AppCompatActivity() {
         binding.root: thẻ gốc -> thẻ <androidx.constraintlayout.widget.ConstraintLayout
         setContentView(View view): Hiển thị giao diện view lên màn hình điện thoại
          */
+
+
+
         setContentView(binding.root)
         setupNavigation()
 
@@ -72,6 +76,15 @@ class MainActivity : AppCompatActivity() {
         handleIntent(intent)
 
         listenToLogout()
+
+
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
 
     }
     private fun setupNavigation() {
@@ -123,6 +136,7 @@ class MainActivity : AppCompatActivity() {
 
         val tvTitle = headerView.findViewById<TextView>(R.id.tvHeaderTitle)
 
+        Log.d("GHi bao main activity", "destinationId: $destinationId and name: ${userManager.getUserName() ?: "Alex"}" )
         when (destinationId) {
 
             R.id.homeFragment -> {
