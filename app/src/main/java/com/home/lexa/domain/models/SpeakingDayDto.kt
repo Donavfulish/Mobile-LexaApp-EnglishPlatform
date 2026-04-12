@@ -9,6 +9,12 @@ data class ShortSpeakingDayDto(
     val completed: Int,
     val paragraphNum: Int
 )
+
+@Serializable
+data class SpeakingDayPagination(
+    val data: List<ShortSpeakingDayDto>,
+    val totalItems: Int
+)
 @Serializable
 data class CreateSpeakingDayRequest(
     val courseId: Long,

@@ -15,7 +15,7 @@ import com.home.lexa.databinding.FragmentCourseDetailBinding
 import com.home.lexa.domain.models.CreateSpeakingDayRequest
 import com.home.lexa.domain.models.DetailFlashcard
 import com.home.lexa.domain.models.EditCourseRequest
-import com.home.lexa.domain.models.SpeakingCourseDetailDto
+import com.home.lexa.domain.models.CourseDetailDto
 import com.home.lexa.ui.components.FlashcardMini
 import com.home.lexa.ui.components.NormalInput
 import com.home.lexa.ui.components.PopUpInput
@@ -103,7 +103,7 @@ class CourseDetailTeacher(
         }
     }
 
-    override fun bindCourseData(course: SpeakingCourseDetailDto) {
+    override fun bindCourseData(course: CourseDetailDto) {
         fragment.list_topic = viewModel.courseDetailData.value?.list_topic!!
         val list_topic_name = fragment.list_topic?.map { it.name }
         val adapter = ArrayAdapter(fragment.requireContext(), android.R.layout.simple_list_item_1, list_topic_name!!)
@@ -152,7 +152,7 @@ class CourseDetailTeacher(
         }
     }
 
-    override fun bindSpeakingData(course: SpeakingCourseDetailDto) {
+    override fun bindSpeakingData(course: CourseDetailDto) {
         course.list_speaking_day.forEachIndexed {index, day ->
             val dayCard = TeacherSpeakingDayCard(fragment.requireContext()).apply {
                     setData(

@@ -73,7 +73,7 @@ data class CreatorDto(
 
 
 @Serializable
-data class SpeakingCourseDetailDto(
+data class CourseDetailDto(
     val id: Long,
     val thumbnail_url: String?,
     val creator: CreatorDto,

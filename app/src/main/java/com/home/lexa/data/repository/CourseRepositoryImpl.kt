@@ -7,7 +7,7 @@ import com.home.lexa.domain.models.AllCoursePaginationResponse
 import com.home.lexa.domain.models.CreateCourseRequest
 import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.ShortCourseDto
-import com.home.lexa.domain.models.SpeakingCourseDetailDto
+import com.home.lexa.domain.models.CourseDetailDto
 import com.home.lexa.domain.models.GetStudyingCourseResponse
 import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.repository.CourseRepository
@@ -214,18 +214,18 @@ class CourseRepositoryImpl(
         }
     }
 
-    override suspend fun getSpeakingDayCourse(courseId: Long): Result<SpeakingCourseDetailDto?> {
+    override suspend fun getCourseDetail(courseId: Long): Result<CourseDetailDto?> {
         return try {
-            val courses: SpeakingCourseDetailDto? = AppMemoryCache.get("getSpeakingDayCourse_${courseId}");
+            val courses: CourseDetailDto? = AppMemoryCache.get("getCourseDetail_${courseId}");
             if (courses != null){
                 return Result.success(courses);
             }
-            val response = apiService.getSpeakingDayCourse(courseId)
+            val response = apiService.getCourseDetail(courseId)
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
                 val data = body.data;
-                AppMemoryCache.put("getSpeakingDayCourse_${courseId}", data as Any);
+                AppMemoryCache.put("getCourseDetail_${courseId}", data as Any);
                 Result.success(data);
             } else {
                 Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ"))

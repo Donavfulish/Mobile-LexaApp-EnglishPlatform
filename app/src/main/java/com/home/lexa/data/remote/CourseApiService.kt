@@ -4,7 +4,7 @@ import com.home.lexa.core.network.ApiResponse
 import com.home.lexa.domain.models.AllCoursePaginationResponse
 import com.home.lexa.domain.models.CreateCourseRequest
 import com.home.lexa.domain.models.EditCourseRequest
-import com.home.lexa.domain.models.SpeakingCourseDetailDto
+import com.home.lexa.domain.models.CourseDetailDto
 import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.domain.models.GetFeaturedCourseResponse
 import com.home.lexa.domain.models.GetStudyingCourseResponse
@@ -78,10 +78,10 @@ interface CourseApiService {
         @Query("next_id") next_id: String? = null,
     ): Response<ApiResponse<AllCoursePaginationResponse>>
 
-    @GET("/api/courses/{courseId}/speaking-days")
-    suspend fun getSpeakingDayCourse(
+    @GET("/api/courses/{courseId}/course-detail")
+    suspend fun getCourseDetail(
         @Path("courseId") courseId: Long
-    ) : Response<ApiResponse<SpeakingCourseDetailDto>>
+    ) : Response<ApiResponse<CourseDetailDto>>
 
     @POST("api/courses/{courseId}/favorite")
     suspend fun favoriteCourse(@Path("courseId") courseId: Long): Response<ApiResponse<Map<String, Any>>>

@@ -9,7 +9,7 @@ import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.CreateCourseRequest
 import com.home.lexa.domain.models.CreateSpeakingDayRequest
 import com.home.lexa.domain.models.DetailFlashcard
-import com.home.lexa.domain.models.SpeakingCourseDetailDto
+import com.home.lexa.domain.models.CourseDetailDto
 import com.home.lexa.domain.repository.CourseRepository
 import com.home.lexa.domain.repository.FlashcardRepository
 import kotlinx.coroutines.launch
@@ -31,8 +31,8 @@ class CourseDetailViewModel(
     val createStatus: LiveData<Result<Unit>?> get() = _createStatus
     private val _updateStatus = MutableLiveData<Result<Unit>?>()
     val updateStatus: LiveData<Result<Unit>?> get() = _updateStatus
-    private val _courseDetailData = MutableLiveData<SpeakingCourseDetailDto?>()
-    val courseDetailData: LiveData<SpeakingCourseDetailDto?> get() = _courseDetailData
+    private val _courseDetailData = MutableLiveData<CourseDetailDto?>()
+    val courseDetailData: LiveData<CourseDetailDto?> get() = _courseDetailData
     private val _flashcardDetailData = MutableLiveData<List<DetailFlashcard>>()
     val flashcardDetailData: LiveData<List<DetailFlashcard>> get() = _flashcardDetailData
     private val _isLoading = MutableLiveData<Boolean>()
@@ -95,7 +95,7 @@ class CourseDetailViewModel(
         viewModelScope.launch {
             try {
                 _isLoading.value = true
-                val course = courseRepository.getSpeakingDayCourse(courseId)
+                val course = courseRepository.getCourseDetail(courseId)
                 course.onSuccess { data ->
                     _courseDetailData.value = data
                     _isLoading.value = false
@@ -130,7 +130,7 @@ class CourseDetailViewModel(
         viewModelScope.launch {
             val result = courseRepository.editCourse(courseId, request)
             result.onSuccess {
-                AppMemoryCache.remove("getSpeakingDayCourse_${courseId}")
+                AppMemoryCache.remove("getCourseDetail_${courseId}")
                 _updateStatus.value = Result.success(Unit)
             }.onFailure {
                 _updateStatus.value = Result.failure(it)
@@ -146,7 +146,7 @@ class CourseDetailViewModel(
         viewModelScope.launch {
             val result = speakingDayRepository.createSpeakingDay(request)
             result.onSuccess {
-                AppMemoryCache.remove("getSpeakingDayCourse_${request.courseId}")
+                AppMemoryCache.remove("getCourseDetail_${request.courseId}")
                 _createStatus.value = Result.success(Unit)
             }.onFailure {
                 Log.e("CREATE_STATUS", "Lỗi: ${it.message}", it)
@@ -183,7 +183,7 @@ class CourseDetailViewModel(
 
             if (courseResult.isSuccess && deckResult.isSuccess) {
                 _favortieStatus.value = Result.success(Unit)
-                AppMemoryCache.remove("getSpeakingDayCourse_${courseId}")
+                AppMemoryCache.remove("getCourseDetail_${courseId}")
             } else {
                 _favortieStatus.value =  Result.failure(Exception("Lỗi cập nhật"))
             }
@@ -204,7 +204,7 @@ class CourseDetailViewModel(
 
                 if (courseResult.isSuccess && deckResult.isSuccess) {
                     _favortieStatus.value = Result.success(Unit)
-                    AppMemoryCache.remove("getSpeakingDayCourse_${courseId}")
+                    AppMemoryCache.remove("getCourseDetail_${courseId}")
                 } else {
                     _favortieStatus.value =  Result.failure(Exception("Lỗi cập nhật"))
                 }

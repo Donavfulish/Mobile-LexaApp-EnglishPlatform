@@ -4,7 +4,7 @@ import com.home.lexa.domain.models.AllCoursePaginationResponse
 import com.home.lexa.domain.models.CreateCourseRequest
 import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.ShortCourseDto
-import com.home.lexa.domain.models.SpeakingCourseDetailDto
+import com.home.lexa.domain.models.CourseDetailDto
 import com.home.lexa.domain.models.GetFeaturedCourseResponse
 import com.home.lexa.domain.models.GetStudyingCourseResponse
 import com.home.lexa.domain.models.SearchInfo
@@ -17,7 +17,7 @@ interface CourseRepository {
     suspend fun editCourse(courseId: Long, request: EditCourseRequest): Result<Boolean>
     suspend fun deleteCourse(courseId: Long): Result<Boolean>
     suspend fun getFavoriteCourses(searchInfo: SearchInfo, nextCursor: Long?): Result<AllCoursePaginationResponse>
-    suspend fun getSpeakingDayCourse(courseId: Long): Result<SpeakingCourseDetailDto?>
+    suspend fun getCourseDetail(courseId: Long): Result<CourseDetailDto?>
     suspend fun getFeaturedCourses(): Result<List<GetFeaturedCourseResponse>>
     suspend fun getTopStudiedCourses(): Result<List<GetFeaturedCourseResponse>>
     suspend fun getStudyingCourses(): Result<List<GetStudyingCourseResponse>>
