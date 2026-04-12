@@ -1,6 +1,7 @@
 package com.home.lexa.ui.auth
 
 import android.app.Application
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -51,6 +52,7 @@ class AuthViewModel (
     private var selectedPedagogyUri: Uri? = null
 
     val oauthGoogleResult = MutableLiveData<OAuthGoogleResult?>()
+    val rememberedLoginRequest = MutableLiveData<LoginRequest?>(null)
 
 //    companion object {
 //        private var instance: AuthViewModel? = null
@@ -250,6 +252,20 @@ class AuthViewModel (
 
     fun commitEmailVerified() {
         return userManager.commitEmailVerified()
+    }
+
+    fun rememberLoginRequest(request: LoginRequest) {
+        userManager.rememberLoginRequest(request)
+    }
+
+    fun forgetLoginRequest() {
+        userManager.forgetLoginRequest()
+    }
+
+    fun getRememberedLoginRequest() {
+        val saved = userManager.getRememberLoginRequest()
+        println("DEBUG: Loaded from Prefs: $saved")
+        rememberedLoginRequest.value = saved
     }
 
     private fun saveUserAndToken(data: AuthResult?) {

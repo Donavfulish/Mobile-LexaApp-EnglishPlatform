@@ -13,6 +13,7 @@ import com.home.lexa.domain.models.LoginRequest
 import com.home.lexa.ui.auth.AuthState
 import com.home.lexa.ui.auth.AuthViewModel
 import com.home.lexa.ui.auth.GoogleUrls
+import kotlinx.coroutines.flow.observeOn
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
@@ -25,6 +26,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     private val colorBorder = Color.parseColor("#E0E0E0")
 
     override fun setupViews() {
+        viewModel.getRememberedLoginRequest()
         setupInputs()
         setupButtons()
     }
@@ -57,7 +59,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 val password = binding.inputPassword.getText().trim()
 
                 if (email.isNotEmpty() && password.isNotEmpty()) {
-                    viewModel.login(LoginRequest(email, password))
+                    val loginRequest = LoginRequest(email, password)
+
+                    viewModel.login(loginRequest)
                 } else {
                     Toast.makeText(requireContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show()
                 }
@@ -114,6 +118,17 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                         binding.btnLogin.setText("Đang xử lý...", Color.WHITE)
                     }
                     is AuthState.Success -> {
+                        val currentRequest = LoginRequest(
+                            binding.inputEmail.getText().trim(),
+                            binding.inputPassword.getText().trim()
+                        )
+
+                        if (binding.cbRememberMe.isChecked) {
+                            viewModel.rememberLoginRequest(currentRequest)
+                        } else {
+                            viewModel.forgetLoginRequest()
+                        }
+
                         viewModel.resetState()
 
                         Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
@@ -137,6 +152,15 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 }
             }
         }
+
+        viewModel.rememberedLoginRequest.observe(viewLifecycleOwner) { value ->
+            if (value == null) return@observe
+
+            binding.inputEmail.setText(value.email)
+            binding.inputPassword.setText(value.password)
+            binding.cbRememberMe.isChecked = true
+        }
+
 
         viewModel.oauthGoogleResult.observe(viewLifecycleOwner) { data ->
             data?.let {

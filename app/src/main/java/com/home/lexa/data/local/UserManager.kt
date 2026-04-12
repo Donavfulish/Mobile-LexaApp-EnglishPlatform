@@ -1,6 +1,7 @@
 package com.home.lexa.data.local
 
 import android.content.Context
+import com.home.lexa.domain.models.LoginRequest
 import com.home.lexa.domain.models.UserInfo
 import com.home.lexa.domain.models.UserRole
 
@@ -10,11 +11,15 @@ object PreferenceKeys {
     const val USER_NAME = "user_name"
     const val USER_ROLE = "user_role"
     const val IS_EMAIL_VERIFIED = "is_email_verified"
+    const val REMEMBERED_EMAIL = "remembered_email"
+    const val REMEMBERED_PASSWORD = "remembered_password"
+    const val IS_REMEMBERED = "is_remembered"
 }
 
 class UserManager(context: Context) {
 
     private val prefs = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+    private val rememberPrefs = context.getSharedPreferences("remember_prefs", Context.MODE_PRIVATE)
 
     fun saveUser(user: UserInfo) {
         prefs.edit()
@@ -43,5 +48,38 @@ class UserManager(context: Context) {
 
     fun clearUser() {
         prefs.edit().clear().apply()
+    }
+
+    fun rememberLoginRequest(request: LoginRequest) {
+        println("DEBUG: Save Remember Login: ${request.email} - ${request.password}")
+        rememberPrefs.edit()
+            .putBoolean(PreferenceKeys.IS_REMEMBERED, true)
+            .putString(PreferenceKeys.REMEMBERED_EMAIL, request.email)
+            .putString(PreferenceKeys.REMEMBERED_PASSWORD, request.password)
+            .apply()
+    }
+
+    fun forgetLoginRequest() {
+        rememberPrefs.edit()
+            .putBoolean(PreferenceKeys.IS_REMEMBERED, false)
+            .remove(PreferenceKeys.REMEMBERED_EMAIL)
+            .remove(PreferenceKeys.REMEMBERED_PASSWORD)
+            .apply()
+    }
+
+    fun getRememberLoginRequest(): LoginRequest? {
+        val email = rememberPrefs.getString(PreferenceKeys.REMEMBERED_EMAIL, null) ?: ""
+        val password = rememberPrefs.getString(PreferenceKeys.REMEMBERED_PASSWORD, null) ?: ""
+
+        val is_remembered = rememberPrefs.getBoolean(PreferenceKeys.IS_REMEMBERED, false)
+
+        println("REMEMBER_LOGIN: $is_remembered : $email - $password")
+
+        if (!is_remembered) return null
+
+        return LoginRequest(
+            email = rememberPrefs.getString(PreferenceKeys.REMEMBERED_EMAIL, null) ?: "",
+            password = rememberPrefs.getString(PreferenceKeys.REMEMBERED_PASSWORD, null) ?: ""
+        )
     }
 }

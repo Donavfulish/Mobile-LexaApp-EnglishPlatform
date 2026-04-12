@@ -167,22 +167,22 @@ class CourseDetailTeacher(
     override fun bindSpeakingData(course: SpeakingCourseDetailDto) {
         course.list_speaking_day.forEachIndexed {index, day ->
             val dayCard = TeacherSpeakingDayCard(fragment.requireContext()).apply {
-                    setData(
-                        _day = index + 1,
-                        _title = day.title,
-                        _paragraphNum = day.paragraphNum
+                setData(
+                    _day = index + 1,
+                    _title = day.title,
+                    _paragraphNum = day.paragraphNum
+                )
+                setOnClickAction {
+                    val bundle = bundleOf(
+                        "courseId" to course.id,
+                        "speakingDayId" to day.speakingDayId,
+                        "order" to index
                     )
-                    setOnClickAction {
-                        val bundle = bundleOf(
-                            "courseId" to course.id,
-                            "speakingDayId" to day.speakingDayId,
-                            "order" to index
-                        )
-                        fragment.findNavController().navigate(
-                            R.id.action_courseDetailFragment_to_speakingPracticeFragment,
-                            bundle
-                        )
-                    }
+                    fragment.findNavController().navigate(
+                        R.id.action_courseDetailFragment_to_speakingPracticeFragment,
+                        bundle
+                    )
+                }
             }
 
             val params = android.widget.LinearLayout.LayoutParams(
