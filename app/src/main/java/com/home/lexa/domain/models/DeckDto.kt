@@ -10,7 +10,6 @@ data class DeckDto(
     val vocabNumber: Int,
     val createdAt: String
 )
-
 @Serializable
 data class DeckResult(
     val deckId: Long,

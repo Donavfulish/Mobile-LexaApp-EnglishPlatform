@@ -179,7 +179,7 @@ class DeckRepositoryImpl(
 
             if (response.isSuccessful ) {
                 Log.d("Đã xoá cache create", "Cache create đã được xoá")
-                AppMemoryCache.remove("getAllDecks");
+                AppMemoryCache.removePrefix("getAllDecks");
                 val newId: Long = 1;
                 Result.success(newId)
             } else {
@@ -198,7 +198,7 @@ class DeckRepositoryImpl(
 
             if (response.isSuccessful && body?.success == true) {
                 Log.d("Đã xoá cache update", "Cache update đã được xoá")
-                AppMemoryCache.remove("getAllDecks");
+                AppMemoryCache.removePrefix("getAllDecks");
                 Result.success(body.data ?: true)
             } else {
 
@@ -216,7 +216,7 @@ class DeckRepositoryImpl(
 
             if (response.isSuccessful && body?.success == true) {
                 Log.d("Đã xoá cache delete", "Cache delete đã được xoá")
-                AppMemoryCache.remove("getAllDecks");
+                AppMemoryCache.removePrefix("getAllDecks");
                 Result.success(body.data ?: true)
             } else {
                 Result.failure(Exception(body?.message ?: "Lỗi khi xóa deck"))
