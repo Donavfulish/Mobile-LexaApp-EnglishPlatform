@@ -120,7 +120,7 @@ class AuthViewModel (
                     _signupState.value =
                         AuthState.Success(authResult.message ?: "Đăng ký thành công")
                 } else {
-                    _signupState.value = AuthState.Error(authResult.message ?: "Lỗi đăng ký")
+                    _signupState.value = AuthState.Error("Email đã được sử dụng")
                 }
             }.onFailure { error ->
                 _signupState.value = AuthState.Error(error.message ?: "Có lỗi xảy ra")

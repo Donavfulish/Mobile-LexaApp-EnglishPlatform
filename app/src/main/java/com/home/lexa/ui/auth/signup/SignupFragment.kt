@@ -288,11 +288,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                             )
                         )
 
-                        viewModel.sendOTP(email)
-
                         viewModel.resetState()
-
-                        navigateToOTPFragment(email)
                     } else {
                         Toast.makeText(requireContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show()
                     }
@@ -342,12 +338,17 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                             Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
                             findNavController().navigate(R.id.action_signupFragment_to_homeFragment)
                         }
+
                         viewModel.resetOAuth()
                         viewModel.resetState()
+
+                        val email = binding.inputEmail.getText()
+                        viewModel.sendOTP(email)
+                        navigateToOTPFragment(email)
                     }
                     is AuthState.Error -> {
                         binding.btnSignup.setText("Đăng Ký", Color.WHITE) // Khôi phục nút
-                        Toast.makeText(requireContext(), "Tài khoản đăng ký không hợp lệ", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), "Email đã được sử dụng", Toast.LENGTH_LONG).show()
                     }
                 }
             }
