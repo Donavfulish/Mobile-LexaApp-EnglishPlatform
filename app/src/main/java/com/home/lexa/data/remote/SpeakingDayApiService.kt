@@ -3,6 +3,7 @@ package com.home.lexa.data.remote
 import com.home.lexa.core.network.ApiResponse
 import com.home.lexa.domain.models.CreateSpeakingDayRequest
 import com.home.lexa.domain.models.EditSpeakingDayRequest
+import com.home.lexa.domain.models.ReorderParagraphsRequest
 import com.home.lexa.domain.models.ShortParagraphSpeakingDayDto
 import retrofit2.Response
 import retrofit2.http.Body
@@ -24,6 +25,12 @@ interface SpeakingDayApiService {
 
     @PATCH("api/users/me/speaking-day/{speakingDayId}")
     suspend fun editSpeakingDay(@Path("speakingDayId") speakingDayId: Long, @Body request: EditSpeakingDayRequest): Response<ApiResponse<Any>>
+
+    @PATCH("api/users/me/speaking-day/{speakingDayId}/paragraphs/reorder")
+    suspend fun reorderParagraphs(
+        @Path("speakingDayId") speakingDayId: Long,
+        @Body request: ReorderParagraphsRequest
+    ): Response<ApiResponse<Any>>
 
     @DELETE("api/users/me/speaking-day/{speakingDayId}")
     suspend fun deleteSpeakingDay(@Path("speakingDayId") speakingDayId: Long): Response<ApiResponse<Any>>

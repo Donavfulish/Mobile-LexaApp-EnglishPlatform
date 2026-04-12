@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.View
 import android.widget.FrameLayout
 import com.home.lexa.databinding.CardParagraphEditBinding
 
@@ -11,9 +12,9 @@ class ParagraphEditCard @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
     private val binding = CardParagraphEditBinding.inflate(LayoutInflater.from(context), this, true)
-    
+
     private var startX = 0f
-    private val swipeThreshold = 100f 
+    private val swipeThreshold = 100f
     private val actionButtonWidth = 200f // Độ rộng của nút (pixel)
 
     fun setData(_order: Int, _paragraph: String) {
@@ -54,13 +55,22 @@ class ParagraphEditCard @JvmOverloads constructor(
                             .setDuration(200)
                             .start()
                     }
-                    
+
                     if (Math.abs(diffX) < 10) v.performClick()
                     true
                 }
                 else -> false
             }
         }
+    }
+
+    /**
+     * Bắt sự kiện Touch riêng cho icon kéo thả (6 chấm)
+     * Lưu ý: Đảm bảo icon 6 chấm trong XML có ID là ic_drag
+     */
+    fun setOnDragHandleTouchListener(listener: OnTouchListener) {
+        // Thay binding.icDrag bằng ID thật của icon 6 chấm trong file card_paragraph_edit.xml của bạn
+        binding.ivDragHandle.setOnTouchListener(listener)
     }
 
     /**

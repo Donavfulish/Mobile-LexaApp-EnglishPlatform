@@ -5,6 +5,7 @@ import com.home.lexa.data.remote.SpeakingDayApiService
 import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.CreateSpeakingDayRequest
 import com.home.lexa.domain.models.EditSpeakingDayRequest
+import com.home.lexa.domain.models.ReorderParagraphsRequest
 import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.domain.models.ShortParagraphSpeakingDayDto
 import com.home.lexa.domain.repository.SpeakingDayRepository
@@ -78,6 +79,23 @@ class SpeakingDayRepositoryImpl(
                 Result.success(true)
             } else {
                 Result.failure(Exception(body?.message ?: "Xóa bài học thất bại"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun reorderParagraphs(speakingDayId: Long, request: ReorderParagraphsRequest): Result<Boolean> {
+        return try {
+            val response = apiService.reorderParagraphs(speakingDayId, request)
+            val body = response.body()
+
+            if (response.isSuccessful && body?.success == true) {
+                Log.d("Đã xoá cache reorder", "Cache getParagraphSpeakingDay đã được xoá")
+                AppMemoryCache.remove("getParagraphSpeakingDay")
+                Result.success(true)
+            } else {
+                Result.failure(Exception(body?.message ?: "Cập nhật thứ tự thất bại"))
             }
         } catch (e: Exception) {
             Result.failure(e)
