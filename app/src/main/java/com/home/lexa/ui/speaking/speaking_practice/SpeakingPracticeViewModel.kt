@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.CreateParagraphRequest
 import com.home.lexa.domain.models.EditSpeakingDayRequest
+import com.home.lexa.domain.models.ReorderParagraphsRequest
 import com.home.lexa.domain.models.ShortParagraphSpeakingDayDto
 import com.home.lexa.domain.models.UpdateParagraphRequest
 import com.home.lexa.domain.repository.ParagraphRepository
@@ -38,6 +39,9 @@ class SpeakingPracticeViewModel(
     private val _deleteSpeakingDayStatus = MutableLiveData<Result<Unit>?>()
     val deleteSpeakingDayStatus: LiveData<Result<Unit>?> get() = _deleteSpeakingDayStatus
 
+    private val _reorderStatus = MutableLiveData<Result<Unit>?>()
+    val reorderStatus: LiveData<Result<Unit>?> get() = _reorderStatus
+
     fun loadParagraphList(speakingDayId: Long){
         viewModelScope.launch {
             try {
@@ -65,6 +69,19 @@ class SpeakingPracticeViewModel(
                 _updateStatus.value = Result.success(Unit)
             }.onFailure {
                 _updateStatus.value = Result.failure(it)
+            }
+        }
+    }
+
+    fun reorderParagraphs(speakingDayId: Long, request: ReorderParagraphsRequest) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val result = speakingDayRepository.reorderParagraphs(speakingDayId, request)
+            result.onSuccess {
+                _reorderStatus.value = Result.success(Unit)
+            }.onFailure {
+                _reorderStatus.value = Result.failure(it)
+                _isLoading.value = false
             }
         }
     }
@@ -136,6 +153,10 @@ class SpeakingPracticeViewModel(
 
     fun resetCreateStatus() {
         _createStatus.value = null
+    }
+
+    fun resetReorderStatus() {
+        _reorderStatus.value = null
     }
 
     fun resetDeleteStatus() {

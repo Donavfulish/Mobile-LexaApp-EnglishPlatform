@@ -24,3 +24,14 @@ data class ShortParagraphSpeakingDayDto(
     val title: String?,
     val list_paragraphs: List<ShortParagraphDto>
 )
+
+@Serializable
+data class ParagraphOrderDto(
+    val id: Long,
+    val order: Long
+)
+
+@Serializable
+data class ReorderParagraphsRequest(
+    val paragraphs: List<ParagraphOrderDto>
+)
