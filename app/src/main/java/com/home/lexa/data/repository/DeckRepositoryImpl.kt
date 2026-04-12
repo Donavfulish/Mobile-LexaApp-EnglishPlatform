@@ -3,10 +3,13 @@ package com.home.lexa.data.repository
 import android.util.Log
 import com.home.lexa.data.remote.DeckApiService
 import com.home.lexa.di.AppMemoryCache
+import com.home.lexa.domain.models.AllCoursePaginationResponse
+import com.home.lexa.domain.models.AllDeckPaginationResponse
 import com.home.lexa.domain.models.CreateDeckRequest
 import com.home.lexa.domain.models.CreateDeckResultRequest
 import com.home.lexa.domain.models.DeckDto
 import com.home.lexa.domain.models.DeckResult
+import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.models.UpdateDeckRequest
 import com.home.lexa.domain.models.UpdateDeckResultRequest
@@ -16,25 +19,104 @@ class DeckRepositoryImpl(
     private val apiService: DeckApiService
 ) : DeckRepository {
 
-    override suspend fun getAllDecks(): Result<List<DeckDto>> {
+    private fun generateCacheKey(type: String, searchInfo: SearchInfo): String {
+        val q = searchInfo.query ?: ""
+        val sort = searchInfo.sortBy ?: ""
+        val order = searchInfo.order ?: ""
+        return "${type}_${q}_${sort}_${order}"
+    }
+
+    override suspend fun getAllDecks(
+        searchInfo: SearchInfo,
+        nextCursor: Long?
+    ): Result<AllDeckPaginationResponse> {
         return try {
-            val decks: List<DeckDto>? = AppMemoryCache.get("getAllDecks");
-            Log.d("Gia tri deck", "deck $decks")
-            if (decks != null){
-                return Result.success(decks);
+            val cacheKey = generateCacheKey("getAllDecks", searchInfo)
+            val isFirstPage = nextCursor == null
+
+            if (isFirstPage) {
+                val cachedResponse: AllDeckPaginationResponse? = AppMemoryCache.get(cacheKey)
+                if (cachedResponse != null && cachedResponse.data.isNotEmpty()) {
+                    return Result.success(cachedResponse)
+                }
             }
-            val response = apiService.getAllDecks()
+
+            val response = apiService.getAllDecks(
+                query = searchInfo.query,
+                sort = searchInfo.sortBy,
+                order = searchInfo.order,
+                limit = searchInfo.limit?.toString(),
+                next_id = nextCursor?.toString(),
+            )
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
-                val data = body.data ?: emptyList();
-                AppMemoryCache.put("getAllDecks", data);
-                Result.success(data);
+                val apiPaginationData = body.data ?: throw Exception("Dữ liệu data trong body bị null")
+                val newCourses = apiPaginationData.data
+
+                val finalCourses = if (isFirstPage) {
+                    newCourses
+                } else {
+                    val oldCache: AllDeckPaginationResponse? = AppMemoryCache.get(cacheKey)
+                    val oldCourses = oldCache?.data ?: emptyList()
+                    oldCourses + newCourses
+                }
+                val updatedResponse = apiPaginationData.copy(data = finalCourses)
+                AppMemoryCache.put(cacheKey, updatedResponse)
+                Result.success(updatedResponse)
             } else {
-                Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ"))
+                val errorMsg = body?.message ?: "Lỗi từ máy chủ: ${response.code()}"
+                Result.failure(Exception(errorMsg))
             }
         } catch (e: Exception) {
-            Result.failure(Exception("Lỗi kết nối: ${e.message}"))
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getFavoriteDecks(
+        searchInfo: SearchInfo,
+        nextCursor: Long?
+    ): Result<AllCoursePaginationResponse> {
+        return try {
+            val cacheKey = generateCacheKey("getFavoriteDecks", searchInfo)
+            val isFirstPage = nextCursor == null
+
+            if (isFirstPage) {
+                val cachedResponse: AllCoursePaginationResponse? = AppMemoryCache.get(cacheKey)
+                if (cachedResponse != null && cachedResponse.data.isNotEmpty()) {
+                    return Result.success(cachedResponse)
+                }
+            }
+
+            val response = apiService.getFavoriteDecks(
+                query = searchInfo.query,
+                sort = searchInfo.sortBy,
+                order = searchInfo.order,
+                limit = searchInfo.limit?.toString(),
+                next_id = nextCursor?.toString(),
+            )
+            val body = response.body()
+
+            if (response.isSuccessful && body?.success == true) {
+                val apiPaginationData = body.data ?: throw Exception("Dữ liệu data trong body bị null")
+                val newCourses = apiPaginationData.data
+
+                val finalCourses = if (isFirstPage) {
+                    newCourses
+                } else {
+                    val oldCache: AllCoursePaginationResponse? = AppMemoryCache.get(cacheKey)
+                    val oldCourses = oldCache?.data ?: emptyList()
+                    oldCourses + newCourses
+                }
+                val updatedResponse = apiPaginationData.copy(data = finalCourses)
+                AppMemoryCache.put(cacheKey, updatedResponse)
+                Result.success(updatedResponse)
+            } else {
+                val errorMsg = body?.message ?: "Lỗi từ máy chủ: ${response.code()}"
+                Result.failure(Exception(errorMsg))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 

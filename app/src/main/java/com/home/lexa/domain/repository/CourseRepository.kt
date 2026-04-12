@@ -16,8 +16,6 @@ interface CourseRepository {
     suspend fun createCourse(request: CreateCourseRequest): Result<Long>
     suspend fun editCourse(courseId: Long, request: EditCourseRequest): Result<Boolean>
     suspend fun deleteCourse(courseId: Long): Result<Boolean>
-
-    suspend fun getFavoriteDecks(): Result<List<ShortCourseDto>>
     suspend fun getFavoriteCourses(searchInfo: SearchInfo, nextCursor: Long?): Result<AllCoursePaginationResponse>
     suspend fun getSpeakingDayCourse(courseId: Long): Result<SpeakingCourseDetailDto?>
     suspend fun getFeaturedCourses(): Result<List<GetFeaturedCourseResponse>>

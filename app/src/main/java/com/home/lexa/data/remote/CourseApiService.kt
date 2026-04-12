@@ -50,10 +50,6 @@ interface CourseApiService {
     @DELETE("api/users/me/courses/{courseId}")
     suspend fun deleteCourse(@Path("courseId") courseId: Long): Response<ApiResponse<Map<String, Any>>>
 
-
-    @GET("/api/user/me/deck/favorite")
-    suspend fun getFavoriteDecks(): Response<ApiResponse<List<ShortCourseDto>>>
-
     @GET("/api/user/me/course/favorite")
     suspend fun getFavoriteCourses(
         @Query("query") query: String? = null,

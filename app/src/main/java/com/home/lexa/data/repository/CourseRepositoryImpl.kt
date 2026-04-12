@@ -235,31 +235,6 @@ class CourseRepositoryImpl(
         }
     }
 
-    override suspend fun getFavoriteDecks(): Result<List<ShortCourseDto>> {
-        return try {
-            val courses: List<ShortCourseDto>? = AppMemoryCache.get("getFavoriteDecks");
-            if (courses != null){
-                return Result.success(courses);
-            }
-            val response = apiService.getFavoriteDecks()
-            val body = response.body()
-
-            if (response.isSuccessful && body?.success == true) {
-                // Thành công: bóc tách dữ liệu ra và trả về
-
-                val data = body.data ?: emptyList();
-                AppMemoryCache.put("getFavoriteDecks", data);
-                Result.success(data);
-            } else {
-                // Thất bại từ Backend (Ví dụ lỗi 400 do validation)
-                Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ"))
-            }
-        } catch (e: Exception) {
-            // Lỗi do mất mạng, không connect được server...
-            Result.failure(e)
-        }
-    }
-
     override suspend fun getFavoriteCourses(
         searchInfo: SearchInfo,
         nextCursor: Long?
