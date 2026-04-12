@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import com.home.lexa.domain.models.GetFeaturedCourseResponse
 import com.home.lexa.domain.models.GetStudyingCourseResponse
+import com.home.lexa.data.local.UserManager
 
 data class UserStats(
     val streakDays: Int,
@@ -16,7 +17,7 @@ data class UserStats(
     val monthlyHours: Float
 )
 
-class HomeViewModel(private val repository: CourseRepository) : ViewModel() {
+class HomeViewModel(private val repository: CourseRepository, private val userManager: UserManager) : ViewModel() {
 
 
 
@@ -30,7 +31,7 @@ class HomeViewModel(private val repository: CourseRepository) : ViewModel() {
     private val _topStudiedCoursesFlow = MutableStateFlow<List<GetFeaturedCourseResponse>>(emptyList())
     val topStudiedCoursesFlow: StateFlow<List<GetFeaturedCourseResponse>> = _topStudiedCoursesFlow.asStateFlow()
 
-    private val _userStatsFlow = MutableStateFlow(UserStats(3, 5f, 6f))
+    private val _userStatsFlow = MutableStateFlow(UserStats(userManager.getStreakCount(), 5f, 6f))
     val userStatsFlow: StateFlow<UserStats> = _userStatsFlow.asStateFlow()
 
     init {

@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
     <application
         android:name=".LexaApp"
         android:usesCleartextTraffic="true"
@@ -14,6 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
+
 
         <activity
             android:name=".MainActivity"
@@ -32,6 +35,9 @@
                 <data android:scheme="lexa" android:host="auth-success" />
             </intent-filter>
         </activity>
+
     </application>
+
+
 
 </manifest>

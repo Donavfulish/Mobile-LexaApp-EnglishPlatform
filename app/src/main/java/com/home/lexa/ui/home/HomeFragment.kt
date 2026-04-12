@@ -2,6 +2,7 @@ package com.home.lexa.ui.home
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.home.lexa.R
@@ -11,14 +12,17 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlinx.coroutines.launch
 import com.home.lexa.ui.adapter.FeaturedCourseAdapter
 import androidx.navigation.fragment.findNavController
+import com.home.lexa.data.local.UserManager
 import com.home.lexa.ui.adapter.StudyingCourseAdapter
+import org.koin.android.ext.android.inject
+import kotlin.getValue
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
     private  val isTeacher = true;
     private val viewModel: HomeViewModel by viewModel()
 
-
+    private val userManager: UserManager by inject()
     private val featuredCourseAdapter by lazy {
         FeaturedCourseAdapter(
             onCardClick = { course ->
@@ -64,6 +68,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     override fun setupViews() {
+        userManager.updateStreak()
+        Log.d("Gia tri streak", "${userManager.getStreakCount()}")
         binding.rvFeaturedCoursesCard.apply {
             adapter = featuredCourseAdapter
         }
