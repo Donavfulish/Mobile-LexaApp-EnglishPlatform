@@ -1,40 +1,26 @@
 package com.home.lexa.ui.course.teacher_course_list
 
 import android.net.Uri
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import androidx.core.os.bundleOf
-import androidx.lifecycle.ViewModel
+import com.google.android.material.button.MaterialButton
 import androidx.navigation.fragment.findNavController
-import com.home.lexa.databinding.FragmentStudentCourseListBinding
 import com.home.lexa.R
-
-
-
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.util.query
 import com.home.lexa.core.base.BaseFragment
-import com.home.lexa.databinding.FragmentFavoriteLibraryBinding
-import com.home.lexa.databinding.FragmentLoginBinding
 import com.home.lexa.databinding.FragmentTeacherCourseListBinding
 import com.home.lexa.domain.models.SearchInfo
-import com.home.lexa.domain.models.ShortCourseDto
-import com.home.lexa.ui.course.student_course_list.CourseFilter
-import com.home.lexa.ui.course.student_course_list.StudentCourseListAdapter
-import com.home.lexa.ui.course.student_course_list.StudentCourseListModel
-import com.home.lexa.ui.library.LibraryFragment
-import com.home.lexa.ui.library.personal_library.PersonalLibraryAdapter
-import com.home.lexa.ui.library.personal_library.PersonalLibraryModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.getValue
+import com.home.lexa.domain.models.TeacherCourseFilter
+
 
 class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>(FragmentTeacherCourseListBinding::inflate) {
     private val viewModel: TeacherCourseListModel by viewModel()
     private val courseAdapter by lazy {
-        StudentCourseListAdapter(emptyList())
+        TeacherCourseListAdapter(emptyList())
         { course ->
             val bundle = Bundle().apply {
                 putLong("courseId", course.id)
@@ -47,14 +33,18 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
 
     private fun updateFilterUI(filter: TeacherCourseFilter) {
 
-        fun setActive(btn: Button) {
+        fun setActive(btn: MaterialButton) {
             btn.setBackgroundResource(R.drawable.bg_filter_active)
+            btn.backgroundTintList = null
             btn.setTextColor(resources.getColor(R.color.white, null))
+            btn.iconTint = ColorStateList.valueOf(resources.getColor(R.color.white, null))
         }
 
-        fun setInactive(btn: Button) {
+        fun setInactive(btn: MaterialButton) {
             btn.setBackgroundResource(R.drawable.bg_filter_inactive)
+            btn.backgroundTintList = null
             btn.setTextColor(resources.getColor(R.color.black, null))
+            btn.iconTint = ColorStateList.valueOf(resources.getColor(R.color.black, null))
         }
 
         setInactive(binding.btnAll)
@@ -73,13 +63,11 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
     override fun setupViews() {
         binding.headerSection.setHeaderData(
             title = "Khoá học của tôi",
-            actionText = "4 tất cả",
+            actionText = "0 tất cả",
             onActionClick = {}
         )
 
-
         val filterArg = arguments?.getString("filter")
-
         val initialFilter = try {
             TeacherCourseFilter.valueOf(filterArg ?: "MYCOURSE")
         } catch (e: Exception) {
@@ -100,6 +88,13 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
         }
 
         binding.btnAll.setOnClickListener {
+            if(viewModel.currentFilter.value == TeacherCourseFilter.ALL)
+                return@setOnClickListener
+            binding.headerSection.setHeaderData(
+                title = "Khoá học của tôi",
+                actionText = "0 tất cả",
+                onActionClick = {}
+            )
             viewModel.changeFilter(
                 TeacherCourseFilter.ALL,
                 SearchInfo(
@@ -112,6 +107,13 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
         }
 
         binding.btnMyCourse.setOnClickListener {
+            if(viewModel.currentFilter.value == TeacherCourseFilter.MYCOURSE)
+                return@setOnClickListener
+            binding.headerSection.setHeaderData(
+                title = "Khoá học của tôi",
+                actionText = "0 tất cả",
+                onActionClick = {}
+            )
             viewModel.changeFilter(TeacherCourseFilter.MYCOURSE,
                 SearchInfo(
                     query= "",
@@ -123,6 +125,13 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
         }
 
         binding.btnFavorite.setOnClickListener {
+            if(viewModel.currentFilter.value == TeacherCourseFilter.FAVORITE)
+                return@setOnClickListener
+            binding.headerSection.setHeaderData(
+                title = "Khoá học của tôi",
+                actionText = "0 tất cả",
+                onActionClick = {}
+            )
             viewModel.changeFilter(TeacherCourseFilter.FAVORITE,
                 SearchInfo(
                     query= "",
@@ -134,7 +143,13 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
         }
 
         binding.btnLearning.setOnClickListener {
-            Log.d("LEARNING", "123");
+            if(viewModel.currentFilter.value == TeacherCourseFilter.LEARNING)
+                return@setOnClickListener
+            binding.headerSection.setHeaderData(
+                title = "Khoá học của tôi",
+                actionText = "0 tất cả",
+                onActionClick = {}
+            )
             viewModel.changeFilter(TeacherCourseFilter.LEARNING,
                 SearchInfo(
                     query= "",
@@ -145,7 +160,7 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
                 null)
         }
 
-        if (viewModel.courses.value.isNullOrEmpty()) {
+        if (viewModel.courses.value.data.isNullOrEmpty()) {
             viewModel.fetchAllCourses(
                 isLoadMore = false,
                 searchInfo = SearchInfo(query = "", limit = 10),
@@ -167,14 +182,13 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
 
-                    // dy > 0 nghĩa là đang lướt xuống
                     if (dy > 0) {
                         val visibleItemCount = layoutManager.childCount
                         val totalItemCount = layoutManager.itemCount
                         val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
                         val threshold = 3
-                        if (!viewModel.isLoading.value!! && !viewModel.isLastPage) {
+                        if (viewModel.isLoading.value == false && !viewModel.isLastPage) {
                             if ((visibleItemCount + firstVisibleItemPosition) >= (totalItemCount - threshold)) {
 
                                 viewModel.fetchAllCourses(
@@ -198,24 +212,34 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
             nextCursor = null
         )
     }
+
     override fun observeData() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
 
         viewModel.courses.observe(viewLifecycleOwner) { list ->
-            courseAdapter.updateData(list)
-
+            if(list.status != viewModel.currentFilter.value){
+                return@observe
+            }
+            courseAdapter.updateData(list.data)
+            if(list.status == TeacherCourseFilter.MYCOURSE){
+                binding.rvCourses.post{
+                    courseAdapter.ToggleDeleteBtn(binding.rvCourses, true)
+                }
+            } else {
+                binding.rvCourses.post{
+                    courseAdapter.ToggleDeleteBtn(binding.rvCourses, false)
+                }
+            }
             val filter = viewModel.currentFilter.value ?: TeacherCourseFilter.MYCOURSE
 
             val title = when (filter) {
                 TeacherCourseFilter.MYCOURSE -> "Khoá học của tôi"
                 TeacherCourseFilter.ALL -> "Tất cả khoá học"
-                TeacherCourseFilter.FAVORITE -> "Khoá học yêu thích của tôi"
+                TeacherCourseFilter.FAVORITE -> "Khoá học yêu thích"
                 TeacherCourseFilter.LEARNING -> "Khoá học đang học"
             }
-
-
 
             binding.headerSection.setHeaderData(
                 title = title,
@@ -224,6 +248,7 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
             )
         }
         viewModel.currentFilter.observe(viewLifecycleOwner) { filter ->
+
             updateFilterUI(filter)
         }
     }

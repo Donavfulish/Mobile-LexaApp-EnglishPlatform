@@ -3,17 +3,61 @@ package com.home.lexa.data.repository
 import android.util.Log
 import com.home.lexa.data.remote.SpeakingDayApiService
 import com.home.lexa.di.AppMemoryCache
+import com.home.lexa.domain.models.AllCoursePaginationResponse
 import com.home.lexa.domain.models.CreateSpeakingDayRequest
 import com.home.lexa.domain.models.EditSpeakingDayRequest
 import com.home.lexa.domain.models.ReorderParagraphsRequest
 import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.domain.models.ShortParagraphSpeakingDayDto
+import com.home.lexa.domain.models.SpeakingDayPagination
 import com.home.lexa.domain.repository.SpeakingDayRepository
 
 class SpeakingDayRepositoryImpl(
     private val apiService: SpeakingDayApiService
 ): SpeakingDayRepository {
 
+    override suspend fun getSpeakingDays(
+        courseId: Long,
+        nextOrder: Int?
+    ): Result<SpeakingDayPagination> {
+        return try {
+            val cacheKey = "getSpeakingDays"
+            val isFirstPage = nextOrder == null
+
+            if (isFirstPage) {
+                val cachedResponse: SpeakingDayPagination? = AppMemoryCache.get(cacheKey)
+                if (cachedResponse != null && cachedResponse.data.isNotEmpty()) {
+                    return Result.success(cachedResponse)
+                }
+            }
+
+            val response = apiService.getSpeakingDays(
+                courseId = courseId,
+                nextOrder = nextOrder
+            )
+            val body = response.body()
+            if(response.isSuccessful && body?.success == true) {
+                val apiPaginationData = body.data ?: throw Exception("Dữ liệu data trong body bị null")
+                val newDays = apiPaginationData.data
+
+                val speakingDays = if (isFirstPage) {
+                    newDays
+                } else {
+                    val oldCache: SpeakingDayPagination? = AppMemoryCache.get(cacheKey)
+                    val oldDays = oldCache?.data ?: emptyList()
+                    oldDays + newDays
+                }
+                val updatedResponse = apiPaginationData.copy(data = speakingDays)
+                AppMemoryCache.put(cacheKey, updatedResponse)
+                Result.success(updatedResponse)
+            } else {
+                val errorMsg = body?.message ?: "Lỗi từ máy chủ: ${response.code()}"
+                Result.failure(Exception(errorMsg))
+            }
+        } catch (e: Exception){
+            Result.failure(e)
+        }
+    }
     override suspend fun getParagraphSpeakingDay(speakingDayId: Long): Result<ShortParagraphSpeakingDayDto?> {
         return try {
             val speakingDay: ShortParagraphSpeakingDayDto? = AppMemoryCache.get("getParagraphSpeakingDay");

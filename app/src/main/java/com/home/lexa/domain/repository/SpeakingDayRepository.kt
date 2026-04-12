@@ -4,8 +4,10 @@ import com.home.lexa.domain.models.CreateSpeakingDayRequest
 import com.home.lexa.domain.models.EditSpeakingDayRequest
 import com.home.lexa.domain.models.ReorderParagraphsRequest
 import com.home.lexa.domain.models.ShortParagraphSpeakingDayDto
+import com.home.lexa.domain.models.SpeakingDayPagination
 
 interface SpeakingDayRepository {
+    suspend fun getSpeakingDays(courseId: Long, nextOrder: Int?): Result<SpeakingDayPagination>
     suspend fun getParagraphSpeakingDay(speakingDayId: Long) : Result<ShortParagraphSpeakingDayDto?>
     suspend fun createSpeakingDay(request: CreateSpeakingDayRequest): Result<Long>
     suspend fun editSpeakingDay(speakingDayId: Long, request: EditSpeakingDayRequest): Result<Boolean>

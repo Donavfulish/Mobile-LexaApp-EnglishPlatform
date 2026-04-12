@@ -24,8 +24,6 @@ import com.home.lexa.databinding.FragmentCourseDetailBinding
 import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.CreateCourseRequest
-import com.home.lexa.domain.models.EditCourseRequest
-import com.home.lexa.domain.models.SpeakingCourseDetailDto
 import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.ui.components.FlashcardMini
@@ -92,12 +90,6 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             setOnClickBack()
         }
 
-        activityBinding.appBarLayout.apply {
-            setText("Chi tiết khoá học");
-            setBackButtonVisible(true);
-        }
-
-
         // =============================================GENERAL SETUP==========================================
         binding.searchBarVocabulary.apply {
             setIconColor(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
@@ -149,20 +141,15 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 binding.vocabularyLayout.visibility = View.VISIBLE
             }
         }
-
-        binding.topic.setOnClickAction {
-            AppMemoryCache.remove("speakingCourseDetail_${courseId}")
-            AppMemoryCache.remove("vocabularyList_${courseId}")
-            val check: SpeakingCourseDetailDto?  = AppMemoryCache.get("speakingCourseDetail_17")
-            Log.e("DEBUG_CACHE", "Cache after remove: $check")
-        }
         syncTabUI()
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.loadCourseDetail(courseId)
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        if(courseId != -1L){
+//            viewModel.loadCourseDetail(courseId)
+//        }
+//    }
     override fun observeData() {
 
         // THEO DOI LOADING CHUNG
@@ -314,6 +301,8 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                     "Lưu thông tin",
                     ContextCompat.getColor(requireContext(), R.color.white)
                 )
+                AppMemoryCache.removePrefix("getAllCourses_")
+                AppMemoryCache.removePrefix("getFavoriteCourses_")
                 val bundle = bundleOf("courseId" to newId)
                 findNavController().navigate(R.id.courseDetailFragment, bundle,
                     NavOptions.Builder()

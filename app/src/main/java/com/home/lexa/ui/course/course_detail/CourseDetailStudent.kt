@@ -9,7 +9,7 @@ import com.home.lexa.R
 import com.home.lexa.databinding.ActivityMainBinding
 import com.home.lexa.databinding.FragmentCourseDetailBinding
 import com.home.lexa.domain.models.DetailFlashcard
-import com.home.lexa.domain.models.SpeakingCourseDetailDto
+import com.home.lexa.domain.models.CourseDetailDto
 import com.home.lexa.ui.components.FlashcardMini
 import com.home.lexa.ui.components.Popup
 import com.home.lexa.ui.components.StudentSpeakingDayCard
@@ -29,7 +29,7 @@ class CourseDetailStudent(
         }
     }
 
-    override fun bindCourseData(course: SpeakingCourseDetailDto) {
+    override fun bindCourseData(course: CourseDetailDto) {
         android.util.Log.e("DEBUG_FAVORITE", "Course ID: ${course.id}, is_favorite: ${course.is_favorite}")
         var isFavorite = course.is_favorite ?: false
         activityBinding.appBarLayout.apply {
@@ -51,7 +51,7 @@ class CourseDetailStudent(
         binding.introduction.text = course.description ?: ""
     }
 
-    override fun bindSpeakingData(course: SpeakingCourseDetailDto) {
+    override fun bindSpeakingData(course: CourseDetailDto) {
         course.list_speaking_day.forEachIndexed {index, day ->
             val dayCard = StudentSpeakingDayCard(fragment.requireContext()).apply {
                     setData(

@@ -4,7 +4,7 @@ import com.home.lexa.core.network.ApiResponse
 import com.home.lexa.domain.models.AllCoursePaginationResponse
 import com.home.lexa.domain.models.CreateCourseRequest
 import com.home.lexa.domain.models.EditCourseRequest
-import com.home.lexa.domain.models.SpeakingCourseDetailDto
+import com.home.lexa.domain.models.CourseDetailDto
 import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.domain.models.GetFeaturedCourseResponse
 import com.home.lexa.domain.models.GetStudyingCourseResponse
@@ -63,19 +63,38 @@ interface CourseApiService {
     @DELETE("api/users/me/courses/{courseId}")
     suspend fun deleteCourse(@Path("courseId") courseId: Long): Response<ApiResponse<Map<String, Any>>>
 
-    // Gọi GET /api/user/me/course/favorite"
-    @GET("/api/user/me/deck/favorite")
-    suspend fun getFavoriteDecks(): Response<ApiResponse<List<ShortCourseDto>>>
+    @GET("/api/user/me/course/favorite")
+    suspend fun getFavoriteCourses(
+        @Query("query") query: String? = null,
+        @Query("sort") sort: String? = null,
+        @Query("order") order: String? = null,
+        @Query("limit") limit: String? = null,
+        @Query("next_id") next_id: String? = null,
+    ): Response<ApiResponse<AllCoursePaginationResponse>>
+
+    @GET("/api/user/me/course/learning")
+    suspend fun getLearningCourses(
+        @Query("query") query: String? = null,
+        @Query("sort") sort: String? = null,
+        @Query("order") order: String? = null,
+        @Query("limit") limit: String? = null,
+        @Query("next_id") next_id: String? = null,
+    ): Response<ApiResponse<AllCoursePaginationResponse>>
+
 
     @GET("/api/users/me/courses")
-    suspend fun getMyCourses(): Response<ApiResponse<List<ShortCourseDto>>>
-    @GET("/api/courses/studying")
-    suspend fun getLearningCourses():  Response<ApiResponse<List<ShortCourseDto>>>
+    suspend fun getMyCourses(
+        @Query("query") query: String? = null,
+        @Query("sort") sort: String? = null,
+        @Query("order") order: String? = null,
+        @Query("limit") limit: String? = null,
+        @Query("next_id") next_id: String? = null,
+    ): Response<ApiResponse<AllCoursePaginationResponse>>
 
-    @GET("/api/courses/{courseId}/speaking-days")
-    suspend fun getSpeakingDayCourse(
+    @GET("/api/courses/{courseId}/course-detail")
+    suspend fun getCourseDetail(
         @Path("courseId") courseId: Long
-    ) : Response<ApiResponse<SpeakingCourseDetailDto>>
+    ) : Response<ApiResponse<CourseDetailDto>>
 
     @POST("api/courses/{courseId}/favorite")
     suspend fun favoriteCourse(@Path("courseId") courseId: Long): Response<ApiResponse<Map<String, Any>>>

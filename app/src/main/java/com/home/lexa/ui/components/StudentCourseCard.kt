@@ -7,6 +7,7 @@ import android.widget.FrameLayout
 import coil.load
 import com.home.lexa.R
 import com.home.lexa.databinding.CardStudentCourseBinding
+import com.home.lexa.domain.models.ShortCourseDto
 
 data class CourseProgressData(
     val title: String,
@@ -34,34 +35,34 @@ class StudentCourseCard @JvmOverloads constructor(
      * @param onOptionsClick: Hàm callback khi user bấm vào icon 3 chấm
      */
     fun setCourseData(
-        data: CourseProgressData,
+        data: ShortCourseDto,
         onActionClick: () -> Unit,
         onCardClick: () -> Unit,
-        onOptionsClick: () -> Unit = {}
+        onOptionsClick: () -> Unit
     ) {
 
         binding.tvCourseTitle.text = data.title
         binding.tvCourseDesc.text = data.description
-        binding.tvAuthorName.text = data.authorName
-        binding.tvUserCount.text = data.userCount.toString()
-        binding.tvHeartCount.text = data.heartCount.toString()
-        binding.btnAction.text = data.actionText
+        binding.tvAuthorName.text = data.creator_name
+        binding.tvUserCount.text = data.studying_user_count.toString()
+        binding.tvHeartCount.text = data.favorite_user_count.toString()
+        binding.btnAction.text = "HỌC NGAY"
 
 
-        binding.progressBar.setProgress(data.progressPercent)
+        binding.progressBar.setProgress(data.completed ?: 0)
 
         binding.tagCategory.setTagData(
-            text = data.tagTitle,
-            colorHex = data.tagColorHex,
+            text = data.topic.name,
+            colorHex = data.topic.colorHex,
             hasBorder = false
         )
 
-        binding.ivThumbnail.load(data.thumbnail) {
+        binding.ivThumbnail.load(data.creator_avatar_url) {
             crossfade(true) // Hiệu ứng mờ dần khi ảnh tải xong cho đẹp
             placeholder(R.drawable.ic_launcher_background) // Ảnh hiển thị tạm trong lúc chờ tải
             error(R.drawable.ic_launcher_background) // Ảnh hiển thị nếu link bị lỗi/mất mạng
         }
-        binding.ivAuthorAvatar.load(data.thumbnail) {
+        binding.ivAuthorAvatar.load(data.thumbnail_url) {
             crossfade(true) // Hiệu ứng mờ dần khi ảnh tải xong cho đẹp
             placeholder(R.drawable.ic_launcher_background) // Ảnh hiển thị tạm trong lúc chờ tải
             error(R.drawable.ic_launcher_background) // Ảnh hiển thị nếu link bị lỗi/mất mạng
