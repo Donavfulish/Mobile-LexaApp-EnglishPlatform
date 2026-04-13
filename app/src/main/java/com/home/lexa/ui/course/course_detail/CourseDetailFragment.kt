@@ -318,6 +318,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 )
                 AppMemoryCache.removePrefix("getAllCourses_")
                 AppMemoryCache.removePrefix("getFavoriteCourses_")
+                AppMemoryCache.removePrefix("getMyCourses_")
                 val bundle = bundleOf("courseId" to newId)
                 findNavController().navigate(R.id.courseDetailFragment, bundle,
                     NavOptions.Builder()

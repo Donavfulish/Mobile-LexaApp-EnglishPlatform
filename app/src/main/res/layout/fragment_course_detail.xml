@@ -706,13 +706,23 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:layout_marginBottom="50dp"
                         app:layout_constraintVertical_bias="0.0"
                         app:layout_constraintTop_toBottomOf="@+id/titleToggle"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toTopOf="@+id/loadingVocabularyProgressBarTeacher"
                         android:padding="8dp"
                         app:columnCount="2"
                         app:alignmentMode="alignMargins"/>
+
+                    <ProgressBar
+                        android:id="@+id/loadingVocabularyProgressBarTeacher"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="50dp"
+                        android:visibility="gone"
+                        app:layout_constraintTop_toBottomOf="@+id/vocabularyGrid_2"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 <!--                    STUDENT ROLE-->
@@ -731,7 +741,7 @@
                         android:layout_marginTop="20dp"
                         app:layout_constraintVertical_bias="0.0"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent">
+                        app:layout_constraintBottom_toTopOf="@+id/loadingVocabularyProgressBarStudent">
 
                         <androidx.gridlayout.widget.GridLayout
                             android:id="@+id/vocabularyGrid"
@@ -743,6 +753,17 @@
                             app:alignmentMode="alignMargins"/>
 
                     </androidx.core.widget.NestedScrollView>
+
+                    <ProgressBar
+                        android:id="@+id/loadingVocabularyProgressBarStudent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:visibility="gone"
+                        app:layout_constraintTop_toBottomOf="@+id/vocabularyListLayout"
+                        app:layout_constraintBottom_toTopOf="@+id/rememberCard"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/rememberCard"
@@ -757,7 +778,7 @@
                         app:cardBackgroundColor="@color/gray_F4F4F6"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/vocabularyListLayout">
+                        app:layout_constraintTop_toBottomOf="@+id/loadingVocabularyProgressBarStudent">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"

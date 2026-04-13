@@ -1,6 +1,7 @@
 package com.home.lexa.data.repository
 
 import com.home.lexa.data.remote.ParagraphApiService
+import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.CreateParagraphRequest
 import com.home.lexa.domain.models.ParagraphResponseDto
 import com.home.lexa.domain.models.ParagraphResultResponseDto

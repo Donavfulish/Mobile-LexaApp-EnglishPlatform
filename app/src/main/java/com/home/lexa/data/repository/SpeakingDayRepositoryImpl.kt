@@ -21,7 +21,7 @@ class SpeakingDayRepositoryImpl(
         nextOrder: Long?
     ): Result<SpeakingDayPagination> {
         return try {
-            val cacheKey = "getSpeakingDays"
+            val cacheKey = "getSpeakingDays_${courseId}"
             val isFirstPage = nextOrder == null
 
             if (isFirstPage) {

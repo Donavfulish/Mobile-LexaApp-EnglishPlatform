@@ -163,7 +163,6 @@ class CourseDetailViewModel(
                             if(currentPages == totalPages){
                                 isLastPage = true
                             }
-                            AppMemoryCache.put("getSpeakingDays", data.list_speaking_day)
                             _speakingDayDetailData.value = data.list_speaking_day.data
                             _paginationLoading.value = false
                         }

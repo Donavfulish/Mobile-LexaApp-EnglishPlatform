@@ -97,8 +97,6 @@ class CourseRepositoryImpl(
 
             if (response.isSuccessful && body?.success == true) {
                 Log.d("Đã xoá cache create", "Cache create đã được xoá")
-                AppMemoryCache.remove("getAllCourses");
-                AppMemoryCache.remove("getMyCourses");
                 AppMemoryCache.remove("getLearningCourses");
                 AppMemoryCache.remove("getFeaturedCourses");
                 AppMemoryCache.remove("getStudyingCourses");
@@ -228,6 +226,9 @@ class CourseRepositoryImpl(
 
             if (response.isSuccessful && body?.success == true) {
                 val data = body.data;
+                if(!data?.list_speaking_day?.data.isNullOrEmpty()){
+                    AppMemoryCache.put("getSpeakingDays_${courseId}", data.list_speaking_day)
+                }
                 AppMemoryCache.put("getCourseDetail_${courseId}", data as Any);
                 Result.success(data);
             } else {
