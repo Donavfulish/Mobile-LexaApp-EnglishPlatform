@@ -61,9 +61,9 @@ class SpeakingPracticeViewModel(
         }
     }
 
-    fun editSpeakingDay(speakingDayId: Long, request: EditSpeakingDayRequest) {
+    fun editSpeakingDay(courseId: Long, speakingDayId: Long, request: EditSpeakingDayRequest) {
         viewModelScope.launch {
-            val result = speakingDayRepository.editSpeakingDay(speakingDayId, request)
+            val result = speakingDayRepository.editSpeakingDay(courseId, speakingDayId, request)
             result.onSuccess {
                 _paragraphDetailData.value = _paragraphDetailData.value?.copy(title = request.title)
                 _updateStatus.value = Result.success(Unit)
@@ -73,10 +73,10 @@ class SpeakingPracticeViewModel(
         }
     }
 
-    fun reorderParagraphs(speakingDayId: Long, request: ReorderParagraphsRequest) {
+    fun reorderParagraphs(courseId: Long, speakingDayId: Long, request: ReorderParagraphsRequest) {
         viewModelScope.launch {
             _isLoading.value = true
-            val result = speakingDayRepository.reorderParagraphs(speakingDayId, request)
+            val result = speakingDayRepository.reorderParagraphs(courseId, speakingDayId, request)
             result.onSuccess {
                 _reorderStatus.value = Result.success(Unit)
             }.onFailure {
@@ -105,10 +105,10 @@ class SpeakingPracticeViewModel(
         }
     }
 
-    fun updateParagraph(paragraphId: Long, newText: String) {
+    fun updateParagraph(speakingDayId: Long, paragraphId: Long, newText: String) {
         viewModelScope.launch {
             _isLoading.value = true
-            val result = paragraphRepository.updateParagraph(paragraphId, UpdateParagraphRequest(
+            val result = paragraphRepository.updateParagraph(speakingDayId, paragraphId, UpdateParagraphRequest(
                 paragraph = newText,
                 audioUrl = ""))
             result.onSuccess {
@@ -123,7 +123,7 @@ class SpeakingPracticeViewModel(
     fun deleteParagraph(speakingDayId: Long, paragraphId: Long) {
         viewModelScope.launch {
             _isLoading.value = true
-            val result = paragraphRepository.deleteParagraph(paragraphId)
+            val result = paragraphRepository.deleteParagraph(speakingDayId, paragraphId)
             result.onSuccess {
                 _deleteStatus.value = Result.success(Unit)
             }.onFailure {
@@ -136,7 +136,7 @@ class SpeakingPracticeViewModel(
     fun deleteSpeakingDay(speakingDayId: Long, courseId: Long) {
         viewModelScope.launch {
             _isLoading.value = true
-            val result = speakingDayRepository.deleteSpeakingDay(speakingDayId)
+            val result = speakingDayRepository.deleteSpeakingDay(courseId, speakingDayId)
             AppMemoryCache.remove("getSpeakingDayCourse_${courseId}")
             result.onSuccess {
                 _deleteSpeakingDayStatus.value = Result.success(Unit)

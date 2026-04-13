@@ -21,7 +21,7 @@ class SpeakingDayRepositoryImpl(
         nextOrder: Long?
     ): Result<SpeakingDayPagination> {
         return try {
-            val cacheKey = "getSpeakingDays"
+            val cacheKey = "getSpeakingDays_$courseId"
             val isFirstPage = nextOrder == null
 
             if (isFirstPage) {
@@ -60,7 +60,7 @@ class SpeakingDayRepositoryImpl(
     }
     override suspend fun getParagraphSpeakingDay(speakingDayId: Long): Result<ShortParagraphSpeakingDayDto?> {
         return try {
-            val speakingDay: ShortParagraphSpeakingDayDto? = AppMemoryCache.get("getParagraphSpeakingDay");
+            val speakingDay: ShortParagraphSpeakingDayDto? = AppMemoryCache.get("getParagraphSpeakingDay_$speakingDayId");
             if (speakingDay != null){
                 return Result.success(speakingDay);
             }
@@ -86,7 +86,7 @@ class SpeakingDayRepositoryImpl(
 
             if (response.isSuccessful && body?.success == true) {
                 Log.d("Đã xoá cache create", "Cache create đã được xoá")
-                AppMemoryCache.remove("getParagraphSpeakingDay");
+                AppMemoryCache.remove("getSpeakingDays_${request.courseId}");
                 val newId = body.data ?: throw Exception("Không lấy được ID")
                 Result.success(newId)
             } else {
@@ -96,14 +96,14 @@ class SpeakingDayRepositoryImpl(
             Result.failure(e)
         }
     }
-    override suspend fun editSpeakingDay(speakingDayId: Long, request: EditSpeakingDayRequest): Result<Boolean> {
+    override suspend fun editSpeakingDay(courseId: Long, speakingDayId: Long, request: EditSpeakingDayRequest): Result<Boolean> {
         return try {
             val response = apiService.editSpeakingDay(speakingDayId, request)
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
                 Log.d("Đã xoá cache update", "Cache update đã được xoá")
-                AppMemoryCache.remove("getParagraphSpeakingDay");
+                AppMemoryCache.remove("getSpeakingDays_${courseId}");
                 Result.success(true)
             } else {
                 Result.failure(Exception(body?.message ?: "Chỉnh sửa bài học thất bại"))
@@ -112,14 +112,14 @@ class SpeakingDayRepositoryImpl(
             Result.failure(e)
         }
     }
-    override suspend fun deleteSpeakingDay(speakingDayId: Long): Result<Boolean> {
+    override suspend fun deleteSpeakingDay(courseId: Long, speakingDayId: Long): Result<Boolean> {
         return try {
             val response = apiService.deleteSpeakingDay(speakingDayId)
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
                 Log.d("Đã xoá cache delete", "Cache delete đã được xoá")
-                AppMemoryCache.remove("getParagraphSpeakingDay");
+                AppMemoryCache.remove("getSpeakingDays_${courseId}");
                 Result.success(true)
             } else {
                 Result.failure(Exception(body?.message ?: "Xóa bài học thất bại"))
@@ -129,14 +129,14 @@ class SpeakingDayRepositoryImpl(
         }
     }
 
-    override suspend fun reorderParagraphs(speakingDayId: Long, request: ReorderParagraphsRequest): Result<Boolean> {
+    override suspend fun reorderParagraphs(courseId: Long, speakingDayId: Long, request: ReorderParagraphsRequest): Result<Boolean> {
         return try {
             val response = apiService.reorderParagraphs(speakingDayId, request)
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
                 Log.d("Đã xoá cache reorder", "Cache getParagraphSpeakingDay đã được xoá")
-                AppMemoryCache.remove("getParagraphSpeakingDay")
+                AppMemoryCache.remove("getSpeakingDays_${courseId}")
                 Result.success(true)
             } else {
                 Result.failure(Exception(body?.message ?: "Cập nhật thứ tự thất bại"))

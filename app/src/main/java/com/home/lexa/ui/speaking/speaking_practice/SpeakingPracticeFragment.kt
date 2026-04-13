@@ -79,7 +79,7 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
             }
 
             binding.btnSaveOrder.text = "Đang lưu..."
-            viewModel.reorderParagraphs(speakingDayId, ReorderParagraphsRequest(requestList))
+            viewModel.reorderParagraphs(courseId, speakingDayId, ReorderParagraphsRequest(requestList))
         }
     }
 
@@ -173,7 +173,7 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
                     val newTitle = binding.paragraphInput.text.toString().trim()
                     if (newTitle.isNotEmpty()){
                         binding.saveBtn.setText("Đang lưu...", ContextCompat.getColor(requireContext(), R.color.white))
-                        viewModel.editSpeakingDay(speakingDayId, EditSpeakingDayRequest(title = newTitle))
+                        viewModel.editSpeakingDay(courseId, speakingDayId, EditSpeakingDayRequest(title = newTitle))
                     }
                 }
 
@@ -277,7 +277,7 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
                             dialogTitle = "Chỉnh sửa đoạn văn",
                             confirmText = "Cập nhật",
                             onConfirm = { dataList ->
-                                viewModel.updateParagraph(paragraph.id, dataList[0])
+                                viewModel.updateParagraph(speakingDayId, paragraph.id, dataList[0])
                             }
                         )
                     }

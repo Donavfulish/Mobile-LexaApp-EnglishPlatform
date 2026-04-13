@@ -8,7 +8,7 @@ import com.home.lexa.domain.models.UpdateParagraphResultRequest
 
 interface ParagraphRepository {
     suspend fun createParagraph(request: CreateParagraphRequest): Result<ParagraphResponseDto>
-    suspend fun updateParagraph(paragraphId: Long, request: UpdateParagraphRequest): Result<ParagraphResponseDto>
-    suspend fun deleteParagraph(paragraphId: Long): Result<Unit>
+    suspend fun updateParagraph(speakingDayId: Long, paragraphId: Long, request: UpdateParagraphRequest): Result<ParagraphResponseDto>
+    suspend fun deleteParagraph(speakingDayId: Long, paragraphId: Long): Result<Unit>
     suspend fun updateParagraphResult(request: UpdateParagraphResultRequest): Result<ParagraphResultResponseDto>
 }
