@@ -10,9 +10,6 @@ import android.view.Window
 import android.widget.Toast
 import com.home.lexa.databinding.InputDeckBinding
 
-
-
-
 class DeckInput @JvmOverloads constructor(
     context: Context,
     themeResId: Int = 0
@@ -29,10 +26,15 @@ class DeckInput @JvmOverloads constructor(
         binding = InputDeckBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
+
     override fun onStart() {
         super.onStart()
+        val displayMetrics = context.resources.displayMetrics
+        val marginPx = (16 * displayMetrics.density).toInt()
+        val width = displayMetrics.widthPixels - (2 * marginPx)
+
         window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
+            width,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
     }
@@ -48,10 +50,12 @@ class DeckInput @JvmOverloads constructor(
         binding.tvTitle.text = title
         binding.btnConfirm.text = confirmText
         binding.edtVocabName.text?.clear()
+        
         binding.btnCancel.setOnClickListener {
             onCancel.invoke()
             dismiss()
         }
+        
         binding.btnConfirm.setOnClickListener {
             val inputText = binding.edtVocabName.text.toString().trim()
 
