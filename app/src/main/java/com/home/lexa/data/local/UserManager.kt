@@ -97,7 +97,6 @@ class UserManager(context: Context) {
     }
 
     fun rememberLoginRequest(request: LoginRequest) {
-        println("DEBUG: Save Remember Login: ${request.email} - ${request.password}")
         rememberPrefs.edit()
             .putBoolean(PreferenceKeys.IS_REMEMBERED, true)
             .putString(PreferenceKeys.REMEMBERED_EMAIL, request.email)
@@ -118,8 +117,6 @@ class UserManager(context: Context) {
         val password = rememberPrefs.getString(PreferenceKeys.REMEMBERED_PASSWORD, null) ?: ""
 
         val is_remembered = rememberPrefs.getBoolean(PreferenceKeys.IS_REMEMBERED, false)
-
-        println("REMEMBER_LOGIN: $is_remembered : $email - $password")
 
         if (!is_remembered) return null
 

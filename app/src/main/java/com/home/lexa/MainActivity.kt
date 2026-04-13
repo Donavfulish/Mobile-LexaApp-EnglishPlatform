@@ -42,7 +42,6 @@ class MainActivity : AppCompatActivity() {
     private val authViewModel: AuthViewModel by viewModel()
     private var isFirstAuthenticated: Boolean = false
 
-    // binding: tuơng tác giao diện thay vì dùng findViewById
     private val userManager: UserManager by inject()
     lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,21 +52,7 @@ class MainActivity : AppCompatActivity() {
 
         authViewModel.getMe()
 
-        /*
-        + ActivityMainBinding: là một class tự động sinh ra dựa trêm file activity_main.xml
-        + inflate: hàm dịch file XML tĩnh thành các View động
-        + layoutInflater: là cách mà nó thực hiện việc dịch
-        + ActivityMainBinding.inflate(layoutInflater): chứa mọi thành phần giao diện dưới dạng động của file main_activity.xml
-         */
         binding = ActivityMainBinding.inflate(layoutInflater)
-
-        /*
-        binding.root: thẻ gốc -> thẻ <androidx.constraintlayout.widget.ConstraintLayout
-        setContentView(View view): Hiển thị giao diện view lên màn hình điện thoại
-         */
-
-
-
         setContentView(binding.root)
         setupNavigation()
 
@@ -76,16 +61,10 @@ class MainActivity : AppCompatActivity() {
         handleIntent(intent)
 
         listenToLogout()
-
-
-
-
     }
 
     override fun onResume() {
         super.onResume()
-
-
     }
     private fun setupNavigation() {
         val navHostFragment = supportFragmentManager
@@ -177,7 +156,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        setIntent(intent) // Cực kỳ quan trọng để update intent mới
+        setIntent(intent)
         handleIntent(intent)
     }
 
@@ -214,7 +193,6 @@ class MainActivity : AppCompatActivity() {
                         val navController = navHostFragment?.navController
 
                         navController?.let {
-                            // Sửa dòng navigate thành thế này để ép nó hiểu là dùng Resource ID
                             it.navigate(resId = R.id.loginFragment, args = null, navOptions = navOptions {
                                 popUpTo(it.graph.id) {
                                     inclusive = true
