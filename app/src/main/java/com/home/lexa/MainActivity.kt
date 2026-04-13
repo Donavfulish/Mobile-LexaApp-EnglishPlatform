@@ -38,6 +38,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+// Sau khi thêm ảnh vào sdcard/Pictures thì dùng lệnh dưới
+// adb shell content insert --uri content://media/external/images/media --bind _data:s:/sdcard/Pictures/tên_file --bind mime_type:s:image/png
+
+// Hoặc lệnh quét reload hết Pictures
+// adb shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///sdcard/Pictures
+
 class MainActivity : AppCompatActivity() {
     private val authViewModel: AuthViewModel by viewModel()
     private var isFirstAuthenticated: Boolean = false
