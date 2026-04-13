@@ -10,7 +10,6 @@ import androidx.room.util.query
 import com.home.lexa.domain.models.CreateDeckRequest
 import com.home.lexa.domain.models.DeckDto
 import com.home.lexa.domain.models.SearchInfo
-import com.home.lexa.domain.models.mockUserInfo
 import com.home.lexa.domain.repository.DeckRepository
 import kotlinx.coroutines.launch
 
@@ -61,7 +60,6 @@ class PersonalLibraryModel(private val repository: DeckRepository) : ViewModel()
 
             val request = CreateDeckRequest(
                 title = title,
-                creatorId = mockUserInfo.id
             )
 
             Log.d("Da fetch nhe ban", "fetching")
