@@ -46,11 +46,13 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
         setInactive(binding.btnAll)
         setInactive(binding.btnFavorite)
         setInactive(binding.btnLearning)
+        setInactive(binding.btnFinished)
 
         when (filter) {
             StudentCourseFilter.ALL -> setActive(binding.btnAll)
             StudentCourseFilter.FAVORITE -> setActive(binding.btnFavorite)
             StudentCourseFilter.LEARNING -> setActive(binding.btnLearning)
+            StudentCourseFilter.FINISHED -> setActive(binding.btnFinished)
         }
     }
 
@@ -188,6 +190,7 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
                         StudentCourseFilter.ALL -> "Tất cả khoá học"
                         StudentCourseFilter.FAVORITE -> "Khoá học yêu thích"
                         StudentCourseFilter.LEARNING -> "Khoá học đang học"
+                        StudentCourseFilter.FINISHED -> "Khoá học đã hoàn thành"
                     }
                 }
                 else -> "Khoá học"
