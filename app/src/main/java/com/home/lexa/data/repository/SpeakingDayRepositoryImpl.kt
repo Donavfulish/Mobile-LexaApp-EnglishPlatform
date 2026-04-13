@@ -18,7 +18,7 @@ class SpeakingDayRepositoryImpl(
 
     override suspend fun getSpeakingDays(
         courseId: Long,
-        nextOrder: Int?
+        nextOrder: Long?
     ): Result<SpeakingDayPagination> {
         return try {
             val cacheKey = "getSpeakingDays"
