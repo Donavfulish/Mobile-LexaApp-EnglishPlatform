@@ -54,21 +54,6 @@ class AuthViewModel (
     val oauthGoogleResult = MutableLiveData<OAuthGoogleResult?>()
     val rememberedLoginRequest = MutableLiveData<LoginRequest?>(null)
 
-//    companion object {
-//        private var instance: AuthViewModel? = null
-//
-//        fun initialize(repo: AuthRespository, token: TokenManager, user: UserManager): AuthViewModel {
-//            if (instance == null) {
-//                instance = AuthViewModel(repo, token, user)
-//            }
-//            return instance!!
-//        }
-//
-//        fun getInstance(): AuthViewModel {
-//            return instance ?: throw IllegalStateException("AuthViewModel must be initialized in MainActivity first")
-//        }
-//    }
-
     fun setAccessToken(token: String) {
         tokenManager.saveAccessToken(token)
     }
@@ -264,7 +249,6 @@ class AuthViewModel (
 
     fun getRememberedLoginRequest() {
         val saved = userManager.getRememberLoginRequest()
-        println("DEBUG: Loaded from Prefs: $saved")
         rememberedLoginRequest.value = saved
     }
 

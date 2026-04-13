@@ -25,7 +25,7 @@ interface SpeakingDayApiService {
     @GET("api/courses/{courseId}/speaking-days")
     suspend fun getSpeakingDays(
         @Path("courseId") courseId: Long,
-        @Query("next_order") nextOrder: Int?
+        @Query("next_order") nextOrder: Long?
     ): Response<ApiResponse<SpeakingDayPagination>>
 
     @POST("api/users/me/speaking-day")

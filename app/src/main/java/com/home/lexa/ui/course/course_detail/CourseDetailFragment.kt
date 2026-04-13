@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.home.lexa.R
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.widget.NestedScrollView
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -165,6 +166,14 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             }
         }
 
+        viewModel.paginationLoading.observe(viewLifecycleOwner){ isLoading ->
+            if(isLoading){
+                binding.loadingSpeakingDayProgressBar.visibility = View.VISIBLE
+            } else {
+                binding.loadingSpeakingDayProgressBar.visibility = View.GONE
+            }
+        }
+
         // THEO DOI DS TOPIC (CHO VIỆC TẠO MỚI)
         viewModel.topicData.observe(viewLifecycleOwner) { topics ->
             if (topics.isNullOrEmpty()) return@observe
@@ -248,14 +257,33 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             binding.teacherNameCourse.text = course.creator.name
             binding.studentNumCourse.text = course.studying_user_count.toString()
             binding.favoriteNumCourse.text = course.favorite_user_count.toString()
-            binding.speakingNum.text = "${course.list_speaking_day.size} Bài học"
+            binding.speakingNum.text = "${course.list_speaking_day.totalItems} Bài học"
             binding.speakingDayLayout.removeAllViews()
 
             // =====================================THONG TIN HIEN THI KHOA HOC=====================================
             handler?.bindCourseData(course)
-
+            binding.contentScroll.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _->
+                val content = v.getChildAt(0)
+                val totalContentHeight = content.measuredHeight
+                val screenHeight = v.measuredHeight
+                val threshold = 300
+                if(scrollY + screenHeight >= totalContentHeight - threshold){
+                    if(viewModel.paginationLoading.value == false && !viewModel.isLastPage && isSpeakingMode){
+                        viewModel.loadMoreSpeakingDay(true, courseId, viewModel.nextItem)
+                    }
+                }
+            })
             // =====================================THONG TIN HIEN THI SPEAKING DAY=====================================
-            handler?.bindSpeakingData(course)
+            //handler?.bindSpeakingData(course.id, course.list_speaking_day.data)
+        }
+
+        // THEO DOI TINH TRANG SPEAKINGDAY TRA VE
+        viewModel.speakingDayDetailData.observe(viewLifecycleOwner){ speakingDays ->
+            if (speakingDays.isNullOrEmpty()){
+                return@observe
+            }
+
+            handler?.bindSpeakingData(courseId, speakingDays)
         }
 
         // THEO DOI TINH TRANG FLASHCARD TRA VE
@@ -273,21 +301,8 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             binding.flashcardNum.text = "${flashcards.size}"
             binding.vocabularyGrid.removeAllViews()
             binding.vocabularyGrid2.removeAllViews()
-            flashcards.forEach { item ->
-                val card = FlashcardMini(requireContext())
-                val vocab = Vocabulary(
-                    level = ColorLabel(item.type, "#E0E0E5"),
-                    imageUrl = item.imageUrl,
-                    word = item.word,
-                    pronunciation_url = item.audioUrl ?: "",
-                    transciption = item.transcription,
-                    part_of_speech = ColorLabel(item.partOfSpeech, "#636AE8"),
-                    definition = item.meaning,
-                    example = item.example ?: ""
-                )
-                card.setData(vocab)
-                handler?.bindFlashcardData(item, card)
-            }
+
+            handler?.bindFlashcardData(flashcards)
         }
 
         viewModel.createCourseStatus.observe(viewLifecycleOwner) { result ->

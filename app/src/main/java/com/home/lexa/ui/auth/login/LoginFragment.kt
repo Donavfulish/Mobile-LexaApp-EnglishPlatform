@@ -86,19 +86,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             }
         }
 
-        // Nút Facebook
-        binding.btnFacebook.apply {
-            setText("Facebook", colorTextDark)
-            setBackground(Color.WHITE)
-            setStroke(1, colorBorder)
-            // Thay R.drawable.ic_facebook bằng icon thực tế của bạn
-            setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_facebook))
-            setOnClickAction {
-                val intent = Intent(Intent.ACTION_VIEW, GoogleUrls.loginUri)
-                startActivity(intent)
-            }
-        }
-
         // Click Đăng ký ngay
         binding.tvSignUpAction.setOnClickListener {
             Toast.makeText(requireContext(), "Chuyển sang màn Đăng ký", Toast.LENGTH_SHORT).show()

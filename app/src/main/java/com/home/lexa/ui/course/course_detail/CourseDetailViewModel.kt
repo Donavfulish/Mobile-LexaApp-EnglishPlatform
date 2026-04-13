@@ -19,6 +19,8 @@ import com.home.lexa.domain.repository.FlashcardRepository
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.async
 import com.home.lexa.domain.models.EditCourseRequest
+import com.home.lexa.domain.models.ShortSpeakingDayDto
+import com.home.lexa.domain.models.SpeakingDayPagination
 import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.repository.DeckRepository
 import com.home.lexa.domain.repository.SpeakingDayRepository
@@ -43,14 +45,23 @@ class CourseDetailViewModel(
     val courseDetailData: LiveData<CourseDetailDto?> get() = _courseDetailData
     private val _flashcardDetailData = MutableLiveData<List<DetailFlashcard>>()
     val flashcardDetailData: LiveData<List<DetailFlashcard>> get() = _flashcardDetailData
+    private val _speakingDayDetailData = MutableLiveData<List<ShortSpeakingDayDto>>()
+    val speakingDayDetailData: LiveData<List<ShortSpeakingDayDto>> get() = _speakingDayDetailData
+    private val _paginationLoading = MutableLiveData<Boolean>()
+    val paginationLoading: LiveData<Boolean> get() = _paginationLoading
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
     private val _topicData = MutableLiveData<List<Topic>>()
     val topicData: LiveData<List<Topic>> get() = _topicData
     private val _favortieStatus = MutableLiveData<Result<Unit>?>()
     val favoriteStatus: LiveData<Result<Unit>?> get() = _favortieStatus
+    var isLastPage = false
+    var currentPages = 0
+    var totalPages = 0
+    var nextItem: Long? = null
 
-//    LOGIC TAO MOI KHOA HOC
+
+    //    LOGIC TAO MOI KHOA HOC
     fun loadTopics() {
         viewModelScope.launch {
             _isLoading.value = true
@@ -100,6 +111,36 @@ class CourseDetailViewModel(
         _createCourseStatus.value = null
     }
 
+    fun loadMoreSpeakingDay(isLoadMore: Boolean, courseId: Long, nextOrder: Long?){
+        if(isLoadMore && (paginationLoading.value == true || isLastPage)) return
+        if(!isLoadMore){
+            isLastPage = false
+            currentPages = 0
+            nextItem = null
+            _speakingDayDetailData.value = emptyList()
+        }
+
+        _paginationLoading.value = true
+        viewModelScope.launch {
+            val result = speakingDayRepository.getSpeakingDays(courseId, nextOrder)
+            result.onSuccess { list ->
+                currentPages =  list.data.size
+                totalPages = list.totalItems
+                nextItem = list.data[list.data.size - 1].order
+                Log.d("PAGINATION_DEBUG", "curr: $currentPages, totalPages: $totalPages, nextItem: $nextItem")
+
+                if(currentPages == totalPages){
+                    isLastPage = true
+                }
+                _speakingDayDetailData.value = list.data
+                _paginationLoading.value = false
+            } .onFailure {
+                _speakingDayDetailData.value = emptyList()
+                _paginationLoading.value = false
+            }
+        }
+    }
+
     // LOGIC XU LY VAI TRO GIAO VIEN
 
 
@@ -112,6 +153,20 @@ class CourseDetailViewModel(
                     _courseDetailData.value = data
                     _isLoading.value = false
                     if (data != null){
+                        if(data.list_speaking_day.data.size != 0){
+                            currentPages = data.list_speaking_day.data.size
+                            totalPages = data.list_speaking_day.totalItems
+                            nextItem = data.list_speaking_day.data[data.list_speaking_day.data.size - 1].order
+
+                            Log.d("PAGINATION_DEBUG", "curr: $currentPages, totalPages: $totalPages, nextItem: $nextItem")
+
+                            if(currentPages == totalPages){
+                                isLastPage = true
+                            }
+                            AppMemoryCache.put("getSpeakingDays", data.list_speaking_day)
+                            _speakingDayDetailData.value = data.list_speaking_day.data
+                            _paginationLoading.value = false
+                        }
                         if(data.deckId != null) {
                             fetchFlashcardsInBackground(data.id, data.deckId)
                         }
@@ -119,10 +174,14 @@ class CourseDetailViewModel(
                 }.onFailure {
                     _courseDetailData.value = null
                     _isLoading.value = false
+                    _speakingDayDetailData.value = emptyList()
+                    _paginationLoading.value = false
                 }
             } catch (e: Exception) {
                 _courseDetailData.value = null
                 _isLoading.value = false
+                _speakingDayDetailData.value = emptyList()
+                _paginationLoading.value = false
             }
         }
     }

@@ -5,7 +5,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.animation.DecelerateInterpolator
-import android.widget.FrameLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.home.lexa.databinding.ViewProgressBarBinding
 
@@ -17,9 +16,7 @@ class ProgressBar @JvmOverloads constructor(
 
     fun setProgress(percentage: Int) {
         val validPercentage = percentage.coerceIn(0, 100)
-
         binding.tvPercentage.text = "$validPercentage%"
-
         val animation = ObjectAnimator.ofInt(
             binding.linearProgressBar,
             "progress",

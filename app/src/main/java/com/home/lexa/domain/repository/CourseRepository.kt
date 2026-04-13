@@ -1,10 +1,7 @@
 package com.home.lexa.domain.repository
 
-import android.net.Uri
+
 import com.home.lexa.domain.models.AllCoursePaginationResponse
-import com.home.lexa.domain.models.CreateCourseRequest
-import com.home.lexa.domain.models.EditCourseRequest
-import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.domain.models.CourseDetailDto
 import com.home.lexa.domain.models.GetFeaturedCourseResponse
 import com.home.lexa.domain.models.GetStudyingCourseResponse

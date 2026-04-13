@@ -36,8 +36,6 @@ class NormalInput @JvmOverloads constructor(
     init {
         setMultipleLines(false)
     }
-
-    // Set giá trị label và hiển thị Label trên ô Input
     fun setLabel(text: String?) {
         if (text.isNullOrEmpty()) {
             binding.tvLabel.visibility = View.GONE
@@ -54,7 +52,6 @@ class NormalInput @JvmOverloads constructor(
 
     fun setIcon(@DrawableRes resId: Int?, colorHex: String? = "#575E6B") {
         if (resId == null || resId == -1) {
-            // Nếu không có icon hoặc id không hợp lệ, ẩn ImageView đi để EditText tràn ra
             binding.ivIcon.visibility = View.GONE
         } else {
             binding.ivIcon.setImageResource(resId)
@@ -94,7 +91,6 @@ class NormalInput @JvmOverloads constructor(
         binding.etInput.setText(text)
     }
 
-    // Giúp ViewModel lắng nghe được sự thay đổi của text
     fun onTextChanged(action: (String) -> Unit) {
         binding.etInput.doOnTextChanged { text, start, before, count ->
             action(text.toString())

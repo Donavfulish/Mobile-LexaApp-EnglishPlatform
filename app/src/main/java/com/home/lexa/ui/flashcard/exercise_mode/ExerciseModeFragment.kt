@@ -16,19 +16,15 @@ class ExerciseModeFragment : BaseFragment<FragmentExerciseModeBinding>(FragmentE
     private val viewModel: ExerciseModeViewModel by viewModel()
 
     override fun setupViews() {
-
-        // Hứng data từ Navigation Bundle
         val deckId = arguments?.getLong("deckId") ?: -1L
         val rememberedCount = arguments?.getInt("rememberedCount") ?: 0
         val forgottenCount = arguments?.getInt("forgottenCount") ?: 0
         val totalCards = arguments?.getInt("totalCards") ?: 0
 
-        // Toast.makeText(requireContext(), "nhận được từ màn trước là:$rememberedCount $forgottenCount $totalCards", Toast.LENGTH_SHORT).show()
-        // Cờ xác định xem đang luyện tiếp từ Cache hay là mới vào lần đầu
+        // Xác định xem đang luyện tiếp từ Cache hay là mới vào lần đầu
         val isRetryForgotten = arguments?.getBoolean("isRetryForgotten") ?: false
         val isRetryAll = arguments?.getBoolean("isRetryAll") ?: false
 
-        // Khởi tạo ViewModel bằng data nhận được
         viewModel.initInitialData(deckId, rememberedCount, forgottenCount, totalCards, isRetryForgotten, isRetryAll)
 
         binding.btnStop.setOnClickListener { showExitConfirmDialog() }
@@ -44,7 +40,6 @@ class ExerciseModeFragment : BaseFragment<FragmentExerciseModeBinding>(FragmentE
             }
         )
 
-        // 2. Set listener cho FlashcardView
         binding.flashcardView.setOnTouchListener { view, event ->
             // A. XỬ LÝ CHỐNG NHIỄU SCROLLVIEW
             when (event.actionMasked) {

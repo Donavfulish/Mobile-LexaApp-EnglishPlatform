@@ -8,6 +8,7 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
@@ -36,13 +37,10 @@ fun TextView.setVocabularyStyle(hexColor: String) {
         this.setTextColor(ColorUtils.blendARGB(baseColor, Color.BLACK, 0.2f))
 
     } catch (e: Exception) {
-        // Màu mặc định nếu parse lỗi
         this.setTextColor(Color.GRAY)
     }
 }
 
-
-// Kế thừa FrameLayout để bọc component XML lại
 class Flashcard @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ScalableContainer(context, attrs) {
@@ -53,7 +51,6 @@ class Flashcard @JvmOverloads constructor(
 
     init {
         setData(mockVocabularyData)
-        // Cho phép UI vượt ngoài phạm vi
         clipChildren = false
         clipToPadding = false
 
@@ -74,7 +71,6 @@ class Flashcard @JvmOverloads constructor(
      */
     fun setData(_data: Vocabulary) {
         this.data = _data
-        // Gán mặt trước (thường là từ vựng)
         binding.layoutFront.apply {
             tvLevel.apply {
                 text = data.level.label
@@ -85,7 +81,6 @@ class Flashcard @JvmOverloads constructor(
             tvTranscription.text = data.transciption
         }
 
-        // Gán mặt sau (định nghĩa, ví dụ)
         binding.layoutBack.apply {
             tvLevel.apply {
                 text = data.level.label
@@ -97,8 +92,6 @@ class Flashcard @JvmOverloads constructor(
 
                 Glide.with(ivIllustration.context)
                     .load(data.imageUrl)
-                    //.placeholder(R.drawable.ephemeral_image) // Ảnh hiển thị trong lúc đợi tải
-                    //.error(R.drawable.error_placeholder)      // Ảnh hiển thị nếu URL lỗi
                     .centerCrop()
                     .into(ivIllustration)
             } else {

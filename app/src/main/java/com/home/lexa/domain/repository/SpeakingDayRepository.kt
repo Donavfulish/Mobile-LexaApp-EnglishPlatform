@@ -7,10 +7,10 @@ import com.home.lexa.domain.models.ShortParagraphSpeakingDayDto
 import com.home.lexa.domain.models.SpeakingDayPagination
 
 interface SpeakingDayRepository {
-    suspend fun getSpeakingDays(courseId: Long, nextOrder: Int?): Result<SpeakingDayPagination>
+    suspend fun getSpeakingDays(courseId: Long, nextOrder: Long?): Result<SpeakingDayPagination>
     suspend fun getParagraphSpeakingDay(speakingDayId: Long) : Result<ShortParagraphSpeakingDayDto?>
     suspend fun createSpeakingDay(request: CreateSpeakingDayRequest): Result<Long>
-    suspend fun editSpeakingDay(speakingDayId: Long, request: EditSpeakingDayRequest): Result<Boolean>
-    suspend fun reorderParagraphs(speakingDayId: Long, request: ReorderParagraphsRequest): Result<Boolean>
-    suspend fun deleteSpeakingDay(speakingDayId: Long): Result<Boolean>
+    suspend fun editSpeakingDay(courseId: Long, speakingDayId: Long, request: EditSpeakingDayRequest): Result<Boolean>
+    suspend fun reorderParagraphs(courseId: Long, speakingDayId: Long, request: ReorderParagraphsRequest): Result<Boolean>
+    suspend fun deleteSpeakingDay(courseId: Long, speakingDayId: Long): Result<Boolean>
 }

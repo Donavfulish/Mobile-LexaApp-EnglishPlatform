@@ -16,10 +16,13 @@ import coil.load
 import com.home.lexa.R
 import com.home.lexa.databinding.ActivityMainBinding
 import com.home.lexa.databinding.FragmentCourseDetailBinding
+import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.CreateSpeakingDayRequest
 import com.home.lexa.domain.models.DetailFlashcard
 import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.CourseDetailDto
+import com.home.lexa.domain.models.ShortSpeakingDayDto
+import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.ui.components.FlashcardMini
 import com.home.lexa.ui.components.NormalInput
 import com.home.lexa.ui.components.PopUpInput
@@ -162,8 +165,9 @@ class CourseDetailTeacher(
         }
     }
 
-    override fun bindSpeakingData(course: CourseDetailDto) {
-        course.list_speaking_day.forEachIndexed {index, day ->
+    override fun bindSpeakingData(courseId: Long, list: List<ShortSpeakingDayDto>) {
+        binding.speakingDayLayout.removeAllViews()
+        list.forEachIndexed {index, day ->
             val dayCard = TeacherSpeakingDayCard(fragment.requireContext()).apply {
                 setData(
                     _day = index + 1,
@@ -172,7 +176,7 @@ class CourseDetailTeacher(
                 )
                 setOnClickAction {
                     val bundle = bundleOf(
-                        "courseId" to course.id,
+                        "courseId" to courseId,
                         "speakingDayId" to day.speakingDayId,
                         "order" to index
                     )
@@ -194,49 +198,65 @@ class CourseDetailTeacher(
         }
     }
 
-    override fun bindFlashcardData(item: DetailFlashcard, card: FlashcardMini) {
-        card.onDeleteClick = {
+    override fun bindFlashcardData(flashcards:  List<DetailFlashcard>) {
 
-            val deletePopup = Popup(fragment.requireContext())
-
-            deletePopup.showDialog(
-                title = "Xóa từ vựng",
-                subTitle = "Bạn có chắc chắn muốn xóa từ '${item.word}' không? Dữ liệu bị xóa sẽ không thể khôi phục.",
-                isWarning = true, // Bật cờ này lên để chữ và nút Xác nhận thành màu đỏ
-                confirmText = "Xóa",
-                onConfirm = {
-                    viewModel.deleteFlashcard(fragment.courseId, item.id,item.deckId !!)
-                },
-                onCancel = {
-                }
+        flashcards.forEach { item ->
+            val card = FlashcardMini(fragment.requireContext())
+            val vocab = Vocabulary(
+                level = ColorLabel(item.type, "#E0E0E5"),
+                imageUrl = item.imageUrl,
+                word = item.word,
+                pronunciation_url = item.audioUrl ?: "",
+                transciption = item.transcription,
+                part_of_speech = ColorLabel(item.partOfSpeech, "#636AE8"),
+                definition = item.meaning,
+                example = item.example ?: ""
             )
+            card.setData(vocab)
+            card.onDeleteClick = {
 
-        }
-        card.onEditClick = {
+                val deletePopup = Popup(fragment.requireContext())
 
-            val bundle = Bundle().apply {
-                putBoolean("IS_EDIT_KEY", true)
-                putString("WORD_KEY", item.word)
-                putString("TRANS_KEY", item.transcription)
-                putString("MEANING", item.meaning)
-                putString("EXAMPLE_KEY", item.example)
-                putString("POS_KEY", item.partOfSpeech)
-                putLong("FLASHCARD_ID_KEY", item.id)
-                putString("IMAGE_URL_KEY", item.imageUrl)
-                putString("TYPE_KEY", item.type)
-                putLong("DECK_ID_KEY", item.deckId!!)
+                deletePopup.showDialog(
+                    title = "Xóa từ vựng",
+                    subTitle = "Bạn có chắc chắn muốn xóa từ '${item.word}' không? Dữ liệu bị xóa sẽ không thể khôi phục.",
+                    isWarning = true,
+                    confirmText = "Xóa",
+                    onConfirm = {
+                        viewModel.deleteFlashcard(fragment.courseId, item.id,item.deckId !!)
+                    },
+                    onCancel = {
+                    }
+                )
 
             }
-            fragment.findNavController().navigate(R.id.action_courseDetailFragment_to_flashcardAddEditFragment,bundle)
+            card.onEditClick = {
+
+                val bundle = Bundle().apply {
+                    putBoolean("IS_EDIT_KEY", true)
+                    putString("WORD_KEY", item.word)
+                    putString("TRANS_KEY", item.transcription)
+                    putString("MEANING", item.meaning)
+                    putString("EXAMPLE_KEY", item.example)
+                    putString("POS_KEY", item.partOfSpeech)
+                    putLong("FLASHCARD_ID_KEY", item.id)
+                    putString("IMAGE_URL_KEY", item.imageUrl)
+                    putString("TYPE_KEY", item.type)
+                    putLong("DECK_ID_KEY", item.deckId!!)
+
+                }
+                fragment.findNavController().navigate(R.id.action_courseDetailFragment_to_flashcardAddEditFragment,bundle)
+            }
+            val params = androidx.gridlayout.widget.GridLayout.LayoutParams().apply {
+                width = 0
+                height = androidx.gridlayout.widget.GridLayout.LayoutParams.WRAP_CONTENT
+                columnSpec = androidx.gridlayout.widget.GridLayout.spec(androidx.gridlayout.widget.GridLayout.UNDEFINED, 1f)
+                setMargins(16, 16, 16, 16)
+            }
+            card.layoutParams = params
+            binding.vocabularyGrid2.addView(card)
         }
-        val params = androidx.gridlayout.widget.GridLayout.LayoutParams().apply {
-            width = 0
-            height = androidx.gridlayout.widget.GridLayout.LayoutParams.WRAP_CONTENT
-            columnSpec = androidx.gridlayout.widget.GridLayout.spec(androidx.gridlayout.widget.GridLayout.UNDEFINED, 1f)
-            setMargins(16, 16, 16, 16)
-        }
-        card.layoutParams = params
-        binding.vocabularyGrid2.addView(card)
+
     }
 
     override fun observerViewModel() {
