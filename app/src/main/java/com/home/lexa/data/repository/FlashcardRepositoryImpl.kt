@@ -70,6 +70,7 @@ class FlashcardRepositoryImpl(
             if (response.isSuccessful && body?.success == true && body.data != null) {
                 Log.d("Đã xoá cache create", "Cache create đã được xoá_${deckId}")
                 AppMemoryCache.remove("getAllFlashcard_${deckId}");
+                AppMemoryCache.remove("getAllFlashcardWithResult_${deckId}")
                 AppMemoryCache.remove("getAllDecks");
                 Result.success(body.data)
             } else {
@@ -89,6 +90,7 @@ class FlashcardRepositoryImpl(
             if (response.isSuccessful && body?.success == true) {
                 Log.d("Đã xoá cache update", "Cache update đã được xoá")
                 AppMemoryCache.remove("getAllFlashcard_${deckId}");
+                AppMemoryCache.remove("getAllFlashcardWithResult_${deckId}")
                 Result.success(body.data ?: true)
             } else {
                 Result.failure(Exception(body?.message ?: "Lỗi khi cập nhật flashcard"))
@@ -106,6 +108,7 @@ class FlashcardRepositoryImpl(
             if (response.isSuccessful && body?.success == true) {
                 Log.d("Đã xoá cache delete", "Cache delete: getAllFlashcard_${flashcardId}")
                 AppMemoryCache.remove("getAllFlashcard_${deckId}");
+                AppMemoryCache.remove("getAllFlashcardWithResult_${deckId}")
                 AppMemoryCache.remove("getAllDecks");
                 Result.success(body.data ?: true)
             } else {

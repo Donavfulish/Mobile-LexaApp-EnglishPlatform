@@ -103,7 +103,6 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
             val bundle = Bundle().apply {
                 putBoolean("IS_EDIT_KEY", false)
                 putLong("DECK_ID_KEY", deckId!!)
-
             }
             findNavController().navigate(R.id.action_vocabularyFlashcardFragment_to_flashcardAddEditFragment,bundle)
         }
@@ -114,9 +113,11 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
 
     override fun onResume() {
         super.onResume()
+        println("DEBUG: deckId = $deckId")
         if (deckId == null) return
 
         viewModel.loadFlashcardDetail(deckId!!);
+        viewModel.loadFlashcardsWithResult(deckId!!)
     }
     private fun navigateToExerciseMode() {
         Log.d("LEXA_DEBUG", "Hàm navigateToExerciseMode được gọi")
