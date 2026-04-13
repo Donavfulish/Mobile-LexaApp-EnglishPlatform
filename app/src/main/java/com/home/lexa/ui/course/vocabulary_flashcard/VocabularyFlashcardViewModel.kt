@@ -73,7 +73,7 @@ class VocabularyFlashcardViewModel(
             try {
                 deckRepository.updateDeck(request)
             } catch (e: Exception) {
-                // Xử lý lỗi (báo lỗi qua LiveData/SharedFlow để Fragment hiện Toast)
+                // Xử lý lỗi
             } finally {
                 // _isLoading.value = false
             }
@@ -114,7 +114,6 @@ class VocabularyFlashcardViewModel(
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                // Gọi API từ Repository
                 val result = flashcardRepository.getAllFlashcardWithResult(deckId)
 
                 result.onSuccess { list ->

@@ -26,14 +26,12 @@ class Popup @JvmOverloads constructor(
         binding = ViewPopupBinding.inflate(layoutInflater)
         setContentView(binding.root)
         window?.setLayout(
-            (context.resources.displayMetrics.widthPixels * 0.9).toInt(), // Chiều rộng bằng 90% màn hình
-            android.view.ViewGroup.LayoutParams.WRAP_CONTENT // Chiều cao tự động bọc nội dung
+            (context.resources.displayMetrics.widthPixels * 0.9).toInt(),
+            android.view.ViewGroup.LayoutParams.WRAP_CONTENT
         )
     }
 
-    /**
-     * Hàm hiển thị Popup với các tham số tùy chỉnh
-     */
+
     fun showDialog(
         title: String,
         subTitle: String,
@@ -44,21 +42,14 @@ class Popup @JvmOverloads constructor(
     ) {
 
         show()
-
         binding.tvTitle.text = title
         binding.tvSubTitle.text = subTitle
         binding.btnConfirm.text = confirmText
 
-
         if (isWarning) {
-
             binding.btnConfirm.backgroundTintList = context.getColorStateList(android.R.color.holo_red_dark)
-
             binding.tvTitle.setTextColor(context.getColor(android.R.color.holo_red_dark))
-
-
         } else {
-
             binding.btnConfirm.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#6A65E9"))
             binding.tvTitle.setTextColor(Color.parseColor("#202124"))
         }

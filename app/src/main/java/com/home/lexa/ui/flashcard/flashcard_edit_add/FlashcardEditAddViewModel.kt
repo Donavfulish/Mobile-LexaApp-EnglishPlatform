@@ -28,19 +28,17 @@ class FlashcardEditAddViewModel(
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
-    // Biến lắng nghe trạng thái lưu thành công hay thất bại
     private val _saveSuccess = MutableLiveData<Boolean>()
     val saveSuccess: LiveData<Boolean> get() = _saveSuccess
     fun createFlashcard(request: CreateFlashcardRequest, imageUri: Uri?) {
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                // Gọi tới Repository (Giả sử hàm createFlashcard trong repo là suspend function)
+
                 val context = getApplication<Application>().applicationContext
                 val dataPart = Gson().toJson(request).toRequestBody("application/json".toMediaTypeOrNull())
                 val imagePart = imageUri?.let { MediaUtils.prepareFilePart(context, "flashcardImage", it) }
 
-                // Gọi tới Repository (Giả sử hàm updateFlashcard trong repo là suspend function)
                 flashcardRepository.createFlashcard(request.deckId, dataPart, imagePart)
                 _saveSuccess.value = true
 
@@ -54,7 +52,7 @@ class FlashcardEditAddViewModel(
         }
     }
 
-    // Hàm Cập nhật Flashcard
+
     fun updateFlashcard(request: UpdateFlashcardRequest, imageUri: Uri?) {
         viewModelScope.launch {
             _isLoading.value = true
@@ -63,7 +61,6 @@ class FlashcardEditAddViewModel(
                 val dataPart = Gson().toJson(request).toRequestBody("application/json".toMediaTypeOrNull())
                 val imagePart = imageUri?.let { MediaUtils.prepareFilePart(context, "flashcardImage", it) }
 
-                // Gọi tới Rep  ository (Giả sử hàm updateFlashcard trong repo là suspend function)
                 flashcardRepository.updateFlashcard(request.deckId, dataPart, imagePart)
                 _saveSuccess.value = true
             } catch (e: Exception) {

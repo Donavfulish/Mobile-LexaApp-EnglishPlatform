@@ -17,7 +17,6 @@ class ProgressRing @JvmOverloads constructor(
     fun setProgress(percentage: Int) {
         val validPercentage = percentage.coerceIn(0, 100)
         binding.tvPercentage.text = validPercentage.toString()
-
         val animation = ObjectAnimator.ofInt(binding.customProgressBar, "progress", 0, validPercentage)
         animation.duration = 1000
         animation.start()

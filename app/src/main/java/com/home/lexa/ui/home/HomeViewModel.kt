@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import com.home.lexa.domain.models.GetFeaturedCourseResponse
 import com.home.lexa.domain.models.GetStudyingCourseResponse
 import com.home.lexa.data.local.UserManager
+import com.home.lexa.domain.models.UserRole
 
 data class UserStats(
     val streakDays: Int,
@@ -21,7 +22,7 @@ class HomeViewModel(private val repository: CourseRepository, private val userMa
 
 
 
-
+    private val isTeacher: Boolean get() = userManager.getUserRole() == UserRole.TEACHER
     private val _featuredCoursesFlow = MutableStateFlow<List<GetFeaturedCourseResponse>>(emptyList())
     val featuredCoursesFlow: StateFlow<List<GetFeaturedCourseResponse>> = _featuredCoursesFlow.asStateFlow()
 
@@ -38,13 +39,10 @@ class HomeViewModel(private val repository: CourseRepository, private val userMa
 
         fetchFeaturedCourses()
 
-
         checkRoleAndFetchData()
     }
 
     private fun checkRoleAndFetchData() {
-
-        val isTeacher = true
 
         if (isTeacher) {
             fetchTopStudiedCourses()

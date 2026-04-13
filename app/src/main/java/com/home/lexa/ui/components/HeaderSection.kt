@@ -13,12 +13,6 @@ class HeaderSection @JvmOverloads constructor(
 
     private val binding = ViewHeaderSectionBinding.inflate(LayoutInflater.from(context), this)
 
-    /**
-     * @param title: Tiêu đề hiển thị (VD: "Khóa học nổi bật")
-     * @param iconRes: ID của Icon (VD: R.drawable.ic_star). Truyền null nếu không muốn hiện Icon.
-     * @param actionText: Chữ của nút bên phải (Mặc định là "Xem tất cả")
-     * @param onActionClick: Hàm callback xử lý khi người dùng bấm vào nút
-     */
     fun setHeaderData(
         title: String,
         iconRes: Int? = null,
@@ -27,7 +21,6 @@ class HeaderSection @JvmOverloads constructor(
     ) {
 
         binding.tvTitle.text = title
-
 
         if (iconRes != null) {
             binding.ivIcon.setImageResource(iconRes)

@@ -10,19 +10,19 @@ import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentHomeBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlinx.coroutines.launch
-import com.home.lexa.ui.adapter.FeaturedCourseAdapter
 import androidx.navigation.fragment.findNavController
 import com.home.lexa.data.local.UserManager
-import com.home.lexa.ui.adapter.StudyingCourseAdapter
+import com.home.lexa.domain.models.UserRole
 import org.koin.android.ext.android.inject
 import kotlin.getValue
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
-    private  val isTeacher = true;
+    private val userManager: UserManager by inject()
+    private val isTeacher: Boolean get() = userManager.getUserRole() == UserRole.TEACHER
     private val viewModel: HomeViewModel by viewModel()
 
-    private val userManager: UserManager by inject()
+
     private val featuredCourseAdapter by lazy {
         FeaturedCourseAdapter(
             onCardClick = { course ->
@@ -49,7 +49,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                     bundle)
             },
             onFavoriteToggle = { course, isFavorite ->
-                // Gọi API lưu trạng thái yêu thích
+
                 // viewModel.toggleFavorite(course.id, isFavorite)
             }
 
@@ -105,7 +105,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             findNavController().navigate(R.id.action_homeFragment_to_libraryFragment)
         }
         binding.cardLessons.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_libraryFragment)
+            findNavController().navigate(R.id.action_homeFragment_to_courseFragment)
 
         }
 
@@ -113,7 +113,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     override fun onResume() {
         super.onResume()
-        // Mỗi khi quay lại màn hình Profile (từ màn hình chỉnh sửa), gọi lại API
         viewModel.fetchFeaturedCourses()
         viewModel.fetchStudyingCourses()
         viewModel.fetchTopStudiedCourses()

@@ -1,4 +1,4 @@
-package com.home.lexa.ui.adapter
+package com.home.lexa.ui.home
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -14,18 +14,16 @@ class StudyingCourseAdapter(
 ) : ListAdapter<GetStudyingCourseResponse, StudyingCourseAdapter.ViewHolder>(CourseProgressDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        // 1. Khởi tạo Component
-        val customCard = StudyingCourseCard(parent.context)
 
-        // 2. Thiết lập thông số Layout (Dành cho danh sách cuộn ngang)
+        val customCard = StudyingCourseCard(parent.context)
         val density = parent.context.resources.displayMetrics.density
-        val cardWidthPixels = (280 * density).toInt() // Chiều rộng cố định 280dp
+        val cardWidthPixels = (280 * density).toInt()
 
         val layoutParams = RecyclerView.LayoutParams(
             cardWidthPixels,
             ViewGroup.LayoutParams.WRAP_CONTENT
         ).apply {
-            // Margin 8dp cho các cạnh để tạo khoảng thở
+
             val margin = (8 * density).toInt()
             setMargins(margin, margin, margin, margin)
         }
