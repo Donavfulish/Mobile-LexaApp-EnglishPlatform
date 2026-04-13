@@ -53,7 +53,7 @@ class FeaturedCourseCard @JvmOverloads constructor(
         binding.background.setImageDrawable(img)
     }
     fun setFavoriteButtonSelected(isSelected: Boolean) {
-        binding.favoriteBtn.isSelected = isSelected
+        binding.favoriteBtn.isSelected = !isSelected
     }
     fun setThumbnail(url: String?){
         binding.background.load(url) {
