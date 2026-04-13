@@ -40,12 +40,12 @@ class StudentCourseCard @JvmOverloads constructor(
             hasBorder = false
         )
 
-        binding.ivThumbnail.load(data.creator_avatar_url) {
+        binding.ivThumbnail.load(data.thumbnail_url) {
             crossfade(true)
             placeholder(R.drawable.ic_launcher_background)
             error(R.drawable.ic_launcher_background)
         }
-        binding.ivAuthorAvatar.load(data.thumbnail_url) {
+        binding.ivAuthorAvatar.load(data.creator_avatar_url) {
             crossfade(true)
             placeholder(R.drawable.ic_launcher_background)
             error(R.drawable.ic_launcher_background)
