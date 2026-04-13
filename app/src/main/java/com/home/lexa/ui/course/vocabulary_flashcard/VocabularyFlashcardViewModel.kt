@@ -9,6 +9,7 @@ import com.home.lexa.domain.models.DeckResult
 import com.home.lexa.domain.models.DetailFlashcard
 import com.home.lexa.domain.models.DetailFlashcardWithResult
 import com.home.lexa.domain.models.Topic
+import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.UpdateDeckRequest
 import com.home.lexa.domain.repository.DeckRepository
 import com.home.lexa.domain.repository.FlashcardRepository
@@ -42,7 +43,7 @@ class VocabularyFlashcardViewModel(
                 _isLoading.value = true
 
                 Log.d("loadFlashcardDetail", "detailid: $deckId")
-                val flashcardsDeferred = async { flashcardRepository.getAllFlashcard(deckId) }
+                val flashcardsDeferred = async { flashcardRepository.getAllFlashcard(deckId, SearchInfo(null, null, null), null) }
                 val deckResultDeferred = async { deckRepository.getDeckResult(deckId) }
 
                 val flashcardsResult = flashcardsDeferred.await()
@@ -55,7 +56,7 @@ class VocabularyFlashcardViewModel(
                 }
 
                 flashcardsResult.onSuccess { list ->
-                    _flashcardDetailData.value = list ?: emptyList()
+                    _flashcardDetailData.value = list.data ?: emptyList()
                 }.onFailure {
                     _flashcardDetailData.value = emptyList()
                 }

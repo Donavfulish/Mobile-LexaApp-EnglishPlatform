@@ -16,6 +16,14 @@ data class DetailFlashcard(
     val partOfSpeech: String
 )
 
+@Serializable
+data class AllFlashcardPaginationResponse(
+    val data: List<DetailFlashcard>,
+    val searchInfo: SearchInfo,
+    val nextCursor: Long?= null,
+    val totalItem: Long)
+
+
 
 @Serializable
 data class DetailFlashcardWithResult (

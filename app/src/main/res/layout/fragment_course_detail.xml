@@ -606,20 +606,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    app:layout_constraintBottom_toTopOf="@+id/loadingSpeakingDayProgressBar"/>
-
-                <ProgressBar
-                    android:id="@+id/loadingSpeakingDayProgressBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="70dp"
-                    android:visibility="gone"
-                    app:layout_constraintTop_toBottomOf="@+id/speakingDayLayout"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
-
-                
+                    app:layout_constraintBottom_toBottomOf="parent"/>
                 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -708,21 +695,10 @@
                         android:layout_marginTop="20dp"
                         app:layout_constraintVertical_bias="0.0"
                         app:layout_constraintTop_toBottomOf="@+id/titleToggle"
-                        app:layout_constraintBottom_toTopOf="@+id/loadingVocabularyProgressBarTeacher"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         android:padding="8dp"
                         app:columnCount="2"
                         app:alignmentMode="alignMargins"/>
-
-                    <ProgressBar
-                        android:id="@+id/loadingVocabularyProgressBarTeacher"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="50dp"
-                        android:visibility="gone"
-                        app:layout_constraintTop_toBottomOf="@+id/vocabularyGrid_2"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 <!--                    STUDENT ROLE-->
@@ -741,7 +717,7 @@
                         android:layout_marginTop="20dp"
                         app:layout_constraintVertical_bias="0.0"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toTopOf="@+id/loadingVocabularyProgressBarStudent">
+                        app:layout_constraintBottom_toTopOf="@+id/rememberCard">
 
                         <androidx.gridlayout.widget.GridLayout
                             android:id="@+id/vocabularyGrid"
@@ -753,17 +729,6 @@
                             app:alignmentMode="alignMargins"/>
 
                     </androidx.core.widget.NestedScrollView>
-
-                    <ProgressBar
-                        android:id="@+id/loadingVocabularyProgressBarStudent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:visibility="gone"
-                        app:layout_constraintTop_toBottomOf="@+id/vocabularyListLayout"
-                        app:layout_constraintBottom_toTopOf="@+id/rememberCard"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"/>
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/rememberCard"
@@ -778,7 +743,7 @@
                         app:cardBackgroundColor="@color/gray_F4F4F6"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/loadingVocabularyProgressBarStudent">
+                        app:layout_constraintTop_toBottomOf="@+id/vocabularyListLayout">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
@@ -834,6 +799,18 @@
                         app:layout_constraintTop_toBottomOf="@+id/rememberCard"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ProgressBar
+                android:id="@+id/paginationProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="70dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/speakingLayout"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

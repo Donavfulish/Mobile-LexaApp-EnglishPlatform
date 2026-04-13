@@ -3,9 +3,12 @@ package com.home.lexa.data.repository
 import android.util.Log
 import com.home.lexa.data.remote.FlashcardApiService
 import com.home.lexa.di.AppMemoryCache
+import com.home.lexa.domain.models.AllCoursePaginationResponse
+import com.home.lexa.domain.models.AllFlashcardPaginationResponse
 import com.home.lexa.domain.models.CreateFlashcardRequest
 import com.home.lexa.domain.models.DetailFlashcard
 import com.home.lexa.domain.models.DetailFlashcardWithResult
+import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.UpdateFlashcardRequest
 import com.home.lexa.domain.models.UpdateFlashcardResultRequest
 import com.home.lexa.domain.repository.FlashcardRepository
@@ -16,25 +19,59 @@ class FlashcardRepositoryImpl(
     private val apiService: FlashcardApiService
 ) : FlashcardRepository {
 
-    override suspend fun getAllFlashcard(deckId: Long): Result<List<DetailFlashcard>> {
+    private fun generateCacheKey(type: String, searchInfo: SearchInfo, deckId: Long): String {
+        val q = searchInfo.query ?: ""
+        val sort = searchInfo.sortBy ?: ""
+        val order = searchInfo.order ?: ""
+        return "${type}_${deckId}_${q}_${sort}_${order}"
+    }
+
+
+    override suspend fun getAllFlashcard(
+        deckId: Long,
+        searchInfo: SearchInfo,
+        nextCursor: Long?): Result<AllFlashcardPaginationResponse> {
         return try {
-            val flashcards: List<DetailFlashcard>? = AppMemoryCache.get("getAllFlashcard_${deckId}");
-            Log.d("Flashcard Cache", "result: $flashcards")
-            if (flashcards != null){
-                return Result.success(flashcards);
+            val cacheKey = generateCacheKey("getAllFlashcard", searchInfo, deckId)
+            val isFirstPage = nextCursor == null
+
+            if (isFirstPage) {
+                val cachedResponse: AllFlashcardPaginationResponse? = AppMemoryCache.get(cacheKey)
+                if (cachedResponse != null && cachedResponse.data.isNotEmpty()) {
+                    return Result.success(cachedResponse)
+                }
             }
-            val response = apiService.getAllFlashcard(deckId)
+
+            val response = apiService.getAllFlashcard(
+                deckId = deckId,
+                query = searchInfo.query,
+                sort = searchInfo.sortBy,
+                order = searchInfo.order,
+                limit = searchInfo.limit?.toString(),
+                next_id = nextCursor?.toString(),
+            )
             val body = response.body()
+
             if (response.isSuccessful && body?.success == true) {
-                val data = body.data ?: emptyList();
-                AppMemoryCache.put("getAllFlashcard_${deckId}", data);
-                Result.success(data);
+                val apiPaginationData = body.data ?: throw Exception("Dữ liệu data trong body bị null")
+                val newFlashcards = apiPaginationData.data
+
+                val finalCourses = if (isFirstPage) {
+                    newFlashcards
+                } else {
+                    val oldCache: AllFlashcardPaginationResponse? = AppMemoryCache.get(cacheKey)
+                    val oldFlashcards = oldCache?.data ?: emptyList()
+                    oldFlashcards + newFlashcards
+                }
+                val updatedResponse = apiPaginationData.copy(data = finalCourses)
+                AppMemoryCache.put(cacheKey, updatedResponse)
+                Result.success(updatedResponse)
             } else {
-                Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ"))
+                val errorMsg = body?.message ?: "Lỗi từ máy chủ: ${response.code()}"
+                Result.failure(Exception(errorMsg))
             }
         } catch (e: Exception) {
-            Log.e("Error Cache Flashcard", "Error", e);
-            Result.failure(Exception("Lỗi kết nối: ${e.message}"))
+            Result.failure(e)
         }
     }
 
@@ -69,7 +106,7 @@ class FlashcardRepositoryImpl(
 
             if (response.isSuccessful && body?.success == true && body.data != null) {
                 Log.d("Đã xoá cache create", "Cache create đã được xoá_${deckId}")
-                AppMemoryCache.remove("getAllFlashcard_${deckId}");
+                AppMemoryCache.removePrefix("getAllFlashcard_${deckId}");
                 AppMemoryCache.remove("getAllDecks");
                 Result.success(body.data)
             } else {
@@ -88,7 +125,7 @@ class FlashcardRepositoryImpl(
 
             if (response.isSuccessful && body?.success == true) {
                 Log.d("Đã xoá cache update", "Cache update đã được xoá")
-                AppMemoryCache.remove("getAllFlashcard_${deckId}");
+                AppMemoryCache.removePrefix("getAllFlashcard_${deckId}");
                 Result.success(body.data ?: true)
             } else {
                 Result.failure(Exception(body?.message ?: "Lỗi khi cập nhật flashcard"))
@@ -105,7 +142,7 @@ class FlashcardRepositoryImpl(
 
             if (response.isSuccessful && body?.success == true) {
                 Log.d("Đã xoá cache delete", "Cache delete: getAllFlashcard_${flashcardId}")
-                AppMemoryCache.remove("getAllFlashcard_${deckId}");
+                AppMemoryCache.removePrefix("getAllFlashcard_${deckId}");
                 AppMemoryCache.remove("getAllDecks");
                 Result.success(body.data ?: true)
             } else {
