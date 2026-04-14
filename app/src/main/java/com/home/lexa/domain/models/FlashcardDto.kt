@@ -24,6 +24,15 @@ data class AllFlashcardPaginationResponse(
     val totalItem: Long)
 
 
+@Serializable
+data class AllFlashcardResultPaginationResponse(
+    val data: List<DetailFlashcardWithResult>,
+    val searchInfo: SearchInfo,
+    val nextCursor: Long?= null,
+    val totalItem: Long)
+
+
+
 
 @Serializable
 data class DetailFlashcardWithResult (
