@@ -36,8 +36,6 @@ import com.home.lexa.ui.utils.StringUtils
 
 enum class CertType { LANGUAGE, PEDAGOGY }
 class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding::inflate) {
-
-//    private lateinit var viewModel: AuthViewModel
     private val viewModel: AuthViewModel by activityViewModel()
 
     private val colorPrimary = Color.parseColor("#6200EA")
@@ -94,7 +92,6 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
 
     private fun updateRoleUI() {
         if (isTeacherRoleSelected) {
-            // FIX LỖI SỐ: Dùng getString() để lấy text thực sự
             binding.tvTitle.text = getString(R.string.signup_teacher_title)
             binding.tvSubtitle.text = getString(R.string.signup_teacher_desc)
 
@@ -113,7 +110,6 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
             binding.llTeacherFields.visibility = View.VISIBLE
 
         } else {
-            // FIX LỖI SỐ: Dùng getString()
             binding.tvTitle.text = getString(R.string.signup_title)
             binding.tvSubtitle.text = getString(R.string.signup_desc)
 
@@ -138,8 +134,8 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
     private fun updateMediaUI(uri: Uri, container: LinearLayout) {
         val imgPreview = container.findViewById<ImageView>(R.id.imgPreview)
         val txtFileName = container.findViewById<TextView>(R.id.txtFileName)
-        val icUpload = container.findViewById<ImageView>(R.id.icUpload) // Icon gốc
-        val txtInstruction = container.findViewById<TextView>(R.id.txtStatus) // Text hướng dẫn gốc
+        val icUpload = container.findViewById<ImageView>(R.id.icUpload)
+        val txtInstruction = container.findViewById<TextView>(R.id.txtStatus)
         val txtFileType = container.findViewById<TextView>(R.id.txtFileType)
 
         // Lấy tên file từ Uri
@@ -239,7 +235,6 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
             setText("Đăng ký", Color.WHITE)
             setBackground(colorPrimary)
             setOnClickAction {
-                // Xử lý lc gọi ViewModel tùy theo isTeacherRoleSelected
                 val name = binding.inputName.getText()
                 val role = if (isTeacherRoleSelected) UserRole.TEACHER else UserRole.STUDENT
                 val password = binding.inputPassword.getText()
@@ -288,11 +283,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                             )
                         )
 
-                        viewModel.sendOTP(email)
-
                         viewModel.resetState()
-
-                        navigateToOTPFragment(email)
                     } else {
                         Toast.makeText(requireContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show()
                     }
@@ -314,7 +305,6 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
             }
         }
 
-        // Sự kiện click để chọn file cho Giáo viên
         binding.btnUploadLanguageCert.root.setOnClickListener {
             Toast.makeText(requireContext(), "Mở thư viện ảnh/file", Toast.LENGTH_SHORT).show()
             certType = CertType.LANGUAGE
@@ -334,7 +324,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                 when (state) {
                     is AuthState.Idle -> { /* Không làm gì */ }
                     is AuthState.Loading -> {
-                        // TODO: Hiện ProgressDialog hoặc đổi text nút thành "Đang đăng nhập..."
+                        // TODO: Đổi hiệu ứng chữ Đang xử lý... thành vòng xoay"
                         binding.btnSignup.setText("Đang xử lý...", Color.WHITE)
                     }
                     is AuthState.Success -> {
@@ -342,12 +332,17 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                             Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
                             findNavController().navigate(R.id.action_signupFragment_to_homeFragment)
                         }
+
                         viewModel.resetOAuth()
                         viewModel.resetState()
+
+                        val email = binding.inputEmail.getText()
+                        viewModel.sendOTP(email)
+                        navigateToOTPFragment(email)
                     }
                     is AuthState.Error -> {
-                        binding.btnSignup.setText("Đăng Ký", Color.WHITE) // Khôi phục nút
-                        Toast.makeText(requireContext(), "Tài khoản đăng ký không hợp lệ", Toast.LENGTH_LONG).show()
+                        binding.btnSignup.setText("Đăng Ký", Color.WHITE)
+                        Toast.makeText(requireContext(), "Email đã được sử dụng", Toast.LENGTH_LONG).show()
                     }
                 }
             }
@@ -365,12 +360,12 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                 binding.inputPassword.visibility = View.GONE
                 binding.inputConfirmPassword.visibility = View.GONE
                 binding.tvSocialLabel.visibility = View.GONE
-                binding.tvEnterInformation.text = "Register with Google"
+                binding.tvEnterInformation.text = "Đăng ký với Google"
 
                 binding.inputPassword.setText(null)
                 binding.inputConfirmPassword.setText(null)
 
-                // Tự động nhập liệu thông tin người dùng bằng dữ liệu bên thứ 3
+                // Tự động nhập liệu thông tin người dùng bằng dữ liệu bên thứ 3 (Google)
                 binding.inputEmail.setText(it.user?.email ?: "")
                 binding.inputEmail.setEnable(false)
 

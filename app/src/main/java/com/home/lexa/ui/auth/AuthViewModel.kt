@@ -1,6 +1,7 @@
 package com.home.lexa.ui.auth
 
 import android.app.Application
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -51,21 +52,7 @@ class AuthViewModel (
     private var selectedPedagogyUri: Uri? = null
 
     val oauthGoogleResult = MutableLiveData<OAuthGoogleResult?>()
-
-//    companion object {
-//        private var instance: AuthViewModel? = null
-//
-//        fun initialize(repo: AuthRespository, token: TokenManager, user: UserManager): AuthViewModel {
-//            if (instance == null) {
-//                instance = AuthViewModel(repo, token, user)
-//            }
-//            return instance!!
-//        }
-//
-//        fun getInstance(): AuthViewModel {
-//            return instance ?: throw IllegalStateException("AuthViewModel must be initialized in MainActivity first")
-//        }
-//    }
+    val rememberedLoginRequest = MutableLiveData<LoginRequest?>(null)
 
     fun setAccessToken(token: String) {
         tokenManager.saveAccessToken(token)
@@ -118,7 +105,7 @@ class AuthViewModel (
                     _signupState.value =
                         AuthState.Success(authResult.message ?: "Đăng ký thành công")
                 } else {
-                    _signupState.value = AuthState.Error(authResult.message ?: "Lỗi đăng ký")
+                    _signupState.value = AuthState.Error("Email đã được sử dụng")
                 }
             }.onFailure { error ->
                 _signupState.value = AuthState.Error(error.message ?: "Có lỗi xảy ra")
@@ -250,6 +237,19 @@ class AuthViewModel (
 
     fun commitEmailVerified() {
         return userManager.commitEmailVerified()
+    }
+
+    fun rememberLoginRequest(request: LoginRequest) {
+        userManager.rememberLoginRequest(request)
+    }
+
+    fun forgetLoginRequest() {
+        userManager.forgetLoginRequest()
+    }
+
+    fun getRememberedLoginRequest() {
+        val saved = userManager.getRememberLoginRequest()
+        rememberedLoginRequest.value = saved
     }
 
     private fun saveUserAndToken(data: AuthResult?) {

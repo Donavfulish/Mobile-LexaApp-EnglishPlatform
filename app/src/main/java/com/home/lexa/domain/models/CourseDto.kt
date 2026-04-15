@@ -1,8 +1,7 @@
 package com.home.lexa.domain.models
-
 import kotlinx.serialization.Serializable
 
-// Model hứng data từ luồng GET
+
 data class Course(
     val id: Long,
     val topicId: Int?,
@@ -12,7 +11,26 @@ data class Course(
     val privacy: String?
 )
 
-// Model đẩy data lên cho luồng POST
+interface BaseCourseFilter
+
+enum class StudentCourseFilter : BaseCourseFilter {
+    ALL,
+    FAVORITE,
+    LEARNING,
+    FINISHED
+}
+
+enum class TeacherCourseFilter : BaseCourseFilter {
+    ALL,
+    FAVORITE,
+    LEARNING,
+    MYCOURSE
+}
+
+data class ShortCourse(
+    val data: List<ShortCourseDto>,
+    val status: BaseCourseFilter
+)
 
 data class ShortCourseDto(
     val id: Long,
@@ -55,7 +73,7 @@ data class CreatorDto(
 
 
 @Serializable
-data class SpeakingCourseDetailDto(
+data class CourseDetailDto(
     val id: Long,
     val thumbnail_url: String?,
     val creator: CreatorDto,
@@ -67,7 +85,7 @@ data class SpeakingCourseDetailDto(
     val favorite_user_count: Int,
     val description: String?,
     val deckId: Long?,
-    val list_speaking_day: List<ShortSpeakingDayDto>,
+    val list_speaking_day: SpeakingDayPagination,
     val list_topic: List<Topic>
 )
 
@@ -104,5 +122,3 @@ data class SearchInfo(
     val order: String ?= null,
     val limit: Int ?= null
 )
-
-

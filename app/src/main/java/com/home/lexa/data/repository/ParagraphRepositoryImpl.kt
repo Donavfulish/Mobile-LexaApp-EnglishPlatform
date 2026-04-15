@@ -1,6 +1,8 @@
 package com.home.lexa.data.repository
 
+import androidx.navigation.ui.AppBarConfiguration
 import com.home.lexa.data.remote.ParagraphApiService
+import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.CreateParagraphRequest
 import com.home.lexa.domain.models.ParagraphResponseDto
 import com.home.lexa.domain.models.ParagraphResultResponseDto
@@ -18,6 +20,7 @@ class ParagraphRepositoryImpl (
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true && body.data != null) {
+                AppMemoryCache.remove("getParagraphSpeakingDay_${request.speakingDayId}")
                 Result.success(body.data)
             } else {
                 Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ khi tạo đoạn văn"))
@@ -28,6 +31,7 @@ class ParagraphRepositoryImpl (
     }
 
     override suspend fun updateParagraph(
+        speakingDayId: Long,
         paragraphId: Long,
         request: UpdateParagraphRequest
     ): Result<ParagraphResponseDto> {
@@ -36,6 +40,7 @@ class ParagraphRepositoryImpl (
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true && body.data != null) {
+                AppMemoryCache.remove("getParagraphSpeakingDay_${speakingDayId}")
                 Result.success(body.data)
             } else {
                 Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ khi cập nhật đoạn văn"))
@@ -45,12 +50,13 @@ class ParagraphRepositoryImpl (
         }
     }
 
-    override suspend fun deleteParagraph(paragraphId: Long): Result<Unit> {
+    override suspend fun deleteParagraph(speakingDayId: Long, paragraphId: Long): Result<Unit> {
         return try {
             val response = apiService.deleteParagraph(paragraphId)
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
+                AppMemoryCache.remove("getParagraphSpeakingDay_${speakingDayId}")
                 Result.success(Unit)
             } else {
                 Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ khi xóa đoạn văn"))

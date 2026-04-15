@@ -15,6 +15,7 @@ class ProfileViewModel(
     private val userManager: UserManager
 ) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
+
     val isLoading: LiveData<Boolean> get() = _isLoading
 
     private val _profileData = MutableLiveData<Profile>()
@@ -51,6 +52,7 @@ class ProfileViewModel(
             val result = repository.updateProfile(data)
             result.onSuccess {
                 _updateSuccess.value = true
+                userManager.updateUserName(data.fullName ?: "");
             }.onFailure { exception ->
                 _error.value = exception.message ?: "Lỗi không xác định"
             }

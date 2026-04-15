@@ -8,8 +8,11 @@ import androidx.core.content.ContextCompat
 import com.home.lexa.R
 import com.home.lexa.databinding.ActivityMainBinding
 import com.home.lexa.databinding.FragmentCourseDetailBinding
+import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.DetailFlashcard
-import com.home.lexa.domain.models.SpeakingCourseDetailDto
+import com.home.lexa.domain.models.CourseDetailDto
+import com.home.lexa.domain.models.ShortSpeakingDayDto
+import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.ui.components.FlashcardMini
 import com.home.lexa.ui.components.Popup
 import com.home.lexa.ui.components.StudentSpeakingDayCard
@@ -29,7 +32,7 @@ class CourseDetailStudent(
         }
     }
 
-    override fun bindCourseData(course: SpeakingCourseDetailDto) {
+    override fun bindCourseData(course: CourseDetailDto) {
         android.util.Log.e("DEBUG_FAVORITE", "Course ID: ${course.id}, is_favorite: ${course.is_favorite}")
         var isFavorite = course.is_favorite ?: false
         activityBinding.appBarLayout.apply {
@@ -48,11 +51,13 @@ class CourseDetailStudent(
             setText(course.type!!, ContextCompat.getColor(fragment.requireContext(), android.R.color.white))
             setBackground( android.graphics.Color.parseColor(course.typeColor))
         }
+        binding.titleCourse.text = course.title
         binding.introduction.text = course.description ?: ""
     }
 
-    override fun bindSpeakingData(course: SpeakingCourseDetailDto) {
-        course.list_speaking_day.forEachIndexed {index, day ->
+    override fun bindSpeakingData(courseId: Long, list: List<ShortSpeakingDayDto>) {
+        binding.speakingDayLayout.removeAllViews()
+        list.forEachIndexed {index, day ->
             val dayCard = StudentSpeakingDayCard(fragment.requireContext()).apply {
                     setData(
                         _day = index + 1,
@@ -72,15 +77,34 @@ class CourseDetailStudent(
         }
     }
 
-    override fun bindFlashcardData(item: DetailFlashcard, card: FlashcardMini) {
-        val params = androidx.gridlayout.widget.GridLayout.LayoutParams().apply {
-            width = 0
-            height = androidx.gridlayout.widget.GridLayout.LayoutParams.WRAP_CONTENT
-            columnSpec = androidx.gridlayout.widget.GridLayout.spec(androidx.gridlayout.widget.GridLayout.UNDEFINED, 1f)
-            setMargins(16, 16, 16, 16)
+    override fun bindFlashcardData(flashcards:  List<DetailFlashcard>) {
+
+        flashcards.forEach { item ->
+            val card = FlashcardMini(fragment.requireContext())
+            val vocab = Vocabulary(
+                level = ColorLabel(item.type, "#E0E0E5"),
+                imageUrl = item.imageUrl,
+                word = item.word,
+                pronunciation_url = item.audioUrl ?: "",
+                transciption = item.transcription,
+                part_of_speech = ColorLabel(item.partOfSpeech, "#636AE8"),
+                definition = item.meaning,
+                example = item.example ?: ""
+            )
+            card.setData(vocab)
+
+            val params = androidx.gridlayout.widget.GridLayout.LayoutParams().apply {
+                width = 0
+                height = androidx.gridlayout.widget.GridLayout.LayoutParams.WRAP_CONTENT
+                columnSpec = androidx.gridlayout.widget.GridLayout.spec(
+                    androidx.gridlayout.widget.GridLayout.UNDEFINED,
+                    1f
+                )
+                setMargins(16, 16, 16, 16)
+            }
+            card.layoutParams = params
+            binding.vocabularyGrid.addView(card)
         }
-        card.layoutParams = params
-        binding.vocabularyGrid.addView(card)
     }
 
     override fun observerViewModel() {

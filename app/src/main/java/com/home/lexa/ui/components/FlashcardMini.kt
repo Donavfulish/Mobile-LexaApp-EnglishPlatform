@@ -63,19 +63,15 @@ class FlashcardMini @JvmOverloads constructor(
     fun flipFront() { if (!isFront) flipCard() }
     fun flipBack() { if (isFront) flipCard() }
 
-    // Bắt sự kiến bấm nút Zoom
     fun zoom() {
         val dialog = android.app.Dialog(context)
         val dialogBinding = ViewLayoutFlashcardZoomBinding.inflate(LayoutInflater.from(context), null, false)
 
-        // Tìm trực tiếp từ XML
         val bigCard = dialogBinding.bigCard
         val btnClose = dialogBinding.btnClose
 
-        // Đổ dữ liệu vào
         bigCard.setData(this.data)
 
-        // Xử lý nút đóng
         dialogBinding.root.setOnClickListener {
             dialog.dismiss()
         }
@@ -99,8 +95,6 @@ class FlashcardMini @JvmOverloads constructor(
             )
         }
     }
-
-    // Bắt sự kiện bấm nút Edit
 
     // Tác vụ phát âm khi bấm nút
     fun pronounce() {
@@ -169,7 +163,7 @@ class FlashcardMini @JvmOverloads constructor(
                 val rotation = progress * 2 * 90f
                 visibleView.rotationY = if (isFront) rotation else -rotation
 
-                // Áp dụng scale trực tiếp lên view con như code tham khảo của bạn
+                // Áp dụng scale trực tiếp lên view con
                 visibleView.scaleX = currentScale
                 visibleView.scaleY = currentScale
 

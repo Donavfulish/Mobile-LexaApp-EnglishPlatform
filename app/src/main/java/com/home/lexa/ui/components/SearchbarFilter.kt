@@ -12,14 +12,12 @@ import androidx.core.widget.doOnTextChanged
 import com.home.lexa.R
 import com.home.lexa.databinding.ViewSearchbarFilterBinding
 
-// Kế thừa FrameLayout để bọc component XML lại
 class SearchbarFilter @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val binding = ViewSearchbarFilterBinding.inflate(LayoutInflater.from(context), this, true)
 
-    // 1. Khai báo Callback cho nút Filter (vì mỗi trang sẽ có giao diện/chức năng bộ lọc khác nhau)
     private var onFilterClickListener: (() -> Unit)? = null
 
     init {
@@ -37,7 +35,6 @@ class SearchbarFilter @JvmOverloads constructor(
         binding.etSearch.hint = text
     }
 
-    // 2. Định nghĩa hàm thiết lập Callback cho nút Filter
     fun setOnFilterClickListener(action: () -> Unit) {
         this.onFilterClickListener = action
     }

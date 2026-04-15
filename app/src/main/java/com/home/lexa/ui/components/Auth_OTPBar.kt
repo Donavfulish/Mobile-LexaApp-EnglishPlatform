@@ -28,7 +28,6 @@ class Auth_OTPBar @JvmOverloads constructor(
         clearError()
         setupOtpListener()
 
-        // Khi click vào vùng đệm xung quanh PinView
         setOnClickListener {
             focusAndShowKeyboard()
         }
@@ -59,13 +58,11 @@ class Auth_OTPBar @JvmOverloads constructor(
     fun focusAndShowKeyboard() {
         binding.pinview.requestFocus()
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        // Dùng toggle nếu show không được, nhưng showSoftInput là chuẩn nhất
         imm.showSoftInput(binding.pinview, InputMethodManager.SHOW_IMPLICIT)
     }
 
     fun setInputEnabled(enabled: Boolean) {
         binding.pinview.apply {
-            // GIỮ NGUYÊN isFocusable = true ĐỂ KHÔNG BỊ ĐỔI MÀU HỆ THỐNG
             isFocusable = true
             isFocusableInTouchMode = true
             isFocusable = enabled
@@ -74,13 +71,9 @@ class Auth_OTPBar @JvmOverloads constructor(
             alpha = if (enabled) 1.0f else 0.5f
 
             if (enabled) {
-//                inputType = InputType.TYPE_CLASS_NUMBER
-//                requestFocus()
                 focusAndShowKeyboard()
             } else {
                 inputType = InputType.TYPE_NULL
-//                val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//                imm.hideSoftInputFromWindow(windowToken, 0)
                 val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(windowToken, 0)
             }
@@ -107,10 +100,7 @@ class Auth_OTPBar @JvmOverloads constructor(
     fun clearError() {
         val defaultColor = Color.parseColor("#BDBDBD")
         binding.pinview.apply {
-            // Trả lại màu gốc trong XML của bạn
             setLineColor(defaultColor)
-
-            // Nếu bạn đang disable thì nhớ bật lại
             alpha = 1.0f
         }
     }

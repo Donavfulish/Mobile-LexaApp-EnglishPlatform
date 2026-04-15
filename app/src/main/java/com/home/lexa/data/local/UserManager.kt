@@ -1,8 +1,13 @@
 package com.home.lexa.data.local
 
 import android.content.Context
+import com.home.lexa.domain.models.LoginRequest
 import com.home.lexa.domain.models.UserInfo
 import com.home.lexa.domain.models.UserRole
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 object PreferenceKeys {
     const val USER_ID = "user_id"
@@ -10,11 +15,17 @@ object PreferenceKeys {
     const val USER_NAME = "user_name"
     const val USER_ROLE = "user_role"
     const val IS_EMAIL_VERIFIED = "is_email_verified"
+    const val REMEMBERED_EMAIL = "remembered_email"
+    const val REMEMBERED_PASSWORD = "remembered_password"
+    const val IS_REMEMBERED = "is_remembered"
+    const val STREAK_COUNT = "streak_count"
+    const val LAST_ACTIVE_DATE = "last_active_date"
 }
 
 class UserManager(context: Context) {
 
     private val prefs = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+    private val rememberPrefs = context.getSharedPreferences("remember_prefs", Context.MODE_PRIVATE)
 
     fun saveUser(user: UserInfo) {
         prefs.edit()
@@ -24,6 +35,46 @@ class UserManager(context: Context) {
             .putString(PreferenceKeys.USER_ROLE, user.role.name)
             .putBoolean(PreferenceKeys.IS_EMAIL_VERIFIED, user.isEmailVerified ?: false)
             .apply()
+    }
+
+    fun updateUserName(name: String) {
+        prefs.edit()
+            .putString(PreferenceKeys.USER_NAME, name)
+            .apply()
+    }
+
+
+    fun updateStreak() {
+        val today = getTodayString()
+        val lastDate = prefs.getString(PreferenceKeys.LAST_ACTIVE_DATE, "")
+        var currentStreak = prefs.getInt(PreferenceKeys.STREAK_COUNT, 0)
+
+        if (lastDate == today) {
+            return
+        }
+
+        if (lastDate == getYesterdayString()) {
+            currentStreak++
+        } else {
+            currentStreak = 1
+        }
+
+        prefs.edit()
+            .putInt(PreferenceKeys.STREAK_COUNT, currentStreak)
+            .putString(PreferenceKeys.LAST_ACTIVE_DATE, today)
+            .apply()
+    }
+
+    fun getStreakCount(): Int = prefs.getInt(PreferenceKeys.STREAK_COUNT, 0)
+
+    private fun getTodayString(): String {
+        return SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
+    }
+
+    private fun getYesterdayString(): String {
+        val cal = Calendar.getInstance()
+        cal.add(Calendar.DATE, -1)
+        return SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(cal.time)
     }
 
     fun getUserId(): Int = prefs.getInt(PreferenceKeys.USER_ID, -1)
@@ -43,5 +94,35 @@ class UserManager(context: Context) {
 
     fun clearUser() {
         prefs.edit().clear().apply()
+    }
+
+    fun rememberLoginRequest(request: LoginRequest) {
+        rememberPrefs.edit()
+            .putBoolean(PreferenceKeys.IS_REMEMBERED, true)
+            .putString(PreferenceKeys.REMEMBERED_EMAIL, request.email)
+            .putString(PreferenceKeys.REMEMBERED_PASSWORD, request.password)
+            .apply()
+    }
+
+    fun forgetLoginRequest() {
+        rememberPrefs.edit()
+            .putBoolean(PreferenceKeys.IS_REMEMBERED, false)
+            .remove(PreferenceKeys.REMEMBERED_EMAIL)
+            .remove(PreferenceKeys.REMEMBERED_PASSWORD)
+            .apply()
+    }
+
+    fun getRememberLoginRequest(): LoginRequest? {
+        val email = rememberPrefs.getString(PreferenceKeys.REMEMBERED_EMAIL, null) ?: ""
+        val password = rememberPrefs.getString(PreferenceKeys.REMEMBERED_PASSWORD, null) ?: ""
+
+        val is_remembered = rememberPrefs.getBoolean(PreferenceKeys.IS_REMEMBERED, false)
+
+        if (!is_remembered) return null
+
+        return LoginRequest(
+            email = rememberPrefs.getString(PreferenceKeys.REMEMBERED_EMAIL, null) ?: "",
+            password = rememberPrefs.getString(PreferenceKeys.REMEMBERED_PASSWORD, null) ?: ""
+        )
     }
 }

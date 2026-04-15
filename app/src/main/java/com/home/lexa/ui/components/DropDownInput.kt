@@ -24,7 +24,6 @@ class DropDownInput @JvmOverloads constructor(
     init {
         orientation = VERTICAL
 
-        // Đọc các thuộc tính từ XML nếu cần (Title, Hint...)
         val typedArray = context.obtainStyledAttributes(attrs, com.home.lexa.R.styleable.DropdownInput)
         val title = typedArray.getString(com.home.lexa.R.styleable.DropdownInput_dropdownTitle)
         binding.tvTitle.text = title

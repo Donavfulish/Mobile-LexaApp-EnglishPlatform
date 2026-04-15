@@ -39,6 +39,7 @@ data class CreateFlashcardRequest(
 @Serializable
 data class UpdateFlashcardRequest(
     val flashcardId: Long,
+    @Transient
     val deckId: Long,
     val word: String? = null,
     val transcription: String? = null,

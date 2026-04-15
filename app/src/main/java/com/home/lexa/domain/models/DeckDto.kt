@@ -10,7 +10,6 @@ data class DeckDto(
     val vocabNumber: Int,
     val createdAt: String
 )
-
 @Serializable
 data class DeckResult(
     val deckId: Long,
@@ -22,7 +21,6 @@ data class DeckResult(
 @Serializable
 data class CreateDeckRequest(
     val title: String,
-    val creatorId: Int,
 )
 
 @Serializable
@@ -56,3 +54,10 @@ data class UpdateDeckResultRequest(
     val rememberedCount: Int,
     val forgottenCount: Int
 )
+
+@Serializable
+data class AllDeckPaginationResponse(
+    val data: List<DeckDto>,
+    val searchInfo: SearchInfo,
+    val nextCursor: Long?= null,
+    val totalItem: Long)

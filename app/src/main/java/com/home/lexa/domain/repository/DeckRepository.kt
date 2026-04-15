@@ -1,15 +1,20 @@
 package com.home.lexa.domain.repository
 
+import com.home.lexa.domain.models.AllCoursePaginationResponse
+import com.home.lexa.domain.models.AllDeckPaginationResponse
 import com.home.lexa.domain.models.CreateDeckRequest
 import com.home.lexa.domain.models.CreateDeckResultRequest
 import com.home.lexa.domain.models.DeckDto
 import com.home.lexa.domain.models.DeckResult
+import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.models.UpdateDeckRequest
 import com.home.lexa.domain.models.UpdateDeckResultRequest
 
 interface DeckRepository {
-    suspend fun getAllDecks(): Result<List<DeckDto>>
+    suspend fun getAllDecks(searchInfo: SearchInfo, nextCursor: Long?): Result<AllDeckPaginationResponse>
+    suspend fun getFavoriteDecks(searchInfo: SearchInfo, nextCursor: Long?): Result<AllCoursePaginationResponse>
+
     suspend fun getDeckResult(deckId: Long): Result<DeckResult?>
     suspend fun favoriteDeck(deckId: Long ): Result<Boolean>
     suspend fun disFavoriteDeck(deckId: Long): Result<Boolean>

@@ -10,9 +10,6 @@ import android.view.Window
 import android.widget.Toast
 import com.home.lexa.databinding.InputDeckBinding
 
-
-
-
 class DeckInput @JvmOverloads constructor(
     context: Context,
     themeResId: Int = 0
@@ -29,47 +26,44 @@ class DeckInput @JvmOverloads constructor(
         binding = InputDeckBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
+
     override fun onStart() {
         super.onStart()
-        // Ép chiều rộng window full màn hình, chiều cao bọc nội dung
+        val displayMetrics = context.resources.displayMetrics
+        val marginPx = (16 * displayMetrics.density).toInt()
+        val width = displayMetrics.widthPixels - (2 * marginPx)
+
         window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
+            width,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
     }
-    /**
-     * Hàm hiển thị Popup nhập liệu
-     * @param onConfirm trả về chuỗi String là tên bộ từ vựng người dùng nhập
-     */
+
     fun showDialog(
         title: String,
         confirmText: String = "Xác nhận",
-        onConfirm: (String) -> Unit, // Thay đổi quan trọng: truyền String ra ngoài
+        onConfirm: (String) -> Unit,
         onCancel: () -> Unit = {}
     ) {
         show()
 
         binding.tvTitle.text = title
         binding.btnConfirm.text = confirmText
-
-        // Xóa text cũ nếu mở lại popup
         binding.edtVocabName.text?.clear()
-
+        
         binding.btnCancel.setOnClickListener {
             onCancel.invoke()
             dismiss()
         }
-
+        
         binding.btnConfirm.setOnClickListener {
             val inputText = binding.edtVocabName.text.toString().trim()
 
-            // Validate: Bắt buộc phải nhập gì đó mới cho tạo
             if (inputText.isNotEmpty()) {
                 onConfirm.invoke(inputText)
                 dismiss()
             } else {
                 Toast.makeText(context, "Vui lòng nhập tên bộ từ vựng", Toast.LENGTH_SHORT).show()
-
             }
         }
     }

@@ -1,15 +1,19 @@
 package com.home.lexa.ui.course.course_detail
 
 
+import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import com.home.lexa.R
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.widget.NestedScrollView
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -21,8 +25,6 @@ import com.home.lexa.databinding.FragmentCourseDetailBinding
 import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.CreateCourseRequest
-import com.home.lexa.domain.models.EditCourseRequest
-import com.home.lexa.domain.models.SpeakingCourseDetailDto
 import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.ui.components.FlashcardMini
@@ -46,14 +48,27 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
     internal var selectedTopicId =  0
     internal var courseId: Long = -1L
     internal lateinit var list_topic: List<Topic>
+    internal var courseImageUri: Uri? = null
     private val activityBinding by lazy { (requireActivity() as MainActivity).binding }
 
-
     private val userManager: UserManager by inject()
+
     override fun onDestroyView() {
         super.onDestroyView()
         handler = null
     }
+
+    internal val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        if (uri != null) {
+            courseImageUri = uri
+            binding.backgroundCourse.load(uri) {
+                crossfade(true)
+            }
+        } else {
+            // Người dùng đóng thư viện mà không chọn ảnh
+        }
+    }
+
     override fun setupViews() {
         isOwner = true
         courseId = arguments?.getLong("courseId") ?: -1L
@@ -75,12 +90,6 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             removeCustomView()
             setOnClickBack()
         }
-
-        activityBinding.appBarLayout.apply {
-            setText("Chi tiết khoá học");
-            setBackButtonVisible(true);
-        }
-
 
         // =============================================GENERAL SETUP==========================================
         binding.searchBarVocabulary.apply {
@@ -109,6 +118,10 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             setBackground(ContextCompat.getColor(requireContext(), R.color.gray_E0E0E5))
         }
 
+        binding.cameraBtn.setOnClickAction {
+            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+
         binding.speakingBtn.setOnClickAction {
             if (!isSpeakingMode) {
                 isSpeakingMode = true
@@ -129,21 +142,15 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 binding.vocabularyLayout.visibility = View.VISIBLE
             }
         }
-
-
-        binding.topic.setOnClickAction {
-            AppMemoryCache.remove("speakingCourseDetail_${courseId}")
-            AppMemoryCache.remove("vocabularyList_${courseId}")
-            val check: SpeakingCourseDetailDto?  = AppMemoryCache.get("speakingCourseDetail_17")
-            Log.e("DEBUG_CACHE", "Cache after remove: $check")
-        }
         syncTabUI()
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.loadCourseDetail(courseId)
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        if(courseId != -1L){
+//            viewModel.loadCourseDetail(courseId)
+//        }
+//    }
     override fun observeData() {
 
         // THEO DOI LOADING CHUNG
@@ -156,6 +163,14 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 binding.shimmerLayout.stopShimmer()
                 binding.shimmerLayout.visibility = View.GONE
                 binding.contentScroll.visibility = View.VISIBLE
+            }
+        }
+
+        viewModel.paginationLoading.observe(viewLifecycleOwner){ isLoading ->
+            if(isLoading){
+                binding.loadingSpeakingDayProgressBar.visibility = View.VISIBLE
+            } else {
+                binding.loadingSpeakingDayProgressBar.visibility = View.GONE
             }
         }
 
@@ -196,7 +211,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 )
                 binding.saveBtn.setText("Đang lưu thông tin...", ContextCompat.getColor(requireContext(), R.color.white))
                 if (newTitle.isNotBlank() || newDesc.isNotBlank()) {
-                    viewModel.createCourse(request)
+                    viewModel.createCourse(request, courseImageUri)
                 } else {
                     Toast.makeText(requireContext(), "Vui lòng điền đầy đủ thông tin!", Toast.LENGTH_LONG).show()
                 }
@@ -242,14 +257,33 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             binding.teacherNameCourse.text = course.creator.name
             binding.studentNumCourse.text = course.studying_user_count.toString()
             binding.favoriteNumCourse.text = course.favorite_user_count.toString()
-            binding.speakingNum.text = "${course.list_speaking_day.size} Bài học"
+            binding.speakingNum.text = "${course.list_speaking_day.totalItems} Bài học"
             binding.speakingDayLayout.removeAllViews()
 
             // =====================================THONG TIN HIEN THI KHOA HOC=====================================
             handler?.bindCourseData(course)
-
+            binding.contentScroll.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _->
+                val content = v.getChildAt(0)
+                val totalContentHeight = content.measuredHeight
+                val screenHeight = v.measuredHeight
+                val threshold = 300
+                if(scrollY + screenHeight >= totalContentHeight - threshold){
+                    if(viewModel.paginationLoading.value == false && !viewModel.isLastPage && isSpeakingMode){
+                        viewModel.loadMoreSpeakingDay(true, courseId, viewModel.nextItem)
+                    }
+                }
+            })
             // =====================================THONG TIN HIEN THI SPEAKING DAY=====================================
-            handler?.bindSpeakingData(course)
+            //handler?.bindSpeakingData(course.id, course.list_speaking_day.data)
+        }
+
+        // THEO DOI TINH TRANG SPEAKINGDAY TRA VE
+        viewModel.speakingDayDetailData.observe(viewLifecycleOwner){ speakingDays ->
+            if (speakingDays.isNullOrEmpty()){
+                return@observe
+            }
+
+            handler?.bindSpeakingData(courseId, speakingDays)
         }
 
         // THEO DOI TINH TRANG FLASHCARD TRA VE
@@ -267,21 +301,8 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             binding.flashcardNum.text = "${flashcards.size}"
             binding.vocabularyGrid.removeAllViews()
             binding.vocabularyGrid2.removeAllViews()
-            flashcards.forEach { item ->
-                val card = FlashcardMini(requireContext())
-                val vocab = Vocabulary(
-                    level = ColorLabel(item.type, "#E0E0E5"),
-                    image = 0,
-                    word = item.word,
-                    pronunciation_url = item.audioUrl ?: "",
-                    transciption = item.transcription,
-                    part_of_speech = ColorLabel(item.partOfSpeech, "#636AE8"),
-                    definition = item.meaning,
-                    example = item.example ?: ""
-                )
-                card.setData(vocab)
-                handler?.bindFlashcardData(item, card)
-            }
+
+            handler?.bindFlashcardData(flashcards)
         }
 
         viewModel.createCourseStatus.observe(viewLifecycleOwner) { result ->
@@ -295,6 +316,8 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                     "Lưu thông tin",
                     ContextCompat.getColor(requireContext(), R.color.white)
                 )
+                AppMemoryCache.removePrefix("getAllCourses_")
+                AppMemoryCache.removePrefix("getFavoriteCourses_")
                 val bundle = bundleOf("courseId" to newId)
                 findNavController().navigate(R.id.courseDetailFragment, bundle,
                     NavOptions.Builder()

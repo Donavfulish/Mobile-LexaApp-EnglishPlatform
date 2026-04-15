@@ -27,7 +27,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-                tools:src="@tools:sample/avatars" />
+                tools:src="@tools:sample/avatars"
+                android:scaleType="centerCrop" />
 
             <ImageView
                 android:layout_width="26dp"
@@ -165,9 +166,10 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/tvStreakInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="15 ngày 🔥"
+                    android:text="0 ngày 🔥"
                     android:textColor="#757575"
                     android:textSize="11sp"
                     app:layout_constraintBottom_toBottomOf="@+id/tvChartTitle"
@@ -179,18 +181,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Tổng cộng: 5 giờ 30 phút"
+                    android:text="Tổng cộng: 0 phút"
                     android:textColor="#9E9E9E"
                     android:textSize="11sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvChartTitle" />
 
-                <ImageView
+                <com.home.lexa.ui.components.UsageChartView
+                    android:id="@+id/usageChartView"
                     android:layout_width="match_parent"
-                    android:layout_height="160dp"
+                    android:layout_height="200dp"
                     android:layout_marginTop="20dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_mock_chart_image"
                     app:layout_constraintTop_toBottomOf="@+id/tvChartSub" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

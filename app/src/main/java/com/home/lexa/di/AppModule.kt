@@ -95,17 +95,17 @@ val appModule = module {
 
 
     // 5. Khởi tạo ViewModels
-    viewModel { HomeViewModel(get<CourseRepository>()) }
+    viewModel { HomeViewModel(get<CourseRepository>(), get()) }
     viewModel { AuthViewModel(androidApplication(), get(), get(), get()) }
     viewModel { ProfileViewModel(get(), get()) }
     viewModel { FavoriteLibraryModel(get()) }
     viewModel { PersonalLibraryModel(get()) }
     viewModel { StudentCourseListModel (get()) }
     viewModel { TeacherCourseListModel(get()) }
-    viewModel { CourseDetailViewModel(get(), get(), get(), get())}
+    viewModel { CourseDetailViewModel(get(), get(), get(), get(), get())}
     viewModel { VocabularyFlashcardViewModel(get(), get())}
     viewModel { ExerciseModeViewModel(get())}
     viewModel { ExerciseResultViewModel(get(), get())}
-    viewModel { FlashcardEditAddViewModel(get())}
+    viewModel { FlashcardEditAddViewModel(get(), get())}
     viewModel { SpeakingPracticeViewModel(get(), get()) }
 }

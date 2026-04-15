@@ -18,6 +18,15 @@ object AppMemoryCache {
         cache.remove(key)
     }
 
+    fun removePrefix(prefix: String){
+        val keys = cache.snapshot().keys
+        for(key in keys){
+            if(key.startsWith(prefix)){
+                cache.remove(key)
+            }
+        }
+    }
+
     fun clearAll() {
         cache.evictAll()
     }

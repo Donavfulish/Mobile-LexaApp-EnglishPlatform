@@ -3,7 +3,6 @@ package com.home.lexa.ui.course.vocabulary_flashcard
 import android.util.Log
 import android.os.Bundle
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -11,27 +10,19 @@ import androidx.navigation.fragment.findNavController
 import com.home.lexa.MainActivity
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
-import com.home.lexa.core.ui.setTopBarTitle
 import com.home.lexa.databinding.FragmentVocabularyFlashcardBinding
 import com.home.lexa.domain.models.ColorLabel
-import com.home.lexa.domain.models.DeckDto
 import com.home.lexa.domain.models.DetailFlashcardWithResult
 import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.models.UpdateDeckRequest
 import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.ui.components.FlashcardMini
 import com.home.lexa.ui.components.Popup
-import kotlinx.coroutines.selects.select
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBinding>(FragmentVocabularyFlashcardBinding::inflate) {
     private val viewModel: VocabularyFlashcardViewModel by viewModel()
-    val deck = DeckDto(
-        id= 1,
-        title= "TOEFL Essentials",
-        vocabNumber = 5,
-        createdAt = "2 Ngày trước"
-    )
+
     private var vocabLearning = 0
     private val deckId by lazy { arguments?.getLong("DECK_ID_KEY") }
     private val deckTitle by lazy { arguments?.getString("DECK_TITLE_KEY") }
@@ -112,7 +103,6 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
             val bundle = Bundle().apply {
                 putBoolean("IS_EDIT_KEY", false)
                 putLong("DECK_ID_KEY", deckId!!)
-
             }
             findNavController().navigate(R.id.action_vocabularyFlashcardFragment_to_flashcardAddEditFragment,bundle)
         }
@@ -123,9 +113,11 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
 
     override fun onResume() {
         super.onResume()
+        println("DEBUG: deckId = $deckId")
         if (deckId == null) return
 
         viewModel.loadFlashcardDetail(deckId!!);
+        viewModel.loadFlashcardsWithResult(deckId!!)
     }
     private fun navigateToExerciseMode() {
         Log.d("LEXA_DEBUG", "Hàm navigateToExerciseMode được gọi")
@@ -149,7 +141,7 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
             Log.d("LEXA_DEBUG", "Chuyển trang thành công!")
 
         } catch (e: Exception) {
-            // Nếu có lỗi do Nav Graph chưa mapping đúng, nó sẽ văng vào đây
+
             Log.e("LEXA_DEBUG", "LỖI CHUYỂN TRANG: ${e.message}", e)
             Toast.makeText(requireContext(), "Lỗi chuyển trang: ${e.message}", Toast.LENGTH_SHORT).show()
         }
@@ -214,7 +206,7 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
                 part_of_speech = ColorLabel(item.flashCard.partOfSpeech, "#636AE8"),
                 definition = item.flashCard.meaning,
                 example = item.flashCard.example ?: "",
-                image = 0,
+                imageUrl = item.flashCard.imageUrl,
             )
             card.setData(vocab)
             card.setIsEditable(binding.editToggle.isChecked)

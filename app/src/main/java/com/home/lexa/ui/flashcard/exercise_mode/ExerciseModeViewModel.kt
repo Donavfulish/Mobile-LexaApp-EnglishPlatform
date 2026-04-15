@@ -166,7 +166,7 @@ class ExerciseModeViewModel(
     private fun mapToVocabulary(item: DetailFlashcardWithResult): Vocabulary {
         return Vocabulary(
             level = ColorLabel(item.flashCard.type, "#E0E0E5"),
-            image = 0,
+            imageUrl = item.flashCard.imageUrl,
             word = item.flashCard.word,
             pronunciation_url = item.flashCard.audioUrl ?: "",
             transciption = item.flashCard.transcription,

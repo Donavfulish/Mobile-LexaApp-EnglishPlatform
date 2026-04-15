@@ -60,7 +60,6 @@ class PasswordInput @JvmOverloads constructor(
         binding.etInput.setSelection(binding.etInput.text.length)
     }
 
-    // Set giá trị label và hiển thị Label trên ô Input
     fun setLabel(text: String?) {
         if (text.isNullOrEmpty()) {
             binding.tvLabel.visibility = GONE
@@ -70,7 +69,6 @@ class PasswordInput @JvmOverloads constructor(
         }
     }
 
-    // Cài đặt nội dung hint
     fun setPlaceHolderText(text: String?) {
         if (text.isNullOrEmpty()) return
 
@@ -94,7 +92,7 @@ class PasswordInput @JvmOverloads constructor(
             binding.etInput.transformationMethod = android.text.method.PasswordTransformationMethod.getInstance()
         }
     }
-    // Giúp ViewModel lắng nghe được sự thay đổi của text
+
     fun onTextChanged(action: (String) -> Unit) {
         binding.etInput.doOnTextChanged { text, start, before, count ->
             action(text.toString())
