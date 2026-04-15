@@ -55,6 +55,12 @@
 
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_verifyEmail_to_profileEmailFragment"
+            app:destination="@id/profileEmailFragment"
+
+            app:popUpTo="@id/profileEmailFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -239,10 +245,12 @@
         android:id="@+id/profileFragment"
         android:name="com.home.lexa.ui.profile.profile.ProfileFragment"
         android:label="ProfileFragment">
-
         <action
             android:id="@+id/action_profileFragment_to_profilePersonalInformationFragment"
             app:destination="@id/profilePersonalInformationFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_profileEmailFragment"
+            app:destination="@id/profileEmailFragment" />
         <action
             android:id="@+id/action_profileFragment_to_profileNotificationFragment"
             app:destination="@id/profileNotificationFragment" />
@@ -256,7 +264,11 @@
     <fragment
         android:id="@+id/profileEmailFragment"
         android:name="com.home.lexa.ui.profile.profile_email.ProfileEmailFragment"
-        android:label="ProfileEmailFragment" />
+        android:label="ProfileEmailFragment" >
+        <action
+            android:id="@+id/action_profileEmailFragment_to_verifyEmail"
+            app:destination="@id/verifyEmail"/>
+    </fragment>
 
     <fragment
         android:id="@+id/profilePersonalInformationFragment"

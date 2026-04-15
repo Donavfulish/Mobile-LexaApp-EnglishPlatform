@@ -15,11 +15,17 @@ class PrimaryButton @JvmOverloads constructor(
     private val binding = ButtonPrimaryBinding.inflate(LayoutInflater.from(context), this, true)
     private var originalText: String = ""
 
+    private val defaultBackgroudColor: Int = 0xFF636AE8.toInt()
+    private val disabledBackgroundColor = 0xFFBDC3C7.toInt()
+    private var textColor: Int? = null
+    private var backgroundColor: Int = defaultBackgroudColor
+
     fun setText(text: String, @ColorInt color: Int? = null) {
         originalText = text
         binding.primaryBtn.text = text
         color?.let {
             binding.primaryBtn.setTextColor(color)
+            textColor = color
         }
     }
 
@@ -29,6 +35,7 @@ class PrimaryButton @JvmOverloads constructor(
 
     fun setBackground(@ColorInt color: Int) {
         binding.primaryBtn.backgroundTintList = ColorStateList.valueOf(color)
+        backgroundColor = color
     }
 
     fun setTextColor(@ColorInt color: Int) {
@@ -66,6 +73,17 @@ class PrimaryButton @JvmOverloads constructor(
             binding.primaryBtn.text = loadingText
         } else {
             binding.primaryBtn.text = originalText
+        }
+    }
+
+    fun setEnabledState(isEnabled: Boolean) {
+        binding.primaryBtn.isEnabled = isEnabled
+        if (isEnabled) {
+            // Khôi phục về màu chính (activeColor)
+            binding.primaryBtn.backgroundTintList = ColorStateList.valueOf(backgroundColor)
+        } else {
+            // Chuyển sang màu xám
+            binding.primaryBtn.backgroundTintList = ColorStateList.valueOf(disabledBackgroundColor)
         }
     }
 }

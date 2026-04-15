@@ -2,6 +2,7 @@ package com.home.lexa.data.remote
 
 import com.home.lexa.core.network.ApiResponse
 import com.home.lexa.domain.models.AuthResult
+import com.home.lexa.domain.models.ChangeEmailRequest
 import com.home.lexa.domain.models.LoginRequest
 import com.home.lexa.domain.models.OtpRequest
 import com.home.lexa.domain.models.OtpVerify
@@ -60,10 +61,12 @@ interface AuthApiService {
     @POST("/api/auth/otp/send")
     suspend fun sendOTP(@Body request: OtpRequest): Response<ApiResponse<Unit>>
 
-
     @POST("/api/auth/otp/verify")
     suspend fun verifyOTP(@Body request: OtpVerify): Response<ApiResponse<Unit>>
 
     @POST("/api/auth/reset-password")
     suspend fun resetPassword(@Body request: ResetPasswordRequest): Response<ApiResponse<Unit>>
+
+    @POST("/api/auth/change-email")
+    suspend fun changeEmail(@Body request: ChangeEmailRequest): Response<ApiResponse<AuthResult>>
 }

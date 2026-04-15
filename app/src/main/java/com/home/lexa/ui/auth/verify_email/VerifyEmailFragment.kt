@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentVerifyEmailBinding
+import com.home.lexa.domain.models.ChangeEmailRequest
 import com.home.lexa.ui.auth.AuthState
 import com.home.lexa.ui.auth.AuthViewModel
 import com.home.lexa.ui.utils.StringUtils
@@ -57,13 +58,15 @@ class VerifyEmailFragment : BaseFragment<FragmentVerifyEmailBinding>(FragmentVer
                     is AuthState.Success -> {
                         viewModel.commitEmailVerified()
 
-                        navigateToNextScreen()
+                        handleSuccess()
+                        viewModel.resetOTPState()
                     }
                     is AuthState.Error -> {
                         binding.otpInputs.setInputEnabled(true)
                         binding.otpInputs.showError()
 
                         Toast.makeText(requireContext(), "OTP sai hoặc đã hết hạn", Toast.LENGTH_LONG).show()
+                        viewModel.resetOTPState()
                     }
                 }
             }
@@ -93,7 +96,7 @@ class VerifyEmailFragment : BaseFragment<FragmentVerifyEmailBinding>(FragmentVer
         timer.start()
     }
 
-    private fun navigateToNextScreen() {
+    private fun handleSuccess() {
         when (args.purpose) {
             VERIFY_PURPOSE.TO_HOME.toString() -> {
                 val action = VerifyEmailFragmentDirections.actionVerifyEmailToHomeFragment()
@@ -105,7 +108,11 @@ class VerifyEmailFragment : BaseFragment<FragmentVerifyEmailBinding>(FragmentVer
                 findNavController().navigate(action)
             }
 
-            else -> {}
+            VERIFY_PURPOSE.CHANGE_EMAIL.toString() -> {
+                viewModel.changeEmail(ChangeEmailRequest(email = args.email))
+                val action = VerifyEmailFragmentDirections.actionVerifyEmailToProfileEmailFragment()
+                findNavController().navigate(action)
+            }
         }
     }
 

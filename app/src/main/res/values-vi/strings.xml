@@ -25,6 +25,7 @@
     <string name="already_have_account">Đã có tài khoản</string>
 
     <string name="forget_password">Quên mật khẩu</string>
+    <string name="enter_your_new_password">Cập nhật mật khẩu mới cho tài khoản</string>
     <string name="signup_teacher_title">Tạo tài khoản giáo viên</string>
     <string name="signup_teacher_desc">Tham gia đội ngũ giảng dạy tại Lexa</string>
     <string name="certificate_language">Chứng chỉ ngoại ngữ</string>
@@ -152,4 +153,5 @@
     <string name="set_reminder_time">Cài đặt giờ nhắc nhở</string>
     <string name="home_screen">Trang chủ</string>
     <string name="enter_email_to_reset">Nhập email tài khoản để nhận mã OTP</string>
+    <string name="new_password">Mật khẩu mới</string>
 </resources>

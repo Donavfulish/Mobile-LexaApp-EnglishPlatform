@@ -4,6 +4,7 @@ import android.content.Context
 import com.home.lexa.domain.models.LoginRequest
 import com.home.lexa.domain.models.UserInfo
 import com.home.lexa.domain.models.UserRole
+import com.patrykandpatrick.vico.core.extension.setFieldValue
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -85,6 +86,8 @@ class UserManager(context: Context) {
     }
 
     fun getUserName(): String? = prefs.getString(PreferenceKeys.USER_NAME, null)
+
+    fun getUserEmail(): String? = prefs.getString(PreferenceKeys.USER_EMAIL, null)
 
     fun isEmailVerified(): Boolean = prefs.getBoolean(PreferenceKeys.IS_EMAIL_VERIFIED, false)
 

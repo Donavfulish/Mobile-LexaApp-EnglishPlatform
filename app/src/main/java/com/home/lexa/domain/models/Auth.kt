@@ -83,6 +83,10 @@ data class ResetPasswordRequest(
     val password: String
 )
 
+data class ChangeEmailRequest (
+    val email: String
+)
+
 val mockUserInfo = UserInfo(
     id = 8,
     name = "Huỳnh Gia Bịp",
