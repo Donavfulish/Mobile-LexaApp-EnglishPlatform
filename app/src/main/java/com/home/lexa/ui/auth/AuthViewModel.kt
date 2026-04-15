@@ -25,6 +25,9 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import androidx.lifecycle.AndroidViewModel
 import com.home.lexa.domain.models.OtpRequest
 import com.home.lexa.domain.models.OtpVerify
+import com.home.lexa.domain.models.Profile
+import com.home.lexa.domain.models.UpdateFcmTokenRequest
+import com.home.lexa.domain.repository.ProfileRepository
 
 sealed class AuthState {
     object Idle : AuthState()
@@ -36,6 +39,7 @@ sealed class AuthState {
 class AuthViewModel (
     application: Application,
     private val repository: AuthRespository,
+    private val profileRepository: ProfileRepository,
     private val tokenManager: TokenManager,
     private val userManager: UserManager
 ) : AndroidViewModel(application) {
@@ -69,6 +73,12 @@ class AuthViewModel (
                 if (authResult.ok) {
                     saveUserAndToken(authResult)
 
+                    val fcmToken = tokenManager.getFcmToken()
+                    if (!fcmToken.isNullOrEmpty()) {
+                        val request = UpdateFcmTokenRequest(fcmToken)
+                        profileRepository.updateFcmToken(request)
+                        println("Đã đồng bộ FCM Token với tài khoản user này!")
+                    }
                     _loginState.value =
                         AuthState.Success(authResult.message ?: "Đăng nhập thành công")
                 } else {

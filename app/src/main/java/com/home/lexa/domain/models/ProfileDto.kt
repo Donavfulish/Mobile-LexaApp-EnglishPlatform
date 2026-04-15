@@ -32,4 +32,8 @@ data class Profile(
     val vocabularies: Int = 450,
     val vocabSets: Int = 8
 )
+@Serializable
+data class UpdateFcmTokenRequest(
+    val fcmToken: String
+)
 

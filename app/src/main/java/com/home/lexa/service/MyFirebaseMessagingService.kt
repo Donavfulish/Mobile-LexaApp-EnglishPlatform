@@ -10,14 +10,18 @@ import androidx.navigation.NavDeepLinkBuilder
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.home.lexa.R
+import com.home.lexa.data.local.TokenManager
 import kotlin.random.Random
 
-class MyFirebaseMessagingService: FirebaseMessagingService() {
-    // Hàm này được gọi khi token của thiết bị thay đổi hoặc lần đầu cài app
+class MyFirebaseMessagingService() : FirebaseMessagingService() {
+
+    private val tokenManager: TokenManager by lazy {
+        TokenManager(applicationContext)
+    }
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        // TODO: Gửi token này lên Server của bạn để server biết đường gửi push về máy này
         println("FCM Token: $token")
+        tokenManager.saveFcmToken(token)
     }
 
     // Hàm này được gọi khi có thông báo tới (Đảm bảo server gửi Data Payload)
@@ -56,8 +60,8 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
 
         // 2. Tạo PendingIntent bằng NavDeepLinkBuilder
         val pendingIntent = NavDeepLinkBuilder(this)
-            .setGraph(R.navigation.nav_graph) // TODO: Thay bằng tên file nav_graph.xml của bạn
-            .setDestination(R.id.homeFragment) // TODO: Thay bằng ID Fragment bạn muốn mở khi click thông báo
+            .setGraph(R.navigation.nav_graph)
+            .setDestination(R.id.homeFragment)
             .setArguments(bundle)
             .createPendingIntent()
 

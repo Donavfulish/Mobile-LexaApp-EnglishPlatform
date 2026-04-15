@@ -96,7 +96,7 @@ val appModule = module {
 
     // 5. Khởi tạo ViewModels
     viewModel { HomeViewModel(get<CourseRepository>(), get()) }
-    viewModel { AuthViewModel(androidApplication(), get(), get(), get()) }
+    viewModel { AuthViewModel(androidApplication(), get(), get(), get(),get()) }
     viewModel { ProfileViewModel(get(), get()) }
     viewModel { FavoriteLibraryModel(get()) }
     viewModel { PersonalLibraryModel(get()) }

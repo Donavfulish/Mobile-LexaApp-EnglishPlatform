@@ -20,6 +20,7 @@ object PreferenceKeys {
     const val IS_REMEMBERED = "is_remembered"
     const val STREAK_COUNT = "streak_count"
     const val LAST_ACTIVE_DATE = "last_active_date"
+
 }
 
 class UserManager(context: Context) {
