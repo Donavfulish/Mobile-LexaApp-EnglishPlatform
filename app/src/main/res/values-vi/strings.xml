@@ -24,6 +24,7 @@
     <string name="register_now">Đăng ký ngay</string>
     <string name="already_have_account">Đã có tài khoản</string>
 
+    <string name="forget_password">Quên mật khẩu</string>
     <string name="signup_teacher_title">Tạo tài khoản giáo viên</string>
     <string name="signup_teacher_desc">Tham gia đội ngũ giảng dạy tại Lexa</string>
     <string name="certificate_language">Chứng chỉ ngoại ngữ</string>
@@ -149,4 +150,6 @@
     <string name="study_time_notification">Thông báo giờ học</string>
     <string name="study_time_notification_desc">Thông báo nhắc nhở trước khi đến giờ học đã cài đặt của bạn.</string>
     <string name="set_reminder_time">Cài đặt giờ nhắc nhở</string>
+    <string name="home_screen">Trang chủ</string>
+    <string name="enter_email_to_reset">Nhập email tài khoản để nhận mã OTP</string>
 </resources>

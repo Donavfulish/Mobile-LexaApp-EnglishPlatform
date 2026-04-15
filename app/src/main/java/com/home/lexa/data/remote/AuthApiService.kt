@@ -6,6 +6,7 @@ import com.home.lexa.domain.models.LoginRequest
 import com.home.lexa.domain.models.OtpRequest
 import com.home.lexa.domain.models.OtpVerify
 import com.home.lexa.domain.models.RefreshRequest
+import com.home.lexa.domain.models.ResetPasswordRequest
 import com.home.lexa.domain.models.SignUpRequest
 import com.home.lexa.domain.models.UserInfo
 import okhttp3.MultipartBody
@@ -62,4 +63,7 @@ interface AuthApiService {
 
     @POST("/api/auth/otp/verify")
     suspend fun verifyOTP(@Body request: OtpVerify): Response<ApiResponse<Unit>>
+
+    @POST("/api/auth/reset-password")
+    suspend fun resetPassword(@Body request: ResetPasswordRequest): Response<ApiResponse<Unit>>
 }

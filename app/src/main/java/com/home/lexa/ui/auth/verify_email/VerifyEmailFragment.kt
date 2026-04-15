@@ -15,6 +15,10 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import kotlin.getValue
 
+enum class VERIFY_PURPOSE {
+    TO_HOME, RESET_PASSWORD, CHANGE_EMAIL
+}
+
 class VerifyEmailFragment : BaseFragment<FragmentVerifyEmailBinding>(FragmentVerifyEmailBinding::inflate) {
     private val args: VerifyEmailFragmentArgs by navArgs()
     private val viewModel: AuthViewModel by activityViewModel()
@@ -53,8 +57,7 @@ class VerifyEmailFragment : BaseFragment<FragmentVerifyEmailBinding>(FragmentVer
                     is AuthState.Success -> {
                         viewModel.commitEmailVerified()
 
-                        val action = VerifyEmailFragmentDirections.actionVerifyEmailToHomeFragment()
-                        findNavController().navigate(action)
+                        navigateToNextScreen()
                     }
                     is AuthState.Error -> {
                         binding.otpInputs.setInputEnabled(true)
@@ -88,5 +91,27 @@ class VerifyEmailFragment : BaseFragment<FragmentVerifyEmailBinding>(FragmentVer
             }
         }
         timer.start()
+    }
+
+    private fun navigateToNextScreen() {
+        when (args.purpose) {
+            VERIFY_PURPOSE.TO_HOME.toString() -> {
+                val action = VerifyEmailFragmentDirections.actionVerifyEmailToHomeFragment()
+                findNavController().navigate(action)
+            }
+
+            VERIFY_PURPOSE.RESET_PASSWORD.toString() -> {
+                val action = VerifyEmailFragmentDirections.actionVerifyEmailToResetPasswordFragment(args.email)
+                findNavController().navigate(action)
+            }
+
+            else -> {}
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.resetState()
     }
 }

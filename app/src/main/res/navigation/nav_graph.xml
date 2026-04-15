@@ -18,6 +18,10 @@
         <action
             android:id="@+id/action_signupFragment_to_verifyEmail"
             app:destination="@id/verifyEmail" />
+        <action
+            android:id="@+id/action_loginFragment_to_forgetPasswordFragment"
+            app:destination="@id/forgetPasswordFragment"
+            />
     </fragment>
 
     <fragment
@@ -32,8 +36,6 @@
             app:destination="@id/verifyEmail" />
     </fragment>
 
-
-
     <fragment
         android:id="@+id/verifyEmail"
         android:name="com.home.lexa.ui.auth.verify_email.VerifyEmailFragment"
@@ -41,13 +43,46 @@
         <argument
             android:name="email"
             app:argType="string" />
+        <argument
+            android:name="purpose"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_verifyEmail_to_resetPasswordFragment"
+            app:destination="@id/resetPasswordFragment" />
         <action
             android:id="@+id/action_verifyEmail_to_homeFragment"
             app:destination="@id/homeFragment"
 
             app:popUpTo="@id/loginFragment"
-
             app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/forgetPasswordFragment"
+        android:name="com.home.lexa.ui.auth.forget_password.ForgetPasswordFragment"
+        android:label="forgetPassword">
+        <action
+            android:id="@+id/action_forgetPasswordFragment_to_resetPasswordFragment"
+            app:destination="@id/resetPasswordFragment"/>
+        <action
+            android:id="@+id/action_forgetPasswordFragment_to_verifyEmail"
+            app:destination="@id/verifyEmail" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/resetPasswordFragment"
+        android:name="com.home.lexa.ui.auth.reset_password.ResetPasswordFragment"
+        android:label="resetPassword">
+        <argument
+            android:name="email"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_resetPasswordFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true"
+            />
     </fragment>
 
 

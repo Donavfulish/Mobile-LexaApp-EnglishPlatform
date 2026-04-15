@@ -25,6 +25,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import androidx.lifecycle.AndroidViewModel
 import com.home.lexa.domain.models.OtpRequest
 import com.home.lexa.domain.models.OtpVerify
+import com.home.lexa.domain.models.ResetPasswordRequest
 
 sealed class AuthState {
     object Idle : AuthState()
@@ -53,6 +54,7 @@ class AuthViewModel (
 
     val oauthGoogleResult = MutableLiveData<OAuthGoogleResult?>()
     val rememberedLoginRequest = MutableLiveData<LoginRequest?>(null)
+    val resetPasswordResult = MutableLiveData<Boolean?>(null)
 
     fun setAccessToken(token: String) {
         tokenManager.saveAccessToken(token)
@@ -235,6 +237,23 @@ class AuthViewModel (
         }
     }
 
+
+    fun resetPassword(request: ResetPasswordRequest) {
+        viewModelScope.launch {
+            val result = repository.resetPassword(request)
+
+            result.onSuccess {
+                resetPasswordResult.value = true
+            }.onFailure { error ->
+                resetPasswordResult.value = false
+            }
+        }
+    }
+
+    fun resetOTPState() {
+        _OTPState.value = AuthState.Idle
+    }
+
     fun commitEmailVerified() {
         return userManager.commitEmailVerified()
     }
@@ -246,6 +265,7 @@ class AuthViewModel (
     fun forgetLoginRequest() {
         userManager.forgetLoginRequest()
     }
+
 
     fun getRememberedLoginRequest() {
         val saved = userManager.getRememberLoginRequest()

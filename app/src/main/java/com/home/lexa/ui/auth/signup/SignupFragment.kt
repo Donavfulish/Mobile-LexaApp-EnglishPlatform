@@ -30,6 +30,7 @@ import androidx.core.view.isVisible
 import coil.load
 import coil.size.ViewSizeResolver
 import com.google.firebase.auth.OAuthProvider
+import com.home.lexa.ui.auth.verify_email.VERIFY_PURPOSE
 import com.home.lexa.ui.utils.DateUtils
 import com.home.lexa.ui.utils.MediaUtils
 import com.home.lexa.ui.utils.StringUtils
@@ -185,7 +186,6 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
             setIcon(R.drawable.ic_email)
             setHorizontalScroll()
             setMaxLength(255)
-
         }
 
         binding.inputName.apply {
@@ -378,7 +378,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
     }
 
     private fun navigateToOTPFragment(email: String) {
-        val action = SignupFragmentDirections.actionSignupFragmentToVerifyEmail(email)
+        val action = SignupFragmentDirections.actionSignupFragmentToVerifyEmail(email, VERIFY_PURPOSE.TO_HOME.toString())
 
         findNavController().navigate(action)
     }

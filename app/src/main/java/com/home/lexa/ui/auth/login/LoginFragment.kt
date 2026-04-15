@@ -13,6 +13,7 @@ import com.home.lexa.domain.models.LoginRequest
 import com.home.lexa.ui.auth.AuthState
 import com.home.lexa.ui.auth.AuthViewModel
 import com.home.lexa.ui.auth.GoogleUrls
+import com.home.lexa.ui.auth.verify_email.VERIFY_PURPOSE
 import kotlinx.coroutines.flow.observeOn
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
@@ -45,7 +46,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             setLabel("Mật khẩu")
             setPlaceHolderText("........")
             setHorizontalScroll()
-
         }
     }
 
@@ -70,7 +70,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
         // Quên mật khẩu
         binding.tvForgotPassword.setOnClickListener {
-            Toast.makeText(requireContext(), "Forgot password clicked", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_loginFragment_to_forgetPasswordFragment)
         }
 
         // Nút Google
@@ -124,7 +124,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                             val email = binding.inputEmail.getText().trim()
                             viewModel.sendOTP(email)
 
-                            val action = LoginFragmentDirections.actionSignupFragmentToVerifyEmail(email)
+                            val action = LoginFragmentDirections.actionSignupFragmentToVerifyEmail(email,
+                                VERIFY_PURPOSE.TO_HOME.toString())
                             findNavController().navigate(action)
                         } else {
                             findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
