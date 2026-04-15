@@ -34,6 +34,7 @@ import com.home.lexa.domain.models.GoogleUserInfo
 import com.home.lexa.domain.models.OAuthGoogleResult
 import com.home.lexa.ui.auth.AuthState
 import com.home.lexa.ui.auth.AuthViewModel
+import com.home.lexa.ui.utils.TTSManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -66,7 +67,14 @@ class MainActivity : AppCompatActivity() {
 
         handleIntent(intent)
 
+        TTSManager.init(this)
+
         listenToLogout()
+    }
+
+    override fun onDestroy() {
+        TTSManager.shutdown()
+        super.onDestroy()
     }
 
     override fun onResume() {

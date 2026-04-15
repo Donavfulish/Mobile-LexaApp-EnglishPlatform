@@ -12,6 +12,7 @@ import com.home.lexa.databinding.FlashcardMiniBinding
 import com.home.lexa.databinding.ViewLayoutFlashcardZoomBinding
 import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.domain.models.mockVocabularyData
+import com.home.lexa.ui.utils.TTSManager
 
 // Kế thừa FrameLayout để bọc component XML lại
 class FlashcardMini @JvmOverloads constructor(
@@ -98,8 +99,10 @@ class FlashcardMini @JvmOverloads constructor(
 
     // Tác vụ phát âm khi bấm nút
     fun pronounce() {
-        if (data.pronunciation_url.isEmpty()) return
-        // TODO Phát âm từ data.pronunciation_url
+        val textToRead = data.word
+        if (textToRead.isNotEmpty()) {
+            TTSManager.speak(textToRead)
+        }
     }
 
     // Đổ dữ liệu Vocabulary vào UI
