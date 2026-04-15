@@ -51,6 +51,7 @@ class CourseDetailStudent(
             setText(course.type!!, ContextCompat.getColor(fragment.requireContext(), android.R.color.white))
             setBackground( android.graphics.Color.parseColor(course.typeColor))
         }
+        binding.titleCourse.text = course.title
         binding.introduction.text = course.description ?: ""
     }
 

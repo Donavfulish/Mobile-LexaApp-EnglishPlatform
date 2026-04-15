@@ -28,7 +28,7 @@ class PersonalDeckCard @JvmOverloads constructor(
         binding.tvTime.text = data.createdAt
         binding.tagCategory.setTagData(
             text = data.topic?.name ?: "non-topic",
-            colorHex = data.topic?.colorHex ?: "#636AE8",
+            colorHex = data.topic?.colorHex ?: "#000000",
             hasBorder = false
         )
         binding.ivOptions.setOnClickListener {

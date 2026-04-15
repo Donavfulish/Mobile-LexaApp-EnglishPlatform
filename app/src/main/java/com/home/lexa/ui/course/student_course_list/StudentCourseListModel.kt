@@ -53,6 +53,7 @@ class StudentCourseListModel(private val repository: CourseRepository) : ViewMod
                 StudentCourseFilter.ALL -> repository.getAllCourses(searchInfo, nextCursor)
                 StudentCourseFilter.FAVORITE -> repository.getFavoriteCourses(searchInfo, nextCursor)
                 StudentCourseFilter.LEARNING -> repository.getLearningCourses(searchInfo, nextCursor)
+                StudentCourseFilter.FINISHED -> repository.getLearningCourses(searchInfo, nextCursor)
             }
 
             result.onSuccess { list ->
