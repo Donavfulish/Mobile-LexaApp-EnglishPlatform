@@ -23,6 +23,7 @@ import com.home.lexa.databinding.ButtonLexaBinding
 import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.domain.models.mockVocabularyData
+import com.home.lexa.ui.utils.TTSManager
 
 fun TextView.setVocabularyStyle(hexColor: String) {
     try {
@@ -59,12 +60,19 @@ class Flashcard @JvmOverloads constructor(
         val scale = resources.displayMetrics.density * distance
         binding.layoutFront.root.cameraDistance = scale
         binding.layoutBack.root.cameraDistance = scale
-
+        binding.layoutBack.btnSound.setOnClickListener{pronounce()}
         setOnClickListener { flipCard() }
     }
 
     fun flipFront() { if (!isFront) flipCard() }
     fun flipBack() { if (isFront) flipCard() }
+    // Tác vụ phát âm khi bấm nút
+    fun pronounce() {
+        val textToRead = data.word
+        if (textToRead.isNotEmpty()) {
+            TTSManager.speak(textToRead)
+        }
+    }
 
     /**
      * Đổ dữ liệu Vocabulary vào UI
