@@ -23,8 +23,10 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import androidx.lifecycle.AndroidViewModel
+import com.home.lexa.domain.models.ChangeEmailRequest
 import com.home.lexa.domain.models.OtpRequest
 import com.home.lexa.domain.models.OtpVerify
+import com.home.lexa.domain.models.ResetPasswordRequest
 
 sealed class AuthState {
     object Idle : AuthState()
@@ -43,16 +45,19 @@ class AuthViewModel (
     private val _loginState = MutableStateFlow<AuthState>(AuthState.Idle)
     private val _signupState = MutableStateFlow<AuthState>(AuthState.Idle)
     private val _OTPState = MutableStateFlow<AuthState>(AuthState.Idle)
+    private val _changeEmailState = MutableStateFlow<AuthState>(AuthState.Idle)
 
     val loginState: StateFlow<AuthState> = _loginState.asStateFlow()
     val signupState: StateFlow<AuthState> = _signupState.asStateFlow()
     val OTPState: StateFlow<AuthState> = _OTPState.asStateFlow()
+    val changeEmailState: StateFlow<AuthState> = _changeEmailState.asStateFlow()
 
     private var selectedLanguageUri: Uri? = null
     private var selectedPedagogyUri: Uri? = null
 
     val oauthGoogleResult = MutableLiveData<OAuthGoogleResult?>()
     val rememberedLoginRequest = MutableLiveData<LoginRequest?>(null)
+    val resetPasswordResult = MutableLiveData<Boolean?>(null)
 
     fun setAccessToken(token: String) {
         tokenManager.saveAccessToken(token)
@@ -235,6 +240,48 @@ class AuthViewModel (
         }
     }
 
+    fun resetPassword(request: ResetPasswordRequest) {
+        viewModelScope.launch {
+            val result = repository.resetPassword(request)
+
+            result.onSuccess {
+                resetPasswordResult.value = true
+            }.onFailure { error ->
+                resetPasswordResult.value = false
+            }
+        }
+    }
+
+    fun changeEmail(request: ChangeEmailRequest) {
+        viewModelScope.launch {
+            _changeEmailState.value = AuthState.Loading
+
+            val result = repository.changeEmail(request)
+
+            result.onSuccess { authResult ->
+                if (authResult.ok) {
+                    saveUserAndToken(authResult)
+
+                    _changeEmailState.value =
+                        AuthState.Success(authResult.message ?: "Cập nhật email thành công")
+                } else {
+                    _changeEmailState.value =
+                        AuthState.Error(authResult.message ?: "Cập nhật email thất bại ")
+                }
+            }.onFailure { error ->
+                _changeEmailState.value = AuthState.Error("Email đã được sử dụng")
+            }
+        }
+    }
+
+    fun clearChangeEmailState() {
+        _changeEmailState.value = AuthState.Idle
+    }
+
+    fun resetOTPState() {
+        _OTPState.value = AuthState.Idle
+    }
+
     fun commitEmailVerified() {
         return userManager.commitEmailVerified()
     }
@@ -247,9 +294,14 @@ class AuthViewModel (
         userManager.forgetLoginRequest()
     }
 
+
     fun getRememberedLoginRequest() {
         val saved = userManager.getRememberLoginRequest()
         rememberedLoginRequest.value = saved
+    }
+
+    fun getUserEmail(): String? {
+        return userManager.getUserEmail()
     }
 
     private fun saveUserAndToken(data: AuthResult?) {

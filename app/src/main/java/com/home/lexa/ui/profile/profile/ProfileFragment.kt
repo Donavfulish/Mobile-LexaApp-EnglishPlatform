@@ -182,6 +182,11 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_profileFragment_to_profilePersonalInformationFragment)
         }
 
+        binding.menuEmail.setOnClickListener {
+            val action = ProfileFragmentDirections.actionProfileFragmentToProfileEmailFragment()
+            findNavController().navigate(action)
+        }
+
         binding.menuNotifications.setOnClickListener {
             findNavController().navigate(R.id.action_profileFragment_to_profileNotificationFragment)
         }

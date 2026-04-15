@@ -108,6 +108,8 @@ class MainActivity : AppCompatActivity() {
         if (
             destinationId == R.id.loginFragment ||
             destinationId == R.id.signUpFragment ||
+            destinationId == R.id.forgetPasswordFragment ||
+            destinationId == R.id.resetPasswordFragment ||
             destinationId == R.id.verifyEmail
         ) {
             binding.bottomNavigationMain.visibility = View.GONE

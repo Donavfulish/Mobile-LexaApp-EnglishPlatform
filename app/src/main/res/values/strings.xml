@@ -23,6 +23,10 @@
     <string name="title_footer">Developed by HCMUS \@ 2024</string>
     <string name="register_now">Register now</string>
     <string name="already_have_account">Already have an account</string>
+    <string name="forget_password">Forget password</string>
+    <string name="enter_email_to_reset">Enter your account email to receive an OTP code</string>
+    <string name="new_password">Reset password</string>
+    <string name="enter_your_new_password">Enter new password for your account</string>
 
     <string name="signup_teacher_title">Create teacher account</string>
     <string name="signup_teacher_desc">Join the teaching staff at Lexa</string>

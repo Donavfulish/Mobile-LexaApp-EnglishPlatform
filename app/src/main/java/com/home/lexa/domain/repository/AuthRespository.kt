@@ -1,9 +1,11 @@
 package com.home.lexa.domain.repository
 
 import com.home.lexa.domain.models.AuthResult
+import com.home.lexa.domain.models.ChangeEmailRequest
 import com.home.lexa.domain.models.LoginRequest
 import com.home.lexa.domain.models.OtpRequest
 import com.home.lexa.domain.models.OtpVerify
+import com.home.lexa.domain.models.ResetPasswordRequest
 import com.home.lexa.domain.models.SignUpRequest
 import com.home.lexa.domain.models.UserInfo
 import okhttp3.MultipartBody
@@ -26,4 +28,6 @@ interface AuthRespository {
     ): Result<AuthResult>
     suspend fun sendOTP(request: OtpRequest): Result<Unit>
     suspend fun verifyOTP(request: OtpVerify): Result<Unit>
+    suspend fun resetPassword(request: ResetPasswordRequest): Result<Unit>
+    suspend fun changeEmail(request: ChangeEmailRequest): Result<AuthResult>
 }

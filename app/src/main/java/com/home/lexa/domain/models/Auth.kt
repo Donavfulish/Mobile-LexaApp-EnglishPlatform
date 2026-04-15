@@ -78,6 +78,15 @@ data class OtpVerify (
     val otp: String,
 )
 
+data class ResetPasswordRequest(
+    val email: String,
+    val password: String
+)
+
+data class ChangeEmailRequest (
+    val email: String
+)
+
 val mockUserInfo = UserInfo(
     id = 8,
     name = "Huỳnh Gia Bịp",
