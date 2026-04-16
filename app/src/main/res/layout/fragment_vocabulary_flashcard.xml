@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <!-- 1. SHIMMER LAYER -->
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmerLayout"
         android:layout_width="match_parent"
@@ -16,13 +15,16 @@
         <include layout="@layout/layout_vocabulary_flashcard_skeleton" />
     </com.facebook.shimmer.ShimmerFrameLayout>
 
-    <!-- 2. CONTENT LAYER (Bọc trong NestedScrollView để cuộn được) -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/contentScroll"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:fillViewport="true"
-        android:visibility="visible">
+        android:visibility="visible"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

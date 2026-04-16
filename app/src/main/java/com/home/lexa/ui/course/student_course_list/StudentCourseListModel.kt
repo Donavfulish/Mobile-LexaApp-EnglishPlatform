@@ -56,18 +56,23 @@ class StudentCourseListModel(private val repository: CourseRepository) : ViewMod
             }
 
             result.onSuccess { list ->
-                currentPages += list.data.size
-                totalPages = list.totalItem.toInt()
-                lastId = list.nextCursor
+                if(!list.data.isNullOrEmpty()){
+                    currentPages += list.data.size
+                    totalPages = list.totalItem.toInt()
+                    lastId = list.nextCursor
 
-                if(currentPages.toLong() == list.totalItem){
+                    if(currentPages.toLong() == list.totalItem){
+                        isLastPage = true
+                        lastId = null
+                    }
+
+                    _courses.value = ShortCourse(list.data, requestFilter)
+                } else {
                     isLastPage = true
-                    lastId = null
+                    _courses.value = ShortCourse(emptyList(), requestFilter)
                 }
-                
-                _courses.value = ShortCourse(list.data, requestFilter)
+
             }.onFailure {
-                _courses.value = ShortCourse(emptyList(), requestFilter)
             }
 
             _isLoading.value = false

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.DetailFlashcardWithResult
+import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.domain.repository.FlashcardRepository
 import kotlinx.coroutines.launch
@@ -80,10 +81,10 @@ class ExerciseModeViewModel(
     public fun fetchFlashcardsFromApi() {
         viewModelScope.launch {
             try {
-                val result = repository.getAllFlashcardWithResult(deckId)
+                val result = repository.getAllFlashcardWithResult(deckId, SearchInfo(null, null, null, totalCards.value), null)
 
                 result.onSuccess { data ->
-                    allCards = data.toMutableList()
+                    allCards = data.data.toMutableList()
 
                     // Lấy về xong thì mới cất vào Cache để quản lý việc vuốt thẻ
                     AppMemoryCache.put(cacheKey, allCards.toList())

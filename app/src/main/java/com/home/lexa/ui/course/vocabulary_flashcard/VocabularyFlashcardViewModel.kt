@@ -37,6 +37,14 @@ class VocabularyFlashcardViewModel(
     private val _topicData = MutableLiveData<List<Topic>>()
     val topicData: LiveData<List<Topic>> get() = _topicData
 
+    private val _paginationLoading = MutableLiveData<Boolean>()
+    val paginationLoading: LiveData<Boolean> get() = _paginationLoading
+
+    var lastId: Long? = null
+    var isLastPage = false
+    var currentPages = 0
+    var totalPages = 0
+
     fun loadFlashcardDetail(deckId: Long) {
         viewModelScope.launch {
             try {
@@ -111,15 +119,33 @@ class VocabularyFlashcardViewModel(
             }
         }
     }
-    fun loadFlashcardsWithResult(deckId: Long) {
+    fun loadFlashcardsWithResult(isLoadMore: Boolean, deckId: Long, searchInfo: SearchInfo, nextCursor: Long?) {
+        if (isLoadMore && (isLastPage || _isLoading.value == true)) return
+
+        if(!isLoadMore){
+            lastId =  null
+            isLastPage = false
+            currentPages = 0
+            totalPages = 0
+        }
         viewModelScope.launch {
-            _isLoading.value = true
+            _paginationLoading.value = true
             try {
                 // Gọi API từ Repository
-                val result = flashcardRepository.getAllFlashcardWithResult(deckId)
-
+                val result = flashcardRepository.getAllFlashcardWithResult(deckId, searchInfo, nextCursor)
                 result.onSuccess { list ->
-                    _flashcardWithResultData.value = list ?: emptyList()
+                    if(!list.data.isNullOrEmpty()){
+                        currentPages += list.data.size
+                        totalPages = list.totalItem.toInt()
+                        lastId = list.data[list.data.size - 1].flashCard.id
+                        if(currentPages == totalPages || list.nextCursor == null){
+                            isLastPage = true
+                        }
+                        _flashcardWithResultData.value = list.data
+                    } else {
+                        _flashcardWithResultData.value = emptyList()
+                        isLastPage = true
+                    }
                 }.onFailure {
                     _flashcardWithResultData.value = emptyList()
                     Log.e("DEBUG_VM", "Lỗi load FlashcardWithResult: ${it.message}")
@@ -128,7 +154,7 @@ class VocabularyFlashcardViewModel(
                 _flashcardWithResultData.value = emptyList()
                 Log.e("DEBUG_VM", "Exception load FlashcardWithResult: ${e.message}")
             } finally {
-                _isLoading.value = false
+                _paginationLoading.value = false
             }
         }
     }

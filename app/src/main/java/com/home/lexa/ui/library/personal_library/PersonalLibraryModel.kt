@@ -28,26 +28,32 @@ class PersonalLibraryModel(private val repository: DeckRepository) : ViewModel()
 
     fun fetchAllDecks(isLoadMore: Boolean, searchInfo: SearchInfo, nextCursor: Long?) {
         if (isLoadMore && (isLastPage || _isLoading.value == true)) return
+        if(!isLoadMore){
+            lastId =  null
+            isLastPage = false
+            currentPages = 0
+            totalPages = 0
+        }
         viewModelScope.launch {
-            if(!isLoadMore){
-                lastId =  null
-                isLastPage = false
-                currentPages = 0
-                totalPages = 0
-            }
             _isLoading.value = true
             val result = repository.getAllDecks(searchInfo, nextCursor)
 
             result.onSuccess { list ->
-                currentPages += list.data.size
-                totalPages = list.totalItem.toInt()
-                lastId = list.nextCursor
+                if(!list.data.isNullOrEmpty()){
+                    currentPages += list.data.size
+                    totalPages = list.totalItem.toInt()
+                    lastId = list.nextCursor
 
-                if(currentPages.toLong() == list.totalItem){
+                    if(currentPages.toLong() == list.totalItem){
+                        isLastPage = true
+                        lastId = null
+                    }
+                    _decks.value = list.data
+                } else {
                     isLastPage = true
-                    lastId = null
+                    _decks.value = emptyList()
                 }
-                _decks.value = list.data
+
             }.onFailure {
                 _decks.value = emptyList()
             }
