@@ -8,6 +8,8 @@ import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentProfileNotificationBinding
 import com.home.lexa.ui.profile.profile.ProfileViewModel
+import com.home.lexa.ui.utils.ScheduleNotificationUtils
+import com.home.lexa.ui.utils.ScheduleNotificationUtils.cancelNotification
 import com.home.lexa.ui.utils.ScheduleNotificationUtils.scheduleNotification
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -49,8 +51,14 @@ class ProfileNotificationFragment : BaseFragment<FragmentProfileNotificationBind
                     scheduleNotification(
                         requireContext(),
                         testTime,
-                        "Test Thông Báo Streak",
-                        "Thông báo này sẽ xuất hiện sau 10 giây"
+                        "Thông Báo Streak",
+                        "Thông báo này sẽ xuất hiện sau 10 giây",
+                        ScheduleNotificationUtils.REQ_CODE_STREAK
+                    )
+                }else{
+                    cancelNotification(
+                        requireContext(),
+                        ScheduleNotificationUtils.REQ_CODE_STREAK
                     )
                 }
             }
@@ -69,7 +77,13 @@ class ProfileNotificationFragment : BaseFragment<FragmentProfileNotificationBind
 
                 if (isOn) {
                     val (hour, minute) = binding.reminderSetting.getSelectedTime()
-                    scheduleDailyReminder(hour, minute)
+                    val selectedDays = binding.reminderSetting.getSelectedDays();
+                    scheduleDailyReminder(hour, minute,selectedDays)
+                }else{
+                    cancelNotification(
+                        requireContext(),
+                        ScheduleNotificationUtils.REQ_CODE_STUDY_HOUR
+                    )
                 }
             }
         }
@@ -79,7 +93,23 @@ class ProfileNotificationFragment : BaseFragment<FragmentProfileNotificationBind
 
 
             if (viewModel.timeToggleState.value == true) {
-                scheduleDailyReminder(hour, minute)
+                val selectedDays = binding.reminderSetting.getSelectedDays().toSet();
+
+                scheduleDailyReminder(hour, minute,selectedDays)
+                Toast.makeText(requireContext(), "Đã đặt lịch vào $hour:$minute", Toast.LENGTH_SHORT).show()
+            }
+        }
+        binding.reminderSetting.setOnDaysChangedListener { days ->
+
+            val safeDaysCopy = days.toSet()
+
+            viewModel.saveScheduleDays(safeDaysCopy)
+
+
+            if (viewModel.timeToggleState.value == true) {
+                val (hour, minute) = binding.reminderSetting.getSelectedTime()
+
+                scheduleDailyReminder(hour, minute,safeDaysCopy)
                 Toast.makeText(requireContext(), "Đã đặt lịch vào $hour:$minute", Toast.LENGTH_SHORT).show()
             }
         }
@@ -108,27 +138,39 @@ class ProfileNotificationFragment : BaseFragment<FragmentProfileNotificationBind
             val minute = timePair.second
             binding.reminderSetting.setTime(hour, minute)
         }
-
+        viewModel.scheduleDays.observe(viewLifecycleOwner) { days ->
+            binding.reminderSetting.setSelectedDays(days)
+        }
     }
-    private fun scheduleDailyReminder(hour: Int, minute: Int) {
+    private fun scheduleDailyReminder(hour: Int, minute: Int, selectedDays: Set<Int>) {
         val calendar = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, hour)
             set(Calendar.MINUTE, minute)
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
+        }
 
-            // Quan trọng: Nếu giờ hẹn đã qua trong ngày hôm nay, cộng thêm 1 ngày để nổ vào ngày mai
-            if (before(Calendar.getInstance())) {
-                add(Calendar.DATE, 1)
+
+
+        if (selectedDays.isNotEmpty()) {
+            var daysAdded = 0
+            while ((calendar.before(Calendar.getInstance()) || !selectedDays.contains(calendar.get(Calendar.DAY_OF_WEEK))) && daysAdded < 7) {
+                calendar.add(Calendar.DATE, 1)
+                daysAdded++
+            }
+        } else {
+
+            if (calendar.before(Calendar.getInstance())) {
+                calendar.add(Calendar.DATE, 1)
             }
         }
 
-        // Gọi hàm tiện ích của bạn
         scheduleNotification(
             requireContext(),
             calendar.timeInMillis,
             "Đã đến giờ học!",
-            "Hãy vào Lexa duy trì chuỗi học tập ngay nhé!"
+            "Hãy vào Lexa duy trì chuỗi học tập ngay nhé!",
+            ScheduleNotificationUtils.REQ_CODE_STUDY_HOUR
         )
     }
 }

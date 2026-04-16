@@ -8,7 +8,9 @@ import android.app.AlarmManager
 import android.os.Build
 import android.provider.Settings
 object ScheduleNotificationUtils {
-    fun scheduleNotification(context: Context, timeInMillis: Long, title: String, message: String) {
+    const val REQ_CODE_STUDY_HOUR = 100
+    const val REQ_CODE_STREAK = 101
+    fun scheduleNotification(context: Context, timeInMillis: Long, title: String, message: String, requestCode: Int) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, ScheduleNotification::class.java).apply {
             putExtra("title", title)
@@ -18,7 +20,7 @@ object ScheduleNotificationUtils {
         // PendingIntent là "vé thông hành" để hệ thống mở Receiver của bạn sau này
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            0,
+            requestCode,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -35,9 +37,22 @@ object ScheduleNotificationUtils {
                 context.startActivity(intent)
             }
         } else {
-
             alarmManager?.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent)
         }
 
+    }
+
+    fun cancelNotification(context: Context, requestCode: Int) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, ScheduleNotification::class.java)
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            requestCode,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        alarmManager.cancel(pendingIntent)
     }
 }

@@ -20,7 +20,8 @@ class ProfileNotificationViewModel(
 
     private val _scheduleTime = MutableLiveData<Pair<Int, Int>>()
     val scheduleTime: LiveData<Pair<Int, Int>> get() = _scheduleTime
-
+    private val _scheduleDays = MutableLiveData<Set<Int>>()
+    val scheduleDays: LiveData<Set<Int>> get() = _scheduleDays
     init {
 
         loadSavedData()
@@ -33,6 +34,7 @@ class ProfileNotificationViewModel(
         val hour = timeManager.getHourScheduleTime()
         val minute = timeManager.getMinuteScheduleTime()
         _scheduleTime.value = Pair(hour, minute)
+        _scheduleDays.value = timeManager.getScheduleDays()
     }
 
 
@@ -50,6 +52,10 @@ class ProfileNotificationViewModel(
     fun saveScheduleTime(hour: Int, minute: Int) {
         timeManager.saveScheduleTime(hour, minute)
         _scheduleTime.value = Pair(hour, minute)
+    }
+    fun saveScheduleDays(days: Set<Int>) {
+        timeManager.saveScheduleDays(days)
+        _scheduleDays.value = days
     }
 }
 

@@ -14,8 +14,8 @@ import com.home.lexa.R
 
 const val notificationId = 1
 const val channelId = "channel1"
-const val titleExtra = "titleExtra"
-const val messageExtra = "messageExtra"
+const val titleExtra = "title"
+const val messageExtra = "message"
 
 class ScheduleNotification: BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
