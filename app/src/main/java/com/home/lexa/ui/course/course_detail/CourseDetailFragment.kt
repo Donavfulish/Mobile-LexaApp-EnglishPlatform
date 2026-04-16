@@ -25,6 +25,7 @@ import com.home.lexa.databinding.FragmentCourseDetailBinding
 import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.CreateCourseRequest
+import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.ui.components.FlashcardMini
@@ -47,6 +48,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
     internal var isPublic = true
     internal var selectedTopicId =  0
     internal var courseId: Long = -1L
+    internal var deckId: Long = -1L
     internal lateinit var list_topic: List<Topic>
     internal var courseImageUri: Uri? = null
     private val activityBinding by lazy { (requireActivity() as MainActivity).binding }
@@ -168,9 +170,9 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
 
         viewModel.paginationLoading.observe(viewLifecycleOwner){ isLoading ->
             if(isLoading){
-                binding.loadingSpeakingDayProgressBar.visibility = View.VISIBLE
+                binding.paginationProgressBar.visibility = View.VISIBLE
             } else {
-                binding.loadingSpeakingDayProgressBar.visibility = View.GONE
+                binding.paginationProgressBar.visibility = View.GONE
             }
         }
 
@@ -224,6 +226,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 Toast.makeText(requireContext(), "Không tìm thấy dữ liệu khóa học", Toast.LENGTH_SHORT).show()
                 return@observe
             }
+            deckId = course.deckId!!
             if (courseId != -1L) {
                 binding.creatingRememberCard.visibility = View.GONE
             }
@@ -267,14 +270,18 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 val totalContentHeight = content.measuredHeight
                 val screenHeight = v.measuredHeight
                 val threshold = 300
-                if(scrollY + screenHeight >= totalContentHeight - threshold){
-                    if(viewModel.paginationLoading.value == false && !viewModel.isLastPage && isSpeakingMode){
-                        viewModel.loadMoreSpeakingDay(true, courseId, viewModel.nextItem)
+                if (scrollY + screenHeight >= totalContentHeight - threshold) {
+                    if (viewModel.paginationLoading.value == false && !viewModel.isLastPage) {
+                        if (isSpeakingMode) {
+                            viewModel.loadMoreSpeakingDay(true, courseId, viewModel.nextItem)
+                        } else {
+                            viewModel.loadMoreFlashcards(
+                                true, deckId, SearchInfo(null, null, null), viewModel.nextItem
+                            )
+                        }
                     }
                 }
             })
-            // =====================================THONG TIN HIEN THI SPEAKING DAY=====================================
-            //handler?.bindSpeakingData(course.id, course.list_speaking_day.data)
         }
 
         // THEO DOI TINH TRANG SPEAKINGDAY TRA VE
@@ -282,7 +289,6 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             if (speakingDays.isNullOrEmpty()){
                 return@observe
             }
-
             handler?.bindSpeakingData(courseId, speakingDays)
         }
 
@@ -298,10 +304,9 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                     binding.vocabularyListLayout.visibility = View.VISIBLE
                 }
             }
-            binding.flashcardNum.text = "${flashcards.size}"
+            binding.flashcardNum.text = "${viewModel.totalPages}"
             binding.vocabularyGrid.removeAllViews()
             binding.vocabularyGrid2.removeAllViews()
-
             handler?.bindFlashcardData(flashcards)
         }
 
@@ -318,6 +323,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 )
                 AppMemoryCache.removePrefix("getAllCourses_")
                 AppMemoryCache.removePrefix("getFavoriteCourses_")
+                AppMemoryCache.removePrefix("getMyCourses_")
                 val bundle = bundleOf("courseId" to newId)
                 findNavController().navigate(R.id.courseDetailFragment, bundle,
                     NavOptions.Builder()
@@ -336,6 +342,10 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
     }
 
     internal fun updateToggleUI() {
+        viewModel.nextItem = null
+        viewModel.currentPages = 0
+        viewModel.totalPages = 0
+        viewModel.isLastPage = false
         if (isSpeakingMode) {
             binding.speakingBtn.apply {
                 setIconColor(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))

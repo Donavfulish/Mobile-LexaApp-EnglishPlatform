@@ -1,6 +1,8 @@
 package com.home.lexa.data.remote
 
 import com.home.lexa.core.network.ApiResponse
+import com.home.lexa.domain.models.AllFlashcardPaginationResponse
+import com.home.lexa.domain.models.AllFlashcardResultPaginationResponse
 import com.home.lexa.domain.models.CreateFlashcardRequest
 import com.home.lexa.domain.models.DetailFlashcard
 import com.home.lexa.domain.models.DetailFlashcardWithResult
@@ -18,17 +20,28 @@ import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface FlashcardApiService {
     @GET("/api/decks/{deckId}/flashcards")
     suspend fun getAllFlashcard(
-        @Path("deckId") deckId: Long
-    ): Response<ApiResponse<List<DetailFlashcard>>>
+        @Path("deckId") deckId: Long,
+        @Query("query") query: String? = null,
+        @Query("sort") sort: String? = null,
+        @Query("order") order: String? = null,
+        @Query("limit") limit: String? = null,
+        @Query("next_id") next_id: String? = null,
+    ): Response<ApiResponse<AllFlashcardPaginationResponse>>
 
     @GET("api/decks/{deckId}/flashcards/result")
     suspend fun getAllFlashcardWithResult(
-        @Path("deckId") deckId: Long
-    ): Response<ApiResponse<List<DetailFlashcardWithResult>>>
+        @Path("deckId") deckId: Long,
+        @Query("query") query: String? = null,
+        @Query("sort") sort: String? = null,
+        @Query("order") order: String? = null,
+        @Query("limit") limit: String? = null,
+        @Query("next_id") next_id: String? = null,
+    ): Response<ApiResponse<AllFlashcardResultPaginationResponse>>
 
     @Multipart
     @POST("/api/decks/{deckId}/flashcards")

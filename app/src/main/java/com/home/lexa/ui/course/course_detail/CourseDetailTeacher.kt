@@ -11,6 +11,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.widget.NestedScrollView
 import androidx.navigation.fragment.findNavController
 import coil.load
 import com.home.lexa.R
@@ -21,6 +22,7 @@ import com.home.lexa.domain.models.CreateSpeakingDayRequest
 import com.home.lexa.domain.models.DetailFlashcard
 import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.CourseDetailDto
+import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.ShortSpeakingDayDto
 import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.ui.components.FlashcardMini
@@ -198,7 +200,7 @@ class CourseDetailTeacher(
     }
 
     override fun bindFlashcardData(flashcards:  List<DetailFlashcard>) {
-
+        binding.vocabularyGrid2.removeAllViews()
         flashcards.forEach { item ->
             val card = FlashcardMini(fragment.requireContext())
             val vocab = Vocabulary(
@@ -255,7 +257,6 @@ class CourseDetailTeacher(
             card.layoutParams = params
             binding.vocabularyGrid2.addView(card)
         }
-
     }
 
     override fun observerViewModel() {

@@ -606,6 +606,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
                     android:layout_marginBottom="50dp"
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
@@ -619,9 +620,6 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
-
-                
-                
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 <!--            Vocabulary-->
@@ -707,7 +705,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:layout_marginBottom="50dp"
                         app:layout_constraintVertical_bias="0.0"
                         app:layout_constraintTop_toBottomOf="@+id/titleToggle"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -732,7 +729,7 @@
                         android:layout_marginTop="20dp"
                         app:layout_constraintVertical_bias="0.0"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent">
+                        app:layout_constraintBottom_toTopOf="@+id/rememberCard">
 
                         <androidx.gridlayout.widget.GridLayout
                             android:id="@+id/vocabularyGrid"
@@ -814,6 +811,18 @@
                         app:layout_constraintTop_toBottomOf="@+id/rememberCard"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ProgressBar
+                android:id="@+id/paginationProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="70dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/speakingLayout"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

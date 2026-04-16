@@ -9,6 +9,7 @@ import com.home.lexa.domain.models.DeckResult
 import com.home.lexa.domain.models.DetailFlashcard
 import com.home.lexa.domain.models.DetailFlashcardWithResult
 import com.home.lexa.domain.models.Topic
+import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.UpdateDeckRequest
 import com.home.lexa.domain.repository.DeckRepository
 import com.home.lexa.domain.repository.FlashcardRepository
@@ -36,13 +37,21 @@ class VocabularyFlashcardViewModel(
     private val _topicData = MutableLiveData<List<Topic>>()
     val topicData: LiveData<List<Topic>> get() = _topicData
 
+    private val _paginationLoading = MutableLiveData<Boolean>()
+    val paginationLoading: LiveData<Boolean> get() = _paginationLoading
+
+    var lastId: Long? = null
+    var isLastPage = false
+    var currentPages = 0
+    var totalPages = 0
+
     fun loadFlashcardDetail(deckId: Long) {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
 
                 Log.d("loadFlashcardDetail", "detailid: $deckId")
-                val flashcardsDeferred = async { flashcardRepository.getAllFlashcard(deckId) }
+                val flashcardsDeferred = async { flashcardRepository.getAllFlashcard(deckId, SearchInfo(null, null, null), null) }
                 val deckResultDeferred = async { deckRepository.getDeckResult(deckId) }
 
                 val flashcardsResult = flashcardsDeferred.await()
@@ -55,7 +64,7 @@ class VocabularyFlashcardViewModel(
                 }
 
                 flashcardsResult.onSuccess { list ->
-                    _flashcardDetailData.value = list ?: emptyList()
+                    _flashcardDetailData.value = list.data ?: emptyList()
                 }.onFailure {
                     _flashcardDetailData.value = emptyList()
                 }
@@ -73,7 +82,7 @@ class VocabularyFlashcardViewModel(
             try {
                 deckRepository.updateDeck(request)
             } catch (e: Exception) {
-                // Xử lý lỗi
+                // Xử lý lỗi (báo lỗi qua LiveData/SharedFlow để Fragment hiện Toast)
             } finally {
                 // _isLoading.value = false
             }
@@ -110,14 +119,34 @@ class VocabularyFlashcardViewModel(
             }
         }
     }
-    fun loadFlashcardsWithResult(deckId: Long) {
+    fun loadFlashcardsWithResult(isLoadMore: Boolean, deckId: Long, searchInfo: SearchInfo, nextCursor: Long?) {
+        if (isLoadMore && (isLastPage || _isLoading.value == true)) return
+
+        if(!isLoadMore){
+            lastId =  null
+            isLastPage = false
+            currentPages = 0
+            totalPages = 0
+        }
         viewModelScope.launch {
-            _isLoading.value = true
+            _paginationLoading.value = true
             try {
-                val result = flashcardRepository.getAllFlashcardWithResult(deckId)
+                // Gọi API từ Repository
+                val result = flashcardRepository.getAllFlashcardWithResult(deckId, searchInfo, nextCursor)
 
                 result.onSuccess { list ->
-                    _flashcardWithResultData.value = list ?: emptyList()
+                    if(!list.data.isNullOrEmpty()){
+                        currentPages += list.data.size
+                        totalPages = list.totalItem.toInt()
+                        lastId = list.data[list.data.size - 1].flashCard.id
+                        if(currentPages == totalPages || list.nextCursor == null){
+                            isLastPage = true
+                        }
+                        _flashcardWithResultData.value = list.data
+                    } else {
+                        _flashcardWithResultData.value = emptyList()
+                        isLastPage = true
+                    }
                 }.onFailure {
                     _flashcardWithResultData.value = emptyList()
                     Log.e("DEBUG_VM", "Lỗi load FlashcardWithResult: ${it.message}")
@@ -126,7 +155,7 @@ class VocabularyFlashcardViewModel(
                 _flashcardWithResultData.value = emptyList()
                 Log.e("DEBUG_VM", "Exception load FlashcardWithResult: ${e.message}")
             } finally {
-                _isLoading.value = false
+                _paginationLoading.value = false
             }
         }
     }

@@ -42,15 +42,20 @@ class FavoriteLibraryModel(private val repository: DeckRepository) : ViewModel()
             val result = repository.getFavoriteDecks(searchInfo, nextCursor)
 
             result.onSuccess { list ->
-                currentPages += list.data.size
-                totalPages = list.totalItem.toInt()
-                lastId = list.nextCursor
+                if(!list.data.isNullOrEmpty()){
+                    currentPages += list.data.size
+                    totalPages = list.totalItem.toInt()
+                    lastId = list.nextCursor
 
-                if(currentPages.toLong() == list.totalItem){
+                    if(currentPages.toLong() == list.totalItem){
+                        isLastPage = true
+                        lastId = null
+                    }
+                    _courses.value = list.data
+                } else{
                     isLastPage = true
-                    lastId = null
+                    _courses.value = emptyList()
                 }
-                _courses.value = list.data
             }.onFailure {
                 _courses.value = emptyList()
             }

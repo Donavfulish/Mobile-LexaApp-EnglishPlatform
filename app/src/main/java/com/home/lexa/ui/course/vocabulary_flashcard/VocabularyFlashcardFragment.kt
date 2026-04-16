@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.widget.NestedScrollView
 import androidx.navigation.fragment.findNavController
 import com.home.lexa.MainActivity
 import com.home.lexa.R
@@ -13,6 +14,7 @@ import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentVocabularyFlashcardBinding
 import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.DetailFlashcardWithResult
+import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.models.UpdateDeckRequest
 import com.home.lexa.domain.models.Vocabulary
@@ -106,8 +108,19 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
             }
             findNavController().navigate(R.id.action_vocabularyFlashcardFragment_to_flashcardAddEditFragment,bundle)
         }
+        binding.contentScroll.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _->
+            val content = v.getChildAt(0)
+            val totalContentHeight = content.measuredHeight
+            val screenHeight = v.measuredHeight
+            val threshold = 300
+            if (scrollY + screenHeight >= totalContentHeight - threshold) {
+                if (viewModel.paginationLoading.value == false && !viewModel.isLastPage) {
+                    viewModel.loadFlashcardsWithResult(true, deckId!!, SearchInfo(null, null, null), viewModel.lastId)
+                }
+            }
+        })
 
-        viewModel.loadFlashcardsWithResult(deckId!!)
+        viewModel.loadFlashcardsWithResult(false, deckId!!, SearchInfo(null, null, null), null)
         viewModel.loadTopics()
     }
 
@@ -159,9 +172,18 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
                 binding.contentScroll.visibility = View.VISIBLE
             }
         }
+
+        viewModel.paginationLoading.observe(viewLifecycleOwner){ isLoading ->
+            if(isLoading){
+                binding.paginationProgressBar.visibility = View.VISIBLE
+            } else {
+                binding.paginationProgressBar.visibility = View.GONE
+            }
+        }
+
         viewModel.flashcardWithResultData.observe(viewLifecycleOwner) { list ->
             renderFlashcards(list)
-            updateProgress(list.size)
+            updateProgress(viewModel.totalPages)
         }
 
         viewModel.deckResultData.observe(viewLifecycleOwner){result ->
@@ -190,7 +212,7 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
             }
     }
     private fun renderFlashcards(list: List<DetailFlashcardWithResult>) {
-        binding.flashcardNum.text = "${list.size}"
+        binding.flashcardNum.text = "${viewModel.totalPages}"
         binding.vocabularyGrid.removeAllViews()
 
 

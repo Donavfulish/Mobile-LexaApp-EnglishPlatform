@@ -19,6 +19,7 @@ import com.home.lexa.domain.repository.FlashcardRepository
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.async
 import com.home.lexa.domain.models.EditCourseRequest
+import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.ShortSpeakingDayDto
 import com.home.lexa.domain.models.SpeakingDayPagination
 import com.home.lexa.domain.models.Topic
@@ -124,15 +125,21 @@ class CourseDetailViewModel(
         viewModelScope.launch {
             val result = speakingDayRepository.getSpeakingDays(courseId, nextOrder)
             result.onSuccess { list ->
-                currentPages =  list.data.size
-                totalPages = list.totalItems
-                nextItem = list.data[list.data.size - 1].order
-                Log.d("PAGINATION_DEBUG", "curr: $currentPages, totalPages: $totalPages, nextItem: $nextItem")
+                if(!list.data.isNullOrEmpty()){
+                    currentPages =  list.data.size
+                    totalPages = list.totalItems
+                    nextItem = list.data[list.data.size - 1].order
+                    Log.d("PAGINATION_DEBUG", "curr: $currentPages, totalPages: $totalPages, nextItem: $nextItem")
 
-                if(currentPages == totalPages){
+                    if(currentPages == totalPages){
+                        isLastPage = true
+                    }
+                    _speakingDayDetailData.value = list.data
+                } else {
                     isLastPage = true
+                    _speakingDayDetailData.value = emptyList()
                 }
-                _speakingDayDetailData.value = list.data
+
                 _paginationLoading.value = false
             } .onFailure {
                 _speakingDayDetailData.value = emptyList()
@@ -163,12 +170,11 @@ class CourseDetailViewModel(
                             if(currentPages == totalPages){
                                 isLastPage = true
                             }
-                            AppMemoryCache.put("getSpeakingDays", data.list_speaking_day)
                             _speakingDayDetailData.value = data.list_speaking_day.data
                             _paginationLoading.value = false
                         }
                         if(data.deckId != null) {
-                            fetchFlashcardsInBackground(data.id, data.deckId)
+                            loadMoreFlashcards(false, data.deckId, SearchInfo(null, null, null), null)
                         }
                     }
                 }.onFailure {
@@ -186,13 +192,38 @@ class CourseDetailViewModel(
         }
     }
 
-    private fun fetchFlashcardsInBackground(courseId: Long, deckId: Long) {
+     fun loadMoreFlashcards(isLoadMore: Boolean, deckId: Long, searchInfo: SearchInfo, nextOrder: Long?) {
+        if(isLoadMore && (paginationLoading.value == true || isLastPage)) return
+        if(!isLoadMore){
+            isLastPage = false
+            currentPages = 0
+            nextItem = null
+            _flashcardDetailData.value = emptyList()
+        }
+
+        _paginationLoading.value = true
         viewModelScope.launch {
-            flashcardRepository.getAllFlashcard(deckId)
-                .onSuccess { list ->
-                _flashcardDetailData.value = list ?: emptyList()
-            }.onFailure {
+            val result = flashcardRepository.getAllFlashcard(deckId, searchInfo, nextOrder)
+            result.onSuccess { list ->
+                if(!list.data.isNullOrEmpty()){
+                    currentPages =  list.data.size
+                    totalPages = list.totalItem.toInt()
+                    nextItem = list.nextCursor
+                    Log.d("PAGINATION_DEBUG", "curr: $currentPages, totalPages: $totalPages, nextItem: $nextItem")
+
+                    if(currentPages == totalPages){
+                        isLastPage = true
+                    }
+                    _flashcardDetailData.value = list.data
+                } else {
+                    isLastPage = true
+                    _flashcardDetailData.value = emptyList()
+                }
+
+                _paginationLoading.value = false
+            } .onFailure {
                 _flashcardDetailData.value = emptyList()
+                _paginationLoading.value = false
             }
         }
     }

@@ -19,10 +19,14 @@
     <!-- 2. CONTENT LAYER (Bọc trong NestedScrollView để cuộn được) -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/contentScroll"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:fillViewport="true"
-        android:visibility="visible">
+        android:visibility="visible"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -180,6 +184,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
+            <ProgressBar
+                android:id="@+id/paginationProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/vocabularyGrid"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:visibility="visible"/>
+
             <ImageView
                 android:id="@+id/icon_tick"
                 android:layout_width="42dp"
@@ -189,7 +204,7 @@
                 android:background="@drawable/bg_gray_rounded"
                 app:tint="@color/purple_paragraph"
                 android:src="@drawable/tick_circle"
-                app:layout_constraintTop_toBottomOf="@id/vocabularyGrid"
+                app:layout_constraintTop_toBottomOf="@id/paginationProgressBar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
 

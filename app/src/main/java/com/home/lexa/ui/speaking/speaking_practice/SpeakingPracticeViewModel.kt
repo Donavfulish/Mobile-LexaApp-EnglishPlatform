@@ -97,6 +97,7 @@ class SpeakingPracticeViewModel(
             )
             val result = paragraphRepository.createParagraph(request)
             result.onSuccess {
+
                 _createStatus.value = Result.success(Unit)
             }.onFailure {
                 _createStatus.value = Result.failure(it)
