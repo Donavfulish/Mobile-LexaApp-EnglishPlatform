@@ -130,7 +130,7 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
         if (deckId == null) return
 
         viewModel.loadFlashcardDetail(deckId!!);
-        viewModel.loadFlashcardsWithResult(deckId!!)
+        viewModel.loadFlashcardsWithResult(false, deckId!!, SearchInfo(null, null, null), null)
     }
     private fun navigateToExerciseMode() {
         Log.d("LEXA_DEBUG", "Hàm navigateToExerciseMode được gọi")
