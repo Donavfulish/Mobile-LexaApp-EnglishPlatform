@@ -5,6 +5,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
+import androidx.navigation.fragment.findNavController
 import com.home.lexa.R
 import com.home.lexa.databinding.ActivityMainBinding
 import com.home.lexa.databinding.FragmentCourseDetailBinding
@@ -64,6 +66,17 @@ class CourseDetailStudent(
                         _title = day.title,
                         _progressPercent = day.completed
                     )
+                setOnClickAction {
+                    val bundle = bundleOf(
+                        "courseId" to courseId,
+                        "speakingDayId" to day.speakingDayId,
+                        "order" to index
+                    )
+                    fragment.findNavController().navigate(
+                        R.id.action_courseDetailFragment_to_speakingPracticeStudentFragment,
+                        bundle
+                    )
+                }
             }
 
             val params = android.widget.LinearLayout.LayoutParams(

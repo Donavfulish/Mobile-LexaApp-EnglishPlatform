@@ -53,3 +53,5 @@ data class ParagraphResultResponseDto(
     val badCount: Int?,
     val userAudioUrl: String?
 )
+
+

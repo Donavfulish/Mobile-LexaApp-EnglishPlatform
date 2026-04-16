@@ -120,6 +120,10 @@
             android:id="@+id/action_courseDetailFragment_to_courseDetailFragment"
             app:destination="@+id/courseDetailFragment"
             />
+        <action
+            android:id="@+id/action_courseDetailFragment_to_speakingPracticeStudentFragment"
+            app:destination="@+id/speakingPracticeStudentFragment"
+            />
     </fragment>
 
 
@@ -312,6 +316,24 @@
             android:name="order"
             app:argType="integer"
             android:defaultValue="0" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/speakingPracticeStudentFragment"
+        android:name="com.home.lexa.ui.speaking.speaking_practice.SpeakingPracticeStudentFragment"
+        android:label="SpeakingPracticeStudentFragment">
+        <argument
+            android:name="courseId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+        <argument
+            android:name="speakingDayId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+        <action
+            android:id="@+id/action_speakingPracticeStudentFragment_to_dailyResultFragment"
+            app:destination="@id/dailyResultFragment" />
+
     </fragment>
 
 </navigation>
