@@ -38,6 +38,7 @@ import com.home.lexa.ui.speaking.speaking_practice.SpeakingPracticeViewModel
 import com.home.lexa.ui.flashcard.flashcard_edit_add.FlashcardEditAddViewModel
 import com.home.lexa.ui.flashcard.exercise_mode.ExerciseModeViewModel
 import com.home.lexa.ui.flashcard.exercise_result.ExerciseResultViewModel
+import com.home.lexa.ui.speaking.speaking_practice.SpeakingPracticeStudentViewModel
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -108,4 +109,5 @@ val appModule = module {
     viewModel { ExerciseResultViewModel(get(), get())}
     viewModel { FlashcardEditAddViewModel(get(), get())}
     viewModel { SpeakingPracticeViewModel(get(), get()) }
+    viewModel { SpeakingPracticeStudentViewModel(get(), get()) }
 }

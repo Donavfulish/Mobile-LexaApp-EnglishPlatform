@@ -177,8 +177,7 @@ class CourseDetailTeacher(
                 setOnClickAction {
                     val bundle = bundleOf(
                         "courseId" to courseId,
-                        "speakingDayId" to day.speakingDayId,
-                        "order" to index
+                        "speakingDayId" to day.speakingDayId
                     )
                     fragment.findNavController().navigate(
                         R.id.action_courseDetailFragment_to_speakingPracticeFragment,

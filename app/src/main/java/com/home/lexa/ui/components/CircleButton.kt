@@ -4,15 +4,10 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.annotation.ColorInt
-import com.home.lexa.R
-import androidx.core.content.ContextCompat
 import com.home.lexa.databinding.ButtonCircleBinding
-import com.home.lexa.databinding.ButtonIconBinding
-import com.home.lexa.databinding.ButtonPrimaryBinding
 
 class CircleButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -21,8 +16,9 @@ class CircleButton @JvmOverloads constructor(
 
     fun setSize(sizeDp: Int){
         val sizePx = (sizeDp * context.resources.displayMetrics.density).toInt()
-        binding.circleBtn.width = sizePx
-        binding.circleBtn.height = sizePx
+        binding.circleBtn.layoutParams.width = sizePx
+        binding.circleBtn.layoutParams.height = sizePx
+        binding.circleBtn.requestLayout()
     }
 
     fun setIcon(icon: Drawable){
@@ -31,7 +27,11 @@ class CircleButton @JvmOverloads constructor(
 
     fun setIconSize(sizeDp: Int){
         val sizePx = (sizeDp * context.resources.displayMetrics.density).toInt()
-        binding.circleBtn.iconSize = sizeDp
+        binding.circleBtn.iconSize = sizePx
+    }
+
+    fun setIconTint(@ColorInt color: Int) {
+        binding.circleBtn.iconTint = ColorStateList.valueOf(color)
     }
 
     fun setBackground(@ColorInt color: Int){
