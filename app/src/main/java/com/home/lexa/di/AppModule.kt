@@ -2,6 +2,7 @@ package com.home.lexa.di
 
 import com.home.lexa.core.network.AuthInterceptor
 import com.home.lexa.core.network.TokenAuthenticator
+import com.home.lexa.data.local.ScheduleTimeManager
 import com.home.lexa.data.local.TokenManager
 import com.home.lexa.data.local.UserManager
 import com.home.lexa.data.remote.AuthApiService
@@ -38,6 +39,7 @@ import com.home.lexa.ui.speaking.speaking_practice.SpeakingPracticeViewModel
 import com.home.lexa.ui.flashcard.flashcard_edit_add.FlashcardEditAddViewModel
 import com.home.lexa.ui.flashcard.exercise_mode.ExerciseModeViewModel
 import com.home.lexa.ui.flashcard.exercise_result.ExerciseResultViewModel
+import com.home.lexa.ui.profile.profile_notification.ProfileNotificationViewModel
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -55,7 +57,7 @@ val appModule = module {
      */
     single { TokenManager(androidContext()) }
     single { UserManager(androidContext()) }
-
+    single { ScheduleTimeManager(androidContext()) }
     // 2. Khởi tạo Mạng
     single{ AuthInterceptor(get()) }
     single{ TokenAuthenticator(get(), getKoin())}
@@ -96,7 +98,7 @@ val appModule = module {
 
     // 5. Khởi tạo ViewModels
     viewModel { HomeViewModel(get<CourseRepository>(), get()) }
-    viewModel { AuthViewModel(androidApplication(), get(), get(), get()) }
+    viewModel { AuthViewModel(androidApplication(), get(), get(), get(),get()) }
     viewModel { ProfileViewModel(get(), get()) }
     viewModel { FavoriteLibraryModel(get()) }
     viewModel { PersonalLibraryModel(get()) }
@@ -108,4 +110,6 @@ val appModule = module {
     viewModel { ExerciseResultViewModel(get(), get())}
     viewModel { FlashcardEditAddViewModel(get(), get())}
     viewModel { SpeakingPracticeViewModel(get(), get()) }
+    viewModel { ProfileNotificationViewModel(get()) }
+
 }

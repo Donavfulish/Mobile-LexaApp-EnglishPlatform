@@ -4,6 +4,7 @@ import android.util.Log
 import com.home.lexa.data.remote.ProfileApiService
 import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.Profile
+import com.home.lexa.domain.models.UpdateFcmTokenRequest
 import com.home.lexa.domain.models.UpdateProfileRequest
 import com.home.lexa.domain.repository.ProfileRepository
 
@@ -52,6 +53,25 @@ class ProfileRepositoryImpl(private val apiService: ProfileApiService) : Profile
                     Result.success(true)
                 } else {
                     Result.failure(Exception(body.message ?: "Cập nhật hồ sơ thất bại"))
+                }
+            } else {
+                Result.failure(Exception("Lỗi máy chủ: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(Exception("Lỗi kết nối: ${e.message}"))
+        }
+    }
+
+    override suspend fun updateFcmToken(data: UpdateFcmTokenRequest): Result<Boolean> {
+        return try {
+            val response = apiService.updateFcmToken(data)
+            val body = response.body()
+
+            if (response.isSuccessful && body != null) {
+                if (body.success == true) {
+                    Result.success(true)
+                } else {
+                    Result.failure(Exception(body.message ?: "Cập nhật FCM token thất bại"))
                 }
             } else {
                 Result.failure(Exception("Lỗi máy chủ: ${response.code()}"))

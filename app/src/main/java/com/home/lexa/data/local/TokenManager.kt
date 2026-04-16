@@ -14,6 +14,8 @@ class TokenManager(context: Context) {
     companion object {
         private const val KEY_ACCESS_TOKEN = "access_token"
         private const val KEY_REFRESH_TOKEN = "refresh_token"
+
+        private const val KEY_FCM_TOKEN = "fcm_token"
     }
 
     fun saveAccessToken(token: String) {
@@ -23,7 +25,9 @@ class TokenManager(context: Context) {
     fun saveRefreshToken(token: String) {
         prefs.edit().putString(KEY_REFRESH_TOKEN, token).apply()
     }
-
+    fun saveFcmToken(fcmToken: String) {
+        prefs.edit().putString(KEY_FCM_TOKEN, fcmToken).apply()
+    }
     fun saveTokens(accessToken: String, refreshToken: String) {
         prefs.edit().apply {
             putString(KEY_ACCESS_TOKEN, accessToken)
@@ -39,8 +43,14 @@ class TokenManager(context: Context) {
     fun getRefreshToken(): String? {
         return prefs.getString(KEY_REFRESH_TOKEN, null)
     }
+    fun getFcmToken(): String? {
+        return prefs.getString(KEY_FCM_TOKEN, null)
+    }
 
     fun clearTokens() {
-        prefs.edit().clear().apply()
+        prefs.edit()
+            .remove(KEY_ACCESS_TOKEN)
+            .remove(KEY_REFRESH_TOKEN)
+            .apply()
     }
 }
