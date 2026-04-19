@@ -11,6 +11,7 @@ import com.home.lexa.databinding.FragmentHomeBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlinx.coroutines.launch
 import androidx.navigation.fragment.findNavController
+import com.home.lexa.MainActivity
 import com.home.lexa.data.local.UserManager
 import com.home.lexa.domain.models.UserRole
 import org.koin.android.ext.android.inject
@@ -21,7 +22,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private val userManager: UserManager by inject()
     private val isTeacher: Boolean get() = userManager.getUserRole() == UserRole.TEACHER
     private val viewModel: HomeViewModel by viewModel()
-
+    private val activityBinding by lazy { (requireActivity() as MainActivity).binding }
 
     private val featuredCourseAdapter by lazy {
         FeaturedCourseAdapter(
@@ -69,6 +70,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     override fun setupViews() {
         userManager.updateStreak()
+
         Log.d("Gia tri streak", "${userManager.getStreakCount()}")
         binding.rvFeaturedCoursesCard.apply {
             adapter = featuredCourseAdapter
@@ -108,6 +110,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             findNavController().navigate(R.id.action_homeFragment_to_courseFragment)
 
         }
+
 
     }
 
