@@ -130,7 +130,7 @@ class SearchbarFilter @JvmOverloads constructor(
     }
 
     fun setTextSearch(text: String){
-        binding.etSearch.hint = text
+        binding.etSearch.setText(text)
     }
 
     fun setOnFilterClickListener(action: () -> Unit) {

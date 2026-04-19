@@ -15,6 +15,12 @@ class StudentCourseListModel(private val repository: CourseRepository) : ViewMod
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
+    var searchInfo = SearchInfo(
+        query = null,
+        sortBy = null,
+        order = null,
+        limit = 10
+    )
 
     private val _currentFilter = MutableLiveData(StudentCourseFilter.ALL)
     val currentFilter: LiveData<StudentCourseFilter> = _currentFilter

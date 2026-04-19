@@ -13,10 +13,12 @@ import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentStudentCourseListBinding
 import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.StudentCourseFilter
+import com.home.lexa.domain.models.TeacherCourseFilter
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>(FragmentStudentCourseListBinding::inflate) {
-    private val viewModel: StudentCourseListModel by viewModel()
+    private val viewModel: StudentCourseListModel by activityViewModel()
     private val courseAdapter by lazy {
         StudentCourseListAdapter(emptyList()) { course ->
             val bundle = Bundle().apply {
@@ -27,13 +29,6 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
             stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         }
     }
-
-    private var searchInfo = SearchInfo(
-        query = null,
-        sortBy = null,
-        order = null,
-        limit = 10
-    )
 
     private fun updateFilterUI(filter: StudentCourseFilter) {
         fun setActive(btn: MaterialButton) {
@@ -66,12 +61,12 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
     override fun setupViews() {
         binding.searchbarFilter.apply {
             onSearchAction { q ->
-                searchInfo = searchInfo.copy(query = q)
-                viewModel.fetchAllCourses(false, searchInfo, null)
+                viewModel.searchInfo = viewModel.searchInfo.copy(query = q)
+                viewModel.fetchAllCourses(false, viewModel.searchInfo, null)
             }
             setOnSortOptionChanged { options ->
-                searchInfo = searchInfo.copy(order = options.order, sortBy = options.sortBy)
-                viewModel.fetchAllCourses(false, searchInfo, null)
+                viewModel.searchInfo = viewModel.searchInfo.copy(order = options.order, sortBy = options.sortBy)
+                viewModel.fetchAllCourses(false, viewModel.searchInfo, null)
             }
         }
 
@@ -80,26 +75,6 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
             actionText = "0 tất cả",
             onActionClick = {}
         )
-
-        val filterArg = arguments?.getString("filter")
-        val initialFilter = try {
-            StudentCourseFilter.valueOf(filterArg ?: "ALL")
-        } catch (e: Exception) {
-            StudentCourseFilter.ALL
-        }
-
-        viewModel.changeFilter(initialFilter, SearchInfo(
-            query= "",
-            sortBy= "",
-            order= "",
-            limit = 10
-        ),
-            null)
-
-        binding.rvCourses.apply {
-            adapter = courseAdapter
-            layoutManager = LinearLayoutManager(context)
-        }
 
         binding.btnAll.setOnClickListener {
             if(viewModel.currentFilter.value == StudentCourseFilter.ALL)
@@ -156,6 +131,19 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
                 null)
         }
 
+        if (viewModel.courses.value == null || viewModel.courses.value.data.isNullOrEmpty()) {
+            val filterArg = arguments?.getString("filter")
+            val initialFilter = try {
+                StudentCourseFilter.valueOf(filterArg ?: "MYCOURSE")
+            } catch (e: Exception) {
+                StudentCourseFilter.ALL
+            }
+            viewModel.changeFilter(initialFilter, viewModel.searchInfo, null)
+        } else {
+            binding.searchbarFilter.setTextSearch(viewModel.searchInfo.query ?: "")
+            viewModel.currentFilter.value?.let { updateFilterUI(it) }
+        }
+
         val layoutManager = LinearLayoutManager(context)
         binding.rvCourses.apply {
             this.layoutManager = layoutManager
@@ -173,7 +161,7 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
                             if ((visibleItemCount + firstVisibleItemPosition) >= (totalItemCount - threshold)) {
                                 viewModel.fetchAllCourses(
                                     isLoadMore = true,
-                                    searchInfo = searchInfo,
+                                    searchInfo = viewModel.searchInfo,
                                     nextCursor = viewModel.lastId
                                 )
                             }
@@ -186,11 +174,6 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchAllCourses(
-            isLoadMore = false,
-            searchInfo = SearchInfo(query = "", limit = 10),
-            nextCursor = null
-        )
     }
 
     override fun observeData() {
