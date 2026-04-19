@@ -28,6 +28,13 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
         }
     }
 
+    private var searchInfo = SearchInfo(
+        query = null,
+        sortBy = null,
+        order = null,
+        limit = 10
+    )
+
     private fun updateFilterUI(filter: StudentCourseFilter) {
         fun setActive(btn: MaterialButton) {
             btn.setBackgroundResource(R.drawable.bg_filter_active)
@@ -57,6 +64,17 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
     }
 
     override fun setupViews() {
+        binding.searchbarFilter.apply {
+            onSearchAction { q ->
+                searchInfo = searchInfo.copy(query = q)
+                viewModel.fetchAllCourses(false, searchInfo, null)
+            }
+            setOnSortOptionChanged { options ->
+                searchInfo = searchInfo.copy(order = options.order, sortBy = options.sortBy)
+                viewModel.fetchAllCourses(false, searchInfo, null)
+            }
+        }
+
         binding.headerSection.setHeaderData(
             title = "Khoá học của tôi",
             actionText = "0 tất cả",
@@ -155,7 +173,7 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
                             if ((visibleItemCount + firstVisibleItemPosition) >= (totalItemCount - threshold)) {
                                 viewModel.fetchAllCourses(
                                     isLoadMore = true,
-                                    searchInfo = SearchInfo(limit = 10),
+                                    searchInfo = searchInfo,
                                     nextCursor = viewModel.lastId
                                 )
                             }

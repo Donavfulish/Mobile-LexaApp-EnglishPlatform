@@ -66,10 +66,10 @@ class StudentCourseListModel(private val repository: CourseRepository) : ViewMod
                         isLastPage = true
                         lastId = null
                     }
-
                     _courses.value = ShortCourse(list.data, requestFilter)
                 } else {
                     isLastPage = true
+                    totalPages = 0
                     _courses.value = ShortCourse(emptyList(), requestFilter)
                 }
 
