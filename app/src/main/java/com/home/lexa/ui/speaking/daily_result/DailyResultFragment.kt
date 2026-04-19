@@ -74,6 +74,7 @@ class DailyResultFragment : BaseFragment<FragmentDailyResultBinding>(FragmentDai
                 val color = when (eval.status) {
                     "GOOD" -> "green"
                     "MEDIUM" -> "yellow"
+                    "BAD" -> "red"
                     else -> "red"
                 }
                 ParagraphWord(eval.word, color)

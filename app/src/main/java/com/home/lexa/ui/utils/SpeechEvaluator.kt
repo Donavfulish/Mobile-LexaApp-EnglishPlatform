@@ -4,10 +4,6 @@ import com.home.lexa.domain.models.WordEvaluationItem
 
 object SpeechEvaluator {
 
-    /**
-     * So sánh câu người dùng đọc với câu gốc
-     * Trả về danh sách WordEvaluationItem
-     */
     fun evaluate(originalSentence: String, recognizedText: String): List<WordEvaluationItem> {
         // 1. Làm sạch chuỗi: Chuyển chữ thường và loại bỏ các dấu câu (, . ? !) để so sánh chính xác hơn
         val cleanOriginal = originalSentence.replace(Regex("[^a-zA-Z0-9\\s]"), "").lowercase()
@@ -20,11 +16,14 @@ object SpeechEvaluator {
         // 3. Tiến hành so khớp từng từ
         return originalWords.map { original ->
 
-            // Tìm từ khớp hoàn toàn
-            val isExactMatch = recognizedWords.contains(original)
+            // 1. Kiểm tra khớp hoàn toàn
+            val isExactMatch = recognizedWords.any { it == original }
 
-            // Tìm từ khớp một phần (sai âm cuối, thiếu 's', 'ed'...)
-            val isPartialMatch = recognizedWords.any { it.contains(original) || original.contains(it) }
+            // 2. Kiểm tra khớp một phần (ví dụ: sai 's', 'ed' hoặc gần giống)
+            // Bạn có thể dùng thuật toán Levenshtein ở đây nếu muốn xịn hơn
+            val isPartialMatch = recognizedWords.any {
+                it.contains(original) || original.contains(it)
+            }
 
             // 4. Định chuẩn Điểm số (Score) và Trạng thái (Status)
             val (score, status) = when {

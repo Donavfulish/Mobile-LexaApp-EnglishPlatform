@@ -4,6 +4,9 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -37,6 +40,7 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
     private var currentAudioPath: String? = null
     private var currentRecognizedText: String = ""
     private val recordedAudios = mutableMapOf<Int, String>()
+    private var userTriggeredStop = false
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -128,32 +132,65 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
     private fun startRecording() {
         // Luôn giải phóng player nếu đang phát âm thanh mà bấm ghi âm
         audioManager.resetMediaPlayer()
-
         val fileName = "record_day${speakingDayId}_idx$currentIndex"
-        val path = audioManager.startRecording(fileName)
 
-        if (path != null) {
-            currentAudioPath = path
-            isRecording = true
-            currentRecognizedText = ""
+        userTriggeredStop = false // Reset cờ
+        currentRecognizedText = ""
 
-            sttManager.startListening(
-                onResult = { text -> currentRecognizedText = text },
-                onError = { Log.e("STT_ERROR", it) }
-            )
+        // 1. Khởi động STT trước
+        sttManager.startListening(
+            onResult = { text ->
+                currentRecognizedText = text
+                // Nếu STT tự nhận diện xong (user ngừng nói lâu)
+                if (!userTriggeredStop) {
+                    stopRecording()
+                }
+                processAndSaveResult()
+            },
+            onError = { errorMsg ->
+                Log.e("STT_ERROR", errorMsg)
+                // Chỉ xử lý kết quả lỗi nếu nó không phải do ta chủ động cancel
+                if (!userTriggeredStop) {
+                    processAndSaveResult()
+                }
+            }
+        )
 
-            binding.btnRecord.setBackground(Color.RED)
-            binding.tvInstruction.text = "Đang ghi âm... Nhấn lại để dừng"
-        }
+        // 2. Delay một chút rồi mới chạy MediaRecorder để tránh xung đột Mic (Error 5/9)
+        binding.root.postDelayed({
+            if (isRecording) { // Chỉ chạy nếu user chưa bấm dừng ngay
+                currentAudioPath = audioManager.startRecording(fileName)
+                if (currentAudioPath == null) {
+                    Log.e("AUDIO", "MediaRecorder failed to start")
+                }
+            }
+        }, 400)
+
+        isRecording = true
+        binding.btnRecord.setBackground(Color.RED)
+        binding.tvInstruction.text = "Đang ghi âm... Nhấn lại để dừng"
     }
 
     private fun stopRecording() {
-        audioManager.stopRecording()
-        sttManager.stopListening()
+        if (!isRecording) return
+
+        userTriggeredStop = true // Đánh dấu user chủ động dừng
         isRecording = false
 
+        audioManager.stopRecording()
+        sttManager.stopListening()
         binding.btnRecord.setBackground(Color.parseColor("#636AE8"))
-        binding.tvInstruction.text = "Đã ghi nhận! Nhấn vào micro để nói lại"
+        binding.tvInstruction.text = "Đang phân tích giọng nói..."
+
+    }
+
+    private fun processAndSaveResult() {
+        if (currentRecognizedText.isBlank()) {
+            activity?.runOnUiThread {
+                binding.tvInstruction.text = "Không nghe rõ, vui lòng thử lại!"
+            }
+            return
+        }
 
         val currentParagraph = paragraphs[currentIndex]
         val originalText = currentParagraph.paragraph ?: ""
@@ -169,7 +206,12 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
                 audioPath = path
             )
         }
-        updateContent()
+
+        // Chạy trên MainThread để cập nhật UI
+        activity?.runOnUiThread {
+            updateContent()
+            binding.tvInstruction.text = "Đã ghi nhận! Nhấn vào micro để nói lại"
+        }
     }
 
     private fun playRecordedAudio() {
@@ -183,42 +225,58 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
         audioManager.playAudio(path)
     }
 
-    private fun updateContent() {
-        if (paragraphs.isEmpty()) return
-
-        val hasRecording = recordedAudios.containsKey(currentIndex)
-        val currentParagraph = paragraphs[currentIndex]
-
-        binding.tvParagraphContent.text = currentParagraph.paragraph
-        binding.tvParagraphContent.setTextColor(if (hasRecording) Color.parseColor("#4CAF50") else Color.parseColor("#202124"))
-        binding.tvProgressTitle.text = "Đoạn văn ${currentIndex + 1}/${paragraphs.size}"
-
-        val progress = ((currentIndex + 1).toFloat() / paragraphs.size * 100).toInt()
-        binding.progressBar.setProgress(progress)
-        binding.tvCompletedPercent.text = "Đã hoàn thành $progress%"
-
+    private fun updateNavigationButtons(hasRecording: Boolean) {
         binding.btnPrev.alpha = if (currentIndex == 0) 0.3f else 1.0f
-
-        // Cập nhật trạng thái nút Next/Finish
         if (currentIndex < paragraphs.size - 1) {
             binding.btnNext.apply {
                 setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_forward)!!)
-                setBackground(Color.parseColor("#F5F5F5"))
-                setIconTint(Color.parseColor("#757575"))
                 alpha = if (hasRecording) 1.0f else 0.3f
             }
         } else {
-            if (hasRecording) {
-                binding.btnNext.apply {
-                    setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_check)!!)
-                    setBackground(Color.parseColor("#636AE8"))
-                    setIconTint(Color.WHITE)
-                    alpha = 1.0f
-                }
-            } else {
-                binding.btnNext.alpha = 0.3f
+            binding.btnNext.apply {
+                setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_check)!!)
+                alpha = if (hasRecording) 1.0f else 0.3f
             }
         }
+    }
+
+    private fun updateContent() {
+        if (paragraphs.isEmpty()) return
+
+        val currentParagraph = paragraphs[currentIndex]
+        val cacheItem = sharedViewModel.sessionCache[currentIndex]
+
+        // LOGIC TÔ MÀU SPANNABLE
+        if (cacheItem != null && cacheItem.paragraphId == currentParagraph.id) {
+            val builder = SpannableStringBuilder()
+            cacheItem.evaluationResults.forEach { item ->
+                val start = builder.length
+                builder.append(item.word).append(" ")
+                val end = builder.length - 1
+
+                val color = when (item.status) {
+                    "GOOD" -> Color.parseColor("#4CAF50")
+                    "MEDIUM" -> Color.parseColor("#FFB300")
+                    else -> Color.parseColor("#F44336")
+                }
+
+                builder.setSpan(
+                    ForegroundColorSpan(color),
+                    start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+            binding.tvParagraphContent.text = builder
+        } else {
+            binding.tvParagraphContent.text = currentParagraph.paragraph
+            binding.tvParagraphContent.setTextColor(Color.parseColor("#202124"))
+        }
+
+        // Cập nhật tiến độ & nút bấm
+        val hasRecording = recordedAudios.containsKey(currentIndex) || cacheItem != null
+        binding.tvProgressTitle.text = "Đoạn văn ${currentIndex + 1}/${paragraphs.size}"
+        val progress = ((currentIndex + 1).toFloat() / paragraphs.size * 100).toInt()
+        binding.progressBar.setProgress(progress)
+        updateNavigationButtons(hasRecording)
     }
 
     override fun observeData() {
@@ -232,7 +290,6 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
     }
 
     private fun setupControls() {
-        // ... (Giữ nguyên code setupControls cũ của bạn) ...
         binding.btnRecord.apply {
             setSize(80); setIconSize(32)
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_mic)!!)
