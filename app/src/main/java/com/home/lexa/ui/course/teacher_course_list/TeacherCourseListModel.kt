@@ -67,6 +67,7 @@ class TeacherCourseListModel(private val repository: CourseRepository) : ViewMod
                     }
                     _courses.value = ShortCourse(list.data, requestFilter)
                 } else {
+                    totalPages = 0
                     isLastPage = true
                     _courses.value = ShortCourse(emptyList(), requestFilter)
                 }

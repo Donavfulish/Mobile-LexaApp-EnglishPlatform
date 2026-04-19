@@ -7,6 +7,7 @@ import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.Filter
 import android.widget.FrameLayout
@@ -155,6 +156,17 @@ class SearchbarFilter @JvmOverloads constructor(
     fun onTextChanged(action: (String) -> Unit) {
         binding.etSearch.doOnTextChanged { text, start, before, count ->
             action(text.toString())
+        }
+    }
+
+    fun onSearchAction(action: (String) -> Unit) {
+        binding.etSearch.setOnEditorActionListener { v, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
+                action(v.text.toString())
+                false
+            } else {
+                false
+            }
         }
     }
 

@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.home.lexa.R
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.util.query
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentTeacherCourseListBinding
 import com.home.lexa.domain.models.SearchInfo
@@ -19,6 +20,12 @@ import com.home.lexa.domain.models.TeacherCourseFilter
 
 class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>(FragmentTeacherCourseListBinding::inflate) {
     private val viewModel: TeacherCourseListModel by viewModel()
+    private var searchInfo = SearchInfo(
+        query = null,
+        sortBy = null,
+        order = null,
+        limit = 10
+    )
     private val courseAdapter by lazy {
         TeacherCourseListAdapter(emptyList())
         { course ->
@@ -61,6 +68,17 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
     }
 
     override fun setupViews() {
+        binding.searchbarFilter.apply {
+            onSearchAction { q ->
+                searchInfo = searchInfo.copy(query = q)
+                viewModel.fetchAllCourses(false, searchInfo, null)
+            }
+            setOnSortOptionChanged { options ->
+                searchInfo = searchInfo.copy(order = options.order, sortBy = options.sortBy)
+                viewModel.fetchAllCourses(false, searchInfo, null)
+            }
+        }
+
         binding.headerSection.setHeaderData(
             title = "Khoá học của tôi",
             actionText = "0 tất cả",
@@ -163,7 +181,7 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
         if (viewModel.courses.value.data.isNullOrEmpty()) {
             viewModel.fetchAllCourses(
                 isLoadMore = false,
-                searchInfo = SearchInfo(query = "", limit = 10),
+                searchInfo = searchInfo,
                 nextCursor = null
             )
         }
@@ -193,7 +211,7 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
 
                                 viewModel.fetchAllCourses(
                                     isLoadMore = true,
-                                    searchInfo = SearchInfo(limit = 10),
+                                    searchInfo = searchInfo,
                                     nextCursor = viewModel.lastId
                                 )
                             }
@@ -248,7 +266,6 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
             )
         }
         viewModel.currentFilter.observe(viewLifecycleOwner) { filter ->
-
             updateFilterUI(filter)
         }
     }
