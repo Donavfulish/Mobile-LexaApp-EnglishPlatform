@@ -54,4 +54,10 @@ data class ParagraphResultResponseDto(
     val userAudioUrl: String?
 )
 
-
+// Data class này dùng để tổng hợp dữ liệu cho màn hình Result
+data class DailyResultSummary(
+    val totalGood: Int,
+    val totalAccepted: Int, // Tương đương với Medium
+    val totalBad: Int,
+    val paragraphs: List<ParagraphResult>
+)

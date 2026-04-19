@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import com.home.lexa.R
 import com.home.lexa.databinding.CardParagraphBinding
 import com.home.lexa.domain.models.ParagraphResult
+import com.home.lexa.ui.utils.TTSManager
 
 class ParagraphCard @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -27,6 +28,9 @@ class ParagraphCard @JvmOverloads constructor(
         binding.leftBtn.setBackground(context.getColor(R.color.white))
         binding.leftBtn.setIcon(context.getDrawable(R.drawable.ic_play_circle))
         binding.leftBtn.setIconPadding(2)
+        binding.leftBtn.setOnClickAction {
+            TTSManager.speak(binding.content.text.toString())
+        }
 
 
         binding.rightBtn.setText("Nghe lại âm của tôi", context.getColor(R.color.pink))
@@ -35,6 +39,8 @@ class ParagraphCard @JvmOverloads constructor(
         binding.rightBtn.setBackground(context.getColor(R.color.white))
         binding.rightBtn.setIcon(context.getDrawable(R.drawable.ic_replay))
         binding.rightBtn.setIconPadding(2)
+
+        setOnClickAISound {  }
     }
 
     fun setOnClickAIButton(action: () -> Unit){
@@ -80,7 +86,9 @@ class ParagraphCard @JvmOverloads constructor(
     }
 
     fun setOnClickAISound(action: () -> Unit){
-        binding.leftBtn.setOnClickListener { action.invoke() }
+        binding.leftBtn.setOnClickAction {
+            TTSManager.speak(binding.content.text.toString())
+        }
     }
 
     fun setOnClickUserSound(action: () -> Unit){

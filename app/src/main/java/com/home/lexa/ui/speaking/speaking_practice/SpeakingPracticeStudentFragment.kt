@@ -8,6 +8,7 @@ import android.media.MediaRecorder
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
@@ -15,6 +16,9 @@ import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentSpeakingPracticeStudentBinding
 import com.home.lexa.domain.models.ShortParagraphDto
+import com.home.lexa.ui.utils.SpeechEvaluator
+import com.home.lexa.ui.utils.SpeechToTextManager
+import com.home.lexa.ui.utils.TTSManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.IOException
@@ -32,6 +36,10 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
     private var player: MediaPlayer? = null
     private var currentAudioPath: String? = null
     private val recordedAudios = mutableMapOf<Int, String>()
+    private val sharedViewModel: PracticeSharedViewModel by sharedViewModel()
+
+    private lateinit var sttManager: SpeechToTextManager
+    private var currentRecognizedText: String = ""
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -46,13 +54,14 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
     override fun setupViews(){
         courseId = arguments?.getLong("courseId") ?: -1L
         speakingDayId = arguments?.getLong("speakingDayId") ?: -1L
+        sttManager =    SpeechToTextManager(requireContext())
         
         setupControls()
 
         if (speakingDayId != -1L) {
             viewModel.loadParagraphList(speakingDayId)
         }
-        
+
         binding.btnNext.setOnClickAction {
             // Kiểm tra xem đã ghi âm đoạn hiện tại chưa
             if (!recordedAudios.containsKey(currentIndex)) {
@@ -70,7 +79,11 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
                 findNavController().navigate(R.id.action_speakingPracticeStudentFragment_to_dailyResultFragment, bundle)
             }
         }
-        
+
+        binding.btnNgheMau.setOnClickAction {
+            listenToSample(paragraphs[currentIndex].paragraph ?: "")
+        }
+
         binding.btnPrev.setOnClickAction {
             if (currentIndex > 0) {
                 currentIndex--
@@ -99,10 +112,25 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
         }
     }
 
+    private fun listenToSample(paragraph: String) {
+            TTSManager.speak(paragraph)
+    }
+
     private fun startRecording() {
         val fileName = "recording_${System.currentTimeMillis()}.mp3"
         val file = File(requireContext().cacheDir, fileName)
         currentAudioPath = file.absolutePath
+
+        // 1. Bắt đầu lắng nghe giọng nói để chuyển thành text
+        currentRecognizedText = ""
+        sttManager.startListening(
+            onResult = { text ->
+                currentRecognizedText = text
+            },
+            onError = { error ->
+                Log.e("STT_ERROR", error)
+            }
+        )
 
         recorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
@@ -132,18 +160,33 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
         }
         recorder = null
         isRecording = false
+
+        // 2. Dừng nhận diện giọng nói
+        sttManager.stopListening()
+
         binding.btnRecord.setBackground(Color.parseColor("#636AE8"))
         binding.tvInstruction.text = "Đã ghi nhận! Nhấn vào micro để nói lại"
-        Toast.makeText(requireContext(), "Đã ghi âm thành công", Toast.LENGTH_SHORT).show()
         binding.tvParagraphContent.setTextColor(Color.parseColor("#4CAF50"))
+
+        // 3. Thực hiện chấm điểm (Evaluate)
+        val currentParagraph = paragraphs[currentIndex]
+        val originalText = currentParagraph.paragraph ?: ""
+        val evaluationResults = SpeechEvaluator.evaluate(originalText, currentRecognizedText)
+
         currentAudioPath?.let { path ->
             recordedAudios[currentIndex] = path
-            val currentParagraph = paragraphs[currentIndex]
-            Log.d("Gia tri path luu: ", path)
-            viewModel.submitRecordingResult(currentParagraph.id, currentParagraph.paragraph ?: "", path)
+
+            // THAY ĐỔI: LƯU VÀO CACHE THAY VÌ GỌI API
+            sharedViewModel.saveParagraphToCache(
+                index = currentIndex,
+                paragraphId = currentParagraph.id,
+                originalText = originalText,
+                evaluationResults = evaluationResults,
+                audioPath = path
+            )
+            Toast.makeText(requireContext(), "Đã lưu tạm kết quả", Toast.LENGTH_SHORT).show()
         }
-        
-        // Cập nhật lại UI để kích hoạt nút Next
+
         updateContent()
     }
 
@@ -206,7 +249,15 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
             setBackground(Color.parseColor("#F5F5F5"))
             setIconTint(grayColor)
         }
-        
+
+        binding.btnNgheMau.apply {
+            setIconSize(40)
+            setIconColor(Color.parseColor("#636AE8"))
+            setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play)!!)
+            setText("Nghe mẫu", Color.parseColor("#636AE8"))
+            setBackground(Color.parseColor("#F5F5F5"))
+            setPadding(20, 10, 20, 10)
+        }
         binding.progressBar.setTitle("TIẾN ĐỘ BÀI HỌC")
     }
 
@@ -275,5 +326,6 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
         super.onDestroy()
         recorder?.release()
         player?.release()
+        sttManager.destroy()
     }
 }

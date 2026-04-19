@@ -207,17 +207,6 @@
             android:layout_marginTop="32dp"
             android:orientation="vertical">
 
-            <com.home.lexa.ui.components.ParagraphCard
-                android:id="@+id/cardParagraph1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp" />
-
-            <com.home.lexa.ui.components.ParagraphCard
-                android:id="@+id/cardParagraph2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp" />
 
         </LinearLayout>
 

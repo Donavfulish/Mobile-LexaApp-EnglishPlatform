@@ -27,9 +27,6 @@ class SpeakingPracticeStudentViewModel(
 
 
 
-
-
-
     fun loadParagraphList(speakingDayId: Long){
         viewModelScope.launch {
             try {
@@ -50,30 +47,32 @@ class SpeakingPracticeStudentViewModel(
     }
 
     // Trong SpeakingPracticeStudentViewModel.kt
-    fun submitRecordingResult(paragraphId: Long, paragraphText: String, audioUrl: String) {
+    fun submitRecordingResult(
+        paragraphId: Long,
+        evaluationResults: List<WordEvaluationItem>,
+        audioUrl: String
+    ) {
         viewModelScope.launch {
             _isLoading.value = true
-            val words = paragraphText.split("\\s+".toRegex())
-                .filter { it.isNotEmpty() }
-                .map { WordEvaluationItem(word = it, score = 100, status = "Correct") }
+
+            // Tính toán số lượng từ đúng, tạm, sai
+            val goodCount = evaluationResults.count { it.status == "GOOD" }
+            val mediumCount = evaluationResults.count { it.status == "MEDIUM" }
+            val badCount = evaluationResults.count { it.status == "BAD" }
 
             val request = UpdateParagraphResultRequest(
                 paragraphId = paragraphId,
-                wordEvaluation = words,
-                goodCount = words.size,
-                mediumCount = 0,
-                badCount = 0,
-                userAudioUrl = audioUrl // Ghi nhận đường dẫn audio ở đây
+                wordEvaluation = evaluationResults,
+                goodCount = goodCount,
+                mediumCount = mediumCount,
+                badCount = badCount,
+                userAudioUrl = audioUrl
             )
             val result = paragraphRepository.updateParagraphResult(request)
             _updateParagraphResultStatus.value = result
             _isLoading.value = false
         }
     }
-
-
-
-
     
     fun resetUpdateParagraphResultStatus() {
         _updateParagraphResultStatus.value = null
