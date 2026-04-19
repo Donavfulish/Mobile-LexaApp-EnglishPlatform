@@ -8,14 +8,17 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Filter
 import android.widget.FrameLayout
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
+import androidx.core.view.forEach
 import androidx.core.widget.doOnTextChanged
 import com.google.android.material.chip.Chip
 import com.home.lexa.R
 import com.home.lexa.databinding.ViewSearchbarFilterBinding
 
+// Kế thừa FrameLayout để bọc component XML lại
 class SearchbarFilter @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
@@ -26,9 +29,10 @@ class SearchbarFilter @JvmOverloads constructor(
     )
 
     private val binding = ViewSearchbarFilterBinding.inflate(LayoutInflater.from(context), this, true)
+
     private var onFilterClickListener: (() -> Unit)? = null
     private var onSortChangedListener: ((FilterOptions) -> Unit)? = null
-    
+
     private val activeColor = ContextCompat.getColor(context, R.color.purple_paragraph)
     private val inactiveStrokeColor = Color.parseColor("#E0E0E0")
     private val inactiveIconColor = Color.parseColor("#202124")
@@ -67,11 +71,20 @@ class SearchbarFilter @JvmOverloads constructor(
         }
 
         binding.iconFilter.setColorFilter(if (isActive) activeColor else inactiveIconColor)
+
+        val chipGroups = listOf(binding.cgSortCriteria, binding.cgSortOrder)
+        chipGroups.forEach { group ->
+            group.forEach { item ->
+                (item as? Chip)?.let { chip ->
+                    updateChipStyle(chip, false)
+                }
+            }
+        }
     }
 
     private fun setupChipsStyling() {
         val chipGroups = listOf(binding.cgSortCriteria, binding.cgSortOrder)
-        
+
         chipGroups.forEach { group ->
             group.setOnCheckedStateChangeListener { _, checkedIds ->
                 for (i in 0 until group.childCount) {
@@ -89,7 +102,7 @@ class SearchbarFilter @JvmOverloads constructor(
     private fun updateChipStyle(chip: Chip, isSelected: Boolean) {
         val color = if (isSelected) activeColor else inactiveStrokeColor
         val textColor = if (isSelected) activeColor else Color.parseColor("#757575")
-        
+
         chip.chipStrokeColor = ColorStateList.valueOf(color)
         chip.chipStrokeWidth = if (isSelected) 4f else 2f
         chip.setTextColor(textColor)
@@ -101,18 +114,14 @@ class SearchbarFilter @JvmOverloads constructor(
             R.id.chipSortTitle -> "title"
             else -> null
         }
-        
+
         val order = when (binding.cgSortOrder.checkedChipId) {
             R.id.chipSortAsc -> "asc"
             R.id.chipSortDesc -> "desc"
             else -> null
         }
-        
-        return FilterOptions(sortBy, order)
-    }
 
-    fun setOnSortOptionChanged(listener: (FilterOptions) -> Unit) {
-        this.onSortChangedListener = listener
+        return FilterOptions(sortBy, order)
     }
 
     fun setIconColor(@ColorInt color: Int){
@@ -127,19 +136,24 @@ class SearchbarFilter @JvmOverloads constructor(
         this.onFilterClickListener = action
     }
 
+    fun setOnSortOptionChanged(listener: (FilterOptions) -> Unit) {
+        this.onSortChangedListener = listener
+    }
+
     fun hideFilter() {
         binding.btnFilter.visibility = View.GONE
     }
 
     fun setPlaceHolderText(text: String?) {
         if (text.isNullOrEmpty()) return
+
         binding.etSearch.hint = text
     }
 
     fun getText(): String = binding.etSearch.text.toString()
 
     fun onTextChanged(action: (String) -> Unit) {
-        binding.etSearch.doOnTextChanged { text, _, _, _ ->
+        binding.etSearch.doOnTextChanged { text, start, before, count ->
             action(text.toString())
         }
     }
@@ -152,8 +166,28 @@ class SearchbarFilter @JvmOverloads constructor(
             suggestions
         )
         binding.etSearch.setAdapter(adapter)
+
         if (suggestions.isNotEmpty()) {
             binding.etSearch.showDropDown()
         }
+    }
+
+    inner class NoFilterAdapter(context: Context, layout: Int, var items: List<String>) :
+        ArrayAdapter<String>(context, layout, items) {
+
+        private val noFilter = object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val results = FilterResults()
+                results.values = items
+                results.count = items.size
+                return results
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                notifyDataSetChanged()
+            }
+        }
+
+        override fun getFilter(): Filter = noFilter
     }
 }
