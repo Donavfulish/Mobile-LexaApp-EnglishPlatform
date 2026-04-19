@@ -92,7 +92,7 @@ class ParagraphCard @JvmOverloads constructor(
     }
 
     fun setOnClickUserSound(action: () -> Unit){
-        binding.rightBtn.setOnClickListener { action.invoke() }
+        binding.rightBtn.setOnClickAction { action.invoke() }
     }
 
 }

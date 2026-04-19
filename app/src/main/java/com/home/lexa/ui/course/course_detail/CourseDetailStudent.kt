@@ -59,6 +59,29 @@ class CourseDetailStudent(
 
     override fun bindSpeakingData(courseId: Long, list: List<ShortSpeakingDayDto>) {
         binding.speakingDayLayout.removeAllViews()
+
+        binding.learningBtn.setOnClickAction {
+
+            if (list.isNotEmpty()) {
+                var targetDayIndex = list.indexOfFirst { it.completed < 100 }
+
+                targetDayIndex = if (targetDayIndex != -1) targetDayIndex else 0
+
+                val bundle = bundleOf(
+                    "courseId" to courseId,
+                    "speakingDayId" to list[targetDayIndex].speakingDayId,
+                    "order" to targetDayIndex
+                )
+
+                fragment.findNavController().navigate(
+                    R.id.action_courseDetailFragment_to_speakingPracticeStudentFragment,
+                    bundle
+                )
+            } else {
+                Toast.makeText(fragment.requireContext(), "Chưa có bài giảng nào!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         list.forEachIndexed {index, day ->
             val dayCard = StudentSpeakingDayCard(fragment.requireContext()).apply {
                     setData(

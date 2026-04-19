@@ -90,7 +90,14 @@ class DailyResultFragment : BaseFragment<FragmentDailyResultBinding>(FragmentDai
 
             card.displayParagraph(paragraphResult)
             card.setOnClickUserSound {
-                audioManager.playAudio(cacheItem.localAudioPath) {}
+                val path = cacheItem.localAudioPath
+                if (!path.isNullOrEmpty() && java.io.File(path).exists()) {
+                    audioManager.playAudio(path) {
+                        // Callback khi nghe xong (nếu cần đổi icon nút bấm)
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "Bản ghi không tồn tại hoặc đã bị xóa", Toast.LENGTH_SHORT).show()
+                }
             }
             binding.paragraphList.addView(card)
         }
