@@ -138,41 +138,29 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
     }
 
     private fun startRecording() {
-        // Luôn giải phóng player nếu đang phát âm thanh mà bấm ghi âm
         audioManager.resetMediaPlayer()
         val fileName = "record_day${speakingDayId}_idx$currentIndex"
-
-        userTriggeredStop = false // Reset cờ
+        userTriggeredStop = false
         currentRecognizedText = ""
 
-        // 1. Khởi động STT trước
+        // Khởi động song song: AudioRecord (layer thấp) + STT (layer cao)
+        // VOICE_RECOGNITION source được thiết kế cho trường hợp này
+        currentAudioPath = audioManager.startRecording(fileName)
+
         sttManager.startListening(
             onResult = { text ->
                 currentRecognizedText = text
-                // Nếu STT tự nhận diện xong (user ngừng nói lâu)
                 if (!userTriggeredStop) {
                     stopRecording()
                 }
-                processAndSaveResult()
             },
             onError = { errorMsg ->
                 Log.e("STT_ERROR", errorMsg)
-                // Chỉ xử lý kết quả lỗi nếu nó không phải do ta chủ động cancel
                 if (!userTriggeredStop) {
-                    processAndSaveResult()
+                    stopRecording()
                 }
             }
         )
-
-        // 2. Delay một chút rồi mới chạy MediaRecorder để tránh xung đột Mic (Error 5/9)
-        binding.root.postDelayed({
-            if (isRecording) { // Chỉ chạy nếu user chưa bấm dừng ngay
-                currentAudioPath = audioManager.startRecording(fileName)
-                if (currentAudioPath == null) {
-                    Log.e("AUDIO", "MediaRecorder failed to start")
-                }
-            }
-        }, 400)
 
         isRecording = true
         binding.btnRecord.setBackground(Color.RED)
@@ -181,15 +169,18 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
 
     private fun stopRecording() {
         if (!isRecording) return
-
-        userTriggeredStop = true // Đánh dấu user chủ động dừng
+        userTriggeredStop = true
         isRecording = false
 
-        audioManager.stopRecording()
         sttManager.stopListening()
         binding.btnRecord.setBackground(Color.parseColor("#636AE8"))
         binding.tvInstruction.text = "Đang phân tích giọng nói..."
 
+        // Dừng AudioRecord và chờ file WAV flush xong rồi mới xử lý
+        audioManager.stopRecording {
+            // Callback này chạy trên Main thread sau khi file đã lưu xong
+            processAndSaveResult()
+        }
     }
 
     private fun processAndSaveResult() {
