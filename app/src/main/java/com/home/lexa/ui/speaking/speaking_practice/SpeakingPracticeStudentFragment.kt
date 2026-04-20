@@ -19,6 +19,8 @@ import com.home.lexa.domain.models.ShortParagraphDto
 import com.home.lexa.ui.utils.AudioManager
 import com.home.lexa.ui.utils.SpeechEvaluator
 import com.home.lexa.ui.utils.SpeechToTextManager
+import android.app.AlertDialog
+import androidx.activity.OnBackPressedCallback
 import com.home.lexa.ui.utils.TTSManager
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -78,6 +80,12 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
         if (speakingDayId != -1L) {
             viewModel.loadParagraphList(speakingDayId)
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                showExitDialog()
+            }
+        })
 
         binding.btnNext.setOnClickAction {
             if (!recordedAudios.containsKey(currentIndex)) {
@@ -284,8 +292,51 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
             if (data != null) {
                 paragraphs = data.list_paragraphs.sortedBy { it.paragraph_order }
                 restoreRecordedAudios()
-                updateContent()
+                checkAndShowContinueDialog()
             }
+        }
+
+        // Lắng nghe kết quả nếu user chọn "Lưu tiến độ và thoát"
+        viewModel.bulkSaveStatus.observe(viewLifecycleOwner) { result ->
+            if (result != null) {
+                result.onSuccess { isSuccess ->
+                    if (isSuccess) {
+                        Toast.makeText(requireContext(), "Đã lưu tiến độ", Toast.LENGTH_SHORT).show()
+                        viewModel.resetBulkSaveStatus() // Reset state để tránh trigger lại
+                        findNavController().popBackStack()
+                    }
+                }.onFailure { error ->
+                    Toast.makeText(requireContext(), "Lỗi khi lưu: ${error.message}", Toast.LENGTH_SHORT).show()
+                    viewModel.resetBulkSaveStatus()
+                }
+            }
+        }
+    }
+
+    private fun checkAndShowContinueDialog() {
+        // Tùy vào cách backend trả data, giả sử ta biết user đã làm đến câu index thứ N:
+        // (Ở đây giả lập tìm index đầu tiên chưa có thu âm)
+        val lastCompletedIndex = recordedAudios.keys.maxOrNull() ?: -1
+
+        if (lastCompletedIndex >= 0 && lastCompletedIndex < paragraphs.size - 1) {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Tiếp tục bài học")
+                .setMessage("Bạn có tiến độ học trước đó. Bạn muốn tiếp tục hay học lại từ đầu?")
+                .setPositiveButton("Tiếp tục") { _, _ ->
+                    currentIndex = lastCompletedIndex + 1
+                    updateContent()
+                }
+                .setNegativeButton("Học lại từ đầu") { _, _ ->
+                    currentIndex = 0
+                    recordedAudios.clear()
+                    sharedViewModel.clearCache()
+                    // Gửi request xoá tiến độ cũ lên server nếu backend yêu cầu
+                    updateContent()
+                }
+                .setCancelable(false)
+                .show()
+        } else {
+            updateContent()
         }
     }
 
@@ -312,6 +363,41 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
             setBackground(Color.parseColor("#F5F5F5"))
         }
         binding.progressBar.setTitle("TIẾN ĐỘ BÀI HỌC")
+    }
+
+    private fun showExitDialog() {
+        val options = arrayOf("Lưu tiến độ", "Thoát không lưu", "Hủy")
+        AlertDialog.Builder(requireContext())
+            .setTitle("Bạn muốn tạm dừng bài học?")
+            .setItems(options) { dialog, which ->
+                when (which) {
+                    0 -> {
+                        // Lưu tiến độ: Gọi ViewModel để đẩy cache lên server, sau đó thoát
+                        saveProgressAndExit()
+                    }
+                    1 -> {
+                        // Thoát không lưu: Xoá cache hiện tại và thoát
+                        sharedViewModel.clearCache()
+                        findNavController().popBackStack()
+                    }
+                    2 -> {
+                        // Hủy: Tắt dialog, tiếp tục học
+                        dialog.dismiss()
+                    }
+                }
+            }
+            .show()
+    }
+
+    private fun saveProgressAndExit() {
+        val cacheData = sharedViewModel.sessionCache.values.toList()
+        if (cacheData.isEmpty()) {
+            findNavController().popBackStack()
+            return
+        }
+
+        viewModel.submitBulkProgress(speakingDayId, cacheData)
+
     }
 
     override fun onDestroy() {

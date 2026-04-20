@@ -44,6 +44,21 @@ data class UpdateParagraphResultRequest(
     val userAudioUrl: String? = null
 )
 
+data class ParagraphResultItemRequest(
+    val paragraphId: Long,
+    val wordEvaluation: List<WordEvaluationItem>?,
+    val goodCount: Int,
+    val mediumCount: Int,
+    val badCount: Int,
+    val userAudioUrl: String? // URL sau khi upload audio lên server
+)
+
+// Request tổng để gửi Bulk
+data class SubmitBulkDailyResultRequest(
+    val speakingDayId: Long,
+    val results: List<ParagraphResultItemRequest>
+)
+
 data class ParagraphResultResponseDto(
     val userId: Int,
     val paragraphId: Long,

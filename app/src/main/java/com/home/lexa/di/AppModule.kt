@@ -116,6 +116,6 @@ val appModule = module {
     viewModel { SpeakingPracticeViewModel(get(), get()) }
     viewModel { ProfileNotificationViewModel(get()) }
     viewModel { SpeakingPracticeStudentViewModel(get(), get()) }
-    viewModel { DailyResultViewModel(get()) }
+    viewModel { DailyResultViewModel(get(), get()) }
     viewModel { PracticeSharedViewModel() }
 }

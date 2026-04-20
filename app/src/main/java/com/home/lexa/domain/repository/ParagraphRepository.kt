@@ -3,6 +3,7 @@ package com.home.lexa.domain.repository
 import com.home.lexa.domain.models.CreateParagraphRequest
 import com.home.lexa.domain.models.ParagraphResponseDto
 import com.home.lexa.domain.models.ParagraphResultResponseDto
+import com.home.lexa.domain.models.SubmitBulkDailyResultRequest
 import com.home.lexa.domain.models.UpdateParagraphRequest
 import com.home.lexa.domain.models.UpdateParagraphResultRequest
 
@@ -11,4 +12,5 @@ interface ParagraphRepository {
     suspend fun updateParagraph(speakingDayId: Long, paragraphId: Long, request: UpdateParagraphRequest): Result<ParagraphResponseDto>
     suspend fun deleteParagraph(speakingDayId: Long, paragraphId: Long): Result<Unit>
     suspend fun updateParagraphResult(request: UpdateParagraphResultRequest): Result<ParagraphResultResponseDto>
+    suspend fun submitBulkParagraphResults(request: SubmitBulkDailyResultRequest): Result<Boolean>
 }

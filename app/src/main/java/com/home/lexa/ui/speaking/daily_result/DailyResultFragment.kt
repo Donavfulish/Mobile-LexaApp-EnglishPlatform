@@ -108,10 +108,15 @@ class DailyResultFragment : BaseFragment<FragmentDailyResultBinding>(FragmentDai
         // Hiện loading ở đây...
         val cacheData = sharedViewModel.sessionCache.values.toList()
 
-        // Gọi ViewModel để gọi API (Gửi List các ParagraphCacheItem lên backend)
-        // Lưu ý: File audio path hiện tại là file local. Bạn cần đảm bảo Backend của bạn
-        // hỗ trợ nhận file multipart, hoặc bạn phải gọi API upload file lấy URL trước khi đẩy text lên.
-        dailyResultViewModel.submitFinalResult(cacheData)
+        // Lấy speakingDayId từ arguments (được truyền từ SpeakingPracticeStudentFragment sang)
+        val speakingDayId = arguments?.getLong("speakingDayId") ?: -1L
+
+        if (speakingDayId != -1L) {
+            // Gọi ViewModel với đủ 2 tham số
+            dailyResultViewModel.submitFinalResult(speakingDayId, cacheData)
+        } else {
+            Toast.makeText(requireContext(), "Lỗi: Không tìm thấy ID bài học", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun observeData() {

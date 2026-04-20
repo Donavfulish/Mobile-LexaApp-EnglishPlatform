@@ -4,6 +4,7 @@ import com.home.lexa.core.network.ApiResponse
 import com.home.lexa.domain.models.CreateParagraphRequest
 import com.home.lexa.domain.models.ParagraphResponseDto
 import com.home.lexa.domain.models.ParagraphResultResponseDto
+import com.home.lexa.domain.models.SubmitBulkDailyResultRequest
 import com.home.lexa.domain.models.UpdateParagraphRequest
 import com.home.lexa.domain.models.UpdateParagraphResultRequest
 import retrofit2.Response
@@ -29,6 +30,11 @@ interface ParagraphApiService {
     suspend fun deleteParagraph(
         @Path("paragraphId") paragraphId: Long
     ): Response<ApiResponse<Unit>>
+
+    @PATCH("api/paragraph/result/bulk")
+    suspend fun submitBulkResults(
+        @Body request: SubmitBulkDailyResultRequest
+    ): Response<ApiResponse<Boolean>>
 
     @PATCH("api/paragraph/result")
     suspend fun updateParagraphResult(
