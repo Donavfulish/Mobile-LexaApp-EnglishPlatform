@@ -17,6 +17,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.room.util.query
 import coil.load
 import com.home.lexa.MainActivity
 import com.home.lexa.core.base.BaseFragment
@@ -96,7 +97,6 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
         // =============================================GENERAL SETUP==========================================
         binding.searchBarVocabulary.apply {
             setIconColor(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
-            setTextSearch("Tìm kiếm từ vựng...")
         }
         binding.vocabularyIconBtn.apply {
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_book)!!)
@@ -144,15 +144,20 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 binding.vocabularyLayout.visibility = View.VISIBLE
             }
         }
+
+        binding.searchBarVocabulary.apply {
+            onSearchAction { q ->
+                viewModel.searchInfor = viewModel.searchInfor.copy(query = q)
+                viewModel.loadMoreFlashcards(false, deckId, viewModel.searchInfor, null)
+            }
+            setOnSortOptionChanged { options ->
+                viewModel.searchInfor = viewModel.searchInfor.copy(sortBy = options.sortBy, order = options.order)
+                viewModel.loadMoreFlashcards(false, deckId, viewModel.searchInfor, null)
+            }
+        }
         syncTabUI()
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//        if(courseId != -1L){
-//            viewModel.loadCourseDetail(courseId)
-//        }
-//    }
     override fun observeData() {
 
         // THEO DOI LOADING CHUNG
@@ -276,7 +281,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                             viewModel.loadMoreSpeakingDay(true, courseId, viewModel.nextItem)
                         } else {
                             viewModel.loadMoreFlashcards(
-                                true, deckId, SearchInfo(null, null, null), viewModel.nextItem
+                                true, deckId, viewModel.searchInfor, viewModel.nextItem
                             )
                         }
                     }

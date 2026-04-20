@@ -60,6 +60,12 @@ class CourseDetailViewModel(
     var currentPages = 0
     var totalPages = 0
     var nextItem: Long? = null
+    var searchInfor = SearchInfo(
+        query = null,
+        sortBy = null,
+        order = null,
+        limit = 10
+    )
 
 
     //    LOGIC TAO MOI KHOA HOC
