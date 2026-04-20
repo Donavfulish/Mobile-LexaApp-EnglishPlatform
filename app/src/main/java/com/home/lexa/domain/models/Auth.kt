@@ -1,5 +1,7 @@
 package com.home.lexa.domain.models
 
+import kotlinx.serialization.Serializable
+
 enum class UserRole { TEACHER, STUDENT }
 enum class ProviderType { GOOGLE, FACEBOOK, GITHUB }
 
@@ -85,6 +87,11 @@ data class ResetPasswordRequest(
 
 data class ChangeEmailRequest (
     val email: String
+)
+
+data class ChangePasswordRequest (
+    val oldPassword: String,
+    val newPassword: String
 )
 
 val mockUserInfo = UserInfo(

@@ -90,18 +90,6 @@ class ProfileFragment : Fragment() {
                 acceptLabel = "Đăng xuất"
             )
         }
-
-        binding.menuLanguage.apply {
-            val currentLang = AppCompatDelegate.getApplicationLocales()[0]?.language ?: "vi"
-
-            val displayValue = if (currentLang == "vi") "Tiếng Việt" else "English"
-
-            setMenuValue(displayValue)
-
-            setOnClickListener {
-                showLanguageBottomSheet()
-            }
-        }
     }
 
     override fun onResume() {
@@ -225,8 +213,23 @@ class ProfileFragment : Fragment() {
         }
 
         binding.menuEmail.setOnClickListener {
-            val action = ProfileFragmentDirections.actionProfileFragmentToProfileEmailFragment()
-            findNavController().navigate(action)
+            findNavController().navigate(R.id.action_profileFragment_to_profileEmailFragment)
+        }
+
+        binding.menuPassword.setOnClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_profileChangePasswordFragment)
+        }
+
+        binding.menuLanguage.apply {
+            val currentLang = AppCompatDelegate.getApplicationLocales()[0]?.language ?: "vi"
+
+            val displayValue = if (currentLang == "vi") "Tiếng Việt" else "English"
+
+            setMenuValue(displayValue)
+
+            setOnClickListener {
+                showLanguageBottomSheet()
+            }
         }
 
         binding.menuNotifications.setOnClickListener {
