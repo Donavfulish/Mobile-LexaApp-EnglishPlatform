@@ -39,6 +39,7 @@ import com.home.lexa.ui.speaking.speaking_practice.SpeakingPracticeViewModel
 import com.home.lexa.ui.flashcard.flashcard_edit_add.FlashcardEditAddViewModel
 import com.home.lexa.ui.flashcard.exercise_mode.ExerciseModeViewModel
 import com.home.lexa.ui.flashcard.exercise_result.ExerciseResultViewModel
+import com.home.lexa.ui.library.LibraryModel
 import com.home.lexa.ui.profile.profile_notification.ProfileNotificationViewModel
 import com.home.lexa.ui.speaking.speaking_practice.SpeakingPracticeStudentViewModel
 import okhttp3.OkHttpClient
@@ -102,6 +103,7 @@ val appModule = module {
     viewModel { HomeViewModel(get<CourseRepository>(), get()) }
     viewModel { AuthViewModel(androidApplication(), get(), get(), get(),get()) }
     viewModel { ProfileViewModel(get(), get()) }
+    viewModel { LibraryModel() }
     viewModel { FavoriteLibraryModel(get()) }
     viewModel { PersonalLibraryModel(get()) }
     viewModel { StudentCourseListModel (get()) }

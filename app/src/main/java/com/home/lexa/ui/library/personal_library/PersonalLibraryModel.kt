@@ -11,6 +11,7 @@ import com.home.lexa.domain.models.CreateDeckRequest
 import com.home.lexa.domain.models.DeckDto
 import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.repository.DeckRepository
+import com.home.lexa.ui.components.SearchbarFilter
 import kotlinx.coroutines.launch
 
 class PersonalLibraryModel(private val repository: DeckRepository) : ViewModel() {
@@ -24,6 +25,13 @@ class PersonalLibraryModel(private val repository: DeckRepository) : ViewModel()
     var isLastPage = false
     var currentPages = 0
     var totalPages = 0
+    var searchInfor = SearchInfo(
+        query = null,
+        sortBy = null,
+        order = null,
+        limit = 10
+    )
+
 
     fun fetchAllDecks(isLoadMore: Boolean, searchInfo: SearchInfo, nextCursor: Long?) {
         if (isLoadMore && (isLastPage || _isLoading.value == true)) return
@@ -78,8 +86,11 @@ class PersonalLibraryModel(private val repository: DeckRepository) : ViewModel()
                 limit = 10
             ), null)
 
-
             _isLoading.value = false
         }
+    }
+
+    fun updateInfor(searchInfo: SearchInfo){
+        searchInfor = searchInfo
     }
 }

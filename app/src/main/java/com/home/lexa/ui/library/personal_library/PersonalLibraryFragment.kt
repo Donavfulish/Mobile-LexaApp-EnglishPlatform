@@ -11,11 +11,16 @@ import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentPersonalLibraryBinding
 import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.ui.components.DeckInput
+import com.home.lexa.ui.components.SearchbarFilter
+import com.home.lexa.ui.library.LibraryModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
 
 class PersonalLibraryFragment : BaseFragment<FragmentPersonalLibraryBinding>(FragmentPersonalLibraryBinding::inflate) {
     private val viewModel: PersonalLibraryModel by viewModel()
+    private val parentViewModel: LibraryModel by viewModel(
+        ownerProducer = { requireParentFragment() }
+    )
     private val deckAdapter by lazy {
         PersonalLibraryAdapter(emptyList())
         { deck ->
@@ -62,7 +67,7 @@ class PersonalLibraryFragment : BaseFragment<FragmentPersonalLibraryBinding>(Fra
 
                                 viewModel.fetchAllDecks(
                                     isLoadMore = true,
-                                    searchInfo = SearchInfo(limit = 10),
+                                    searchInfo = viewModel.searchInfor,
                                     nextCursor = viewModel.lastId
                                 )
                             }
@@ -86,16 +91,7 @@ class PersonalLibraryFragment : BaseFragment<FragmentPersonalLibraryBinding>(Fra
     }
 
     override fun onResume() {
-
         super.onResume()
-        Log.d("Di vao day cua personal", "Di bo");
-        viewModel.fetchAllDecks(true, SearchInfo(
-            query= "",
-            sortBy= "",
-            order= "",
-            limit = 10
-        ), null)
-
     }
 
     override fun observeData() {
@@ -105,6 +101,15 @@ class PersonalLibraryFragment : BaseFragment<FragmentPersonalLibraryBinding>(Fra
 
         viewModel.decks.observe(viewLifecycleOwner) { list ->
             deckAdapter.updateData(list)
+        }
+
+        parentViewModel.searchInfo.observe(viewLifecycleOwner){ infor ->
+            viewModel.updateInfor(infor)
+            viewModel.fetchAllDecks(
+                isLoadMore = false,
+                searchInfo = viewModel.searchInfor,
+                nextCursor = null
+            )
         }
     }
 }
