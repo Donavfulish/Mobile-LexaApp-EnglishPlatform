@@ -35,24 +35,24 @@
 
         <LinearLayout
             android:id="@+id/textContainer"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="246dp"
+            android:layout_height="52dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:orientation="vertical"
-            app:layout_constraintStart_toEndOf="@id/ivIcon"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/toggleContainer"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintStart_toEndOf="@id/ivIcon"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Title"
+                android:textColor="#202124"
                 android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#202124"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvDescription"
@@ -60,8 +60,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Description"
-                android:textSize="14sp"
-                android:textColor="#5F6368"/>
+                android:textColor="#5F6368"
+                android:textSize="14sp" />
 
         </LinearLayout>
 

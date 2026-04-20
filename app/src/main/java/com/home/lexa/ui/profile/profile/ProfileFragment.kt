@@ -11,6 +11,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -59,6 +61,18 @@ class ProfileFragment : Fragment() {
                 },
                 acceptLabel = "Đăng xuất"
             )
+        }
+
+        binding.menuLanguage.apply {
+            val currentLang = AppCompatDelegate.getApplicationLocales()[0]?.language ?: "vi"
+
+            val displayValue = if (currentLang == "vi") "Tiếng Việt" else "English"
+
+            setMenuValue(displayValue)
+
+            setOnClickListener {
+                showLanguageBottomSheet()
+            }
         }
     }
 
@@ -217,6 +231,43 @@ class ProfileFragment : Fragment() {
             if (errorMessage != null) {
                 Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    private fun showLanguageBottomSheet() {
+        val dialog = com.google.android.material.bottomsheet.BottomSheetDialog(requireContext())
+        val view = layoutInflater.inflate(R.layout.view_bottom_sheet_language, null)
+
+        val btnVietnamese = view.findViewById<View>(R.id.btnVietnamese)
+        val btnEnglish = view.findViewById<View>(R.id.btnEnglish)
+
+        btnVietnamese.setOnClickListener {
+            updateLanguage("vi")
+            dialog.dismiss()
+        }
+
+        btnEnglish.setOnClickListener {
+            updateLanguage("en")
+            dialog.dismiss()
+        }
+
+        dialog.setContentView(view)
+        dialog.show()
+    }
+
+    private fun updateLanguage(langCode: String) {
+        val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(langCode)
+
+        val intent = requireActivity().intent
+
+        AppCompatDelegate.setApplicationLocales(appLocale)
+
+        // Ngay sau khi set, yêu cầu Activity kết thúc và chạy lại với hiệu ứng Fade
+        requireActivity().apply {
+            finish()
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            startActivity(intent)
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
     }
 
