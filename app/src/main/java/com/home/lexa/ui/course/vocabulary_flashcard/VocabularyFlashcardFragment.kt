@@ -91,7 +91,6 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
         }
         binding.searchBarVocabulary.apply {
             setIconColor(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
-            setTextSearch("Tìm kiếm từ vựng...")
         }
         binding.editToggle.onCheckedChangeListener = { isChecked ->
             for (i in 0 until binding.vocabularyGrid.childCount) {
@@ -115,10 +114,20 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
             val threshold = 300
             if (scrollY + screenHeight >= totalContentHeight - threshold) {
                 if (viewModel.paginationLoading.value == false && !viewModel.isLastPage) {
-                    viewModel.loadFlashcardsWithResult(true, deckId!!, SearchInfo(null, null, null), viewModel.lastId)
+                    viewModel.loadFlashcardsWithResult(true, deckId!!, viewModel.searchInfor, viewModel.lastId)
                 }
             }
         })
+        binding.searchBarVocabulary.apply {
+            onSearchAction { q ->
+                viewModel.searchInfor = viewModel.searchInfor.copy(query = q)
+                viewModel.loadFlashcardsWithResult(false, deckId!!, viewModel.searchInfor, null)
+            }
+            setOnSortOptionChanged { options ->
+                viewModel.searchInfor = viewModel.searchInfor.copy(sortBy = options.sortBy, order = options.order)
+                viewModel.loadFlashcardsWithResult(false, deckId!!, viewModel.searchInfor, null)
+            }
+        }
 
         viewModel.loadFlashcardsWithResult(false, deckId!!, SearchInfo(null, null, null), null)
         viewModel.loadTopics()

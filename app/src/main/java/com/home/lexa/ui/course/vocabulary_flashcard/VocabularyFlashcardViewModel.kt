@@ -44,6 +44,12 @@ class VocabularyFlashcardViewModel(
     var isLastPage = false
     var currentPages = 0
     var totalPages = 0
+    var searchInfor = SearchInfo(
+        query = null,
+        sortBy = null,
+        order = null,
+        limit = 10
+    )
 
     fun loadFlashcardDetail(deckId: Long) {
         viewModelScope.launch {
