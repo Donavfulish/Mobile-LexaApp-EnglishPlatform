@@ -7,6 +7,8 @@ import com.home.lexa.domain.models.Profile
 import com.home.lexa.domain.models.UpdateFcmTokenRequest
 import com.home.lexa.domain.models.UpdateProfileRequest
 import com.home.lexa.domain.repository.ProfileRepository
+import com.home.lexa.ui.profile.profile.AVATAR_ACTION
+import okhttp3.MultipartBody
 
 class ProfileRepositoryImpl(private val apiService: ProfileApiService) : ProfileRepository {
 
@@ -43,8 +45,6 @@ class ProfileRepositoryImpl(private val apiService: ProfileApiService) : Profile
             val response = apiService.updateProfile(data)
             val body = response.body()
 
-
-
             if (response.isSuccessful && body != null) {
                 if (body.success == true) {
                     // Xoá cache sau khi update thành công
@@ -72,6 +72,30 @@ class ProfileRepositoryImpl(private val apiService: ProfileApiService) : Profile
                     Result.success(true)
                 } else {
                     Result.failure(Exception(body.message ?: "Cập nhật FCM token thất bại"))
+                }
+            } else {
+                Result.failure(Exception("Lỗi máy chủ: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(Exception("Lỗi kết nối: ${e.message}"))
+        }
+    }
+
+    override suspend fun updateAvatar(
+        avatarPart: MultipartBody.Part?,
+        action: AVATAR_ACTION
+    ): Result<Boolean> {
+        return try {
+            val response = apiService.updateAvatar(avatarPart, action.value)
+            val body = response.body()
+
+            if (response.isSuccessful && body != null) {
+                if (body.success == true) {
+                    Log.d("Đã xoá cache", "Đã xoá");
+                    AppMemoryCache.remove("getProfile")
+                    Result.success(true)
+                } else {
+                    Result.failure(Exception(body.message ?: "Cập nhật avatar thất bại"))
                 }
             } else {
                 Result.failure(Exception("Lỗi máy chủ: ${response.code()}"))

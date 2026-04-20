@@ -146,5 +146,6 @@ dependencies {
     //13. Display Image for ShapeableImageView
     implementation ("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
+    implementation("com.github.stfalcon-studio:StfalconImageViewer:1.0.1")
 
 }

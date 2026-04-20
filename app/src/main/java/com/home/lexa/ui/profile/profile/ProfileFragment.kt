@@ -4,6 +4,7 @@ import android.app.AppOpsManager
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -11,12 +12,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import coil.load
+import coil.size.ViewSizeResolver
+import com.bumptech.glide.Glide
 import com.home.lexa.R
 import com.home.lexa.core.network.AuthEventBus
 import com.home.lexa.data.local.UserManager
@@ -29,6 +34,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import com.stfalcon.imageviewer.StfalconImageViewer
 
 class ProfileFragment : Fragment() {
 
@@ -37,6 +43,22 @@ class ProfileFragment : Fragment() {
 
     private val viewModel: ProfileViewModel by viewModel()
     private val userManager: UserManager by inject()
+
+    private var avatarUri: Uri? = null
+
+    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        if (uri != null) {
+            avatarUri = uri
+            binding.ivAvatar.load(avatarUri) {
+                crossfade(true)
+                placeholder(R.drawable.ic_person)
+                error(R.drawable.ic_person)
+            }
+            viewModel.updateAvatar(avatarUri, AVATAR_ACTION.UPDATE)
+        } else {
+            // Người dùng đóng thư viện mà không chọn ảnh
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,6 +73,12 @@ class ProfileFragment : Fragment() {
         setupInitialUI()
         observeData()
         Log.d("ProfileFragment", "Start");
+
+        binding.ivAvatar.apply {
+            setOnClickListener {
+                showAvatarOptions()
+            }
+        }
 
         binding.btnLogout.setOnClickListener {
             requireContext().showConfirmDialog(
@@ -231,6 +259,63 @@ class ProfileFragment : Fragment() {
             if (errorMessage != null) {
                 Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    private fun showAvatarOptions() {
+        val dialog = com.google.android.material.bottomsheet.BottomSheetDialog(requireContext())
+        val view = layoutInflater.inflate(R.layout.view_bottom_sheet_avatar, null)
+
+        val currentAvatarUrl = viewModel.profileData.value?.avatarUrl
+
+        view.findViewById<View>(R.id.btnViewAvatar).apply {
+            visibility = if (currentAvatarUrl != null) View.VISIBLE else View.GONE
+
+            setOnClickListener {
+                showFullAvatar()
+                dialog.dismiss()
+            }
+        }
+
+        view.findViewById<View>(R.id.btnUploadAvatar).setOnClickListener {
+            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            dialog.dismiss()
+        }
+
+        view.findViewById<View>(R.id.btnDeleteAvatar).apply {
+            visibility = if (currentAvatarUrl != null) View.VISIBLE else View.GONE
+
+            setOnClickListener {
+                requireContext().showConfirmDialog(
+                    title = "Gỡ ảnh đại diện",
+                    message = "Hành động này không thể hoàn tác. Bạn chắc chắn muốn gỡ ảnh đại diện?",
+                    onConfirm = {
+                        viewModel.updateAvatar(null, AVATAR_ACTION.DELETE)
+
+                        avatarUri = null
+
+                        binding.ivAvatar.load(R.drawable.ic_person)
+
+                        dialog.dismiss()
+                    },
+                    acceptLabel = "Gỡ ảnh"
+                )
+            }
+        }
+
+        dialog.setContentView(view)
+        dialog.show()
+    }
+
+    private fun showFullAvatar() {
+        val avatarUrl = viewModel.profileData.value?.avatarUrl
+
+        if (avatarUrl != null) {
+            StfalconImageViewer.Builder<String>(requireContext(), listOf(avatarUrl)) { view, image ->
+                Glide.with(view).load(image).into(view)
+            }.show()
+        } else {
+            Toast.makeText(requireContext(), "Chưa có ảnh đại diện", Toast.LENGTH_SHORT).show()
         }
     }
 

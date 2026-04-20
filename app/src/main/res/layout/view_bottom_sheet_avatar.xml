@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:background="#E0E0E0" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnViewAvatar"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="start|center_vertical"
+        android:text="Xem ảnh đại diện"
+        android:textAllCaps="false"
+        android:textColor="#202124"
+        android:textSize="16sp"
+        app:icon="@drawable/ic_open_eye"
+        app:iconPadding="16dp"
+        app:iconTint="#757575" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnUploadAvatar"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="start|center_vertical"
+        android:text="Tải ảnh mới lên"
+        android:textAllCaps="false"
+        android:textColor="#202124"
+        android:textSize="16sp"
+        app:icon="@drawable/ic_upload"
+        app:iconPadding="16dp"
+        app:iconTint="#757575" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDeleteAvatar"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="start|center_vertical"
+        android:text="Xóa ảnh"
+        android:textAllCaps="false"
+        android:textColor="#FF3B30"
+        android:textSize="16sp"
+        app:icon="@drawable/trash"
+        app:iconPadding="16dp"
+        app:iconTint="#FF3B30" />
+
+</LinearLayout>
