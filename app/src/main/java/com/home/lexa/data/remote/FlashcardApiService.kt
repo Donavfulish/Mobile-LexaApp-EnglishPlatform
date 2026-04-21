@@ -33,7 +33,7 @@ interface FlashcardApiService {
         @Query("next_id") next_id: String? = null,
     ): Response<ApiResponse<AllFlashcardPaginationResponse>>
 
-    @GET("api/decks/{deckId}/flashcards/result")
+    @GET("/api/decks/{deckId}/flashcards/result")
     suspend fun getAllFlashcardWithResult(
         @Path("deckId") deckId: Long,
         @Query("query") query: String? = null,
@@ -70,4 +70,7 @@ interface FlashcardApiService {
         @Path("deckId") deckId: Long,
         @Body request: UpdateFlashcardResultRequest
     ): Response<ApiResponse<Boolean>>
+
+    @GET("api/decks/flashcards/suggestion")
+    suspend fun getFlashcardSuggestions(@Query("query") query: String? = null): Response<ApiResponse<List<String>>>
 }

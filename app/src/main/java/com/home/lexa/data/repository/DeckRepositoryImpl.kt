@@ -25,6 +25,17 @@ class DeckRepositoryImpl(
         val order = searchInfo.order ?: ""
         return "${type}_${q}_${sort}_${order}"
     }
+    override suspend fun getDeckSuggestions(query: String?): Result<List<String>?> {
+        return try {val response = apiService.getDeckSuggestions(query)
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!.data)
+            } else {
+                Result.failure(Exception("Lỗi lấy gợi ý Deck"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
     override suspend fun getAllDecks(
         searchInfo: SearchInfo,
