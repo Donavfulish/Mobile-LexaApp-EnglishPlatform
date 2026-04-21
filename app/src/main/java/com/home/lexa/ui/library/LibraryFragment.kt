@@ -3,9 +3,7 @@ package com.home.lexa.ui.library
 import com.google.android.material.tabs.TabLayoutMediator
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentLibraryBinding
-import com.home.lexa.ui.library.favorite_library.FavoriteLibraryModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.getValue
 
 class LibraryFragment : BaseFragment<FragmentLibraryBinding>(FragmentLibraryBinding::inflate) {
 
@@ -26,6 +24,11 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>(FragmentLibraryBind
             onSearchAction { q ->
                 viewModel.updateSearch(q)
             }
+            onTextChanged { q ->
+                if (q.isNotEmpty()) {
+                    viewModel.getSuggestions(q)
+                }
+            }
             setOnSortOptionChanged { options ->
                 viewModel.updateFilter(options)
             }
@@ -33,6 +36,9 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>(FragmentLibraryBind
     }
 
     override fun observeData() {
+        viewModel.suggestions.observe(viewLifecycleOwner) { list ->
+            binding.searchbarFilter.setSuggestions(list)
+        }
     }
 
     fun navigateToTab(page: Int) {

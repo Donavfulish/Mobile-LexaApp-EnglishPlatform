@@ -103,7 +103,7 @@ val appModule = module {
     viewModel { HomeViewModel(get<CourseRepository>(), get()) }
     viewModel { AuthViewModel(androidApplication(), get(), get(), get(),get()) }
     viewModel { ProfileViewModel(get(), get()) }
-    viewModel { LibraryModel() }
+    viewModel { LibraryModel(get()) }
     viewModel { FavoriteLibraryModel(get()) }
     viewModel { PersonalLibraryModel(get()) }
     viewModel { StudentCourseListModel (get()) }

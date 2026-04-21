@@ -17,7 +17,6 @@ import androidx.core.widget.NestedScrollView
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import androidx.room.util.query
 import coil.load
 import com.home.lexa.MainActivity
 import com.home.lexa.core.base.BaseFragment
@@ -147,12 +146,20 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
 
         binding.searchBarVocabulary.apply {
             onSearchAction { q ->
-                viewModel.searchInfor = viewModel.searchInfor.copy(query = q)
-                viewModel.loadMoreFlashcards(false, deckId, viewModel.searchInfor, null)
+                val currentDeckId = viewModel.courseDetailData.value?.deckId
+                if (currentDeckId != null) {
+                    viewModel.searchInfor = viewModel.searchInfor.copy(query = q)
+                    viewModel.loadMoreFlashcards(false, currentDeckId, viewModel.searchInfor, null)
+                } else {
+                    Log.e("SEARCH_DEBUG", "DeckId is null, cannot search")
+                }
             }
             setOnSortOptionChanged { options ->
-                viewModel.searchInfor = viewModel.searchInfor.copy(sortBy = options.sortBy, order = options.order)
-                viewModel.loadMoreFlashcards(false, deckId, viewModel.searchInfor, null)
+                val currentDeckId = viewModel.courseDetailData.value?.deckId
+                if (currentDeckId != null) {
+                    viewModel.searchInfor = viewModel.searchInfor.copy(sortBy = options.sortBy, order = options.order)
+                    viewModel.loadMoreFlashcards(false, currentDeckId, viewModel.searchInfor, null)
+                }
             }
             onTextChanged { q ->
                 if(q.length >= 2){
@@ -160,6 +167,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 }
             }
         }
+
         syncTabUI()
     }
 
@@ -349,8 +357,9 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 )
             }
         }
-        viewModel.suggestions.observe(viewLifecycleOwner) { list ->
-            binding.searchBarVocabulary.setSuggestions(list)
+        
+        viewModel.suggestions.observe(viewLifecycleOwner) { suggestions ->
+            binding.searchBarVocabulary.setSuggestions(suggestions)
         }
     }
 
