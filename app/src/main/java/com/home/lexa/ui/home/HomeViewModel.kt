@@ -11,6 +11,9 @@ import com.home.lexa.domain.models.GetFeaturedCourseResponse
 import com.home.lexa.domain.models.GetStudyingCourseResponse
 import com.home.lexa.data.local.UserManager
 import com.home.lexa.domain.models.UserRole
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 data class UserStats(
     val streakDays: Int,
@@ -34,6 +37,9 @@ class HomeViewModel(private val repository: CourseRepository, private val userMa
 
     private val _userStatsFlow = MutableStateFlow(UserStats(userManager.getStreakCount(), 5f, 6f))
     val userStatsFlow: StateFlow<UserStats> = _userStatsFlow.asStateFlow()
+
+    private val _toastMessageFlow = MutableSharedFlow<String>()
+    val toastMessageFlow: SharedFlow<String> = _toastMessageFlow.asSharedFlow()
 
     init {
 
@@ -80,6 +86,44 @@ class HomeViewModel(private val repository: CourseRepository, private val userMa
                 _topStudiedCoursesFlow.value = dtoList
             }.onFailure { exception ->
                 println("Lỗi gọi API Top Studied Courses: ${exception.message}")
+            }
+        }
+    }
+
+    fun toggleFavorite(course: GetFeaturedCourseResponse, isFavorite: Boolean) {
+        viewModelScope.launch {
+            val result = if (isFavorite) {
+                repository.favoriteCourse(course.id)
+            } else {
+                repository.disFavoriteCourse(course.id)
+            }
+            
+            result.onSuccess {
+                // Cập nhật lại danh sách featured courses trong bộ nhớ để UI phản hồi nhanh
+                val updatedList = _featuredCoursesFlow.value.map {
+                    if (it.id == course.id) {
+                        it.copy(
+                            is_favorite = isFavorite,
+                            favorite_user_count = if (isFavorite) it.favorite_user_count + 1 else it.favorite_user_count - 1
+                        )
+                    } else it
+                }
+                _featuredCoursesFlow.value = updatedList
+                
+                // Tương tự cho top studied courses nếu có
+                val updatedTopList = _topStudiedCoursesFlow.value.map {
+                    if (it.id == course.id) {
+                        it.copy(
+                            is_favorite = isFavorite,
+                            favorite_user_count = if (isFavorite) it.favorite_user_count + 1 else it.favorite_user_count - 1
+                        )
+                    } else it
+                }
+                _topStudiedCoursesFlow.value = updatedTopList
+                
+                _toastMessageFlow.emit(if (isFavorite) "Yêu thích thành công" else "Bỏ yêu thích thành công")
+            }.onFailure {
+                _toastMessageFlow.emit("Lỗi từ hệ thống")
             }
         }
     }

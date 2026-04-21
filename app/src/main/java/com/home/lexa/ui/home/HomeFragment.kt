@@ -4,6 +4,7 @@ package com.home.lexa.ui.home
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
@@ -33,8 +34,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                     bundle)
             },
             onFavoriteToggle = { course, isFavorite ->
-
-                // viewModel.toggleFavorite(course.id, isFavorite)
+                viewModel.toggleFavorite(course, isFavorite)
             },
 
         )
@@ -49,8 +49,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                     bundle)
             },
             onFavoriteToggle = { course, isFavorite ->
-
-                // viewModel.toggleFavorite(course.id, isFavorite)
+                Log.d("Nhieu luot hoc", "hoc")
+                viewModel.toggleFavorite(course, isFavorite)
             }
 
         )
@@ -122,6 +122,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             viewModel.featuredCoursesFlow.collect { courses ->
                 featuredCourseAdapter.submitList(courses)
 
+            }
+
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.toastMessageFlow.collect { message ->
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             }
         }
 
