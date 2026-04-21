@@ -22,6 +22,7 @@ import com.home.lexa.ui.components.NormalInput
 import com.home.lexa.ui.components.ParagraphEditCard
 import com.home.lexa.ui.components.PopUpInput
 import com.home.lexa.ui.components.Popup
+import com.home.lexa.ui.utils.SpeechToTextManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(FragmentSpeakingPracticeBinding::inflate) {
@@ -29,11 +30,14 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
     private var speakingDayId = -1L
     private var courseId = -1L
     private var order = 0
+    private lateinit var sttManager: SpeechToTextManager
+    private var currentRecognizedText: String = ""
 
     override fun setupViews() {
         courseId = arguments?.getLong("courseId") ?: -1L
         speakingDayId = arguments?.getLong("speakingDayId") ?: -1L
         order = arguments?.getInt("order") ?: 0
+        sttManager = SpeechToTextManager(requireContext())
 
         val activityBinding = (requireActivity() as MainActivity).binding
         activityBinding.appBarLayout.apply {
@@ -316,4 +320,6 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
             }
         }
     }
+
+
 }
