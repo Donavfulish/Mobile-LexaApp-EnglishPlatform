@@ -1,5 +1,6 @@
 package com.home.lexa.ui.home
 
+import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -34,6 +35,7 @@ class StudyingCourseAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        Log.d("Gia tri card: ", "${getItem(position)}")
         holder.bind(getItem(position))
     }
 

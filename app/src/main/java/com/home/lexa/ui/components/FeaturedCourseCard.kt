@@ -3,6 +3,7 @@ package com.home.lexa.ui.components
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -25,10 +26,12 @@ class FeaturedCourseCard @JvmOverloads constructor(
     }
     fun setData(course: GetFeaturedCourseResponse){
         binding.title.setText(course.title)
+
         binding.topic.setText(course.topic.name, null)
         binding.teacherName.setText(course.creator_name)
         binding.groupNum.setText(course.studying_user_count.toString())
         binding.favoriteNum.setText(course.favorite_user_count.toString())
+
         setFavoriteButtonSelected(course.is_favorite == true )
         setThumbnail(course.thumbnail_url)
         setTeacherImage(course.creator_avatar_url)
@@ -53,7 +56,7 @@ class FeaturedCourseCard @JvmOverloads constructor(
         binding.background.setImageDrawable(img)
     }
     fun setFavoriteButtonSelected(isSelected: Boolean) {
-        binding.favoriteBtn.isSelected = !isSelected
+        binding.favoriteBtn.isSelected = isSelected
     }
     fun setThumbnail(url: String?){
         binding.background.load(url) {
