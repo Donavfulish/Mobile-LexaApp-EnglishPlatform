@@ -137,6 +137,12 @@ class MainActivity : AppCompatActivity() {
             binding.bottomNavigationMain.visibility = View.VISIBLE
             binding.appBarLayout.visibility = View.VISIBLE
         }
+        if(destinationId != R.id.homeFragment &&
+            destinationId != R.id.libraryFragment &&
+            destinationId != R.id.courseFragment &&
+            destinationId != R.id.profileFragment){
+            binding.bottomNavigationMain.visibility = View.GONE
+        }
     }
 
     private fun handleTopBar(destinationId: Int) {
@@ -156,21 +162,25 @@ class MainActivity : AppCompatActivity() {
             R.id.homeFragment -> {
                 tvTitle.text = "Chào ${userManager.getUserName() ?: "Alex"}"
                 binding.appBarLayout.insertCustomeView(headerView)
+                binding.bottomNavigationMain.setSelectedTab(R.id.homeFragment)
             }
 
             R.id.libraryFragment -> {
                 tvTitle.text = "Thư viện"
                 binding.appBarLayout.insertCustomeView(headerView)
+                binding.bottomNavigationMain.setSelectedTab(R.id.libraryFragment)
             }
 
             R.id.courseFragment -> {
                 tvTitle.text = "Khóa học"
                 binding.appBarLayout.insertCustomeView(headerView)
+                binding.bottomNavigationMain.setSelectedTab(R.id.courseFragment)
             }
 
             R.id.profileFragment -> {
                 tvTitle.text = "Hồ sơ cá nhân"
                 binding.appBarLayout.insertCustomeView(headerView)
+                binding.bottomNavigationMain.setSelectedTab(R.id.profileFragment)
             }
 
             // CASE QUAN TRỌNG tiêu đề động
