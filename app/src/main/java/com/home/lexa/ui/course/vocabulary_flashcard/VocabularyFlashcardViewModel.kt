@@ -13,7 +13,9 @@ import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.UpdateDeckRequest
 import com.home.lexa.domain.repository.DeckRepository
 import com.home.lexa.domain.repository.FlashcardRepository
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class VocabularyFlashcardViewModel(
@@ -40,6 +42,12 @@ class VocabularyFlashcardViewModel(
     private val _paginationLoading = MutableLiveData<Boolean>()
     val paginationLoading: LiveData<Boolean> get() = _paginationLoading
 
+    private val _suggestions = MutableLiveData<List<String>>(emptyList())
+    val suggestions: LiveData<List<String>> get() = _suggestions
+
+    private val _isSuggesting = MutableLiveData<Boolean>(false)
+    val isSuggesting: LiveData<Boolean> get() = _isSuggesting
+
     var lastId: Long? = null
     var isLastPage = false
     var currentPages = 0
@@ -50,6 +58,24 @@ class VocabularyFlashcardViewModel(
         order = null,
         limit = 10
     )
+    private var searchJob: Job? = null
+
+    fun getSuggestions(query: String) {
+        if (isSuggesting.value == true) return
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(200)
+            _isSuggesting.value = true
+            val result = flashcardRepository.getFlashcardSuggestions(query)
+            result.onSuccess { list ->
+                _suggestions.value = list
+                _isSuggesting.value = false
+            }.onFailure {
+                _suggestions.value = emptyList()
+                _isSuggesting.value = false
+            }
+        }
+    }
 
     fun loadFlashcardDetail(deckId: Long) {
         viewModelScope.launch {

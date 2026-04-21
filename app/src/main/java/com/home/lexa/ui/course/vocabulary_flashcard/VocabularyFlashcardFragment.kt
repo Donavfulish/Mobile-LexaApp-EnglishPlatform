@@ -127,6 +127,11 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
                 viewModel.searchInfor = viewModel.searchInfor.copy(sortBy = options.sortBy, order = options.order)
                 viewModel.loadFlashcardsWithResult(false, deckId!!, viewModel.searchInfor, null)
             }
+            onTextChanged { q ->
+                if(q.length >= 2){
+                    viewModel.getSuggestions(q)
+                }
+            }
         }
 
         viewModel.loadFlashcardsWithResult(false, deckId!!, SearchInfo(null, null, null), null)
@@ -210,6 +215,11 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
             binding.diTopic.setSelection(deckTopicName ?: "None")
             binding.diTopic.setFrameColor(topicColorMap[deckTopicName] ?: "#FFFFFF")
         }
+
+        viewModel.suggestions.observe(viewLifecycleOwner) { suggestions ->
+            binding.searchBarVocabulary.setSuggestions(suggestions)
+        }
+
 
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("RELOAD_DATA")
             ?.observe(viewLifecycleOwner) { shouldReload ->

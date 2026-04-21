@@ -71,6 +71,6 @@ interface FlashcardApiService {
         @Body request: UpdateFlashcardResultRequest
     ): Response<ApiResponse<Boolean>>
 
-    @GET("api/decks/flashcards/suggestion")
+    @GET("api/decks/flashcards/suggestions")
     suspend fun getFlashcardSuggestions(@Query("query") query: String? = null): Response<ApiResponse<List<String>>>
 }
