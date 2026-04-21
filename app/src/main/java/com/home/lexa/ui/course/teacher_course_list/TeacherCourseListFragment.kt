@@ -76,6 +76,11 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
                 viewModel.searchInfo = viewModel.searchInfo.copy(order = options.order, sortBy = options.sortBy)
                 viewModel.fetchAllCourses(false, viewModel.searchInfo, null)
             }
+            onTextChanged { query ->
+                if(query.length >= 2){
+                    viewModel.getSuggestions(query)
+                }
+            }
         }
 
         binding.headerSection.setHeaderData(
@@ -245,6 +250,9 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
         }
         viewModel.currentFilter.observe(viewLifecycleOwner) { filter ->
             updateFilterUI(filter)
+        }
+        viewModel.suggestions.observe(viewLifecycleOwner) { list ->
+            binding.searchbarFilter.setSuggestions(list)
         }
     }
 }

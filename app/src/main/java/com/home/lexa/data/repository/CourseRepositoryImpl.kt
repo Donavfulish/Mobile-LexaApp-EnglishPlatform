@@ -28,6 +28,19 @@ class CourseRepositoryImpl(
         return "${type}_${q}_${sort}_${order}"
     }
 
+    override suspend fun getCourseSuggestions(query: String?): Result<List<String>?> {
+        return try {
+            val response = apiService.getCourseSuggestions(query)
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!.data)
+            } else {
+                Result.failure(Exception("Lỗi lấy gợi ý: ${response.message()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     override suspend fun getAllCourses(
         searchInfo: SearchInfo,
         nextCursor: Long?

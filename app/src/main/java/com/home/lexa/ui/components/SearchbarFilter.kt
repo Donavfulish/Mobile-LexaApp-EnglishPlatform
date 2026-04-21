@@ -72,15 +72,6 @@ class SearchbarFilter @JvmOverloads constructor(
         }
 
         binding.iconFilter.setColorFilter(if (isActive) activeColor else inactiveIconColor)
-
-        val chipGroups = listOf(binding.cgSortCriteria, binding.cgSortOrder)
-        chipGroups.forEach { group ->
-            group.forEach { item ->
-                (item as? Chip)?.let { chip ->
-                    updateChipStyle(chip, false)
-                }
-            }
-        }
     }
 
     private fun setupChipsStyling() {
@@ -99,7 +90,6 @@ class SearchbarFilter @JvmOverloads constructor(
             }
         }
     }
-
     private fun updateChipStyle(chip: Chip, isSelected: Boolean) {
         val color = if (isSelected) activeColor else inactiveStrokeColor
         val textColor = if (isSelected) activeColor else Color.parseColor("#757575")
@@ -182,24 +172,5 @@ class SearchbarFilter @JvmOverloads constructor(
         if (suggestions.isNotEmpty()) {
             binding.etSearch.showDropDown()
         }
-    }
-
-    inner class NoFilterAdapter(context: Context, layout: Int, var items: List<String>) :
-        ArrayAdapter<String>(context, layout, items) {
-
-        private val noFilter = object : Filter() {
-            override fun performFiltering(constraint: CharSequence?): FilterResults {
-                val results = FilterResults()
-                results.values = items
-                results.count = items.size
-                return results
-            }
-
-            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                notifyDataSetChanged()
-            }
-        }
-
-        override fun getFilter(): Filter = noFilter
     }
 }
