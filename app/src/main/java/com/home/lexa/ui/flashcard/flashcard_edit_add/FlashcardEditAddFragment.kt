@@ -13,8 +13,17 @@ import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.CreateFlashcardRequest
 import com.home.lexa.domain.models.UpdateFlashcardRequest
 import com.home.lexa.domain.models.Vocabulary
+import com.home.lexa.domain.models.WordUiState
 import com.home.lexa.ui.components.FlashcardMini
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.launch
+import com.home.lexa.BuildConfig
+import com.home.lexa.R
+import com.home.lexa.domain.models.VocabType
 
 class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(FragmentAddEditFlashcardBinding::inflate) {
 
@@ -53,6 +62,7 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
         }
 
         setupButtons()
+        setupIpaKeyboard()
     }
 
 
@@ -75,17 +85,21 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
 
             dropdownWordType.apply {
                 setTile("Loại từ")
-                setSelection("Chọn loại từ")
+                setSelection("Danh từ")
                 setUpOptions(listOf("Danh từ", "Động từ", "Tính từ", "Trạng từ"))
             }
 
             dropdownLevel.apply {
                 setTile("Level")
-                setSelection("C1")
-                setUpOptions(listOf("A1", "A2", "B1", "B2", "C1", "C2"))
+                val levelOptions = VocabType.entries.map {
+                    if (it == VocabType.NONE) "Không xác định" else it.name
+                }
+                setUpOptions(levelOptions)
+                setSelection("Không xác định")
 
             }
         }
+
     }
 
     private fun fillData() {
@@ -129,12 +143,47 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
         binding.fabAddImage.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
+
+
+
+        binding.btnAiSuggest.setOnClickListener {
+            val word = binding.inputVocab.getText().trim()
+            val meaning = binding.inputDefinition.getText().trim()
+            val pos = binding.dropdownWordType.getSelection()
+            if (word.isEmpty() || meaning.isEmpty()) {
+                Toast.makeText(requireContext(), "Vui lòng nhập từ vựng và định nghĩa để AI có ngữ cảnh", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+
+            viewModel.fetchAiExampleSuggestion(word, meaning, pos)
+        }
+        binding.btnPhoneticSuggest.setOnClickListener {
+            val word = binding.inputVocab.getText().trim()
+            val pos = binding.dropdownWordType.getSelection()
+            if (word.isEmpty() || pos.isEmpty()) {
+                Toast.makeText(requireContext(), "Vui lòng nhập từ vựng", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+
+            viewModel.fetchPhonetic(word, pos)
+        }
     }
 
     private fun saveFlashcard() {
 
         val inputWord = binding.inputVocab.getText().trim()
-        val inputTrans = binding.inputPronunciation.getText().trim()
+        var inputTrans = binding.inputPronunciation.getText().trim()
+
+        if (inputTrans.isNotEmpty()) {
+            if (!inputTrans.startsWith("/")) {
+                inputTrans = "/$inputTrans"
+            }
+            if (!inputTrans.endsWith("/")) {
+                inputTrans = "$inputTrans/"
+            }
+        }
         val inputMeaning = binding.inputDefinition.getText().trim()
         val inputExample = binding.inputExample.getText().trim()
 
@@ -199,12 +248,55 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
                 Toast.makeText(requireContext(), "Có lỗi xảy ra, vui lòng thử lại", Toast.LENGTH_SHORT).show()
             }
         }
+
+        viewModel.uiState.observe(viewLifecycleOwner){ state ->
+            when (state) {
+                is WordUiState.Loading -> {
+                    binding.btnAiSuggest.isEnabled = false
+                    binding.loadingOverlay.visibility = android.view.View.VISIBLE
+                }
+                is WordUiState.Success -> {
+                    binding.loadingOverlay.visibility = android.view.View.GONE
+                    binding.btnAiSuggest.isEnabled = true
+                    val data  = state.data
+                    binding.inputExample.setText(data)
+                }
+
+                is WordUiState.Error -> {
+                    binding.btnAiSuggest.isEnabled = true
+                    binding.loadingOverlay.visibility = android.view.View.GONE
+                    Toast.makeText(context, "Lỗi khi generate bằng AI, vui lòng thử lại", Toast.LENGTH_SHORT).show()
+                    println(state.message)
+                }
+                else -> {
+                    binding.loadingOverlay.visibility = android.view.View.GONE
+                }
+            }
+        }
+        viewModel.phoneticState.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                "ERROR" -> {
+                    Toast.makeText(requireContext(), "Không tìm thấy phiên âm", Toast.LENGTH_SHORT).show()
+
+                }
+                null -> { /* Idle */ }
+                else -> {
+                    binding.inputPronunciation.setText(result)
+                }
+            }
+        }
     }
 
     private fun showPreview() {
 
         val inputWord = binding.inputVocab.getText().trim()
-        val inputTrans = binding.inputPronunciation.getText().trim()
+
+        var inputTrans = binding.inputPronunciation.getText().trim()
+
+        if (inputTrans.isNotEmpty()) {
+            if (!inputTrans.startsWith("/")) inputTrans = "/$inputTrans"
+            if (!inputTrans.endsWith("/")) inputTrans = "$inputTrans/"
+        }
         val inputMeaning = binding.inputDefinition.getText().trim()
         val inputExample = binding.inputExample.getText().trim()
 
@@ -249,14 +341,31 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
     }
 
     private fun mapLevelToId(levelText: String): Int {
-        return when (levelText) {
-            "A1" -> 1
-            "A2" -> 2
-            "B1" -> 3
-            "B2" -> 4
-            "C1" -> 5
-            "C2" -> 6
-            else -> 1
+        return try {
+            if (levelText == "Không xác định") {
+                VocabType.NONE.ordinal
+            } else {
+                VocabType.valueOf(levelText).ordinal
+            }
+        } catch (e: Exception) {
+            VocabType.NONE.ordinal
+        }
+    }
+    private fun setupIpaKeyboard() {
+
+        val ipaSymbols = listOf("ˈ", "ˌ", "ː", "ə", "æ", "ʌ", "ɒ", "ɪ", "ʊ", "ɔ", "ɜ", "ɑ", "ɛ",
+            "θ", "ð", "ʃ", "ʒ", "ŋ", "dʒ", "tʃ")
+
+        binding.layoutIpaKeyboard.removeAllViews()
+
+
+        for (symbol in ipaSymbols) {
+            val button = layoutInflater.inflate(R.layout.item_ipa_button, binding.layoutIpaKeyboard, false) as MaterialButton
+            button.text = symbol
+            button.setOnClickListener {
+                binding.inputPronunciation.insertTextAtCursor(symbol)
+            }
+            binding.layoutIpaKeyboard.addView(button)
         }
     }
 }

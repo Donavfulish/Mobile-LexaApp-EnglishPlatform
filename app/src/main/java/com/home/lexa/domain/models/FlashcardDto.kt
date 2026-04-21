@@ -1,6 +1,7 @@
 package com.home.lexa.domain.models
 
 import kotlinx.serialization.Serializable
+enum class VocabType { NONE, A1, A2, B1, B2, C1, C2 }
 
 @Serializable
 data class DetailFlashcard(
@@ -79,3 +80,12 @@ data class UpdateFlashcardResultRequest(
     val deckId: Long,
     val results: List<FlashcardResultItem>
 )
+
+
+
+sealed class WordUiState {
+    object Idle : WordUiState()
+    object Loading : WordUiState()
+    data class Success(val data: String) : WordUiState()
+    data class Error(val message: String) : WordUiState()
+}
