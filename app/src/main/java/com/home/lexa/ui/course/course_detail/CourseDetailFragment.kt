@@ -96,7 +96,6 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
         // =============================================GENERAL SETUP==========================================
         binding.searchBarVocabulary.apply {
             setIconColor(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
-            setTextSearch("Tìm kiếm từ vựng...")
         }
         binding.vocabularyIconBtn.apply {
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_book)!!)
@@ -144,15 +143,34 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 binding.vocabularyLayout.visibility = View.VISIBLE
             }
         }
+
+        binding.searchBarVocabulary.apply {
+            onSearchAction { q ->
+                val currentDeckId = viewModel.courseDetailData.value?.deckId
+                if (currentDeckId != null) {
+                    viewModel.searchInfor = viewModel.searchInfor.copy(query = q)
+                    viewModel.loadMoreFlashcards(false, currentDeckId, viewModel.searchInfor, null)
+                } else {
+                    Log.e("SEARCH_DEBUG", "DeckId is null, cannot search")
+                }
+            }
+            setOnSortOptionChanged { options ->
+                val currentDeckId = viewModel.courseDetailData.value?.deckId
+                if (currentDeckId != null) {
+                    viewModel.searchInfor = viewModel.searchInfor.copy(sortBy = options.sortBy, order = options.order)
+                    viewModel.loadMoreFlashcards(false, currentDeckId, viewModel.searchInfor, null)
+                }
+            }
+            onTextChanged { q ->
+                if(q.length >= 2){
+                    viewModel.getSuggestions(q)
+                }
+            }
+        }
+
         syncTabUI()
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//        if(courseId != -1L){
-//            viewModel.loadCourseDetail(courseId)
-//        }
-//    }
     override fun observeData() {
 
         // THEO DOI LOADING CHUNG
@@ -276,7 +294,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                             viewModel.loadMoreSpeakingDay(true, courseId, viewModel.nextItem)
                         } else {
                             viewModel.loadMoreFlashcards(
-                                true, deckId, SearchInfo(null, null, null), viewModel.nextItem
+                                true, deckId, viewModel.searchInfor, viewModel.nextItem
                             )
                         }
                     }
@@ -338,6 +356,10 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                     ContextCompat.getColor(requireContext(), R.color.white)
                 )
             }
+        }
+        
+        viewModel.suggestions.observe(viewLifecycleOwner) { suggestions ->
+            binding.searchBarVocabulary.setSuggestions(suggestions)
         }
     }
 

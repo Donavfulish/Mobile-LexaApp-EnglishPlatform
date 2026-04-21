@@ -71,7 +71,6 @@ class TeacherCourseListAdapter(
             holder?.let{
                 if(status){
                     it.favoriteDeckCard.ToggleDeleteMode(true) {
-                        Log.e("DEBUG", "hello")
                     }
                 } else {
                     it.favoriteDeckCard.ToggleDeleteMode(false){}

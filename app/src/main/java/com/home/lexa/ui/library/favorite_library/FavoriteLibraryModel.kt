@@ -10,6 +10,7 @@ import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.domain.models.TeacherCourseFilter
 import com.home.lexa.domain.repository.CourseRepository
 import com.home.lexa.domain.repository.DeckRepository
+import com.home.lexa.ui.components.SearchbarFilter
 import kotlinx.coroutines.launch
 
 class FavoriteLibraryModel(private val repository: DeckRepository) : ViewModel() {
@@ -17,15 +18,19 @@ class FavoriteLibraryModel(private val repository: DeckRepository) : ViewModel()
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
-    // LiveData để chứa danh sách Decks
     private val _courses = MutableLiveData<List<ShortCourseDto>>(emptyList())
     val courses: LiveData<List<ShortCourseDto>> get() = _courses
 
-    // Hàm này không cần suspend, gọi phát chạy luôn
     var lastId: Long? = null
     var isLastPage = false
     var currentPages = 0
     var totalPages = 0
+    var searchInfor = SearchInfo(
+        query = null,
+        sortBy = null,
+        order = null,
+        limit = 10
+    )
 
     fun fetchAllCourses(isLoadMore: Boolean, searchInfo: SearchInfo, nextCursor: Long?) {
         if (isLoadMore && (isLastPage || _isLoading.value == true)) return
@@ -62,5 +67,9 @@ class FavoriteLibraryModel(private val repository: DeckRepository) : ViewModel()
 
             _isLoading.value = false
         }
+    }
+
+    fun updateInfor(searchInfo: SearchInfo){
+        searchInfor = searchInfo
     }
 }

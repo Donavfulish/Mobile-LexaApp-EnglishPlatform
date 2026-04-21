@@ -9,12 +9,27 @@ import com.home.lexa.domain.models.StudentCourseFilter
 import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.ShortCourse
 import com.home.lexa.domain.repository.CourseRepository
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class StudentCourseListModel(private val repository: CourseRepository) : ViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
+
+    private val _isSuggesting = MutableLiveData<Boolean>(false)
+    val isSuggesting: LiveData<Boolean> get() = _isSuggesting
+
+    private val _suggestions = MutableLiveData<List<String>>(emptyList())
+    val suggestions: LiveData<List<String>> get() = _suggestions
+
+    var searchInfo = SearchInfo(
+        query = null,
+        sortBy = null,
+        order = null,
+        limit = 10
+    )
 
     private val _currentFilter = MutableLiveData(StudentCourseFilter.ALL)
     val currentFilter: LiveData<StudentCourseFilter> = _currentFilter
@@ -26,6 +41,23 @@ class StudentCourseListModel(private val repository: CourseRepository) : ViewMod
     var isLastPage = false
     var currentPages = 0
     var totalPages = 0
+    private var searchJob: Job? = null
+
+    fun getSuggestions(query: String) {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(200)
+            _isSuggesting.value = true
+            val result = repository.getCourseSuggestions(query)
+            result.onSuccess { list ->
+                _suggestions.value = list
+                _isSuggesting.value = false
+            }.onFailure {
+                _suggestions.value = emptyList()
+                _isSuggesting.value = false
+            }
+        }
+    }
 
     fun changeFilter(filter: StudentCourseFilter, searchInfo: SearchInfo, nextCursor: Long?) {
         Log.d("File filter", filter.toString())
@@ -66,10 +98,10 @@ class StudentCourseListModel(private val repository: CourseRepository) : ViewMod
                         isLastPage = true
                         lastId = null
                     }
-
                     _courses.value = ShortCourse(list.data, requestFilter)
                 } else {
                     isLastPage = true
+                    totalPages = 0
                     _courses.value = ShortCourse(emptyList(), requestFilter)
                 }
 

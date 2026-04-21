@@ -10,17 +10,23 @@ import androidx.navigation.fragment.findNavController
 import com.home.lexa.R
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.util.query
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentTeacherCourseListBinding
 import com.home.lexa.domain.models.SearchInfo
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import com.home.lexa.domain.models.TeacherCourseFilter
 
 
 class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>(FragmentTeacherCourseListBinding::inflate) {
-    private val viewModel: TeacherCourseListModel by viewModel()
+    // SỬA: Dùng activityViewModel() để share instance và giữ data khi back
+    private val viewModel: TeacherCourseListModel by activityViewModel()
+
     private val courseAdapter by lazy {
-        TeacherCourseListAdapter(emptyList())
+        TeacherCourseListAdapter(
+            if(viewModel.courses.value?.data != null)
+            viewModel.courses.value.data
+        else emptyList())
         { course ->
             val bundle = Bundle().apply {
                 putLong("courseId", course.id)
@@ -61,31 +67,27 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
     }
 
     override fun setupViews() {
+        binding.searchbarFilter.apply {
+            onSearchAction { q ->
+                viewModel.searchInfo = viewModel.searchInfo.copy(query = q)
+                viewModel.fetchAllCourses(false, viewModel.searchInfo, null)
+            }
+            setOnSortOptionChanged { options ->
+                viewModel.searchInfo = viewModel.searchInfo.copy(order = options.order, sortBy = options.sortBy)
+                viewModel.fetchAllCourses(false, viewModel.searchInfo, null)
+            }
+            onTextChanged { query ->
+                if(query.length >= 2){
+                    viewModel.getSuggestions(query)
+                }
+            }
+        }
+
         binding.headerSection.setHeaderData(
             title = "Khoá học của tôi",
             actionText = "0 tất cả",
             onActionClick = {}
         )
-
-        val filterArg = arguments?.getString("filter")
-        val initialFilter = try {
-            TeacherCourseFilter.valueOf(filterArg ?: "MYCOURSE")
-        } catch (e: Exception) {
-            TeacherCourseFilter.MYCOURSE
-        }
-
-        viewModel.changeFilter(initialFilter, SearchInfo(
-            query= "",
-            sortBy= "",
-            order= "",
-            limit = 10
-        ),
-            null)
-
-        binding.rvCourses.apply {
-            adapter = courseAdapter
-            layoutManager = LinearLayoutManager(context)
-        }
 
         binding.btnAll.setOnClickListener {
             if(viewModel.currentFilter.value == TeacherCourseFilter.ALL)
@@ -160,12 +162,17 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
                 null)
         }
 
-        if (viewModel.courses.value.data.isNullOrEmpty()) {
-            viewModel.fetchAllCourses(
-                isLoadMore = false,
-                searchInfo = SearchInfo(query = "", limit = 10),
-                nextCursor = null
-            )
+        if (viewModel.courses.value == null || viewModel.courses.value?.data.isNullOrEmpty()) {
+            val filterArg = arguments?.getString("filter")
+            val initialFilter = try {
+                TeacherCourseFilter.valueOf(filterArg ?: "MYCOURSE")
+            } catch (e: Exception) {
+                TeacherCourseFilter.MYCOURSE
+            }
+            viewModel.changeFilter(initialFilter, viewModel.searchInfo, null)
+        } else {
+            binding.searchbarFilter.setTextSearch(viewModel.searchInfo.query ?: "")
+            viewModel.currentFilter.value?.let { updateFilterUI(it) }
         }
 
         binding.addBtn.setOnClickAction {
@@ -173,19 +180,18 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
                 R.id.action_courseFragment_to_courseDetailFragment)
         }
 
-        val layoutManager = LinearLayoutManager(context)
         binding.rvCourses.apply {
             adapter = courseAdapter
-            this.layoutManager = layoutManager
+            val lm = layoutManager as? LinearLayoutManager ?: LinearLayoutManager(context).also { layoutManager = it }
 
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
 
                     if (dy > 0) {
-                        val visibleItemCount = layoutManager.childCount
-                        val totalItemCount = layoutManager.itemCount
-                        val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+                        val visibleItemCount = lm.childCount
+                        val totalItemCount = lm.itemCount
+                        val firstVisibleItemPosition = lm.findFirstVisibleItemPosition()
 
                         val threshold = 3
                         if (viewModel.isLoading.value == false && !viewModel.isLastPage) {
@@ -193,7 +199,7 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
 
                                 viewModel.fetchAllCourses(
                                     isLoadMore = true,
-                                    searchInfo = SearchInfo(limit = 10),
+                                    searchInfo = viewModel.searchInfo,
                                     nextCursor = viewModel.lastId
                                 )
                             }
@@ -206,11 +212,6 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchAllCourses(
-            isLoadMore = false,
-            searchInfo = SearchInfo(query = "", limit = 10),
-            nextCursor = null
-        )
     }
 
     override fun observeData() {
@@ -248,8 +249,10 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
             )
         }
         viewModel.currentFilter.observe(viewLifecycleOwner) { filter ->
-
             updateFilterUI(filter)
+        }
+        viewModel.suggestions.observe(viewLifecycleOwner) { list ->
+            binding.searchbarFilter.setSuggestions(list)
         }
     }
 }

@@ -91,7 +91,6 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
         }
         binding.searchBarVocabulary.apply {
             setIconColor(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
-            setTextSearch("Tìm kiếm từ vựng...")
         }
         binding.editToggle.onCheckedChangeListener = { isChecked ->
             for (i in 0 until binding.vocabularyGrid.childCount) {
@@ -115,10 +114,25 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
             val threshold = 300
             if (scrollY + screenHeight >= totalContentHeight - threshold) {
                 if (viewModel.paginationLoading.value == false && !viewModel.isLastPage) {
-                    viewModel.loadFlashcardsWithResult(true, deckId!!, SearchInfo(null, null, null), viewModel.lastId)
+                    viewModel.loadFlashcardsWithResult(true, deckId!!, viewModel.searchInfor, viewModel.lastId)
                 }
             }
         })
+        binding.searchBarVocabulary.apply {
+            onSearchAction { q ->
+                viewModel.searchInfor = viewModel.searchInfor.copy(query = q)
+                viewModel.loadFlashcardsWithResult(false, deckId!!, viewModel.searchInfor, null)
+            }
+            setOnSortOptionChanged { options ->
+                viewModel.searchInfor = viewModel.searchInfor.copy(sortBy = options.sortBy, order = options.order)
+                viewModel.loadFlashcardsWithResult(false, deckId!!, viewModel.searchInfor, null)
+            }
+            onTextChanged { q ->
+                if(q.length >= 2){
+                    viewModel.getSuggestions(q)
+                }
+            }
+        }
 
         viewModel.loadFlashcardsWithResult(false, deckId!!, SearchInfo(null, null, null), null)
         viewModel.loadTopics()
@@ -201,6 +215,11 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
             binding.diTopic.setSelection(deckTopicName ?: "None")
             binding.diTopic.setFrameColor(topicColorMap[deckTopicName] ?: "#FFFFFF")
         }
+
+        viewModel.suggestions.observe(viewLifecycleOwner) { suggestions ->
+            binding.searchBarVocabulary.setSuggestions(suggestions)
+        }
+
 
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("RELOAD_DATA")
             ?.observe(viewLifecycleOwner) { shouldReload ->

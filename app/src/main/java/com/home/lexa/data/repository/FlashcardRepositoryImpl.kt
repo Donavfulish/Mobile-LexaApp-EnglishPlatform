@@ -27,6 +27,18 @@ class FlashcardRepositoryImpl(
         return "${type}_${deckId}_${q}_${sort}_${order}"
     }
 
+    override suspend fun getFlashcardSuggestions(query: String?): Result<List<String>?> {
+        return try {
+            val response = apiService.getFlashcardSuggestions(query)
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!.data)
+            } else {
+                Result.failure(Exception("Lỗi lấy gợi ý Flashcard"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
     override suspend fun getAllFlashcard(
         deckId: Long,

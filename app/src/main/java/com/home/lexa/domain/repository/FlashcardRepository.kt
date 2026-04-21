@@ -18,4 +18,5 @@ interface FlashcardRepository {
     suspend fun deleteFlashcard(flashcardId: Long, deckId: Long):  Result<Boolean>
     suspend fun createFlashcard(deckId: Long, request: RequestBody, imageUri: MultipartBody.Part?) : Result<Long>
     suspend fun updateFlashcardResults(deckId: Long, request: UpdateFlashcardResultRequest): Result<Boolean>
+    suspend fun getFlashcardSuggestions(query: String?): Result<List<String>?>
 }
