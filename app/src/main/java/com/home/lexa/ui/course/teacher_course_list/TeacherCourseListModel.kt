@@ -44,10 +44,10 @@ class TeacherCourseListModel(private val repository: CourseRepository) : ViewMod
 
     fun getSuggestions(query: String){
         if(isSuggesting.value == true) return
-        _isSuggesting.value = true
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             delay(200)
+            _isSuggesting.value = true
             val result = repository.getCourseSuggestions(query)
             result.onSuccess {list ->
                 _suggestions.value = list

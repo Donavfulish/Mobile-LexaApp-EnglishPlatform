@@ -64,6 +64,11 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
                 viewModel.searchInfo = viewModel.searchInfo.copy(query = q)
                 viewModel.fetchAllCourses(false, viewModel.searchInfo, null)
             }
+            onTextChanged { q ->
+                if (q.isNotEmpty()) {
+                    viewModel.getSuggestions(q)
+                }
+            }
             setOnSortOptionChanged { options ->
                 viewModel.searchInfo = viewModel.searchInfo.copy(order = options.order, sortBy = options.sortBy)
                 viewModel.fetchAllCourses(false, viewModel.searchInfo, null)
@@ -179,6 +184,10 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
     override fun observeData() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+
+        viewModel.suggestions.observe(viewLifecycleOwner) { suggestions ->
+            binding.searchbarFilter.setSuggestions(suggestions)
         }
 
         viewModel.courses.observe(viewLifecycleOwner) { shortCourse ->
