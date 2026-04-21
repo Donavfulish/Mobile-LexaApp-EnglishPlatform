@@ -154,6 +154,11 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 viewModel.searchInfor = viewModel.searchInfor.copy(sortBy = options.sortBy, order = options.order)
                 viewModel.loadMoreFlashcards(false, deckId, viewModel.searchInfor, null)
             }
+            onTextChanged { q ->
+                if(q.length >= 2){
+                    viewModel.getSuggestions(q)
+                }
+            }
         }
         syncTabUI()
     }
@@ -343,6 +348,9 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                     ContextCompat.getColor(requireContext(), R.color.white)
                 )
             }
+        }
+        viewModel.suggestions.observe(viewLifecycleOwner) { list ->
+            binding.searchBarVocabulary.setSuggestions(list)
         }
     }
 

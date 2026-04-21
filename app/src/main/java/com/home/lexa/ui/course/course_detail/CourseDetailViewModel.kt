@@ -26,6 +26,8 @@ import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.repository.DeckRepository
 import com.home.lexa.domain.repository.SpeakingDayRepository
 import com.home.lexa.ui.utils.MediaUtils
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 
@@ -56,6 +58,12 @@ class CourseDetailViewModel(
     val topicData: LiveData<List<Topic>> get() = _topicData
     private val _favortieStatus = MutableLiveData<Result<Unit>?>()
     val favoriteStatus: LiveData<Result<Unit>?> get() = _favortieStatus
+
+    private val _suggestions = MutableLiveData<List<String>>(emptyList())
+    val suggestions: LiveData<List<String>> get() = _suggestions
+
+    private val _isSuggesting = MutableLiveData<Boolean>(false)
+    val isSuggesting: LiveData<Boolean> get() = _isSuggesting
     var isLastPage = false
     var currentPages = 0
     var totalPages = 0
@@ -66,6 +74,24 @@ class CourseDetailViewModel(
         order = null,
         limit = 10
     )
+    private var searchJob: Job? = null
+
+    fun getSuggestions(query: String) {
+        if (isSuggesting.value == true) return
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(200)
+            _isSuggesting.value = true
+            val result = flashcardRepository.getFlashcardSuggestions(query)
+            result.onSuccess { list ->
+                _suggestions.value = list
+                _isSuggesting.value = false
+            }.onFailure {
+                _suggestions.value = emptyList()
+                _isSuggesting.value = false
+            }
+        }
+    }
 
 
     //    LOGIC TAO MOI KHOA HOC
