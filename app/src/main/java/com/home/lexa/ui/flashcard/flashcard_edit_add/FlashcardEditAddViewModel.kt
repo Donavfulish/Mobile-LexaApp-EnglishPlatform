@@ -5,8 +5,8 @@ import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.ai.client.generativeai.GenerativeModel
 import com.google.gson.Gson
 import com.home.lexa.domain.models.CreateFlashcardRequest
 import com.home.lexa.domain.models.DetailFlashcard
@@ -16,6 +16,11 @@ import com.home.lexa.ui.utils.MediaUtils
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
+import com.home.lexa.BuildConfig
+import com.home.lexa.domain.models.WordUiState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class FlashcardEditAddViewModel(
     application: Application,
@@ -30,6 +35,18 @@ class FlashcardEditAddViewModel(
 
     private val _saveSuccess = MutableLiveData<Boolean>()
     val saveSuccess: LiveData<Boolean> get() = _saveSuccess
+
+    val generativeModel = GenerativeModel(
+        modelName = "gemini-2.5-flash",
+        apiKey = BuildConfig.GEMINI_KEY
+    )
+
+
+    private val _uiState = MutableLiveData<WordUiState>(WordUiState.Idle)
+    val uiState: LiveData<WordUiState> get() = _uiState
+
+    private val _phoneticState = MutableLiveData<String?>(null)
+    val phoneticState: LiveData<String?> get() = _phoneticState
     fun createFlashcard(request: CreateFlashcardRequest, imageUri: Uri?) {
         viewModelScope.launch {
             _isLoading.value = true
@@ -69,6 +86,38 @@ class FlashcardEditAddViewModel(
             } finally {
                 _isLoading.value = false
             }
+        }
+    }
+
+
+    fun fetchAiExampleSuggestion(word: String, meaning: String, partOfSpeech: String) {
+        viewModelScope.launch {
+            _uiState.value = WordUiState.Loading
+            try {
+
+                val result = flashcardRepository.getExampleSuggestion(generativeModel, word, meaning, partOfSpeech)
+
+                if (result != null) {
+                    _uiState.value = WordUiState.Success(result)
+                } else {
+                    _uiState.value = WordUiState.Error("Không thể tạo câu ví dụ")
+                }
+            } catch (e: Exception) {
+                _uiState.value = WordUiState.Error("Lỗi kết nối: ${e.localizedMessage}")
+            }
+        }
+    }
+    fun fetchPhonetic(word: String, type: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = flashcardRepository.getPhoneticFromApi(word, type)
+            result.fold(
+                onSuccess = { phonetic ->
+                    _phoneticState.postValue(phonetic)
+                },
+                onFailure = {
+                    _phoneticState.postValue("ERROR")
+                }
+            )
         }
     }
 }

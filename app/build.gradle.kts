@@ -1,3 +1,4 @@
+import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -8,7 +9,12 @@ plugins {
 
 
 }
-
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
+}
+val geminiApiKey = localProperties.getProperty("GEMINI_API_KEY")
 android {
     namespace = "com.home.lexa"
     compileSdk = 34
@@ -21,9 +27,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "GEMINI_KEY", "\"$geminiApiKey\"")
+
         vectorDrawables {
             useSupportLibrary = true
         }
+
     }
 
     buildTypes {
@@ -45,6 +54,7 @@ android {
     buildFeatures {
         compose = true
         viewBinding = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.7"
@@ -54,9 +64,7 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    buildFeatures {
-        viewBinding = true
-    }
+
 }
 
 dependencies {
@@ -147,5 +155,7 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
     implementation("com.github.stfalcon-studio:StfalconImageViewer:1.0.1")
+
+    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
 
 }
