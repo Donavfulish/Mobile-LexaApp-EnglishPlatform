@@ -160,5 +160,57 @@
     <string name="do_you_want_create_your">Bạn có muốn tạo riêng ?</string>
     <string name="content_create_your">\nHãy chuyển sang tab Cá nhân để bắt đầu xây dựng\nbộ từ vựng của riêng bạn.</string>
     <string name="go_to_personal_tab">Đi đến tab cá nhân</string>
+    <string name="example">Ví dụ</string>
+    <string name="enter_defination">Nhập định nghĩa...</string>
+    <string name="enter_example">Nhập ví dụ...</string>
+    <string name="pos_noun">Danh từ</string>
+    <string name="pos_verb">Động từ</string>
+    <string name="pos_adjective">Tính từ</string>
+    <string name="pos_adverb">Trạng từ</string>
+    <string name="pos_none">Chưa có</string>
 
+    <string name="level">Cấp độ</string>
+
+    <string name="level_none">Không xác định</string>
+    <string name="level_a1">A1</string>
+    <string name="level_a2">A2</string>
+    <string name="level_b1">B1</string>
+    <string name="level_b2">B2</string>
+    <string name="level_c1">C1</string>
+    <string name="level_c2">C2</string>
+    <string name="content_toast_enter_flashcard">Vui lòng nhập từ vựng và định nghĩa để AI có ngữ cảnh</string>
+    <string name="enter_vocabulary">Vui lòng nhập từ vựng</string>
+    <string name="enter_vocabulary_defination">Vui lòng nhập từ vựng và định nghĩater vocabulary and definitions.</string>
+    <string name="saving">Đang lưu...</string>
+    <string name="save_successfully">Lưu thành công!</string>
+    <string name="error_retry">Có lỗi xảy ra, vui lòng thử lại</string>
+    <string name="illustrative_image">Ảnh minh họa</string>
+    <string name="preview">Xem trước</string>
+    <string name="phonetic">Phiên âm</string>
+    <string name="suggestion">Gợi ý</string>
+    <string name="defination">Định nghĩa</string>
+    <string name="suggestion_gemini">Gợi ý với GEMINI</string>
+    <string name="ai_thinking">AI đang suy nghĩ...</string>
+    <string name="create_flashcard">Thêm mới từ vựng</string>
+    <string name="enter_word_to_preview">Nhập từ vựng để xem trước!</string>
+    <string name="stop_practice">Dừng luyện tập</string>
+    <string name="message_stop_practice">Bạn có chắc chắn muốn ngừng luyện tập không? Tiến độ hiện tại của bạn sẽ được lưu lại.</string>
+    <string name="quit">Thoát</string>
+
+    <string name="progress">Tiến độ</string>
+    <string name="practice">Luyện tập</string>
+    <string name="words_memorized">từ đã thuộc</string>
+    <string name="title_practice_again">Luyện lại từ đầu?</string>
+    <string name="message_practice_again">Tiến độ học tập của bạn đối với bộ từ vựng này sẽ được đặt lại về 0%. Bạn có chắc chắn không?</string>
+    <string name="accept">Đồng ý</string>
+    <string name="save_and_quit">Lưu và thoát</string>
+    <string name="message_save_quit">Bạn có muốn lưu lại tiến trình luyện tập của mình không?</string>
+    <string name="quit_not_save">Thoát và không lưu</string>
+    <string name="stop_upper">DỪNG</string>
+    <string name="topic">Chủ đề</string>
+    <string name="delete_vocabulary">Xóa từ vựng</string>
+    <string name="delete">Xóa</string>
+    <string name="delete_flashcard_subtitle">Bạn có chắc muốn xóa \'%1$s\' không?</string>
+    <string name="enter_name_deck">Vui lòng nhập tên bộ từ vựng.</string>
+    <string name="enter_name_deck_input">Nhập tên bộ từ vựng...</string>
 </resources>

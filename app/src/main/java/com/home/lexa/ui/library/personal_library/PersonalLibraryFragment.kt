@@ -86,6 +86,7 @@ class PersonalLibraryFragment : BaseFragment<FragmentPersonalLibraryBinding>(Fra
                 onConfirm = { vocabName ->
                     viewModel.createDeck(vocabName)
                 }
+
             )
         }
     }

@@ -14,6 +14,7 @@ import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentVocabularyFlashcardBinding
 import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.DetailFlashcardWithResult
+import com.home.lexa.domain.models.PartOfSpeech
 import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.models.UpdateDeckRequest
@@ -48,7 +49,7 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
 
 
         binding.diTopic.apply {
-            setTile("Chủ đề")
+            setTile(context.getString(R.string.topic))
             onItemSelected =  { topicName ->
                 setFrameColor(topicColorMap[topicName] ?: "#FFFFFF")
                 viewModel.updateDeck(UpdateDeckRequest(
@@ -61,7 +62,7 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
         binding.startBtn.apply {
             setIconPadding(10)
             setTextSize(18f)
-            setText("Bắt đầu luyện tập", ContextCompat.getColor(requireContext(), R.color.white))
+            setText(getString(R.string.start_practice), ContextCompat.getColor(requireContext(), R.color.white))
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play_circle))
             setIconColor(ContextCompat.getColor(requireContext(), R.color.white))
             setBackground(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
@@ -74,7 +75,7 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
         binding.startBtn2.apply {
             setIconPadding(10)
             setTextSize(18f)
-            setText("Bắt đầu luyện tập", ContextCompat.getColor(requireContext(), R.color.white))
+            setText(getString(R.string.start_practice), ContextCompat.getColor(requireContext(), R.color.white))
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play_circle))
             setIconColor(ContextCompat.getColor(requireContext(), R.color.white))
             setBackground(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
@@ -239,12 +240,13 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
 
         list.forEach { item ->
             val card = FlashcardMini(requireContext())
+            val posEnum = PartOfSpeech.fromId(item.flashCard.partOfSpeechId)
             val vocab = Vocabulary(
                 level = ColorLabel(item.flashCard.type, "#E0E0E5"),
                 word = item.flashCard.word,
                 pronunciation_url = item.flashCard.audioUrl ?: "",
                 transciption = item.flashCard.transcription,
-                part_of_speech = ColorLabel(item.flashCard.partOfSpeech, "#636AE8"),
+                part_of_speech = ColorLabel(getString(posEnum?.nameRes ?:R.string.pos_none ), "#636AE8"),
                 definition = item.flashCard.meaning,
                 example = item.flashCard.example ?: "",
                 imageUrl = item.flashCard.imageUrl,
@@ -254,10 +256,10 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
 
             card.onDeleteClick = {
                 Popup(requireContext()).showDialog(
-                    title = "Xóa từ vựng",
-                    subTitle = "Bạn có chắc muốn xóa '${item.flashCard.word}'?",
+                    title = getString(R.string.delete_vocabulary),
+                    subTitle = getString(R.string.delete_flashcard_subtitle, item.flashCard.word),
                     isWarning = true,
-                    confirmText = "Xóa",
+                    confirmText = getString(R.string.delete),
                     onConfirm = { viewModel.deleteFlashcard(item.flashCard.id, deckId!!) }
                 )
             }
@@ -269,7 +271,7 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
                     putString("TRANS_KEY", item.flashCard.transcription)
                     putString("MEANING", item.flashCard.meaning)
                     putString("EXAMPLE_KEY", item.flashCard.example)
-                    putString("POS_KEY", item.flashCard.partOfSpeech)
+                    putInt("POS_ID_KEY", item.flashCard.partOfSpeechId)
                     putLong("FLASHCARD_ID_KEY", item.flashCard.id)
                     putString("IMAGE_URL_KEY", item.flashCard.imageUrl)
                     putString("TYPE_KEY", item.flashCard.type)
@@ -292,10 +294,10 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
     private fun updateProgress(total: Int) {
         if (total > 0) {
             val percentage = (vocabLearning * 100) / total
-            binding.progressText.text = "Tiến độ: $percentage%"
+            binding.progressText.text = getString(R.string.progress)+": $percentage%"
             binding.progress.setProgressVocabulary(percentage, total, vocabLearning)
         } else {
-            binding.progressText.text = "Tiến độ: 0%"
+            binding.progressText.text = getString(R.string.progress)+": 0%"
             binding.progress.setProgressVocabulary(0, 0, 0)
         }
 

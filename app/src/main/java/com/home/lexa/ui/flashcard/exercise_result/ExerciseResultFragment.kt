@@ -27,10 +27,10 @@ class ExerciseResultFragment : BaseFragment<FragmentExerciseResultBinding>(Fragm
         val percentage = (rememberedCount * 100) / totalCards
         binding.progressRing.setProgress(percentage)
 
-        binding.tvTotalLearned.text = "$rememberedCount/$totalCards từ đã học"
+        binding.tvTotalLearned.text = "$rememberedCount/$totalCards " + getString(R.string.words_memorized)
         binding.tvResultRemembered.text = rememberedCount.toString()
         binding.tvResultForgotten.text = forgottenCount.toString()
-
+        binding.tvDeckTitle.text= getString(R.string.practice)
         binding.btnPracticeForgotten.setOnClickListener { navigateBackToPractice(isRetryForgotten = true) }
         binding.btnRetryAll.setOnClickListener { showResetConfirmDialog() }
         binding.btnExit.setOnClickListener { showExitConfirmDialog() }
@@ -52,27 +52,27 @@ class ExerciseResultFragment : BaseFragment<FragmentExerciseResultBinding>(Fragm
 
     private fun showResetConfirmDialog() {
         AlertDialog.Builder(requireContext())
-            .setTitle("Luyện lại từ đầu?")
-            .setMessage("Tiến độ của bộ từ vựng này sẽ bị reset về 0%. Bạn có chắc chắn không?")
-            .setPositiveButton("Đồng ý") { _, _ -> navigateBackToPractice(isRetryForgotten = false) }
-            .setNegativeButton("Hủy", null)
+            .setTitle(getString(R.string.title_practice_again))
+            .setMessage(getString(R.string.message_practice_again))
+            .setPositiveButton(getString(R.string.accept)) { _, _ -> navigateBackToPractice(isRetryForgotten = false) }
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
     private fun showExitConfirmDialog() {
         AlertDialog.Builder(requireContext())
-            .setTitle("Lưu và thoát")
-            .setMessage("Bạn có muốn lưu lại kết quả luyện tập không?")
-            .setPositiveButton("Lưu & Thoát") { _, _ ->
+            .setTitle(getString(R.string.save_and_quit))
+            .setMessage(getString(R.string.message_save_quit))
+            .setPositiveButton(getString(R.string.save_and_quit)) { _, _ ->
                 viewModel.saveProgressToApi(deckId, remembered = rememberedCount, forgotten = forgottenCount) {
                     // Pop ngược về màn hình chi tiết bộ từ vựng
                     findNavController().popBackStack(R.id.vocabularyFlashcardFragment, false)
                 }
             }
-            .setNegativeButton("Thoát không lưu") { _, _ ->
+            .setNegativeButton(getString(R.string.quit_not_save)) { _, _ ->
                 findNavController().popBackStack(R.id.vocabularyFlashcardFragment, false)
             }
-            .setNeutralButton("Hủy", null)
+            .setNeutralButton(getString(R.string.cancel), null)
             .show()
     }
 }

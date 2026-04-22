@@ -160,4 +160,58 @@
     <string name="do_you_want_create_your">Do you want create your?</string>
     <string name="content_create_your">" Switch to the Personal tab to begin building your own deck."</string>
     <string name="go_to_personal_tab">Go to personal tab</string>
+    <string name="example">Example</string>
+    <string name="enter_defination">Enter defination...</string>
+    <string name="enter_example">Enter example...</string>
+
+
+    <string name="pos_noun">Noun</string>
+    <string name="pos_verb">Verb</string>
+    <string name="pos_adjective">Adjective</string>
+    <string name="pos_adverb">Adverb</string>
+    <string name="pos_none">None</string>
+
+    <string name="level">Level</string>
+
+    <string name="level_none">None</string>
+    <string name="level_a1">A1</string>
+    <string name="level_a2">A2</string>
+    <string name="level_b1">B1</string>
+    <string name="level_b2">B2</string>
+    <string name="level_c1">C1</string>
+    <string name="level_c2">C2</string>
+    <string name="content_toast_enter_flashcard">Please enter vocabulary and definitions so the AI has context.</string>
+    <string name="enter_vocabulary">Please enter vocabulary</string>
+    <string name="enter_vocabulary_defination">Please enter vocabulary and definitions.</string>
+    <string name="saving">Saving...</string>
+    <string name="save_successfully">Saved successfully!</string>
+    <string name="error_retry">An error occurred, please try again.</string>
+    <string name="illustrative_image">Illustrative image</string>
+    <string name="preview">Preview</string>
+    <string name="phonetic">Phonetic</string>
+    <string name="suggestion">Suggestion</string>
+    <string name="defination">Defination</string>
+    <string name="suggestion_gemini">Suggestion with GEMINI</string>
+    <string name="ai_thinking">AI is thingking...</string>
+    <string name="create_flashcard">Create flashcard</string>
+    <string name="enter_word_to_preview">Enter vocabulary words to see a preview!</string>
+    <string name="stop_practice">Stop practice</string>
+    <string name="message_stop_practice">Are you sure you want to stop practicing? Your current progress will be saved</string>
+    <string name="quit">Quit</string>
+    <string name="progress">Progress</string>
+    <string name="practice">Practice</string>
+    <string name="words_memorized">words memorized</string>
+    <string name="title_practice_again">Start practicing from scratch?</string>
+    <string name="message_practice_again">Your progress on this vocabulary set will be reset to 0%. Are you sure?</string>
+    <string name="accept">Accept</string>
+    <string name="save_and_quit">Save and quit</string>
+    <string name="message_save_quit">Do you want to save your practice progress?</string>
+    <string name="quit_not_save">Quit and not save</string>
+    <string name="stop_upper">STOP</string>
+    <string name="topic">Topic</string>
+    <string name="delete_vocabulary">Delete this vocabulary</string>
+    <string name="delete">Delete</string>
+    <string name="delete_flashcard_subtitle">Are you sure you want to delete \'%1$s\'?</string>
+    <string name="enter_name_deck">Please enter the name of the deck.</string>
+    <string name="enter_name_deck_input">Enter the name of the deck...</string>
 </resources>

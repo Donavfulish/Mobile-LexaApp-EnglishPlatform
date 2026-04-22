@@ -7,7 +7,7 @@
     <item
         android:id="@+id/libraryFragment"
         android:icon="@drawable/ic_book_2"
-        android:title="Thư viện" />
+        android:title="@string/library" />
     <item
         android:id="@+id/courseFragment"
         android:icon="@drawable/ic_course_menu"

@@ -14,7 +14,6 @@ import androidx.core.os.bundleOf
 import androidx.core.widget.NestedScrollView
 import androidx.navigation.fragment.findNavController
 import coil.load
-import com.home.lexa.R
 import com.home.lexa.databinding.ActivityMainBinding
 import com.home.lexa.databinding.FragmentCourseDetailBinding
 import com.home.lexa.domain.models.ColorLabel
@@ -22,6 +21,7 @@ import com.home.lexa.domain.models.CreateSpeakingDayRequest
 import com.home.lexa.domain.models.DetailFlashcard
 import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.CourseDetailDto
+import com.home.lexa.domain.models.PartOfSpeech
 import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.ShortSpeakingDayDto
 import com.home.lexa.domain.models.Vocabulary
@@ -31,7 +31,7 @@ import com.home.lexa.ui.components.PopUpInput
 import com.home.lexa.ui.components.Popup
 import com.home.lexa.ui.components.TeacherSpeakingDayCard
 import com.home.lexa.ui.components.ToggleSwitch
-
+import com.home.lexa.R
 class CourseDetailTeacher(
     private val fragment: CourseDetailFragment,
     private val binding: FragmentCourseDetailBinding,
@@ -203,13 +203,15 @@ class CourseDetailTeacher(
         binding.vocabularyGrid2.removeAllViews()
         flashcards.forEach { item ->
             val card = FlashcardMini(fragment.requireContext())
+            val posEnum = PartOfSpeech.fromId(item.partOfSpeechId)
+
             val vocab = Vocabulary(
                 level = ColorLabel(item.type, "#E0E0E5"),
                 imageUrl = item.imageUrl,
                 word = item.word,
                 pronunciation_url = item.audioUrl ?: "",
                 transciption = item.transcription,
-                part_of_speech = ColorLabel(item.partOfSpeech, "#636AE8"),
+                part_of_speech = ColorLabel(fragment.getString(posEnum?.nameRes ?:R.string.pos_none ), "#636AE8"),
                 definition = item.meaning,
                 example = item.example ?: ""
             )
@@ -239,7 +241,7 @@ class CourseDetailTeacher(
                     putString("TRANS_KEY", item.transcription)
                     putString("MEANING", item.meaning)
                     putString("EXAMPLE_KEY", item.example)
-                    putString("POS_KEY", item.partOfSpeech)
+                    putInt("POS_ID_KEY", item.partOfSpeechId)
                     putLong("FLASHCARD_ID_KEY", item.id)
                     putString("IMAGE_URL_KEY", item.imageUrl)
                     putString("TYPE_KEY", item.type)

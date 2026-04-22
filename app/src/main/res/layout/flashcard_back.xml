@@ -149,7 +149,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:text="EXAMPLE"
+                    android:text="@string/example"
                     android:textColor="#6B7280"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -176,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:letterSpacing="0.1"
-                android:text="CHẠM ĐỂ QUAY LẠI"
+                android:text="@string/tap_to_go_back"
                 android:textColor="#9CA3AF"
                 android:textSize="14sp"
                 android:textStyle="bold"

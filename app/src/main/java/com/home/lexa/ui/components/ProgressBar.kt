@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.animation.DecelerateInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.home.lexa.R
 import com.home.lexa.databinding.ViewProgressBarBinding
 
 class ProgressBar @JvmOverloads constructor(
@@ -31,7 +32,7 @@ class ProgressBar @JvmOverloads constructor(
     fun setProgressVocabulary(percentage: Int, vocabTotal: Int, vocabLearnning: Int) {
         val validPercentage = percentage.coerceIn(0, 100)
 
-        binding.tvPercentage.text = "${vocabLearnning}/${vocabTotal} từ"
+        binding.tvPercentage.text = "${vocabLearnning}/${vocabTotal} " + "${context.getString(R.string.word)}"
 
         val animation = ObjectAnimator.ofInt(
             binding.linearProgressBar,

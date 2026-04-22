@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Toast
+import com.home.lexa.R
 import com.home.lexa.databinding.InputDeckBinding
 
 class DeckInput @JvmOverloads constructor(
@@ -63,7 +64,8 @@ class DeckInput @JvmOverloads constructor(
                 onConfirm.invoke(inputText)
                 dismiss()
             } else {
-                Toast.makeText(context, "Vui lòng nhập tên bộ từ vựng", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context,
+                    context.getString(R.string.enter_name_deck), Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -232,8 +232,8 @@ class FlashcardRepositoryImpl(
         """.trimIndent()
 
         val response = generativeModel.generateContent(prompt)
-        val exampleText = response.text?.trim() ?:"Ngữ cảnh không phù hợp"
-        if(exampleText == "INVALID_CONTEXT") return "Ngữ cảnh không phù hợp"
+        val exampleText = response.text?.trim() ?:"INVALID_CONTEXT"
+
         return exampleText
     }
 

@@ -13,6 +13,7 @@ import com.home.lexa.databinding.FragmentCourseDetailBinding
 import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.DetailFlashcard
 import com.home.lexa.domain.models.CourseDetailDto
+import com.home.lexa.domain.models.PartOfSpeech
 import com.home.lexa.domain.models.ShortSpeakingDayDto
 import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.ui.components.FlashcardMini
@@ -117,13 +118,14 @@ class CourseDetailStudent(
 
         flashcards.forEach { item ->
             val card = FlashcardMini(fragment.requireContext())
+            val posEnum = PartOfSpeech.fromId(item.partOfSpeechId)
             val vocab = Vocabulary(
                 level = ColorLabel(item.type, "#E0E0E5"),
                 imageUrl = item.imageUrl,
                 word = item.word,
                 pronunciation_url = item.audioUrl ?: "",
                 transciption = item.transcription,
-                part_of_speech = ColorLabel(item.partOfSpeech, "#636AE8"),
+                part_of_speech = ColorLabel(fragment.getString(posEnum?.nameRes ?:R.string.pos_none ), "#636AE8"),
                 definition = item.meaning,
                 example = item.example ?: ""
             )
