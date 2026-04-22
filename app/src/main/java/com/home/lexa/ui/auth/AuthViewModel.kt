@@ -24,6 +24,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import androidx.lifecycle.AndroidViewModel
 import com.home.lexa.domain.models.ChangeEmailRequest
+import com.home.lexa.domain.models.ChangePasswordRequest
 import com.home.lexa.domain.models.OtpRequest
 import com.home.lexa.domain.models.OtpVerify
 import com.home.lexa.domain.models.ResetPasswordRequest
@@ -50,11 +51,13 @@ class AuthViewModel (
     private val _signupState = MutableStateFlow<AuthState>(AuthState.Idle)
     private val _OTPState = MutableStateFlow<AuthState>(AuthState.Idle)
     private val _changeEmailState = MutableStateFlow<AuthState>(AuthState.Idle)
+    private val _changePasswordState = MutableStateFlow<AuthState>(AuthState.Idle)
 
     val loginState: StateFlow<AuthState> = _loginState.asStateFlow()
     val signupState: StateFlow<AuthState> = _signupState.asStateFlow()
     val OTPState: StateFlow<AuthState> = _OTPState.asStateFlow()
     val changeEmailState: StateFlow<AuthState> = _changeEmailState.asStateFlow()
+    val changePasswordState: StateFlow<AuthState> = _changePasswordState.asStateFlow()
 
     private var selectedLanguageUri: Uri? = null
     private var selectedPedagogyUri: Uri? = null
@@ -281,6 +284,28 @@ class AuthViewModel (
                 }
             }.onFailure { error ->
                 _changeEmailState.value = AuthState.Error("Email đã được sử dụng")
+            }
+        }
+    }
+
+    fun changePassword(request: ChangePasswordRequest) {
+        viewModelScope.launch {
+            _changePasswordState.value = AuthState.Loading
+
+            val result = repository.changePassword(request)
+
+            result.onSuccess { authResult ->
+                if (authResult.ok) {
+                    saveUserAndToken(authResult)
+
+                    _changePasswordState.value =
+                        AuthState.Success(authResult.message ?: "Cập nhật mật khẩu thành công")
+                } else {
+                    _changePasswordState.value =
+                        AuthState.Error(authResult.message ?: "Cập nhật mật khẩu thất bại ")
+                }
+            }.onFailure { error ->
+                _changePasswordState.value = AuthState.Error("Mật khẩu cũ chưa chính xác")
             }
         }
     }

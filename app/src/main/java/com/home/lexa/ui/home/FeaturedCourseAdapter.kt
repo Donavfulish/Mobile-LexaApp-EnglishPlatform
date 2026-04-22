@@ -1,5 +1,6 @@
 package com.home.lexa.ui.home
 
+import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -37,12 +38,14 @@ class FeaturedCourseAdapter(
         return CourseViewHolder(customCard)
     }
     override fun onBindViewHolder(holder: CourseViewHolder, position: Int) {
+        Log.d("Gia tri couse feature: ", "${getItem(position)}")
         holder.bind(getItem(position))
     }
 
     inner class CourseViewHolder(private val customCard: FeaturedCourseCard) :
         RecyclerView.ViewHolder(customCard) {
-        fun bind(course: GetFeaturedCourseResponse) {
+
+            fun bind(course: GetFeaturedCourseResponse) {
             customCard.apply {
                 setData(course)
                 setOnClickCard { onCardClick(course) }

@@ -15,14 +15,12 @@ class CourseFragment : BaseFragment<FragmentCourseBinding>(FragmentCourseBinding
     private val userManager: UserManager by inject()
     private val isTeacher: Boolean get() = userManager.getUserRole() == UserRole.TEACHER
     override fun setupViews() {
-        val fragment = if (isTeacher) {
-            TeacherCourseListFragment()
-        } else {
-            StudentCourseListFragment()
-        }
-
-        childFragmentManager.commit {
-            replace(binding.courseContainer.id, fragment)
+        val existingFragment = childFragmentManager.findFragmentById(binding.courseContainer.id)
+        if (existingFragment == null) {
+            val fragment = if (isTeacher) TeacherCourseListFragment() else StudentCourseListFragment()
+            childFragmentManager.commit {
+                replace(binding.courseContainer.id, fragment)
+            }
         }
     }
 

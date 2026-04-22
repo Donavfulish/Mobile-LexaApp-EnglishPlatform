@@ -7,6 +7,7 @@ import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.Filter
 import android.widget.FrameLayout
@@ -71,15 +72,6 @@ class SearchbarFilter @JvmOverloads constructor(
         }
 
         binding.iconFilter.setColorFilter(if (isActive) activeColor else inactiveIconColor)
-
-        val chipGroups = listOf(binding.cgSortCriteria, binding.cgSortOrder)
-        chipGroups.forEach { group ->
-            group.forEach { item ->
-                (item as? Chip)?.let { chip ->
-                    updateChipStyle(chip, false)
-                }
-            }
-        }
     }
 
     private fun setupChipsStyling() {
@@ -98,7 +90,6 @@ class SearchbarFilter @JvmOverloads constructor(
             }
         }
     }
-
     private fun updateChipStyle(chip: Chip, isSelected: Boolean) {
         val color = if (isSelected) activeColor else inactiveStrokeColor
         val textColor = if (isSelected) activeColor else Color.parseColor("#757575")
@@ -129,7 +120,7 @@ class SearchbarFilter @JvmOverloads constructor(
     }
 
     fun setTextSearch(text: String){
-        binding.etSearch.hint = text
+        binding.etSearch.setText(text)
     }
 
     fun setOnFilterClickListener(action: () -> Unit) {
@@ -158,6 +149,17 @@ class SearchbarFilter @JvmOverloads constructor(
         }
     }
 
+    fun onSearchAction(action: (String) -> Unit) {
+        binding.etSearch.setOnEditorActionListener { v, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
+                action(v.text.toString())
+                false
+            } else {
+                false
+            }
+        }
+    }
+
     fun setSuggestions(suggestions: List<String>) {
         val adapter = ArrayAdapter(
             context,
@@ -170,24 +172,5 @@ class SearchbarFilter @JvmOverloads constructor(
         if (suggestions.isNotEmpty()) {
             binding.etSearch.showDropDown()
         }
-    }
-
-    inner class NoFilterAdapter(context: Context, layout: Int, var items: List<String>) :
-        ArrayAdapter<String>(context, layout, items) {
-
-        private val noFilter = object : Filter() {
-            override fun performFiltering(constraint: CharSequence?): FilterResults {
-                val results = FilterResults()
-                results.values = items
-                results.count = items.size
-                return results
-            }
-
-            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                notifyDataSetChanged()
-            }
-        }
-
-        override fun getFilter(): Filter = noFilter
     }
 }

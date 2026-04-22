@@ -11,8 +11,7 @@
         android:layout_height="0dp"
         android:fillViewport="true"
         app:layout_constraintBottom_toTopOf="@+id/bottomActionLayout"
-        app:layout_constraintTop_toTopOf="parent"
-        >
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,16 +25,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
+                android:layout_marginBottom="8dp"
                 android:text="Xem trước"
-                android:textColor="@color/purple_500"
-                android:textStyle="bold"
                 android:textAllCaps="false"
+                android:textColor="@color/purple_500"
                 android:textSize="12sp"
+                android:textStyle="bold"
                 app:cornerRadius="8dp"
-                app:strokeColor="@color/purple_500"
-                app:strokeWidth="1dp"
                 app:icon="@drawable/ic_open_eye"
-                app:iconTint="@color/purple_500" />
+                app:iconTint="@color/purple_500"
+                app:strokeColor="@color/purple_500"
+                app:strokeWidth="1dp" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -47,8 +47,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ảnh minh hoạ"
-                    android:textStyle="bold"
                     android:textColor="#333333"
+                    android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -60,9 +60,9 @@
                     android:layout_marginTop="8dp"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="0dp"
+                    app:layout_constraintTop_toBottomOf="@id/tvImageLabel"
                     app:strokeColor="#EEEEEE"
-                    app:strokeWidth="1dp"
-                    app:layout_constraintTop_toBottomOf="@id/tvImageLabel">
+                    app:strokeWidth="1dp">
 
                     <FrameLayout
                         android:layout_width="match_parent"
@@ -83,12 +83,18 @@
                             android:layout_margin="12dp"
                             android:clickable="true"
                             android:focusable="true"
-                            app:cardBackgroundColor="#40000000" app:cardCornerRadius="20dp" app:cardElevation="0dp" app:strokeColor="#80FFFFFF" app:strokeWidth="1.5dp"> <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_camera"
-                            app:tint="@color/white" />
+                            app:cardBackgroundColor="#40000000"
+                            app:cardCornerRadius="20dp"
+                            app:cardElevation="0dp"
+                            app:strokeColor="#80FFFFFF"
+                            app:strokeWidth="1.5dp">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_camera"
+                                app:tint="@color/white" />
 
                         </com.google.android.material.card.MaterialCardView>
                     </FrameLayout>
@@ -96,128 +102,197 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- Từ vựng -->
+
+
             <TextView
+                android:id="@+id/tvVocabLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Từ vựng"
+                android:textColor="#333333"
                 android:textStyle="bold"
-                android:textColor="#333333" />
-
+                app:layout_constraintStart_toStartOf="parent"
+                />
             <com.home.lexa.ui.components.NormalInput
                 android:id="@+id/inputVocab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"/>
+                />
 
 
-            <!-- Phiên âm -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-                
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="Phiên âm"
-                    android:textStyle="bold"
-                    android:textColor="#333333" />
-
-                <ImageView
-                    android:id="@+id/ivSuggestPronunciation"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_lightbulb"
-                    app:tint="#EFB034" />
-            </LinearLayout>
-
-            <com.home.lexa.ui.components.NormalInput
-                android:id="@+id/inputPronunciation"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="16dp">
 
-            <!-- Level & Loại từ -->
+                <TextView
+                    android:id="@+id/tvPhoneticLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phiên âm"
+                    android:textColor="#333333"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/btnPhoneticSuggest"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPhoneticSuggest"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Gợi ý"
+                    android:textAllCaps="false"
+                    android:textColor="@color/purple_500"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="0dp"
+                    app:icon="@drawable/ic_gemini"
+                    app:iconSize="16dp"
+                    app:iconTint="@null"
+                    app:layout_constraintStart_toEndOf="@+id/tvPhoneticLabel"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="RtlSymmetry" />
+
+                <com.home.lexa.ui.components.NormalInput
+                    android:id="@+id/inputPronunciation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/btnPhoneticSuggest" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginBottom="16dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/layoutIpaKeyboard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="4dp" />
+
+            </HorizontalScrollView>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
                 android:baselineAligned="false"
-                android:layout_marginBottom="16dp">
-
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:layout_weight="1"
-                    android:layout_marginEnd="8dp">
+                    android:orientation="vertical">
+
 
                     <com.home.lexa.ui.components.DropDownInput
                         android:id="@+id/dropdownLevel"
-                        android:layout_width="129dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_weight="1" />
-
-                    <ImageView
-                        android:id="@+id/ivSuggestLevel"
-                        android:layout_width="20dp"
-                        android:layout_height="match_parent"
-
-                        android:src="@drawable/ic_lightbulb"
-                        app:tint="#EFB034" />
+                        android:layout_marginTop="8dp" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content">
+                    android:orientation="vertical">
+
+
+
                     <com.home.lexa.ui.components.DropDownInput
                         android:id="@+id/dropdownWordType"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        />
+                        android:layout_marginTop="8dp" />
                 </LinearLayout>
 
             </LinearLayout>
 
-            <!-- Định nghĩa -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Định nghĩa"
-                android:textStyle="bold"
-                android:textColor="#333333" />
+                android:textColor="#333333"
+                android:textStyle="bold" />
 
             <com.home.lexa.ui.components.NormalInput
                 android:id="@+id/inputDefinition"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
-                />
-
-            <!-- Câu ví dụ -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Câu ví dụ"
-                android:textStyle="bold"
-                android:textColor="#333333" />
-
-            <com.home.lexa.ui.components.NormalInput
-                android:id="@+id/inputExample"
+                android:layout_marginBottom="16dp" />
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="24dp"
-                />
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:id="@+id/tvExampleLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Câu ví dụ"
+                    android:textColor="#333333"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/btnAiSuggest"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/btnAiSuggest" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAiSuggest"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Gợi ý với GEMINI"
+                    android:textAllCaps="false"
+                    android:textColor="@color/purple_500"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="0dp"
+                    app:icon="@drawable/ic_gemini"
+                    app:iconSize="16dp"
+                    app:iconTint="@null"
+                    app:layout_constraintStart_toEndOf="@+id/tvExampleLabel"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="RtlSymmetry" />
+
+                <com.home.lexa.ui.components.NormalInput
+                    android:id="@+id/inputExample"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/btnAiSuggest" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
         </LinearLayout>
@@ -227,9 +302,9 @@
         android:id="@+id/bottomActionLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:orientation="horizontal"
         android:padding="16dp"
-        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <com.google.android.material.button.MaterialButton
@@ -237,34 +312,71 @@
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="52dp"
-            android:layout_weight="1"
             android:layout_marginEnd="8dp"
+            android:layout_weight="1"
             android:text="Hủy"
             android:textColor="#666666"
             android:textStyle="bold"
             app:cornerRadius="8dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="#DDDDDD"
             app:icon="@drawable/ic_close"
+            app:iconGravity="textStart"
             app:iconTint="#666666"
-            app:iconGravity="textStart" />
+            app:strokeColor="#DDDDDD"
+            app:strokeWidth="1dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSave"
             style="@style/Widget.Material3.Button"
             android:layout_width="0dp"
             android:layout_height="52dp"
-            android:layout_weight="1"
             android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/purple_500"
             android:text="Lưu"
             android:textColor="@android:color/white"
             android:textStyle="bold"
-            android:backgroundTint="@color/purple_500"
             app:cornerRadius="8dp"
             app:icon="@drawable/ic_save"
-            app:iconTint="@android:color/white"
-            app:iconGravity="textStart" />
+            app:iconGravity="textStart"
+            app:iconTint="@android:color/white" />
 
     </LinearLayout>
+    <FrameLayout
+        android:id="@+id/loadingOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="10dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="@drawable/bg_rounded_white"
+            android:padding="24dp">
+
+            <ProgressBar
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:indeterminateTint="@color/purple_500" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="AI đang suy nghĩ..."
+                android:textColor="#333333"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

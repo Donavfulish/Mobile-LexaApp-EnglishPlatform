@@ -11,12 +11,17 @@ import com.home.lexa.databinding.FragmentFavoriteLibraryBinding
 import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.UserRole
 import com.home.lexa.domain.models.StudentCourseFilter
+import com.home.lexa.ui.components.SearchbarFilter
 import com.home.lexa.ui.library.LibraryFragment
+import com.home.lexa.ui.library.LibraryModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
 
 class FavoriteLibraryFragment : BaseFragment<FragmentFavoriteLibraryBinding>(FragmentFavoriteLibraryBinding::inflate) {
     private val viewModel: FavoriteLibraryModel by viewModel()
+    private val parentViewModel: LibraryModel by viewModel(
+        ownerProducer = { requireParentFragment() }
+    )
     private val userManager by lazy {
         UserManager(requireContext())
     }
@@ -45,9 +50,11 @@ class FavoriteLibraryFragment : BaseFragment<FragmentFavoriteLibraryBinding>(Fra
                     UserRole.TEACHER -> {
                         findNavController().navigate(R.id.teacherCourseListFragment, bundle)
                     }
+
                     UserRole.STUDENT -> {
                         findNavController().navigate(R.id.studentCourseListFragment, bundle)
                     }
+
                     else -> {
                         // fallback nếu null
                         findNavController().navigate(R.id.studentCourseListFragment, bundle)
@@ -90,7 +97,7 @@ class FavoriteLibraryFragment : BaseFragment<FragmentFavoriteLibraryBinding>(Fra
 
                                 viewModel.fetchAllCourses(
                                     isLoadMore = true,
-                                    searchInfo = SearchInfo(limit = 10),
+                                    searchInfo = viewModel.searchInfor,
                                     nextCursor = viewModel.lastId
                                 )
                             }
@@ -103,18 +110,20 @@ class FavoriteLibraryFragment : BaseFragment<FragmentFavoriteLibraryBinding>(Fra
 
     override fun onResume() {
         super.onResume()
-        // Mỗi khi quay lại màn hình Profile (từ màn hình chỉnh sửa), gọi lại API
-        viewModel.fetchAllCourses(true, SearchInfo(
-            query= "",
-            sortBy= "",
-            order= "",
-            limit = 10
-        ), null)
     }
 
     override fun observeData() {
         viewModel.courses.observe(viewLifecycleOwner) { list ->
             deckAdapter.updateData(list)
+        }
+
+        parentViewModel.searchInfo.observe(viewLifecycleOwner){ infor ->
+            viewModel.updateInfor(infor)
+            viewModel.fetchAllCourses(
+                isLoadMore = false,
+                searchInfo = viewModel.searchInfor,
+                nextCursor = null
+            )
         }
     }
 }

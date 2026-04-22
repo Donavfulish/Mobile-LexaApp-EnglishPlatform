@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.home.lexa.MainActivity
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentProfileEmailBinding
 import com.home.lexa.ui.auth.AuthState
@@ -19,6 +20,14 @@ class ProfileEmailFragment : BaseFragment<FragmentProfileEmailBinding>(FragmentP
     private var currentEmail: String = ""
 
     override fun setupViews() {
+        val activityBinding = (requireActivity() as MainActivity).binding
+        activityBinding.appBarLayout.apply {
+            removeCustomView()
+            setText("Cập nhật Email")
+            setBackButtonVisible(true)
+            setOnClickBack()
+        }
+
         currentEmail = viewModel.getUserEmail() ?: ""
 
         binding.inputEmail.apply {
@@ -29,7 +38,6 @@ class ProfileEmailFragment : BaseFragment<FragmentProfileEmailBinding>(FragmentP
             setMaxLength(255)
 
             onTextChanged({
-                println("DEBUG: CHANGE EMAIL: getText = ${getText().trim()}, args.email = ${currentEmail?.trim()}")
                 val isSaveEnabled = (getText().trim() != currentEmail?.trim())
                 binding.btnSave.setEnabledState(isSaveEnabled)
             })

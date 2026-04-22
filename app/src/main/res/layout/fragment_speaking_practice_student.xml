@@ -85,17 +85,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
+        <com.home.lexa.ui.components.IconButton
             android:id="@+id/btnNgheMau"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_rounded_white_border"
             android:drawableStart="@drawable/ic_play"
             android:drawablePadding="8dp"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="10dp"
-            android:text="Nghe mẫu"
-            android:textColor="#636AE8"
             android:textSize="14sp"
             app:drawableTint="#636AE8" />
 

@@ -3,9 +3,10 @@ package com.home.lexa.ui.speaking.speaking_practice
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.media.MediaPlayer
-import android.media.MediaRecorder
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,23 +16,33 @@ import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentSpeakingPracticeStudentBinding
 import com.home.lexa.domain.models.ShortParagraphDto
+import com.home.lexa.ui.utils.AudioManager
+import com.home.lexa.ui.utils.SpeechEvaluator
+import com.home.lexa.ui.utils.SpeechToTextManager
+import android.app.AlertDialog
+import androidx.activity.OnBackPressedCallback
+import com.home.lexa.ui.utils.TTSManager
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.File
-import java.io.IOException
 
 class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStudentBinding>(FragmentSpeakingPracticeStudentBinding::inflate) {
-    private var speakingDayId = -1L
+
     private val viewModel: SpeakingPracticeStudentViewModel by viewModel()
+    private val sharedViewModel: PracticeSharedViewModel by sharedViewModel()
+
+    private var speakingDayId = -1L
     private var courseId = -1L
-    
     private var paragraphs: List<ShortParagraphDto> = emptyList()
     private var currentIndex = 0
     private var isRecording = false
 
-    private var recorder: MediaRecorder? = null
-    private var player: MediaPlayer? = null
+    private lateinit var audioManager: AudioManager
+    private lateinit var sttManager: SpeechToTextManager
+
     private var currentAudioPath: String? = null
+    private var currentRecognizedText: String = ""
     private val recordedAudios = mutableMapOf<Int, String>()
+    private var userTriggeredStop = false
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -43,18 +54,40 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
         }
     }
 
-    override fun setupViews(){
+    private fun restoreRecordedAudios() {
+        if (paragraphs.isEmpty() || speakingDayId == -1L) return
+
+        paragraphs.forEachIndexed { index, _ ->
+            val fileName = "record_day${speakingDayId}_idx$index.mp3"
+            val file = java.io.File(requireContext().filesDir, fileName)
+
+            if (file.exists()) {
+                recordedAudios[index] = file.absolutePath
+                Log.d("RESTORE", "Tìm thấy file cũ cho đoạn $index: ${file.absolutePath}")
+            }
+        }
+    }
+
+    override fun setupViews() {
         courseId = arguments?.getLong("courseId") ?: -1L
         speakingDayId = arguments?.getLong("speakingDayId") ?: -1L
-        
+
+        audioManager = AudioManager(requireContext())
+        sttManager = SpeechToTextManager(requireContext())
+
         setupControls()
 
         if (speakingDayId != -1L) {
             viewModel.loadParagraphList(speakingDayId)
         }
-        
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                showExitDialog()
+            }
+        })
+
         binding.btnNext.setOnClickAction {
-            // Kiểm tra xem đã ghi âm đoạn hiện tại chưa
             if (!recordedAudios.containsKey(currentIndex)) {
                 Toast.makeText(requireContext(), "Vui lòng ghi âm trước khi tiếp tục", Toast.LENGTH_SHORT).show()
                 return@setOnClickAction
@@ -63,14 +96,14 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
             if (currentIndex < paragraphs.size - 1) {
                 currentIndex++
                 updateContent()
-            } else if (currentIndex == paragraphs.size - 1) {
+            } else {
                 val bundle = Bundle().apply {
                     putLong("speakingDayId", speakingDayId)
                 }
                 findNavController().navigate(R.id.action_speakingPracticeStudentFragment_to_dailyResultFragment, bundle)
             }
         }
-        
+
         binding.btnPrev.setOnClickAction {
             if (currentIndex > 0) {
                 currentIndex--
@@ -84,6 +117,11 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
 
         binding.btnNgheLai.setOnClickListener {
             playRecordedAudio()
+        }
+
+        binding.btnNgheMau.setOnClickAction {
+            val text = paragraphs.getOrNull(currentIndex)?.paragraph ?: ""
+            TTSManager.speak(text)
         }
     }
 
@@ -100,51 +138,79 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
     }
 
     private fun startRecording() {
-        val fileName = "recording_${System.currentTimeMillis()}.mp3"
-        val file = File(requireContext().cacheDir, fileName)
-        currentAudioPath = file.absolutePath
+        audioManager.resetMediaPlayer()
+        val fileName = "record_day${speakingDayId}_idx$currentIndex"
+        userTriggeredStop = false
+        currentRecognizedText = ""
 
-        recorder = MediaRecorder().apply {
-            setAudioSource(MediaRecorder.AudioSource.MIC)
-            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-            setOutputFile(currentAudioPath)
-            try {
-                prepare()
-                start()
-                isRecording = true
-                binding.btnRecord.setBackground(Color.RED)
-                binding.tvInstruction.text = "Đang ghi âm... Nhấn lại để dừng"
-            } catch (e: IOException) {
-                Log.e("AudioRecord", "prepare() failed")
+        // Khởi động song song: AudioRecord (layer thấp) + STT (layer cao)
+        // VOICE_RECOGNITION source được thiết kế cho trường hợp này
+        currentAudioPath = audioManager.startRecording(fileName)
+
+        sttManager.startListening(
+            onResult = { text ->
+                currentRecognizedText = text
+                if (!userTriggeredStop) {
+                    stopRecording()
+                }
+            },
+            onError = { errorMsg ->
+                Log.e("STT_ERROR", errorMsg)
+                if (!userTriggeredStop) {
+                    stopRecording()
+                }
             }
-        }
+        )
+
+        isRecording = true
+        binding.btnRecord.setBackground(Color.RED)
+        binding.tvInstruction.text = "Đang ghi âm... Nhấn lại để dừng"
     }
 
     private fun stopRecording() {
-        recorder?.apply {
-            try {
-                stop()
-                release()
-            } catch (e: Exception) {
-                Log.e("AudioRecord", "stop() failed")
-            }
-        }
-        recorder = null
+        if (!isRecording) return
+        userTriggeredStop = true
         isRecording = false
+
+        sttManager.stopListening()
         binding.btnRecord.setBackground(Color.parseColor("#636AE8"))
-        binding.tvInstruction.text = "Đã ghi nhận! Nhấn vào micro để nói lại"
-        Toast.makeText(requireContext(), "Đã ghi âm thành công", Toast.LENGTH_SHORT).show()
-        binding.tvParagraphContent.setTextColor(Color.parseColor("#4CAF50"))
+        binding.tvInstruction.text = "Đang phân tích giọng nói..."
+
+        // Dừng AudioRecord và chờ file WAV flush xong rồi mới xử lý
+        audioManager.stopRecording {
+            // Callback này chạy trên Main thread sau khi file đã lưu xong
+            processAndSaveResult()
+        }
+    }
+
+    private fun processAndSaveResult() {
+        if (currentRecognizedText.isBlank()) {
+            activity?.runOnUiThread {
+                binding.tvInstruction.text = "Không nghe rõ, vui lòng thử lại!"
+            }
+            return
+        }
+
+        val currentParagraph = paragraphs[currentIndex]
+        val originalText = currentParagraph.paragraph ?: ""
+        val evaluationResults = SpeechEvaluator.evaluate(originalText, currentRecognizedText)
+
         currentAudioPath?.let { path ->
             recordedAudios[currentIndex] = path
-            val currentParagraph = paragraphs[currentIndex]
-            Log.d("Gia tri path luu: ", path)
-            viewModel.submitRecordingResult(currentParagraph.id, currentParagraph.paragraph ?: "", path)
+            sharedViewModel.saveParagraphToCache(
+                index = currentIndex,
+                paragraphId = currentParagraph.id,
+                originalText = originalText,
+                evaluationResults = evaluationResults,
+                audioPath = path
+            )
         }
-        
-        // Cập nhật lại UI để kích hoạt nút Next
-        updateContent()
+
+        // Chạy trên MainThread để cập nhật UI
+        activity?.runOnUiThread {
+            updateContent()
+            binding.tvInstruction.text = "Đã ghi nhận! Nhấn vào micro để nói lại"
+        }
     }
 
     private fun playRecordedAudio() {
@@ -154,126 +220,180 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
             return
         }
 
-        Log.d("Giá tri path record: ", path)
         Toast.makeText(requireContext(), "Đang phát ghi âm lại", Toast.LENGTH_SHORT).show()
-        player?.stop()
-        player?.release()
-        
-        try {
-            player = MediaPlayer().apply {
-                setDataSource(path)
-                prepare()
-                start()
-                setOnCompletionListener { it.release() }
+        audioManager.playAudio(path)
+    }
+
+    private fun updateNavigationButtons(hasRecording: Boolean) {
+        binding.btnPrev.alpha = if (currentIndex == 0) 0.3f else 1.0f
+        if (currentIndex < paragraphs.size - 1) {
+            binding.btnNext.apply {
+                setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_forward)!!)
+                alpha = if (hasRecording) 1.0f else 0.3f
             }
-        } catch (e: Exception) {
-            Log.e("AudioPlay", "Lỗi phát âm thanh")
+        } else {
+            binding.btnNext.apply {
+                setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_check)!!)
+                alpha = if (hasRecording) 1.0f else 0.3f
+            }
         }
-    }
-
-    private fun setupFinishButton() {
-        binding.btnNext.apply {
-            setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_check)!!)
-            setBackground(Color.parseColor("#636AE8"))
-            setIconTint(Color.WHITE)
-            alpha = 1.0f
-        }
-    }
-
-    private fun setupControls() {
-        val grayColor = Color.parseColor("#757575")
-
-        binding.btnRecord.apply {
-            setSize(80)
-            setIconSize(32)
-            setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_mic)!!)
-            setBackground(Color.parseColor("#636AE8"))
-            setIconTint(Color.WHITE)
-        }
-
-        binding.btnPrev.apply {
-            setSize(56)
-            setIconSize(24)
-            setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_back)!!)
-            setBackground(Color.parseColor("#F5F5F5"))
-            setIconTint(grayColor)
-        }
-
-        binding.btnNext.apply {
-            setSize(56)
-            setIconSize(24)
-            setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_forward)!!)
-            setBackground(Color.parseColor("#F5F5F5"))
-            setIconTint(grayColor)
-        }
-        
-        binding.progressBar.setTitle("TIẾN ĐỘ BÀI HỌC")
     }
 
     private fun updateContent() {
         if (paragraphs.isEmpty()) return
-        
-        val hasRecording = recordedAudios.containsKey(currentIndex)
-        
-        // Nếu đã có bản ghi âm cho đoạn này thì hiện màu xanh, ngược lại hiện màu đen
-        if (hasRecording) {
-            binding.tvParagraphContent.setTextColor(Color.parseColor("#4CAF50"))
+
+        val currentParagraph = paragraphs[currentIndex]
+        val cacheItem = sharedViewModel.sessionCache[currentIndex]
+
+        // LOGIC TÔ MÀU SPANNABLE
+        if (cacheItem != null && cacheItem.paragraphId == currentParagraph.id) {
+            val builder = SpannableStringBuilder()
+            cacheItem.evaluationResults.forEach { item ->
+                val start = builder.length
+                builder.append(item.word).append(" ")
+                val end = builder.length - 1
+
+                val color = when (item.status) {
+                    "GOOD" -> Color.parseColor("#4CAF50")
+                    "MEDIUM" -> Color.parseColor("#FFB300")
+                    else -> Color.parseColor("#F44336")
+                }
+
+                builder.setSpan(
+                    ForegroundColorSpan(color),
+                    start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+            binding.tvParagraphContent.text = builder
         } else {
+            binding.tvParagraphContent.text = currentParagraph.paragraph
             binding.tvParagraphContent.setTextColor(Color.parseColor("#202124"))
         }
-        
-        val currentParagraph = paragraphs[currentIndex]
-        binding.tvParagraphContent.text = currentParagraph.paragraph
+
+        // Cập nhật tiến độ & nút bấm
+        val hasRecording = recordedAudios.containsKey(currentIndex) || cacheItem != null
         binding.tvProgressTitle.text = "Đoạn văn ${currentIndex + 1}/${paragraphs.size}"
-        
         val progress = ((currentIndex + 1).toFloat() / paragraphs.size * 100).toInt()
         binding.progressBar.setProgress(progress)
-        binding.tvCompletedPercent.text = "Đã hoàn thành $progress%"
-        
-        binding.btnPrev.alpha = if (currentIndex == 0) 0.3f else 1.0f
-        
-        if (currentIndex < paragraphs.size - 1) {
-            binding.btnNext.apply {
-                setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_forward)!!)
-                setBackground(Color.parseColor("#F5F5F5"))
-                setIconTint(Color.parseColor("#757575"))
-                // Chỉ hiện rõ nếu đã ghi âm, nếu chưa thì mờ đi
-                alpha = if (hasRecording) 1.0f else 0.3f
-            }
-        } else {
-            // Nếu là đoạn cuối
-            if (hasRecording) {
-                setupFinishButton()
-            } else {
-                binding.btnNext.apply {
-                    setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_forward)!!)
-                    setBackground(Color.parseColor("#F5F5F5"))
-                    setIconTint(Color.parseColor("#757575"))
-                    alpha = 0.3f
-                }
-            }
-        }
+        updateNavigationButtons(hasRecording)
     }
 
     override fun observeData() {
         viewModel.paragraphDetailData.observe(viewLifecycleOwner) { data ->
             if (data != null) {
                 paragraphs = data.list_paragraphs.sortedBy { it.paragraph_order }
-                currentIndex = 0
-                updateContent()
+                restoreRecordedAudios()
+                checkAndShowContinueDialog()
             }
         }
-        
-        viewModel.updateParagraphResultStatus.observe(viewLifecycleOwner) { result ->
-            result?.onSuccess {
-                viewModel.resetUpdateParagraphResultStatus()
+
+        // Lắng nghe kết quả nếu user chọn "Lưu tiến độ và thoát"
+        viewModel.bulkSaveStatus.observe(viewLifecycleOwner) { result ->
+            if (result != null) {
+                result.onSuccess { isSuccess ->
+                    if (isSuccess) {
+                        Toast.makeText(requireContext(), "Đã lưu tiến độ", Toast.LENGTH_SHORT).show()
+                        viewModel.resetBulkSaveStatus() // Reset state để tránh trigger lại
+                        findNavController().popBackStack()
+                    }
+                }.onFailure { error ->
+                    Toast.makeText(requireContext(), "Lỗi khi lưu: ${error.message}", Toast.LENGTH_SHORT).show()
+                    viewModel.resetBulkSaveStatus()
+                }
             }
         }
     }
 
+    private fun checkAndShowContinueDialog() {
+        // Tùy vào cách backend trả data, giả sử ta biết user đã làm đến câu index thứ N:
+        // (Ở đây giả lập tìm index đầu tiên chưa có thu âm)
+        val lastCompletedIndex = recordedAudios.keys.maxOrNull() ?: -1
+
+        if (lastCompletedIndex >= 0 && lastCompletedIndex < paragraphs.size - 1) {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Tiếp tục bài học")
+                .setMessage("Bạn có tiến độ học trước đó. Bạn muốn tiếp tục hay học lại từ đầu?")
+                .setPositiveButton("Tiếp tục") { _, _ ->
+                    currentIndex = lastCompletedIndex + 1
+                    updateContent()
+                }
+                .setNegativeButton("Học lại từ đầu") { _, _ ->
+                    currentIndex = 0
+                    recordedAudios.clear()
+                    sharedViewModel.clearCache()
+                    // Gửi request xoá tiến độ cũ lên server nếu backend yêu cầu
+                    updateContent()
+                }
+                .setCancelable(false)
+                .show()
+        } else {
+            updateContent()
+        }
+    }
+
+    private fun setupControls() {
+        binding.btnRecord.apply {
+            setSize(80); setIconSize(32)
+            setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_mic)!!)
+            setBackground(Color.parseColor("#636AE8")); setIconTint(Color.WHITE)
+        }
+        binding.btnPrev.apply {
+            setSize(56); setIconSize(24)
+            setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_back)!!)
+            setBackground(Color.parseColor("#F5F5F5")); setIconTint(Color.parseColor("#757575"))
+        }
+        binding.btnNext.apply {
+            setSize(56); setIconSize(24)
+            setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_forward)!!)
+            setBackground(Color.parseColor("#F5F5F5")); setIconTint(Color.parseColor("#757575"))
+        }
+        binding.btnNgheMau.apply {
+            setIconSize(40); setIconColor(Color.parseColor("#636AE8"))
+            setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play)!!)
+            setText("Nghe mẫu", Color.parseColor("#636AE8"))
+            setBackground(Color.parseColor("#F5F5F5"))
+        }
+        binding.progressBar.setTitle("TIẾN ĐỘ BÀI HỌC")
+    }
+
+    private fun showExitDialog() {
+        val options = arrayOf("Lưu tiến độ", "Thoát không lưu", "Hủy")
+        AlertDialog.Builder(requireContext())
+            .setTitle("Bạn muốn tạm dừng bài học?")
+            .setItems(options) { dialog, which ->
+                when (which) {
+                    0 -> {
+                        // Lưu tiến độ: Gọi ViewModel để đẩy cache lên server, sau đó thoát
+                        saveProgressAndExit()
+                    }
+                    1 -> {
+                        // Thoát không lưu: Xoá cache hiện tại và thoát
+                        sharedViewModel.clearCache()
+                        findNavController().popBackStack()
+                    }
+                    2 -> {
+                        // Hủy: Tắt dialog, tiếp tục học
+                        dialog.dismiss()
+                    }
+                }
+            }
+            .show()
+    }
+
+    private fun saveProgressAndExit() {
+        val cacheData = sharedViewModel.sessionCache.values.toList()
+        if (cacheData.isEmpty()) {
+            findNavController().popBackStack()
+            return
+        }
+
+        viewModel.submitBulkProgress(speakingDayId, cacheData)
+
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        recorder?.release()
-        player?.release()
+        audioManager.release()
+        sttManager.destroy()
     }
 }

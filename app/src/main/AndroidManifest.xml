@@ -12,6 +12,7 @@
 
     <application
         android:name=".LexaApp"
+        android:localeConfig="@xml/locales_config"
         android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -21,7 +22,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
-        tools:targetApi="31">
+        tools:targetApi="33">
         <receiver
             android:name=".service.ScheduleNotification"
             android:enabled="true"/>

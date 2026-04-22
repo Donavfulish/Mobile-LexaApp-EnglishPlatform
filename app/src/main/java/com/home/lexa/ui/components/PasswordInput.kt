@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.util.SparseArray
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.FrameLayout
 import androidx.core.widget.doOnTextChanged
@@ -99,6 +100,10 @@ class PasswordInput @JvmOverloads constructor(
         }
     }
 
+    fun setEnable(isEnable: Boolean) {
+        binding.etInput.isEnabled = isEnable
+    }
+
     fun setMultipleLines(isMultiLine: Boolean) {
         binding.etInput.apply {
             if (isMultiLine) {
@@ -132,6 +137,10 @@ class PasswordInput @JvmOverloads constructor(
 
             requestLayout()
         }
+    }
+
+    fun hideLockIcon() {
+        binding.ivIcon.visibility = View.GONE
     }
 
     // Hàm nhận function (callback) xử lý click

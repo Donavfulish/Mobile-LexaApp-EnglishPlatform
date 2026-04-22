@@ -3,6 +3,7 @@ package com.home.lexa.data.remote
 import com.home.lexa.core.network.ApiResponse
 import com.home.lexa.domain.models.AuthResult
 import com.home.lexa.domain.models.ChangeEmailRequest
+import com.home.lexa.domain.models.ChangePasswordRequest
 import com.home.lexa.domain.models.LoginRequest
 import com.home.lexa.domain.models.OtpRequest
 import com.home.lexa.domain.models.OtpVerify
@@ -18,6 +19,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Multipart
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Part
 
@@ -69,4 +71,7 @@ interface AuthApiService {
 
     @POST("/api/auth/change-email")
     suspend fun changeEmail(@Body request: ChangeEmailRequest): Response<ApiResponse<AuthResult>>
+
+    @PATCH("/api/auth/change-password")
+    suspend fun changePassword(@Body request: ChangePasswordRequest): Response<ApiResponse<AuthResult>>
 }

@@ -57,6 +57,7 @@ class ProfilePersonalInformationFragment : BaseFragment<FragmentProfilePersonalI
             removeCustomView()
             setText("Thông tin cá nhân")
             setBackButtonVisible(true)
+            setOnClickBack()
         }
 
         binding.fullNameInput.apply {

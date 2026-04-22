@@ -256,6 +256,9 @@
             android:id="@+id/action_profileFragment_to_profileEmailFragment"
             app:destination="@id/profileEmailFragment" />
         <action
+            android:id="@+id/action_profileFragment_to_profileChangePasswordFragment"
+            app:destination="@id/profileChangePasswordFragment" />
+        <action
             android:id="@+id/action_profileFragment_to_profileNotificationFragment"
             app:destination="@id/profileNotificationFragment" />
     </fragment>

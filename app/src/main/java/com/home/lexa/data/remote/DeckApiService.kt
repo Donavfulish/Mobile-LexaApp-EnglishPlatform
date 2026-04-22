@@ -81,4 +81,7 @@ interface DeckApiService {
     // ==== TOPIC ====
     @GET("api/topics")
     suspend fun getTopics(): Response<ApiResponse<List<Topic>>>
+
+    @GET("api/decks/suggestions")
+    suspend fun getDeckSuggestions(@Query("query") query: String? = null): Response<ApiResponse<List<String>>>
 }

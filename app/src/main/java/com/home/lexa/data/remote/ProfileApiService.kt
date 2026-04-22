@@ -4,10 +4,14 @@ import com.home.lexa.core.network.ApiResponse
 import com.home.lexa.domain.models.Profile
 import com.home.lexa.domain.models.UpdateFcmTokenRequest
 import com.home.lexa.domain.models.UpdateProfileRequest
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.PATCH
+import retrofit2.http.Part
+import retrofit2.http.Query
 
 interface ProfileApiService {
     @GET("api/profile")
@@ -16,6 +20,10 @@ interface ProfileApiService {
     suspend fun updateProfile(@Body data: UpdateProfileRequest): Response<ApiResponse<Boolean?>>
     @PATCH("api/profile/fcm-token")
     suspend fun updateFcmToken(@Body data: UpdateFcmTokenRequest): Response<ApiResponse<Boolean?>>
-
-
+    @Multipart
+    @PATCH("api/profile/avatar")
+    suspend fun updateAvatar(
+        @Part avatarPart: MultipartBody.Part?,
+        @Query("action") action: String
+    ): Response<ApiResponse<Boolean?>>
 }

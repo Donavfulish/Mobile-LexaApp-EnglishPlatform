@@ -23,6 +23,7 @@ interface DeckRepository {
     suspend fun deleteDeck(deckId: Long): Result<Boolean>
     suspend fun createDeckResult(request: CreateDeckResultRequest): Result<Boolean>
     suspend fun updateDeckResult(request: UpdateDeckResultRequest): Result<Boolean>
+    suspend fun getDeckSuggestions(query: String?): Result<List<String>?>
 
     // ==== TOPIC ====
     suspend fun getAllTopics(): Result<List<Topic>>

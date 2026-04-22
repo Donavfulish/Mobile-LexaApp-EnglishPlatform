@@ -26,4 +26,5 @@ interface CourseRepository {
     suspend fun getLearningCourses(searchInfo: SearchInfo, nextCursor: Long?): Result<AllCoursePaginationResponse>
     suspend fun favoriteCourse(courseId: Long ): Result<Boolean>
     suspend fun disFavoriteCourse(courseId: Long): Result<Boolean>
-}
+    suspend fun getCourseSuggestions(query: String?): Result<List<String>?>
+    }

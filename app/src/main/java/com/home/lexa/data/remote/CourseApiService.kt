@@ -92,4 +92,6 @@ interface CourseApiService {
     @DELETE("api/courses/{courseId}/favorite")
     suspend fun disFavoriteCourse(@Path("courseId") courseId: Long): Response<ApiResponse<Map<String, Any>>>
 
+    @GET("api/courses/suggestion")
+    suspend fun getCourseSuggestions(@Query("query") query: String? = null): Response<ApiResponse<List<String>>>
 }

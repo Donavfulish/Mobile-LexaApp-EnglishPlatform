@@ -3,6 +3,7 @@ package com.home.lexa.data.repository
 import com.home.lexa.data.remote.AuthApiService
 import com.home.lexa.domain.models.AuthResult
 import com.home.lexa.domain.models.ChangeEmailRequest
+import com.home.lexa.domain.models.ChangePasswordRequest
 import com.home.lexa.domain.models.LoginRequest
 import com.home.lexa.domain.models.OtpRequest
 import com.home.lexa.domain.models.OtpVerify
@@ -205,6 +206,25 @@ class AuthRepositoryImpl(private val apiService: AuthApiService) : AuthResposito
                     Result.success(body.data)
                 } else {
                     Result.failure(Exception(body.message ?: "Cập nhật email thất bại"))
+                }
+            } else {
+                Result.failure(Exception("Lỗi máy chủ: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(Exception("Lỗi kết nối mạng: ${e.message}"))
+        }
+    }
+
+    override suspend fun changePassword(request: ChangePasswordRequest): Result<AuthResult> {
+        return try {
+            val response = apiService.changePassword(request)
+            val body = response.body()
+
+            if (response.isSuccessful && body != null) {
+                if (body.success == true && body.data != null) {
+                    Result.success(body.data)
+                } else {
+                    Result.failure(Exception(body.message ?: "Cập nhật mật khẩu thất bại"))
                 }
             } else {
                 Result.failure(Exception("Lỗi máy chủ: ${response.code()}"))

@@ -156,7 +156,13 @@ class NormalInput @JvmOverloads constructor(
             requestLayout()
         }
     }
+    fun insertTextAtCursor(symbol: String) {
+        val start = Math.max(binding.etInput.selectionStart, 0)
+        val end = Math.max(binding.etInput.selectionEnd, 0)
 
+        binding.etInput.text?.replace(Math.min(start, end), Math.max(start, end), symbol)
+
+    }
     // Hàm nhận function (callback) xử lý click
     /*fun setOnLexaClickListener(onClick: () -> Unit) {
         binding.root.setOnClickListener {
