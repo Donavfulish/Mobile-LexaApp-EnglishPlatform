@@ -76,8 +76,8 @@ class PersonalLibraryFragment : BaseFragment<FragmentPersonalLibraryBinding>(Fra
             val popup = DeckInput(requireContext())
 
             popup.showDialog(
-                title = "Tạo bộ từ vựng mới",
-                confirmText = "Tạo",
+                title = getString(R.string.creat_new_deck),
+                confirmText = getString(R.string.create),
                 onConfirm = { vocabName ->
                     viewModel.createDeck(vocabName)
                 }

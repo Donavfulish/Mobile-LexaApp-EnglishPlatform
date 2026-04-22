@@ -1,6 +1,7 @@
 package com.home.lexa.ui.library
 
 import com.google.android.material.tabs.TabLayoutMediator
+import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentLibraryBinding
 
@@ -15,7 +16,7 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>(FragmentLibraryBind
         binding.viewPager.offscreenPageLimit = 2
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = if (position == 0) "Yêu thích" else "Cá nhân"
+            tab.text = if (position == 0) getString(R.string.favorite) else getString(R.string.personal)
         }.attach()
     }
 

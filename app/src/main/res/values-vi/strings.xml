@@ -154,4 +154,11 @@
     <string name="home_screen">Trang chủ</string>
     <string name="enter_email_to_reset">Nhập email tài khoản để nhận mã OTP</string>
     <string name="new_password">Mật khẩu mới</string>
+    <string name="creat_new_deck">Tạo bộ từ vựng mới</string>
+    <string name="create">Tạo</string>
+    <string name="favorite_deck">BỘ TỪ VỰNG YÊU THÍCH</string>
+    <string name="do_you_want_create_your">Bạn có muốn tạo riêng ?</string>
+    <string name="content_create_your">\nHãy chuyển sang tab Cá nhân để bắt đầu xây dựng\nbộ từ vựng của riêng bạn.</string>
+    <string name="go_to_personal_tab">Đi đến tab cá nhân</string>
+
 </resources>

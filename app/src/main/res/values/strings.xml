@@ -154,4 +154,10 @@
     <string name="study_time_notification_desc">A reminder notification before your scheduled study time.</string>
     <string name="set_reminder_time">Set reminder time</string>
     <string name="home_screen">Home Screen</string>
+    <string name="creat_new_deck">Create new deck</string>
+    <string name="create">Create</string>
+    <string name="favorite_deck">FAVORITE DECK</string>
+    <string name="do_you_want_create_your">Do you want create your?</string>
+    <string name="content_create_your">" Switch to the Personal tab to begin building your own deck."</string>
+    <string name="go_to_personal_tab">Go to personal tab</string>
 </resources>
