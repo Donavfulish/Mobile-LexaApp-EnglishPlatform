@@ -82,12 +82,12 @@ class ProfileFragment : Fragment() {
 
         binding.btnLogout.setOnClickListener {
             requireContext().showConfirmDialog(
-                title = "Đăng xuất",
-                message = "Dữ liệu chưa lưu có thể bị mất. Bạn vẫn muốn đăng xuất?",
+                title = getString(R.string.logout),
+                message = getString(R.string.popup_warning_logout),
                 onConfirm = {
                     handleLogout()
                 },
-                acceptLabel = "Đăng xuất"
+                acceptLabel = getString(R.string.logout)
             )
         }
     }
@@ -95,7 +95,6 @@ class ProfileFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.fetchProfile()
-        Log.d("onResume", "Di vao nhe");
         checkAndLoadUsageData()
     }
 
@@ -104,7 +103,7 @@ class ProfileFragment : Fragment() {
 
             loadUsageData()
         } else {
-            binding.tvChartSub.text = "Chạm để cấp quyền xem thống kê"
+            binding.tvChartSub.text = getString(R.string.tap_to_permit_statistics)
             binding.tvChartSub.setOnClickListener {
                 requestUsagePermission()
             }
@@ -127,12 +126,11 @@ class ProfileFragment : Fragment() {
         try {
             startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
         } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Không thể mở cài đặt", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.toast_unable_open_settings), Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun loadUsageData() {
-        Log.d("ProfileFragment", "Di vao")
         lifecycleScope.launch {
             val usageData = withContext(Dispatchers.IO) {
                 getAppUsageStats(requireContext())
@@ -145,15 +143,15 @@ class ProfileFragment : Fragment() {
             val mins = totalMinutes % 60
             
             binding.tvChartSub.text = if (hours > 0) {
-                "Tổng cộng: $hours giờ $mins phút"
+                getString(R.string.total_hours_minutes, hours, mins)
             } else {
-                "Tổng cộng: $mins phút"
+                getString(R.string.total_minutes, mins)
             }
             
             binding.usageChartView.setData(usageData)
 
             val streak = userManager.getStreakCount()
-            binding.tvStreakInfo.text = "$streak ngày 🔥"
+            binding.tvStreakInfo.text = getString(R.string.streak_days, streak)
         }
     }
 
@@ -196,16 +194,16 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setupInitialUI() {
-        binding.tvUserName.text = userManager.getUserName() ?: "Người dùng Lexa"
+        binding.tvUserName.text = userManager.getUserName() ?: "Lexa user"
         binding.tvUserRole.text = userManager.getUserRole()?.name ?: "Học sinh"
 
-        binding.statsCourses.setCardData(R.drawable.ic_book, 0, "Khóa đang học")
+        binding.statsCourses.setCardData(R.drawable.ic_book, 0, getString(R.string.studying_courses))
         binding.statsCourses.setIconStyle(tintColorHex = "#4285F4", bgColorHex = "#E8F0FE")
 
-        binding.statsVocab.setCardData(R.drawable.ic_cup, 0, "Từ vựng")
+        binding.statsVocab.setCardData(R.drawable.ic_cup, 0, getString(R.string.vocabulary))
         binding.statsVocab.setIconStyle(tintColorHex = "#F4B400", bgColorHex = "#FEF7E0")
 
-        binding.statsVocabSets.setCardData(R.drawable.ic_folder, 0, "Bộ từ vựng")
+        binding.statsVocabSets.setCardData(R.drawable.ic_folder, 0, getString(R.string.vocabulary_decks))
         binding.statsVocabSets.setIconStyle(tintColorHex = "#0F9D58", bgColorHex = "#E6F4EA")
         
         binding.menuPersonalInfo.setOnClickListener {
@@ -244,9 +242,9 @@ class ProfileFragment : Fragment() {
                 tvUserName.text = profile.fullName ?: userManager.getUserName()
                 tvUserEmail.text = profile.email
 
-                statsCourses.setCardData(R.drawable.ic_book, profile.activeCourses, "Khóa đang học")
-                statsVocab.setCardData(R.drawable.ic_cup, profile.vocabularies, "Từ vựng")
-                statsVocabSets.setCardData(R.drawable.ic_folder, profile.vocabSets, "Bộ từ vựng")
+                statsCourses.setCardData(R.drawable.ic_book, profile.activeCourses, getString(R.string.studying_courses))
+                statsVocab.setCardData(R.drawable.ic_cup, profile.vocabularies, getString(R.string.vocabulary))
+                statsVocabSets.setCardData(R.drawable.ic_folder, profile.vocabSets, getString(R.string.vocabulary_decks))
 
                 menuEmail.setMenuValue(profile.email ?: "")
                 menuPersonalInfo.setMenuValue(formatDate(profile.DoB))
@@ -290,8 +288,8 @@ class ProfileFragment : Fragment() {
 
             setOnClickListener {
                 requireContext().showConfirmDialog(
-                    title = "Gỡ ảnh đại diện",
-                    message = "Hành động này không thể hoàn tác. Bạn chắc chắn muốn gỡ ảnh đại diện?",
+                    title = getString(R.string.popup_remove_avatar),
+                    message = getString(R.string.warning_remove_avatar),
                     onConfirm = {
                         viewModel.updateAvatar(null, AVATAR_ACTION.DELETE)
 
@@ -301,7 +299,7 @@ class ProfileFragment : Fragment() {
 
                         dialog.dismiss()
                     },
-                    acceptLabel = "Gỡ ảnh"
+                    acceptLabel = getString(R.string.popup_remove_avatar)
                 )
             }
         }
@@ -318,7 +316,7 @@ class ProfileFragment : Fragment() {
                 Glide.with(view).load(image).into(view)
             }.show()
         } else {
-            Toast.makeText(requireContext(), "Chưa có ảnh đại diện", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.empty_avatar), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -346,17 +344,7 @@ class ProfileFragment : Fragment() {
     private fun updateLanguage(langCode: String) {
         val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(langCode)
 
-        val intent = requireActivity().intent
-
         AppCompatDelegate.setApplicationLocales(appLocale)
-
-        // Ngay sau khi set, yêu cầu Activity kết thúc và chạy lại với hiệu ứng Fade
-        requireActivity().apply {
-            finish()
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-            startActivity(intent)
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-        }
     }
 
     private fun handleLogout() {
@@ -367,7 +355,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun formatDate(date: java.util.Date?): String {
-        if (date == null) return "Chỉnh sửa"
+        if (date == null) return getString(R.string.edit)
         val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         return formatter.format(date)
     }

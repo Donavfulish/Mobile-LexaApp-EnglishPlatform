@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">My Application</string>
 
+    <string name="save_changes_successfully">Lưu thay đổi thành công</string>
     <string name="login_title">Chào mừng trở lại</string>
     <string name="login_desc">Đăng nhập để tiếp tục học tập cùng chúng tôi</string>
     <string name="remember_me">Ghi nhớ tôi</string>
@@ -150,14 +151,19 @@
     <string name="listen_my_audio_again">Nghe lại âm của tôi</string>
 
     <string name="personal_profile">Hồ sơ cá nhân</string>
-    <string name="study_statistics">Thống kê học tập</string>
-    <string name="current_course">Khoá đang học</string>
-    <string name="vocabulary_set">Bộ từ vựng</string>
+    <string name="study_statistics">THỐNG KÊ HỌC TẬP</string>
+    <string name="vocabulary_decks">Bộ từ vựng</string>
     <string name="weekly_study_time">Thời gian học trong tuần</string>
     <string name="total_amount">Tổng cộng %1$s</string>
+    <string name="total_minutes">Tổng cộng: %1$d phút</string>
+    <string name="streak_days">%1$d ngày 🔥</string>
     <string name="account_and_security_upper">TÀI KHOẢN VÀ BẢO MẬT</string>
     <string name="personal_information">Thông tin cá nhân</string>
     <string name="change_password">Đổi mật khẩu</string>
+    <string name="old_password">Mật khẩu cũ</string>
+    <string name="enter_old_password">Nhập mật khẩu cũ</string>
+    <string name="enter_confirm_new_password">Xác nhận mật khẩu mới</string>
+    <string name="change_email">Chỉnh sửa email</string>
     <string name="app_settings_upper">CÀI ĐẶT ỨNG DỤNG</string>
     <string name="language">Ngôn ngữ</string>
     <string name="notification">Thông báo</string>
@@ -167,11 +173,19 @@
     <string name="address_upper">ĐỊA CHỈ</string>
     <string name="save_changes">Lưu thay đổi</string>
 
+    <string name="popup_warning_logout">Dữ liệu chưa lưu có thể bị mất. Bạn vẫn muốn đăng xuất?</string>
+    <string name="tap_to_permit_statistics">Chạm để cấp quyền xem thống kê</string>
+    <string name="toast_unable_open_settings">Không thể mở cài đặt</string>
+    <string name="warning_remove_avatar">Hành động này không thể hoàn tác. Bạn chắc chắn muốn gỡ ảnh đại diện?</string>
+    <string name="empty_avatar">Chưa có ảnh đại diện</string>
     <string name="streak_notification">Thông báo chuỗi</string>
     <string name="streak_notification_desc">Nhắc nhở bạn duy trì chuỗi học tập hàng ngày để không bỏ lỡ tiến độ.</string>
     <string name="study_time_notification">Thông báo giờ học</string>
     <string name="study_time_notification_desc">Thông báo nhắc nhở trước khi đến giờ học đã cài đặt của bạn.</string>
     <string name="set_reminder_time">Cài đặt giờ nhắc nhở</string>
+    <string name="set_schedule_at_hours_minutes">Đã đặt lịch vào %1$d:$2%d</string>
+    <string name="noti_study_time">Giờ học đến rồi!</string>
+    <string name="noti_study_time_desc">Hãy vào Lexa duy trì chuỗi học tập ngay nhé!</string>
     <string name="home_screen">Trang chủ</string>
     <string name="enter_email_to_reset">Nhập email tài khoản để nhận mã OTP</string>
     <string name="new_password">Mật khẩu mới</string>
@@ -193,4 +207,9 @@
     <string name="toast_signup_successfully">Đăng ký thành công</string>
     <string name="toast_signup_google_successfully">Đăng ký bằng Google thành công</string>
     <string name="toast_verify_otp_successfully">Xác thực OTP thành công</string>
+    <string name="total_hours_minutes">Tổng cộng: %1$d giờ %2$d phút</string>
+    <string name="studying_courses">Khóa đang học</string>
+    <string name="popup_remove_avatar">Gỡ ảnh đại diện</string>
+    <string name="enter_new_password">Nhập mật khẩu mới</string>
+    <string name="this_noti_happens_after_10_secs">Thông báo này sẽ xuất hiện sau 10 giây</string>
 </resources>

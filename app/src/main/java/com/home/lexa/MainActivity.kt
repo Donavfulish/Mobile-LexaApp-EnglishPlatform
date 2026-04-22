@@ -71,10 +71,10 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         askNotificationPermission()
-        val splashScreen = installSplashScreen()
+        //val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        splashScreen.setKeepOnScreenCondition { !isFirstAuthenticated }
+        //splashScreen.setKeepOnScreenCondition { !isFirstAuthenticated }
 
         authViewModel.getMe()
 

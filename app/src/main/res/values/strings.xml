@@ -4,6 +4,7 @@
 
     <string name="continue_process">Continue</string>
     <string name="toast_please_enter_all_information">Please enter all the information</string>
+    <string name="save_changes_successfully">Save changes successfully</string>
 
     <string name="login_title">Welcome back</string>
     <string name="login_desc">Log in to continue learning with us</string>
@@ -172,14 +173,22 @@
     <string name="listen_my_audio_again">Listen to my audio again</string>
 
     <string name="personal_profile">Personal profile</string>
-    <string name="study_statistics">Study statistics</string>
-    <string name="current_course">Current course</string>
-    <string name="vocabulary_set">Vocabulary set</string>
+    <string name="study_statistics">STUDY STATISTICS</string>
+    <string name="studying_courses">Current course</string>
+    <string name="vocabulary_decks">Vocabulary deck</string>
     <string name="weekly_study_time">Weekly study time</string>
     <string name="total_amount">Total %1$s</string>
+    <string name="total_hours_minutes">Total: %1$d hours %2$d minutes</string>
+    <string name="total_minutes">Total: %1$d minutes</string>
+    <string name="streak_days">%1$d days 🔥</string>
     <string name="account_and_security_upper">ACCOUNT AND SECURITY</string>
     <string name="personal_information">Personal information</string>
     <string name="change_password">Change password</string>
+    <string name="old_password">Old password</string>
+    <string name="enter_old_password">Enter old password</string>
+    <string name="enter_new_password">Enter new password</string>
+    <string name="enter_confirm_new_password">Verify new password</string>
+    <string name="change_email">Change email</string>
     <string name="app_settings_upper">APP SETTINGS</string>
     <string name="language">Language</string>
     <string name="notification">Notifications</string>
@@ -188,11 +197,21 @@
     <string name="birth_date_upper">DATE OF BIRTH</string>
     <string name="address_upper">ADDRESS</string>
     <string name="save_changes">Save changes</string>
+    <string name="popup_warning_logout">"Unsaved data may be lost. Do you still want to log out?"</string>
+    <string name="tap_to_permit_statistics">Tap to grant permission to view statistics</string>
+    <string name="toast_unable_open_settings">Unable to open settings</string>
+    <string name="popup_remove_avatar">Remove avatar</string>
+    <string name="warning_remove_avatar">This action can not be undo. Do you still want to remove avatar?</string>
+    <string name="empty_avatar">No avatar yet</string>
 
     <string name="streak_notification">Streak notification</string>
     <string name="streak_notification_desc">A reminder to maintain your daily study streak so you don\'t lose progress.</string>
     <string name="study_time_notification">Study time notification</string>
     <string name="study_time_notification_desc">A reminder notification before your scheduled study time.</string>
     <string name="set_reminder_time">Set reminder time</string>
+    <string name="this_noti_happens_after_10_secs">This notification will execute after 10 seconds</string>
+    <string name="set_schedule_at_hours_minutes">Set schedule at %1$d:$2%d</string>
+    <string name="noti_study_time">Study time!</string>
+    <string name="noti_study_time_desc">Join Lexa and continue your learning streak now!</string>
     <string name="home_screen">Home Screen</string>
 </resources>

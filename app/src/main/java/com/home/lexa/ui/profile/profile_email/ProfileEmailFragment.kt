@@ -5,6 +5,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.home.lexa.MainActivity
+import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentProfileEmailBinding
 import com.home.lexa.ui.auth.AuthState
@@ -23,7 +24,7 @@ class ProfileEmailFragment : BaseFragment<FragmentProfileEmailBinding>(FragmentP
         val activityBinding = (requireActivity() as MainActivity).binding
         activityBinding.appBarLayout.apply {
             removeCustomView()
-            setText("Cập nhật Email")
+            setText(getString(R.string.change_email))
             setBackButtonVisible(true)
             setOnClickBack()
         }
@@ -33,7 +34,7 @@ class ProfileEmailFragment : BaseFragment<FragmentProfileEmailBinding>(FragmentP
         binding.inputEmail.apply {
             setLabel("EMAIL")
             setText(currentEmail)
-            setPlaceHolderText("Nhập email tài khoản")
+            setPlaceHolderText("nguyenvana@gmail.com")
             setHorizontalScroll()
             setMaxLength(255)
 
@@ -46,7 +47,7 @@ class ProfileEmailFragment : BaseFragment<FragmentProfileEmailBinding>(FragmentP
         val colorPink = 0xFF636AE8.toInt() // Dùng màu purple_paragraph của app
         val colorWhite = 0xFFFFFFFF.toInt()
         binding.btnSave.apply {
-            setText("Lưu thay đổi", colorWhite)
+            setText(getString(R.string.save_changes), colorWhite)
             setBackground(colorPink)
             setEnabledState(false)
 
@@ -54,7 +55,7 @@ class ProfileEmailFragment : BaseFragment<FragmentProfileEmailBinding>(FragmentP
                 val email = binding.inputEmail.getText().trim()
 
                 if (!StringUtils.isValidEmail(email)) {
-                    Toast.makeText(requireContext(), "Email không hợp lệ", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.toast_wrong_email_format), Toast.LENGTH_SHORT).show()
                     return@setOnClickAction
                 }
 

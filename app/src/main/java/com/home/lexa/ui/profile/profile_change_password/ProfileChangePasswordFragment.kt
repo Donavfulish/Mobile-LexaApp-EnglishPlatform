@@ -5,6 +5,7 @@ import androidx.core.view.get
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.home.lexa.MainActivity
+import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentProfileChangePasswordBinding
 import com.home.lexa.domain.models.ChangePasswordRequest
@@ -23,27 +24,27 @@ class ProfileChangePasswordFragment : BaseFragment<FragmentProfileChangePassword
         val activityBinding = (requireActivity() as MainActivity).binding
         activityBinding.appBarLayout.apply {
             removeCustomView()
-            setText("Đổi mật khẩu")
+            setText(getString(R.string.change_password))
             setBackButtonVisible(true)
             setOnClickBack()
         }
 
         binding.inputOldPassword.apply {
-            setLabel("Mật khẩu cũ")
-            setPlaceHolderText("Nhập mật khẩu cũ")
+            setLabel(getString(R.string.old_password))
+            setPlaceHolderText(getString(R.string.enter_old_password))
             setHorizontalScroll()
             hideLockIcon()
         }
 
         binding.inputNewPassword.apply {
-            setLabel("Mật khẩu mới")
-            setPlaceHolderText("Nhập mật khẩu mới")
+            setLabel(getString(R.string.new_password))
+            setPlaceHolderText(getString(R.string.enter_new_password))
             setHorizontalScroll()
             hideLockIcon()
         }
 
         binding.inputConfirmPassword.apply {
-            setPlaceHolderText("Xác nhận mật khẩu mới")
+            setPlaceHolderText(getString(R.string.enter_confirm_new_password))
             setHorizontalScroll()
             hideLockIcon()
         }
@@ -51,7 +52,7 @@ class ProfileChangePasswordFragment : BaseFragment<FragmentProfileChangePassword
         val colorPink = 0xFF636AE8.toInt() // Dùng màu purple_paragraph của app
         val colorWhite = 0xFFFFFFFF.toInt()
         binding.btnSave.apply {
-            setText("Lưu thay đổi", colorWhite)
+            setText(getString(R.string.save_changes), colorWhite)
             setBackground(colorPink)
 
             setOnClickAction({
@@ -105,12 +106,12 @@ class ProfileChangePasswordFragment : BaseFragment<FragmentProfileChangePassword
         val confirmPassword = binding.inputConfirmPassword.getText()
 
         if (oldPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
-            Toast.makeText(requireContext(), "Vui lòng nhập đủ dữ liệu", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.toast_please_enter_all_information), Toast.LENGTH_SHORT).show()
             return
         }
 
         if (newPassword != confirmPassword) {
-            Toast.makeText(requireContext(), "Mật khẩu xác nhận không trùng khớp", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.toast_confirm_password_not_match), Toast.LENGTH_SHORT).show()
             return
         }
 

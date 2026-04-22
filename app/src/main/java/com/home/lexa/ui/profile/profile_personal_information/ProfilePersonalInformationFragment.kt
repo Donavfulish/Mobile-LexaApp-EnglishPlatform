@@ -55,21 +55,21 @@ class ProfilePersonalInformationFragment : BaseFragment<FragmentProfilePersonalI
         val activityBinding = (requireActivity() as MainActivity).binding
         activityBinding.appBarLayout.apply {
             removeCustomView()
-            setText("Thông tin cá nhân")
+            setText(getString(R.string.personal_information))
             setBackButtonVisible(true)
             setOnClickBack()
         }
 
         binding.fullNameInput.apply {
-            setLabel("HỌ VÀ TÊN")
-            setPlaceHolderText("Nhập họ và tên...")
+            setLabel(getString(R.string.name).uppercase())
+            setPlaceHolderText(getString(R.string.example_name))
             setHorizontalScroll()
             setMaxLength(255)
 
         }
 
         binding.birthDateInput.apply {
-            setLabel("NGÀY SINH")
+            setLabel(getString(R.string.birth_date).uppercase())
             setEndIcon(R.drawable.ic_calendar)
             
             val calendar = Calendar.getInstance()
@@ -93,14 +93,14 @@ class ProfilePersonalInformationFragment : BaseFragment<FragmentProfilePersonalI
 
         binding.addressInput.apply {
             setInputHeight(150)
-            setLabel("ĐỊA CHỈ")
-            setPlaceHolderText("Nhập địa chỉ của bạn...")
+            setLabel(getString(R.string.address).uppercase())
+            setPlaceHolderText(getString(R.string.enter_your_address))
         }
 
         val colorPink = 0xFF636AE8.toInt() // Dùng màu purple_paragraph của app
         val colorWhite = 0xFFFFFFFF.toInt()
         binding.btnSave.apply {
-            setText("Lưu thay đổi", colorWhite)
+            setText(getString(R.string.save_changes), colorWhite)
             setBackground(colorPink)
         }
     }
@@ -123,7 +123,7 @@ class ProfilePersonalInformationFragment : BaseFragment<FragmentProfilePersonalI
         // Lắng nghe cập nhật thành công
         viewModel.updateSuccess.observe(viewLifecycleOwner) { success ->
             if (success) {
-                Toast.makeText(requireContext(), "Lưu thông tin thành công", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.save_changes_successfully), Toast.LENGTH_SHORT).show()
                 viewModel.resetUpdateStatus()
                 // Tự động quay lại màn hình Profile
                 parentFragmentManager.popBackStack()
