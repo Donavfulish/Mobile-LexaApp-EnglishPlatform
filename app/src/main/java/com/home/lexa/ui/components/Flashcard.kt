@@ -23,11 +23,12 @@ import com.home.lexa.databinding.ButtonLexaBinding
 import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.domain.models.mockVocabularyData
+import com.home.lexa.ui.utils.ColorTokenUtils
 import com.home.lexa.ui.utils.TTSManager
 
 fun TextView.setVocabularyStyle(hexColor: String) {
     try {
-        val baseColor = Color.parseColor(hexColor)
+        val baseColor = ColorTokenUtils.resolve(context, hexColor)
 
         // Nền nhạt (12% opacity)
         this.backgroundTintList = ColorStateList.valueOf(
@@ -38,7 +39,7 @@ fun TextView.setVocabularyStyle(hexColor: String) {
         this.setTextColor(ColorUtils.blendARGB(baseColor, Color.BLACK, 0.2f))
 
     } catch (e: Exception) {
-        this.setTextColor(Color.GRAY)
+        this.setTextColor(androidx.core.content.ContextCompat.getColor(context, com.home.lexa.R.color.text_muted))
     }
 }
 

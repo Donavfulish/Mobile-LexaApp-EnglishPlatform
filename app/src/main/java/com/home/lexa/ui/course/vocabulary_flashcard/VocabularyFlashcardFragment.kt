@@ -50,7 +50,12 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
         binding.diTopic.apply {
             setTile("Chủ đề")
             onItemSelected =  { topicName ->
-                setFrameColor(topicColorMap[topicName] ?: "#FFFFFF")
+                val colorHex = topicColorMap[topicName]
+                if (colorHex != null) {
+                    setFrameColor(colorHex)
+                } else {
+                    setFrameColor(R.color.surface)
+                }
                 viewModel.updateDeck(UpdateDeckRequest(
                     deckId = deckId!!,
                     topicName = binding.diTopic.getSelection()
@@ -213,7 +218,12 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
                 it.name
             })
             binding.diTopic.setSelection(deckTopicName ?: "None")
-            binding.diTopic.setFrameColor(topicColorMap[deckTopicName] ?: "#FFFFFF")
+            val initialColorHex = topicColorMap[deckTopicName]
+            if (initialColorHex != null) {
+                binding.diTopic.setFrameColor(initialColorHex)
+            } else {
+                binding.diTopic.setFrameColor(R.color.surface)
+            }
         }
 
         viewModel.suggestions.observe(viewLifecycleOwner) { suggestions ->
@@ -240,11 +250,11 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
         list.forEach { item ->
             val card = FlashcardMini(requireContext())
             val vocab = Vocabulary(
-                level = ColorLabel(item.flashCard.type, "#E0E0E5"),
+                level = ColorLabel(item.flashCard.type, "@color/tag_neutral"),
                 word = item.flashCard.word,
                 pronunciation_url = item.flashCard.audioUrl ?: "",
                 transciption = item.flashCard.transcription,
-                part_of_speech = ColorLabel(item.flashCard.partOfSpeech, "#636AE8"),
+                part_of_speech = ColorLabel(item.flashCard.partOfSpeech, "@color/brand_primary"),
                 definition = item.flashCard.meaning,
                 example = item.flashCard.example ?: "",
                 imageUrl = item.flashCard.imageUrl,
@@ -306,7 +316,12 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
                 it.name
             })
             binding.diTopic.setSelection(deckTopicName ?: "None")
-            binding.diTopic.setFrameColor(topicColorMap[deckTopicName] ?: "#FFFFFF")
+            val initialColorHex = topicColorMap[deckTopicName]
+            if (initialColorHex != null) {
+                binding.diTopic.setFrameColor(initialColorHex)
+            } else {
+                binding.diTopic.setFrameColor(R.color.surface)
+            }
         }
 
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("RELOAD_DATA")

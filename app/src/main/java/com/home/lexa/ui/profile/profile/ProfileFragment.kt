@@ -200,13 +200,13 @@ class ProfileFragment : Fragment() {
         binding.tvUserRole.text = userManager.getUserRole()?.name ?: "Học sinh"
 
         binding.statsCourses.setCardData(R.drawable.ic_book, 0, "Khóa đang học")
-        binding.statsCourses.setIconStyle(tintColorHex = "#4285F4", bgColorHex = "#E8F0FE")
+        binding.statsCourses.setIconStyle(tintColorRes = R.color.c_4285f4, bgColorRes = R.color.c_e8f0fe)
 
         binding.statsVocab.setCardData(R.drawable.ic_cup, 0, "Từ vựng")
-        binding.statsVocab.setIconStyle(tintColorHex = "#F4B400", bgColorHex = "#FEF7E0")
+        binding.statsVocab.setIconStyle(tintColorRes = R.color.c_f4b400, bgColorRes = R.color.c_fef7e0)
 
         binding.statsVocabSets.setCardData(R.drawable.ic_folder, 0, "Bộ từ vựng")
-        binding.statsVocabSets.setIconStyle(tintColorHex = "#0F9D58", bgColorHex = "#E6F4EA")
+        binding.statsVocabSets.setIconStyle(tintColorRes = R.color.c_0f9d58, bgColorRes = R.color.c_e6f4ea)
         
         binding.menuPersonalInfo.setOnClickListener {
             findNavController().navigate(R.id.action_profileFragment_to_profilePersonalInformationFragment)

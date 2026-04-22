@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.home.lexa.MainActivity
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
@@ -97,11 +98,11 @@ class ProfilePersonalInformationFragment : BaseFragment<FragmentProfilePersonalI
             setPlaceHolderText("Nhập địa chỉ của bạn...")
         }
 
-        val colorPink = 0xFF636AE8.toInt() // Dùng màu purple_paragraph của app
-        val colorWhite = 0xFFFFFFFF.toInt()
+        val colorPrimary = ContextCompat.getColor(requireContext(), R.color.btn_primary_bg)
+        val colorOnPrimary = ContextCompat.getColor(requireContext(), R.color.icon_tint_inverse)
         binding.btnSave.apply {
-            setText("Lưu thay đổi", colorWhite)
-            setBackground(colorPink)
+            setText("Lưu thay đổi", colorOnPrimary)
+            setBackground(colorPrimary)
         }
     }
 

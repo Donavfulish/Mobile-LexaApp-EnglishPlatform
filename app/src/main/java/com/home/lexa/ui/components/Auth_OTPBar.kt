@@ -7,6 +7,8 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
+import androidx.core.content.ContextCompat
+import com.home.lexa.R
 import com.home.lexa.databinding.InputOtpBarBinding
 import com.patrykandpatrick.vico.core.DefaultColors.Dark.lineColor
 
@@ -87,7 +89,7 @@ class Auth_OTPBar @JvmOverloads constructor(
     }
 
     fun showError() {
-        val errorColor = Color.parseColor("#FF0000")
+        val errorColor = ContextCompat.getColor(context, R.color.c_ff0000)
         binding.pinview.apply {
             alpha = 1.0f
             setLineColor(errorColor)
@@ -98,7 +100,7 @@ class Auth_OTPBar @JvmOverloads constructor(
     }
 
     fun clearError() {
-        val defaultColor = Color.parseColor("#BDBDBD")
+        val defaultColor = ContextCompat.getColor(context, R.color.c_bdbdbd)
         binding.pinview.apply {
             setLineColor(defaultColor)
             alpha = 1.0f

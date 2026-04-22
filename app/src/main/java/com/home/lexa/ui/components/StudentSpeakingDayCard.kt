@@ -23,7 +23,7 @@ class StudentSpeakingDayCard @JvmOverloads constructor(
 
     fun setDay(_day: Int) {
         this.day = _day
-        binding.tvDayLabel.setTagData("Ngày " + day.toString(), "#636AE8", true)
+        binding.tvDayLabel.setTagData("Ngày " + day.toString(), "@color/brand_primary", true)
     }
 
     fun setTitle(_title: String) {

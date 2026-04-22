@@ -2,15 +2,17 @@ package com.home.lexa.ui.components
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import com.google.android.material.card.MaterialCardView
+import com.home.lexa.R
 import com.home.lexa.databinding.CardBoxNotiBinding
 
 class NotificationCardView @JvmOverloads constructor(
@@ -41,7 +43,7 @@ class NotificationCardView @JvmOverloads constructor(
         // 🎨 Config card
         cardElevation = 0f
         strokeWidth = 1
-        strokeColor = Color.parseColor("#E0E0E0")
+        strokeColor = ContextCompat.getColor(context, R.color.c_e0e0e0)
 
         // 🎯 Toggle event
         binding.toggleMode.onCheckedChangeListener = { isChecked ->
@@ -79,12 +81,7 @@ class NotificationCardView @JvmOverloads constructor(
     fun setToggleState(isOn: Boolean) {
         binding.toggleMode.isChecked = isOn
     }
-    fun setIconBackgroundTint(colorHex: String) {
-        try {
-            val color = Color.parseColor(colorHex)
-            ivIcon.backgroundTintList = ColorStateList.valueOf(color)
-        } catch (e: IllegalArgumentException) {
-            e.printStackTrace()
-        }
+    fun setIconBackgroundTint(@ColorRes colorResId: Int) {
+        ivIcon.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, colorResId))
     }
 }

@@ -2,10 +2,12 @@ package com.home.lexa.ui.components
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
 import com.google.android.material.card.MaterialCardView
+import com.home.lexa.R
 import com.home.lexa.databinding.ViewStatsBoxBinding
 
 class StatsBox @JvmOverloads constructor(
@@ -17,9 +19,9 @@ class StatsBox @JvmOverloads constructor(
     init {
         radius = 24f
         cardElevation = 0f // Trong hình ko có bóng đổ rõ
-        setCardBackgroundColor(Color.WHITE)
+        setCardBackgroundColor(ContextCompat.getColor(context, R.color.c_ffffff))
         strokeWidth = 1
-        strokeColor = Color.parseColor("#F0F0F0") // Viền siêu nhạt
+        strokeColor = ContextCompat.getColor(context, R.color.c_f0f0f0) // Viền siêu nhạt
     }
 
     fun setCardData(iconRes: Int, count: Int, title: String) {
@@ -29,8 +31,8 @@ class StatsBox @JvmOverloads constructor(
     }
 
     // Hàm quan trọng để tuỳ chỉnh màu như trong hình
-    fun setIconStyle(tintColorHex: String, bgColorHex: String) {
-        binding.ivIcon.imageTintList = ColorStateList.valueOf(Color.parseColor(tintColorHex))
-        binding.ivIcon.backgroundTintList = ColorStateList.valueOf(Color.parseColor(bgColorHex))
+    fun setIconStyle(@ColorRes tintColorRes: Int, @ColorRes bgColorRes: Int) {
+        binding.ivIcon.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, tintColorRes))
+        binding.ivIcon.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, bgColorRes))
     }
 }

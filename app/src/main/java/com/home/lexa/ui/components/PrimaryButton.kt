@@ -7,6 +7,8 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.annotation.ColorInt
+import androidx.core.content.ContextCompat
+import com.home.lexa.R
 import com.home.lexa.databinding.ButtonPrimaryBinding
 
 class PrimaryButton @JvmOverloads constructor(
@@ -15,8 +17,8 @@ class PrimaryButton @JvmOverloads constructor(
     private val binding = ButtonPrimaryBinding.inflate(LayoutInflater.from(context), this, true)
     private var originalText: String = ""
 
-    private val defaultBackgroudColor: Int = 0xFF636AE8.toInt()
-    private val disabledBackgroundColor = 0xFFBDC3C7.toInt()
+    private val defaultBackgroudColor: Int = ContextCompat.getColor(context, R.color.btn_primary_bg)
+    private val disabledBackgroundColor: Int = ContextCompat.getColor(context, R.color.btn_primary_disabled_bg)
     private var textColor: Int? = null
     private var backgroundColor: Int = defaultBackgroudColor
 

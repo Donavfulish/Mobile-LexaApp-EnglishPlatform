@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import com.home.lexa.R
 import com.home.lexa.databinding.ViewTagBinding
+import com.home.lexa.ui.utils.ColorTokenUtils
 
 
 class Tag @JvmOverloads constructor(
@@ -19,7 +20,7 @@ class Tag @JvmOverloads constructor(
 
     fun setTagData(text: String, colorHex: String, hasBorder: Boolean = false) {
 
-        val baseColor = Color.parseColor(colorHex)
+        val baseColor = ColorTokenUtils.resolve(context, colorHex)
         val backgroundColor = ColorUtils.setAlphaComponent(baseColor, 38)
 
         binding.tvTagName.text = text

@@ -22,9 +22,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
     private val viewModel: AuthViewModel by activityViewModel()
 
-    private val colorPrimary = Color.parseColor("#6200EA")
-    private val colorTextDark = Color.parseColor("#333333")
-    private val colorBorder = Color.parseColor("#E0E0E0")
+    private val colorPrimary by lazy(LazyThreadSafetyMode.NONE) { ContextCompat.getColor(requireContext(), R.color.c_6200ea) }
+    private val colorTextDark by lazy(LazyThreadSafetyMode.NONE) { ContextCompat.getColor(requireContext(), R.color.c_333333) }
+    private val colorBorder by lazy(LazyThreadSafetyMode.NONE) { ContextCompat.getColor(requireContext(), R.color.c_e0e0e0) }
 
     override fun setupViews() {
         viewModel.getRememberedLoginRequest()
@@ -52,7 +52,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     private fun setupButtons() {
         // Nút Đăng Nhập
         binding.btnLogin.apply {
-            setText("Đăng Nhập", Color.WHITE)
+            setText("Đăng Nhập", ContextCompat.getColor(requireContext(), R.color.c_ffffff))
             setBackground(colorPrimary)
             setOnClickAction {
                 val email = binding.inputEmail.getText().trim()
@@ -76,7 +76,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         // Nút Google
         binding.btnGoogle.apply {
             setText(" Đăng nhập bằng Google", colorTextDark)
-            setBackground(Color.WHITE)
+            setBackground(ContextCompat.getColor(requireContext(), R.color.c_ffffff))
             setStroke(1, colorBorder)
             // Thay R.drawable.ic_google bằng icon thực tế của bạn
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_google))
@@ -102,7 +102,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                     is AuthState.Idle -> { /* Không làm gì */ }
                     is AuthState.Loading -> {
                         // TODO: Hiện ProgressDialog hoặc đổi text nút thành "Đang đăng nhập..."
-                        binding.btnLogin.setText("Đang xử lý...", Color.WHITE)
+                        binding.btnLogin.setText("Đang xử lý...", ContextCompat.getColor(requireContext(), R.color.c_ffffff))
                     }
                     is AuthState.Success -> {
                         val currentRequest = LoginRequest(

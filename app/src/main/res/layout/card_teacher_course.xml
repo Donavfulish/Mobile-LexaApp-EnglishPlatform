@@ -5,10 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardBackgroundColor="#FFFFFF"
+    app:cardBackgroundColor="@color/c_ffffff"
     app:cardCornerRadius="16dp"
     app:cardElevation="2dp"
-    app:strokeColor="#E8E8E8"
+    app:strokeColor="@color/c_e8e8e8"
     app:strokeWidth="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -57,7 +57,7 @@
             app:srcCompat="@drawable/ic_more_horiz_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="#888888" />
+            app:tint="@color/c_888888" />
 
         <ImageView
             android:id="@+id/ivDelete"
@@ -71,7 +71,7 @@
             app:srcCompat="@drawable/trash"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="#FF4D4D"
+            app:tint="@color/c_ff4d4d"
             tools:visibility="visible"/>
 
         <TextView
@@ -82,7 +82,7 @@
             android:maxLines="2"
             android:ellipsize="end"
             android:text="Tiếng Anh Giao Tiếp Cơ Bản"
-            android:textColor="#202124"
+            android:textColor="@color/c_202124"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -97,7 +97,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:text="Nắm vững 500 cấu trúc câu thông dụng nhất trong giao tiếp hàng ngày với người..."
-            android:textColor="#5F6368"
+            android:textColor="@color/c_5f6368"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tagCategory"
@@ -139,7 +139,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="John Smith"
-            android:textColor="#5F6368"
+            android:textColor="@color/c_5f6368"
             app:autoSizeTextType="uniform"
             app:autoSizeMinTextSize="10sp"
             app:autoSizeMaxTextSize="13sp"
@@ -157,7 +157,7 @@
             android:layout_marginTop="16dp"
             android:maxLines="1"
             android:text="450"
-            android:textColor="#5F6368"
+            android:textColor="@color/c_5f6368"
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -172,7 +172,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/tvHeartCount"
             app:layout_constraintEnd_toStartOf="@+id/tvHeartCount"
             app:layout_constraintTop_toTopOf="@+id/tvHeartCount"
-            app:tint="#FF6B6B" />
+            app:tint="@color/c_ff6b6b" />
 
         <TextView
             android:id="@+id/tvUserCount"
@@ -181,7 +181,7 @@
             android:layout_marginEnd="16dp"
             android:maxLines="1"
             android:text="1240"
-            android:textColor="#5F6368"
+            android:textColor="@color/c_5f6368"
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="@+id/tvHeartCount"
             app:layout_constraintEnd_toStartOf="@+id/ivHeart"
@@ -196,7 +196,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/tvHeartCount"
             app:layout_constraintEnd_toStartOf="@+id/tvUserCount"
             app:layout_constraintTop_toTopOf="@+id/tvHeartCount"
-            app:tint="#888888" />
+            app:tint="@color/c_888888" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

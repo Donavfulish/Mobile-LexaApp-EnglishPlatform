@@ -39,11 +39,11 @@ enum class CertType { LANGUAGE, PEDAGOGY }
 class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding::inflate) {
     private val viewModel: AuthViewModel by activityViewModel()
 
-    private val colorPrimary = Color.parseColor("#6200EA")
-    private val colorLightPrimary = Color.parseColor("#F8F4FF") // Màu nền tím nhạt khi được chọn
-    private val colorTextDark = Color.parseColor("#333333")
-    private val colorBorder = Color.parseColor("#E0E0E0")
-    private val colorInactiveText = Color.parseColor("#888888")
+    private val colorPrimary by lazy(LazyThreadSafetyMode.NONE) { ContextCompat.getColor(requireContext(), R.color.c_6200ea) }
+    private val colorLightPrimary by lazy(LazyThreadSafetyMode.NONE) { ContextCompat.getColor(requireContext(), R.color.c_f8f4ff) } // Màu nền tím nhạt khi được chọn
+    private val colorTextDark by lazy(LazyThreadSafetyMode.NONE) { ContextCompat.getColor(requireContext(), R.color.c_333333) }
+    private val colorBorder by lazy(LazyThreadSafetyMode.NONE) { ContextCompat.getColor(requireContext(), R.color.c_e0e0e0) }
+    private val colorInactiveText by lazy(LazyThreadSafetyMode.NONE) { ContextCompat.getColor(requireContext(), R.color.c_888888) }
 
     private var isTeacherRoleSelected = false
     private var oauthProvider: ProviderType? = null
@@ -106,7 +106,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
             binding.btnRoleStudent.setTextColor(colorInactiveText)
             binding.btnRoleStudent.setIconTintResource(R.color.gray_888888)
             binding.btnRoleStudent.strokeColor = ContextCompat.getColorStateList(requireContext(), R.color.gray_E0E0E5)
-            binding.btnRoleStudent.backgroundTintList = ColorStateList.valueOf(Color.WHITE) // Đổi nền trắng
+            binding.btnRoleStudent.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.c_ffffff)) // Đổi nền trắng
 
             binding.llTeacherFields.visibility = View.VISIBLE
 
@@ -126,7 +126,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
             binding.btnRoleTeacher.setTextColor(colorInactiveText)
             binding.btnRoleTeacher.setIconTintResource(R.color.gray_888888)
             binding.btnRoleTeacher.strokeColor = ContextCompat.getColorStateList(requireContext(), R.color.gray_E0E0E5)
-            binding.btnRoleTeacher.backgroundTintList = ColorStateList.valueOf(Color.WHITE) // Đổi nền trắng
+            binding.btnRoleTeacher.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.c_ffffff)) // Đổi nền trắng
 
             binding.llTeacherFields.visibility = View.GONE
         }
@@ -158,7 +158,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
     private fun setupSocialButtons() {
         binding.btnGoogle.apply {
             setText(" Đăng ký bằng Google", colorTextDark)
-            setBackground(Color.WHITE)
+            setBackground(ContextCompat.getColor(requireContext(), R.color.c_ffffff))
             setStroke(1, colorBorder)
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_google))
             setOnClickAction {
@@ -169,7 +169,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
 
         binding.btnFacebook.apply {
             setText("Facebook", colorTextDark)
-            setBackground(Color.WHITE)
+            setBackground(ContextCompat.getColor(requireContext(), R.color.c_ffffff))
             setStroke(1, colorBorder)
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_facebook))
             setOnClickAction {

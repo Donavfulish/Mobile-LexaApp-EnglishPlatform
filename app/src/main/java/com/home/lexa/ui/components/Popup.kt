@@ -6,6 +6,8 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Window
+import androidx.core.content.ContextCompat
+import com.home.lexa.R
 import com.home.lexa.databinding.ViewPopupBinding
 
 
@@ -50,8 +52,8 @@ class Popup @JvmOverloads constructor(
             binding.btnConfirm.backgroundTintList = context.getColorStateList(android.R.color.holo_red_dark)
             binding.tvTitle.setTextColor(context.getColor(android.R.color.holo_red_dark))
         } else {
-            binding.btnConfirm.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#6A65E9"))
-            binding.tvTitle.setTextColor(Color.parseColor("#202124"))
+            binding.btnConfirm.backgroundTintList = android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.c_6a65e9))
+            binding.tvTitle.setTextColor(ContextCompat.getColor(context, R.color.c_202124))
         }
 
 

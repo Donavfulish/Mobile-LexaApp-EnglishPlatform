@@ -16,7 +16,7 @@
         android:translationZ="0dp"
         app:pressedTranslationZ="2dp"
         android:textColor="@color/black"
-        app:rippleColor="#22000000"
+        app:rippleColor="@color/c_22000000"
         android:insetLeft="0dp"
         android:insetRight="0dp"
         android:textStyle="bold"

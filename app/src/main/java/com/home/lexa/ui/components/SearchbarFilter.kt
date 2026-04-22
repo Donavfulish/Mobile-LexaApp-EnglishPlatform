@@ -35,8 +35,8 @@ class SearchbarFilter @JvmOverloads constructor(
     private var onSortChangedListener: ((FilterOptions) -> Unit)? = null
 
     private val activeColor = ContextCompat.getColor(context, R.color.purple_paragraph)
-    private val inactiveStrokeColor = Color.parseColor("#E0E0E0")
-    private val inactiveIconColor = Color.parseColor("#202124")
+    private val inactiveStrokeColor = ContextCompat.getColor(context, R.color.c_e0e0e0)
+    private val inactiveIconColor = ContextCompat.getColor(context, R.color.c_202124)
 
     init {
         setupFilterToggle()
@@ -92,7 +92,7 @@ class SearchbarFilter @JvmOverloads constructor(
     }
     private fun updateChipStyle(chip: Chip, isSelected: Boolean) {
         val color = if (isSelected) activeColor else inactiveStrokeColor
-        val textColor = if (isSelected) activeColor else Color.parseColor("#757575")
+        val textColor = if (isSelected) activeColor else ContextCompat.getColor(context, R.color.c_757575)
 
         chip.chipStrokeColor = ColorStateList.valueOf(color)
         chip.chipStrokeWidth = if (isSelected) 4f else 2f

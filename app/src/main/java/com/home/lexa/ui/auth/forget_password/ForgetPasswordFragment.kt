@@ -2,6 +2,7 @@ package com.home.lexa.ui.auth.forget_password
 
 import android.graphics.Color
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
@@ -15,7 +16,7 @@ import kotlin.getValue
 
 class ForgetPasswordFragment : BaseFragment<FragmentForgetPasswordBinding>(FragmentForgetPasswordBinding::inflate) {
     private val viewModel: AuthViewModel by activityViewModel()
-    private val colorPrimary = Color.parseColor("#6200EA")
+    private val colorPrimary by lazy(LazyThreadSafetyMode.NONE) { ContextCompat.getColor(requireContext(), R.color.c_6200ea) }
 
     override fun setupViews() {
         binding.inputEmail.apply {
@@ -27,7 +28,7 @@ class ForgetPasswordFragment : BaseFragment<FragmentForgetPasswordBinding>(Fragm
         }
 
         binding.btnContinue.apply {
-            setText("Tiếp tục", Color.WHITE)
+            setText("Tiếp tục", ContextCompat.getColor(requireContext(), R.color.c_ffffff))
             setBackground(colorPrimary)
             setOnClickAction {
                 val email = binding.inputEmail.getText()

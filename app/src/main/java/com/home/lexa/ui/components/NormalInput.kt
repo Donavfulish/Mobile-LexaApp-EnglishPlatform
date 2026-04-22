@@ -13,8 +13,11 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.FrameLayout
 import androidx.annotation.DrawableRes
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
+import com.home.lexa.R
 import com.home.lexa.databinding.InputNormalBinding
 
 class NormalInput @JvmOverloads constructor(
@@ -50,24 +53,24 @@ class NormalInput @JvmOverloads constructor(
         binding.etInput.hint = text
     }
 
-    fun setIcon(@DrawableRes resId: Int?, colorHex: String? = "#575E6B") {
+    fun setIcon(@DrawableRes resId: Int?, @ColorRes colorResId: Int = R.color.c_575e6b) {
         if (resId == null || resId == -1) {
             binding.ivIcon.visibility = View.GONE
         } else {
             binding.ivIcon.setImageResource(resId)
 
-            binding.ivIcon.setColorFilter(colorHex!!.toColorInt(), PorterDuff.Mode.SRC_IN)
+            binding.ivIcon.setColorFilter(ContextCompat.getColor(context, colorResId), PorterDuff.Mode.SRC_IN)
 
             binding.ivIcon.visibility = View.VISIBLE
         }
     }
 
-    fun setEndIcon(@DrawableRes resId: Int?, colorHex: String? = "#575E6B") {
+    fun setEndIcon(@DrawableRes resId: Int?, @ColorRes colorResId: Int = R.color.c_575e6b) {
         if (resId == null || resId == -1) {
             binding.ivEndIcon.visibility = View.GONE
         } else {
             binding.ivEndIcon.setImageResource(resId)
-            binding.ivEndIcon.setColorFilter(colorHex!!.toColorInt(), PorterDuff.Mode.SRC_IN)
+            binding.ivEndIcon.setColorFilter(ContextCompat.getColor(context, colorResId), PorterDuff.Mode.SRC_IN)
             binding.ivEndIcon.visibility = View.VISIBLE
         }
     }

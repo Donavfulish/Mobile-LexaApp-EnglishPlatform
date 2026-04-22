@@ -163,7 +163,7 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
         )
 
         isRecording = true
-        binding.btnRecord.setBackground(Color.RED)
+        binding.btnRecord.setBackground(ContextCompat.getColor(requireContext(), R.color.recording_active_bg))
         binding.tvInstruction.text = "Đang ghi âm... Nhấn lại để dừng"
     }
 
@@ -173,7 +173,7 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
         isRecording = false
 
         sttManager.stopListening()
-        binding.btnRecord.setBackground(Color.parseColor("#636AE8"))
+        binding.btnRecord.setBackground(ContextCompat.getColor(requireContext(), R.color.btn_primary_bg))
         binding.tvInstruction.text = "Đang phân tích giọng nói..."
 
         // Dừng AudioRecord và chờ file WAV flush xong rồi mới xử lý
@@ -254,9 +254,9 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
                 val end = builder.length - 1
 
                 val color = when (item.status) {
-                    "GOOD" -> Color.parseColor("#4CAF50")
-                    "MEDIUM" -> Color.parseColor("#FFB300")
-                    else -> Color.parseColor("#F44336")
+                    "GOOD" -> ContextCompat.getColor(requireContext(), R.color.status_success)
+                    "MEDIUM" -> ContextCompat.getColor(requireContext(), R.color.status_warning)
+                    else -> ContextCompat.getColor(requireContext(), R.color.status_error_alt)
                 }
 
                 builder.setSpan(
@@ -267,7 +267,7 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
             binding.tvParagraphContent.text = builder
         } else {
             binding.tvParagraphContent.text = currentParagraph.paragraph
-            binding.tvParagraphContent.setTextColor(Color.parseColor("#202124"))
+            binding.tvParagraphContent.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary))
         }
 
         // Cập nhật tiến độ & nút bấm
@@ -335,23 +335,26 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
         binding.btnRecord.apply {
             setSize(80); setIconSize(32)
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_mic)!!)
-            setBackground(Color.parseColor("#636AE8")); setIconTint(Color.WHITE)
+            setBackground(ContextCompat.getColor(requireContext(), R.color.btn_primary_bg));
+            setIconTint(ContextCompat.getColor(requireContext(), R.color.icon_tint_inverse))
         }
         binding.btnPrev.apply {
             setSize(56); setIconSize(24)
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_back)!!)
-            setBackground(Color.parseColor("#F5F5F5")); setIconTint(Color.parseColor("#757575"))
+            setBackground(ContextCompat.getColor(requireContext(), R.color.control_bg));
+            setIconTint(ContextCompat.getColor(requireContext(), R.color.text_tertiary))
         }
         binding.btnNext.apply {
             setSize(56); setIconSize(24)
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_forward)!!)
-            setBackground(Color.parseColor("#F5F5F5")); setIconTint(Color.parseColor("#757575"))
+            setBackground(ContextCompat.getColor(requireContext(), R.color.control_bg));
+            setIconTint(ContextCompat.getColor(requireContext(), R.color.text_tertiary))
         }
         binding.btnNgheMau.apply {
-            setIconSize(40); setIconColor(Color.parseColor("#636AE8"))
+            setIconSize(40); setIconColor(ContextCompat.getColor(requireContext(), R.color.brand_primary))
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play)!!)
-            setText("Nghe mẫu", Color.parseColor("#636AE8"))
-            setBackground(Color.parseColor("#F5F5F5"))
+            setText("Nghe mẫu", ContextCompat.getColor(requireContext(), R.color.brand_primary))
+            setBackground(ContextCompat.getColor(requireContext(), R.color.control_bg))
         }
         binding.progressBar.setTitle("TIẾN ĐỘ BÀI HỌC")
     }

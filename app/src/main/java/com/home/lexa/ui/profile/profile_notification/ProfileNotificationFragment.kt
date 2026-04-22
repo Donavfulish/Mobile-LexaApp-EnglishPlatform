@@ -1,8 +1,8 @@
 package com.home.lexa.ui.profile.profile_notification
 
-import android.graphics.Color
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.home.lexa.MainActivity
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
@@ -34,15 +34,15 @@ class ProfileNotificationFragment : BaseFragment<FragmentProfileNotificationBind
         binding.notification.apply {
             setTitle("Thông báo")
             setDescription(null)
-            setIcon(R.drawable.ic_notification, Color.parseColor("#636AE8"))
+            setIcon(R.drawable.ic_notification, ContextCompat.getColor(requireContext(), R.color.c_636ae8))
             setToggleState(false)
         }
 
         binding.streakNotification.apply {
             setTitle("Thông báo chuỗi")
             setDescription("Nhắc nhở bạn duy trì chuỗi học tập hàng ngày để không bỏ lỡ tiến độ.")
-            setIcon(R.drawable.ic_fire_outline, Color.parseColor("#FF9800"))
-            setIconBackgroundTint("#FFF4E5")
+            setIcon(R.drawable.ic_fire_outline, ContextCompat.getColor(requireContext(), R.color.c_ff9800))
+            setIconBackgroundTint(R.color.c_fff4e5)
 
             setOnToggleChangeListener { isOn ->
                 viewModel.onStreakToggled(isOn)
@@ -67,7 +67,7 @@ class ProfileNotificationFragment : BaseFragment<FragmentProfileNotificationBind
         binding.studyHourNotification.apply {
             setTitle("Thông báo giờ học")
             setDescription("Thông báo nhắc nhở trước khi đến giờ học đã cài đặt của bạn.")
-            setIcon(R.drawable.ic_book, Color.parseColor("#4285F4"))
+            setIcon(R.drawable.ic_book, ContextCompat.getColor(requireContext(), R.color.c_4285f4))
 
             setOnToggleChangeListener { isOn ->
 

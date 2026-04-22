@@ -313,13 +313,13 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
         val previewVocab = Vocabulary(
             level = ColorLabel(
                 selectedLevelStr,
-                "#E0E0E5"
+                "@color/tag_neutral"
             ),
             imageUrl = imageUrl ?: "",
             word = inputWord,
             pronunciation_url = "",
             transciption = inputTrans,
-            part_of_speech = ColorLabel(selectedPosStr, "#636AE8"),
+            part_of_speech = ColorLabel(selectedPosStr, "@color/brand_primary"),
             definition = inputMeaning,
             example = inputExample
         )

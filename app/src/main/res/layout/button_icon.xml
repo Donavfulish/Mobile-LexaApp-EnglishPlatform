@@ -18,7 +18,7 @@
         android:insetTop="0dp"
         android:insetBottom="0dp"
         app:cornerRadius="12dp"
-        app:rippleColor="#22000000"
+        app:rippleColor="@color/c_22000000"
         android:backgroundTint="@color/lexa_primary"
         app:pressedTranslationZ="2dp"
         android:insetLeft="0dp"

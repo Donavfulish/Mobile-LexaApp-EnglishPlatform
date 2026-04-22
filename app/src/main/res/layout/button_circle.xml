@@ -24,7 +24,7 @@
         android:insetRight="0dp"
 
         app:cornerRadius="100dp"
-        android:backgroundTint="#636AE8"
+    android:backgroundTint="@color/c_636ae8"
         app:icon="@drawable/ic_plus"
         app:iconGravity="textStart"
         app:iconSize="32dp"

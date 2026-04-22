@@ -8,6 +8,8 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.ContextCompat
+import com.home.lexa.R
 
 class UsageChartView @JvmOverloads constructor(
     context: Context,
@@ -19,24 +21,24 @@ class UsageChartView @JvmOverloads constructor(
     private val dayLabels = listOf("T2", "T3", "T4", "T5", "T6", "T7", "CN")
     
     private val barPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#6200EE") // Màu tím chủ đạo của app
+        color = ContextCompat.getColor(context, R.color.c_6200ee) // Màu tím chủ đạo của app
         style = Paint.Style.FILL
     }
 
     private val gridPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#F0F0F0")
+        color = ContextCompat.getColor(context, R.color.c_f0f0f0)
         strokeWidth = 2f
         pathEffect = DashPathEffect(floatArrayOf(10f, 10f), 0f)
     }
 
     private val labelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.GRAY
+        color = ContextCompat.getColor(context, R.color.c_9e9e9e)
         textSize = 30f
         textAlign = Paint.Align.CENTER
     }
 
     private val yAxisLabelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.LTGRAY
+        color = ContextCompat.getColor(context, R.color.c_d0d0d0)
         textSize = 24f
         textAlign = Paint.Align.LEFT
     }

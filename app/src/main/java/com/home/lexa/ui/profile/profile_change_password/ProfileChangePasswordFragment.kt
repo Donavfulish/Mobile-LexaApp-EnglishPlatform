@@ -1,10 +1,12 @@
 package com.home.lexa.ui.profile.profile_change_password
 
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.home.lexa.MainActivity
+import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentProfileChangePasswordBinding
 import com.home.lexa.domain.models.ChangePasswordRequest
@@ -48,11 +50,11 @@ class ProfileChangePasswordFragment : BaseFragment<FragmentProfileChangePassword
             hideLockIcon()
         }
 
-        val colorPink = 0xFF636AE8.toInt() // Dùng màu purple_paragraph của app
-        val colorWhite = 0xFFFFFFFF.toInt()
+        val colorPrimary = ContextCompat.getColor(requireContext(), R.color.btn_primary_bg)
+        val colorOnPrimary = ContextCompat.getColor(requireContext(), R.color.icon_tint_inverse)
         binding.btnSave.apply {
-            setText("Lưu thay đổi", colorWhite)
-            setBackground(colorPink)
+            setText("Lưu thay đổi", colorOnPrimary)
+            setBackground(colorPrimary)
 
             setOnClickAction({
                 handleChangePassword()

@@ -7,10 +7,13 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.PopupMenu
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import com.home.lexa.R
 import com.home.lexa.databinding.InputDropdownBinding
+import com.home.lexa.ui.utils.ColorTokenUtils
 
 class DropDownInput @JvmOverloads constructor(
     context: Context,
@@ -57,8 +60,14 @@ class DropDownInput @JvmOverloads constructor(
     }
 
     fun setFrameColor(colorHex: String, hasBorder: Boolean = false) {
-        val baseColor = Color.parseColor(colorHex)
+        setFrameColorInt(ColorTokenUtils.resolve(context, colorHex), hasBorder)
+    }
 
+    fun setFrameColor(@ColorRes colorRes: Int, hasBorder: Boolean = false) {
+        setFrameColorInt(ContextCompat.getColor(context, colorRes), hasBorder)
+    }
+
+    private fun setFrameColorInt(@ColorInt baseColor: Int, hasBorder: Boolean) {
         val backgroundColor = ColorUtils.setAlphaComponent(baseColor, 38)
 
         binding.tvSelectedValue.setTextColor(baseColor)

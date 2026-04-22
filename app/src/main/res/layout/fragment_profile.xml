@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F9FA">
+    android:background="@color/c_f8f9fa">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
                 android:id="@+id/ivAvatar"
                 android:layout_width="86dp"
                 android:layout_height="86dp"
-                android:background="#E0E0E0"
+                android:background="@color/c_e0e0e0"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -36,7 +36,7 @@
                 android:layout_marginEnd="-4dp"
                 android:layout_marginBottom="-4dp"
                 android:background="@drawable/bg_circle_icon"
-                android:backgroundTint="#6200EE"
+                android:backgroundTint="@color/c_6200ee"
                 android:padding="5dp"
                 android:src="@drawable/ic_edit"
                 app:layout_constraintBottom_toBottomOf="@+id/ivAvatar"
@@ -48,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:textColor="#202124"
+                android:textColor="@color/c_202124"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -61,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:textColor="#757575"
+                android:textColor="@color/c_757575"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -74,8 +74,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/bg_rounded_badge"
-                android:backgroundTint="#EFEFFD"
-                android:paddingHorizontal="16dp" android:paddingVertical="5dp" android:textAllCaps="false" android:textColor="#6200EE"
+                android:backgroundTint="@color/c_efeffd"
+                android:paddingHorizontal="16dp" android:paddingVertical="5dp" android:textAllCaps="false" android:textColor="@color/c_6200ee"
                 android:textSize="11sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -93,10 +93,10 @@
             android:drawableStart="@drawable/ic_trending"
             android:drawablePadding="8dp"
             android:text="THỐNG KÊ HỌC TẬP"
-            android:textColor="#757575"
+            android:textColor="@color/c_757575"
             android:textSize="11sp"
             android:textStyle="bold"
-            app:drawableTint="#757575" />
+            app:drawableTint="@color/c_757575" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -117,7 +117,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginHorizontal="20dp"
-                    android:background="#EEEEEE" />
+                    android:background="@color/c_eeeeee" />
             </com.home.lexa.ui.components.StatsBox>
 
             <com.home.lexa.ui.components.StatsBox
@@ -140,10 +140,10 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="16dp"
-            app:cardBackgroundColor="#FFFFFF"
+            app:cardBackgroundColor="@color/c_ffffff"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:strokeColor="#F0F0F0"
+            app:strokeColor="@color/c_f0f0f0"
             app:strokeWidth="1dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -158,10 +158,10 @@
                     android:drawableStart="@drawable/ic_clock"
                     android:drawablePadding="6dp"
                     android:text="Thời gian học trong tuần"
-                    android:textColor="#202124"
+                    android:textColor="@color/c_202124"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    app:drawableTint="#6200EE"
+                    app:drawableTint="@color/c_6200ee"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -170,7 +170,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0 ngày 🔥"
-                    android:textColor="#757575"
+                    android:textColor="@color/c_757575"
                     android:textSize="11sp"
                     app:layout_constraintBottom_toBottomOf="@+id/tvChartTitle"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -182,7 +182,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="Tổng cộng: 0 phút"
-                    android:textColor="#9E9E9E"
+                    android:textColor="@color/c_9e9e9e"
                     android:textSize="11sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvChartTitle" />
@@ -204,7 +204,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp"
             android:text="TÀI KHOẢN &amp; BẢO MẬT"
-            android:textColor="#757575"
+            android:textColor="@color/c_757575"
             android:textSize="11sp"
             android:textStyle="bold" />
 
@@ -212,10 +212,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
-            app:cardBackgroundColor="#FFFFFF"
+            app:cardBackgroundColor="@color/c_ffffff"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:strokeColor="#F0F0F0"
+            app:strokeColor="@color/c_f0f0f0"
             app:strokeWidth="1dp">
 
             <LinearLayout
@@ -227,7 +227,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginHorizontal="16dp"
-                    android:background="#F0F0F0" />
+                    android:background="@color/c_f0f0f0" />
 
                 <com.home.lexa.ui.components.SettingMenuItem
                     android:id="@+id/menuPersonalInfo"
@@ -249,7 +249,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginHorizontal="16dp"
-                    android:background="#F0F0F0" />
+                    android:background="@color/c_f0f0f0" />
 
                 <com.home.lexa.ui.components.SettingMenuItem
                     android:id="@+id/menuPassword"
@@ -268,7 +268,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp"
             android:text="CÀI ĐẶT ỨNG DỤNG"
-            android:textColor="#757575"
+            android:textColor="@color/c_757575"
             android:textSize="11sp"
             android:textStyle="bold" />
 
@@ -276,10 +276,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
-            app:cardBackgroundColor="#FFFFFF"
+            app:cardBackgroundColor="@color/c_ffffff"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:strokeColor="#F0F0F0"
+            app:strokeColor="@color/c_f0f0f0"
             app:strokeWidth="1dp">
 
             <LinearLayout
@@ -299,7 +299,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginHorizontal="16dp"
-                    android:background="#F0F0F0" />
+                    android:background="@color/c_f0f0f0" />
 
                 <com.home.lexa.ui.components.SettingMenuItem
                     android:id="@+id/menuNotifications"
@@ -319,10 +319,10 @@
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="32dp"
             android:text="Đăng xuất"
-            android:textColor="#FF3B30"
+            android:textColor="@color/c_ff3b30"
             android:textSize="14sp"
             app:cornerRadius="8dp"
-            app:strokeColor="#FF3B30" />
+            app:strokeColor="@color/c_ff3b30" />
 
         <TextView
             android:layout_width="match_parent"
@@ -330,7 +330,7 @@
             android:layout_marginTop="32dp"
             android:gravity="center"
             android:text="LEXA v2.4.0 (Build 20241025)"
-            android:textColor="#BDBDBD"
+            android:textColor="@color/c_bdbdbd"
             android:textSize="10sp" />
 
     </LinearLayout>

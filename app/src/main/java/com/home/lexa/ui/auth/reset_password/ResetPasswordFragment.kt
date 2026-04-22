@@ -2,6 +2,7 @@ package com.home.lexa.ui.auth.reset_password
 
 import android.graphics.Color
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavArgs
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -18,7 +19,7 @@ import kotlin.getValue
 class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(FragmentResetPasswordBinding::inflate) {
     private val args: ResetPasswordFragmentArgs by navArgs()
     private val viewModel: AuthViewModel by activityViewModel()
-    private val colorPrimary = Color.parseColor("#6200EA")
+    private val colorPrimary by lazy(LazyThreadSafetyMode.NONE) { ContextCompat.getColor(requireContext(), R.color.c_6200ea) }
 
     override fun setupViews() {
         binding.inputPassword.apply {
@@ -34,7 +35,7 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(Fragmen
         }
 
         binding.btnResetPassword.apply {
-            setText("Cập nhật mật khẩu", Color.WHITE)
+            setText("Cập nhật mật khẩu", ContextCompat.getColor(requireContext(), R.color.c_ffffff))
             setBackground(colorPrimary)
             setOnClickAction {
                 val password = binding.inputPassword.getText()

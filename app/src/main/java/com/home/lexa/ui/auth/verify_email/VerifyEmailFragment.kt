@@ -81,7 +81,7 @@ class VerifyEmailFragment : BaseFragment<FragmentVerifyEmailBinding>(FragmentVer
                 binding.tvResendCode.apply {
                     isEnabled = false
                     text = "Gửi lại sau (${secondsRemaining}s)"
-                    setTextColor(android.graphics.Color.GRAY)
+                    setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), com.home.lexa.R.color.c_9e9e9e))
                 }
             }
 
@@ -89,7 +89,7 @@ class VerifyEmailFragment : BaseFragment<FragmentVerifyEmailBinding>(FragmentVer
                 binding.tvResendCode.apply {
                     isEnabled = true
                     text = "Gửi lại mã OTP"
-                    setTextColor("#4A69FF".toColorInt())
+                    setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), com.home.lexa.R.color.c_4a69ff))
                 }
             }
         }
