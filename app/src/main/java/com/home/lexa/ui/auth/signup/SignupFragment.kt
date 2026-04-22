@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Row
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.toColorLong
 import androidx.lifecycle.lifecycleScope
@@ -157,7 +158,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
 
     private fun setupSocialButtons() {
         binding.btnGoogle.apply {
-            setText(" Đăng ký bằng Google", colorTextDark)
+            setText(getString(R.string.signup_with_google), colorTextDark)
             setBackground(Color.WHITE)
             setStroke(1, colorBorder)
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_google))
@@ -189,8 +190,8 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
         }
 
         binding.inputName.apply {
-            setLabel("Họ và tên *")
-            setPlaceHolderText("Nguyễn Văn A")
+            setLabel(getString(R.string.name) + " *")
+            setPlaceHolderText(getString(R.string.example_name))
             setIcon(R.drawable.user_profile)
             setHorizontalScroll()
             setMaxLength(255)
@@ -198,7 +199,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
         }
 
         binding.inputDob.apply {
-            setLabel("Ngày sinh")
+            setLabel(getString(R.string.birth_date))
             setPlaceHolderText("dd/mm/yyyy")
             setIcon(R.drawable.ic_calendar)
             setHorizontalScroll()
@@ -208,22 +209,22 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
 
         binding.inputAddress.apply {
             setMultipleLines(true)
-            setLabel("Địa chỉ")
-            setPlaceHolderText("Nhập địa chỉ của bạn...")
+            setLabel(getString(R.string.address))
+            setPlaceHolderText(getString(R.string.enter_your_address))
             setIcon(R.drawable.ic_location)
             setHorizontalScroll()
 
         }
 
         binding.inputPassword.apply {
-            setLabel("Mật khẩu *")
+            setLabel(getString(R.string.password) + " *")
             setPlaceHolderText("........")
             setHorizontalScroll()
 
         }
 
         binding.inputConfirmPassword.apply {
-            setLabel("Xác nhận mật khẩu *")
+            setLabel(getString(R.string.confirm_password) + " *")
             setPlaceHolderText("........")
             setHorizontalScroll()
 
@@ -232,7 +233,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
 
     private fun setupSignupButton() {
         binding.btnSignup.apply {
-            setText("Đăng ký", Color.WHITE)
+            setText(getString(R.string.signup), Color.WHITE)
             setBackground(colorPrimary)
             setOnClickAction {
                 val name = binding.inputName.getText()
@@ -245,27 +246,27 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                 val isGuaranteed = binding.cbCommitment.isChecked
 
                 if (!StringUtils.isValidEmail(email)) {
-                    Toast.makeText(requireContext(), "Email sai định dạng", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.toast_wrong_email_format), Toast.LENGTH_SHORT).show()
                     return@setOnClickAction
                 }
 
                 if (!password.isEmpty() && password != confirmPassword) {
-                    Toast.makeText(requireContext(), "Mật khẩu không trùng khớp", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.toast_confirm_password_not_match), Toast.LENGTH_SHORT).show()
                     return@setOnClickAction
                 }
 
                 if (!date_of_birth.isEmpty() && !DateUtils.isValidDate(date_of_birth)) {
-                    Toast.makeText(requireContext(), "Ngày sinh sai định dạng", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.toast_wrong_birthday_format), Toast.LENGTH_SHORT).show()
                     return@setOnClickAction
                 }
 
                 if (role == UserRole.TEACHER) {
                     if (binding.btnUploadLanguageCert.icUpload.isVisible) {
-                        Toast.makeText(requireContext(), "Vui lòng cung cấp bằng ngoại ngữ", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), getString(R.string.toast_please_provide_language_cert), Toast.LENGTH_SHORT).show()
                         return@setOnClickAction
                     }
                     if (!isGuaranteed) {
-                        Toast.makeText(requireContext(), "Vui lòng xác nhận bằng cấp không qua chỉnh sửa", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), getString(R.string.please_confirm_qualifications), Toast.LENGTH_SHORT).show()
                         return@setOnClickAction
                     }
                 }
@@ -285,7 +286,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
 
                         viewModel.resetState()
                     } else {
-                        Toast.makeText(requireContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), getString(R.string.toast_please_enter_all_information), Toast.LENGTH_SHORT).show()
                     }
                 } else if (oauthProvider == ProviderType.GOOGLE) {
                     if (name.isNotEmpty()) {
@@ -299,20 +300,20 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                             )
                         )
                     } else {
-                        Toast.makeText(requireContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), getString(R.string.toast_please_enter_all_information), Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         }
 
         binding.btnUploadLanguageCert.root.setOnClickListener {
-            Toast.makeText(requireContext(), "Mở thư viện ảnh/file", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.open_media_library), Toast.LENGTH_SHORT).show()
             certType = CertType.LANGUAGE
             pickMediaLauncher.launch("image/*")
         }
 
         binding.btnUploadPedagogyCert.root.setOnClickListener {
-            Toast.makeText(requireContext(), "Mở thư viện ảnh/file", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.open_media_library), Toast.LENGTH_SHORT).show()
             certType = CertType.PEDAGOGY
             pickMediaLauncher.launch("image/*")
         }
@@ -325,11 +326,11 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                     is AuthState.Idle -> { /* Không làm gì */ }
                     is AuthState.Loading -> {
                         // TODO: Đổi hiệu ứng chữ Đang xử lý... thành vòng xoay"
-                        binding.btnSignup.setText("Đang xử lý...", Color.WHITE)
+                        binding.btnSignup.setEnabledState(false)
                     }
                     is AuthState.Success -> {
                         if (oauthProvider != null) {
-                            Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), getString(R.string.toast_signup_successfully), Toast.LENGTH_SHORT).show()
                             findNavController().navigate(R.id.action_signupFragment_to_homeFragment)
                         }
 
@@ -341,8 +342,8 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                         navigateToOTPFragment(email)
                     }
                     is AuthState.Error -> {
-                        binding.btnSignup.setText("Đăng Ký", Color.WHITE)
-                        Toast.makeText(requireContext(), "Email đã được sử dụng", Toast.LENGTH_LONG).show()
+                        binding.btnSignup.setEnabledState(true)
+                        Toast.makeText(requireContext(), getString(R.string.toast_email_already_used), Toast.LENGTH_LONG).show()
                     }
                 }
             }
@@ -351,7 +352,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
         viewModel.oauthGoogleResult.observe(viewLifecycleOwner) { data ->
             data?.let {
                 if (data.registered) {
-                    Toast.makeText(requireContext(), "Tài khoản đã được sử dụng", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.toast_account_already_used), Toast.LENGTH_SHORT).show()
                     return@observe
                 }
                 // Vô hiệu hóa các nút đăng ký OAuth và các UI không cần thiết
@@ -360,7 +361,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                 binding.inputPassword.visibility = View.GONE
                 binding.inputConfirmPassword.visibility = View.GONE
                 binding.tvSocialLabel.visibility = View.GONE
-                binding.tvEnterInformation.text = "Đăng ký với Google"
+                binding.tvEnterInformation.text = getString(R.string.signup_with_google)
 
                 binding.inputPassword.setText(null)
                 binding.inputConfirmPassword.setText(null)

@@ -6,6 +6,7 @@ import androidx.core.graphics.toColorInt
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentVerifyEmailBinding
 import com.home.lexa.domain.models.ChangeEmailRequest
@@ -33,13 +34,13 @@ class VerifyEmailFragment : BaseFragment<FragmentVerifyEmailBinding>(FragmentVer
             findNavController().popBackStack()
         }
 
-        binding.tvSubtitle.text = "Mở hộp thư ${maskedEmail} để lấy mã"
+        binding.tvSubtitle.text = getString(R.string.otp_desc, maskedEmail)
 
         binding.tvResendCode.setOnClickListener {
             startResendTimer()
 
             viewModel.sendOTP(email)
-            Toast.makeText(requireContext(), "Đã gửi lại mã!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.toast_otp_resent), Toast.LENGTH_SHORT).show()
         }
 
         binding.otpInputs.onOtpCompletionListener = { otpCode ->
@@ -65,7 +66,7 @@ class VerifyEmailFragment : BaseFragment<FragmentVerifyEmailBinding>(FragmentVer
                         binding.otpInputs.setInputEnabled(true)
                         binding.otpInputs.showError()
 
-                        Toast.makeText(requireContext(), "OTP sai hoặc đã hết hạn", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), getString(R.string.toast_otp_wrong_or_expired), Toast.LENGTH_LONG).show()
                         viewModel.resetOTPState()
                     }
                 }
@@ -80,7 +81,7 @@ class VerifyEmailFragment : BaseFragment<FragmentVerifyEmailBinding>(FragmentVer
                 val secondsRemaining = millisUntilFinished / 1000
                 binding.tvResendCode.apply {
                     isEnabled = false
-                    text = "Gửi lại sau (${secondsRemaining}s)"
+                    text = getString(R.string.otp_resend_enabled_after_seconds, secondsRemaining)
                     setTextColor(android.graphics.Color.GRAY)
                 }
             }
@@ -88,7 +89,7 @@ class VerifyEmailFragment : BaseFragment<FragmentVerifyEmailBinding>(FragmentVer
             override fun onFinish() {
                 binding.tvResendCode.apply {
                     isEnabled = true
-                    text = "Gửi lại mã OTP"
+                    text = getString(R.string.otp_resend)
                     setTextColor("#4A69FF".toColorInt())
                 }
             }

@@ -22,31 +22,31 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(Fragmen
 
     override fun setupViews() {
         binding.inputPassword.apply {
-            setLabel("Mật khẩu mới")
+            setLabel(getString(R.string.new_password))
             setPlaceHolderText("........")
             setHorizontalScroll()
         }
 
         binding.inputConfirmPassword.apply {
-            setLabel("Xác nhận mật khẩu mới")
+            setLabel(getString(R.string.verify_new_password))
             setPlaceHolderText("........")
             setHorizontalScroll()
         }
 
         binding.btnResetPassword.apply {
-            setText("Cập nhật mật khẩu", Color.WHITE)
+            setText(getString(R.string.reset_password_title), Color.WHITE)
             setBackground(colorPrimary)
             setOnClickAction {
                 val password = binding.inputPassword.getText()
                 val passwordConfirmed = binding.inputConfirmPassword.getText()
 
                 if (password.isEmpty() || passwordConfirmed.isEmpty()) {
-                    Toast.makeText(requireContext(), "Vui lòng nhập đủ dữ liệu", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.toast_please_enter_all_information), Toast.LENGTH_SHORT).show()
                     return@setOnClickAction
                 }
 
                 if (password != passwordConfirmed) {
-                    Toast.makeText(requireContext(), "Mật khẩu xác nhận không trùng khớp", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.toast_confirm_password_not_match), Toast.LENGTH_SHORT).show()
                     return@setOnClickAction
                 }
 
@@ -60,9 +60,9 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(Fragmen
             if (isSuccess == null) return@observe
 
             if (isSuccess) {
-                Toast.makeText(requireContext(), "Cập nhật mật khẩu thành công", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.toast_reset_password_successfully), Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(requireContext(), "Cập nhật mật khẩu thất bại", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.toast_reset_password_fail), Toast.LENGTH_SHORT).show()
             }
 
             findNavController().navigate(R.id.action_resetPasswordFragment_to_loginFragment)

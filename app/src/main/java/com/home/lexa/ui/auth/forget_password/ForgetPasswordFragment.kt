@@ -27,18 +27,18 @@ class ForgetPasswordFragment : BaseFragment<FragmentForgetPasswordBinding>(Fragm
         }
 
         binding.btnContinue.apply {
-            setText("Tiếp tục", Color.WHITE)
+            setText(getString(R.string.continue_process), Color.WHITE)
             setBackground(colorPrimary)
             setOnClickAction {
                 val email = binding.inputEmail.getText()
 
                 if (email.isEmpty()) {
-                    Toast.makeText(requireContext(), "Vui lòng nhập email tài khoản", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.toast_please_enter_all_information), Toast.LENGTH_SHORT).show()
                     return@setOnClickAction
                 }
 
                 if (!StringUtils.isValidEmail(email)) {
-                    Toast.makeText(requireContext(), "Email không hợp lệ", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.toast_wrong_email_format), Toast.LENGTH_SHORT).show()
                     return@setOnClickAction
                 }
 
