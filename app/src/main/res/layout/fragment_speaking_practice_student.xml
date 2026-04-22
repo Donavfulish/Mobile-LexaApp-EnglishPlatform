@@ -52,25 +52,37 @@
         app:layout_constraintBottom_toTopOf="@+id/llActions"
         app:layout_constraintTop_toBottomOf="@id/tvProgressTitle">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="32dp">
+            android:fillViewport="true"
 
-            <TextView
-                android:id="@+id/tvParagraphContent"
+            android:scrollbars="vertical"
+            android:scrollbarStyle="insideOverlay"
+            android:fadeScrollbars="false">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:lineSpacingExtra="8dp"
-                android:textColor="#202124"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="The quick brown fox jumps over the lazy dog." />
+                android:padding="24dp">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/tvParagraphContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:lineSpacingExtra="8dp"
+                    android:textColor="#202124"
+                    android:textStyle="bold"
+
+                    android:textSize="22sp"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="The quick brown fox jumps over the lazy dog." />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
     </com.google.android.material.card.MaterialCardView>
 
     <!-- Sub Actions -->
