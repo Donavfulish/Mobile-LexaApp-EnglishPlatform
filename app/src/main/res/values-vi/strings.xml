@@ -38,7 +38,7 @@
     <string name="otp_resend">Gửi lại mã OTP</string>
 
     <string name="hello_user">Chào %1$s</string>
-    <string name="day">%1$s day</string>
+    <string name="day">Ngày %1$s</string>
     <string name="study_time">Thời gian học</string>
     <string name="this_week">Tuần này</string>
     <string name="this_month">Tháng này</string>
@@ -120,9 +120,9 @@
 
     <string name="study_day_name">Tên ngày học</string>
     <string name="score">Điểm số</string>
-    <string name="good">Good</string>
-    <string name="bad">Bad</string>
-    <string name="medium">Medium</string>
+    <string name="good">Đạt</string>
+    <string name="bad">Kém</string>
+    <string name="medium">Khá</string>
     <string name="study_again">Học lại</string>
     <string name="return_to_course">Trở về khoá học</string>
     <string name="listen_standard_pronunciation">Nghe phát âm chuẩn</string>
@@ -154,4 +154,83 @@
     <string name="home_screen">Trang chủ</string>
     <string name="enter_email_to_reset">Nhập email tài khoản để nhận mã OTP</string>
     <string name="new_password">Mật khẩu mới</string>
+
+    <!-- Student Course List -->
+    <string name="my_courses">Khoá học của tôi</string>
+    <string name="all_courses">Tất cả khoá học</string>
+    <string name="favorite_courses">Khoá học yêu thích</string>
+    <string name="learning_courses">Khoá học đang học</string>
+    <string name="finished_courses">Khoá học đã hoàn thành</string>
+    <string name="all">Tất cả</string>
+    <string name="learning">Đang học</string>
+    <string name="finished">Đã hoàn thành</string>
+    <string name="all_count">%1$d tất cả</string>
+
+    <!-- Speaking Practice -->
+    <string name="speaking_day_order">Ngày %1$d</string>
+    <string name="delete_speaking_day_title">Xóa ngày học</string>
+    <string name="delete_speaking_day_msg">Bạn có chắc chắn muốn xóa toàn bộ ngày học này? Tất cả các đoạn văn bên trong cũng sẽ bị mất.</string>
+    <string name="delete_all">Xóa toàn bộ</string>
+    <string name="save_info">Lưu thông tin</string>
+    <string name="saving">Đang lưu...</string>
+    <string name="save_new_order">Lưu thứ tự mới</string>
+    <string name="update_title_success">Cập nhật tiêu đề thành công!</string>
+    <string name="update_paragraph_success">Cập nhật đoạn văn thành công!</string>
+    <string name="add_paragraph_success">Thêm đoạn văn mới thành công!</string>
+    <string name="delete_paragraph_success">Xóa đoạn văn thành công!</string>
+    <string name="delete_day_success">Đã xóa ngày học thành công!</string>
+    <string name="save_order_success">Lưu thứ tự thành công!</string>
+    <string name="paragraph_content_label">Nội dung đoạn văn</string>
+    <string name="edit_paragraph">Chỉnh sửa đoạn văn</string>
+    <string name="update">Cập nhật</string>
+    <string name="confirm_delete">Xác nhận xoá</string>
+    <string name="delete_paragraph_msg">Bạn có chắc chắn muốn xoá đoạn văn này không? Hành động này không thể hoàn tác.</string>
+    <string name="delete_now">Xoá ngay</string>
+    <string name="enter_new_paragraph">Nhập đoạn văn mới...</string>
+    <string name="create_new_paragraph">Tạo đoạn văn mới</string>
+    <string name="create_now">Tạo ngay</string>
+    <string name="recording_permission_msg">Cần quyền ghi âm để thực hiện bài tập</string>
+    <string name="please_record_first">Vui lòng ghi âm trước khi tiếp tục</string>
+    <string name="recording_msg">Đang ghi âm... Nhấn lại để dừng</string>
+    <string name="analyzing_voice">Đang phân tích giọng nói...</string>
+    <string name="mic_not_clear">Không nghe rõ, vui lòng thử lại!</string>
+    <string name="recorded_msg">Đã ghi nhận! Nhấn vào micro để nói lại</string>
+    <string name="not_recorded_yet">Bạn chưa ghi âm đoạn này</string>
+    <string name="playing_recording">Đang phát ghi âm lại</string>
+    <string name="paragraph_progress_count">Đoạn văn %1$d/%2$d</string>
+    <string name="progress_saved">Đã lưu tiến độ</string>
+    <string name="save_error_msg">Lỗi khi lưu: %1$s</string>
+    <string name="continue_lesson_title">Tiếp tục bài học</string>
+    <string name="continue_lesson_msg">Bạn có tiến độ học trước đó. Bạn muốn tiếp tục hay học lại từ đầu?</string>
+    <string name="continue_action">Tiếp tục</string>
+    <string name="start_over">Học lại từ đầu</string>
+    <string name="pause_lesson_title">Bạn muốn tạm dừng bài học?</string>
+    <string name="save_progress_action">Lưu tiến độ</string>
+    <string name="exit_without_saving">Thoát không lưu</string>
+    <string name="enter_study_day_name_hint">Nhập tên ngày học</string>
+    <string name="paragraph_list_title">Danh sách đoạn văn</string>
+    <string name="swipe_instruction_msg">Vuốt trái để chỉnh sửa, Vuốt phải để xoá doạn văn</string>
+    <string name="completed_percent">Đã hoàn thành %1$d%%</string>
+
+    <!-- Daily Result -->
+    <string name="completed_exclamation">Hoàn thành!</string>
+    <string name="status_good">Đạt (Good)</string>
+    <string name="status_accepted">Khá (Accepted)</string>
+    <string name="status_bad">Kém (Bad)</string>
+    <string name="record_not_found">Bản ghi không tồn tại hoặc đã bị xóa</string>
+    <string name="lesson_id_not_found">Lỗi: Không tìm thấy ID bài học</string>
+    <string name="save_result_success">Đã lưu kết quả thành công!</string>
+    <string name="save_result_error">Lỗi khi lưu kết quả lên server</string>
+
+    <!-- Home -->
+    <string name="teaching_achievements_upper">THÀNH TỰU DẠY</string>
+    <string name="total_studied">Tổng số lượt học</string>
+    <string name="vocabulary_downloads">Lượt tải từ vựng</string>
+    <string name="most_studied">Nhiều lượt học nhất</string>
+    <string name="study_time_upper">THỜI GIAN HỌC</string>
+    <string name="streak_days_count">%1$d ngày</string>
+    <string name="hours_short">%1$.1f h</string>
+    <string name="favorite_success">Yêu thích thành công</string>
+    <string name="unfavorite_success">Bỏ yêu thích thành công</string>
+    <string name="system_error">Lỗi từ hệ thống</string>
 </resources>

@@ -14,6 +14,7 @@ import com.home.lexa.domain.models.UserRole
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import com.home.lexa.R
 
 data class UserStats(
     val streakDays: Int,
@@ -38,8 +39,8 @@ class HomeViewModel(private val repository: CourseRepository, private val userMa
     private val _userStatsFlow = MutableStateFlow(UserStats(userManager.getStreakCount(), 5f, 6f))
     val userStatsFlow: StateFlow<UserStats> = _userStatsFlow.asStateFlow()
 
-    private val _toastMessageFlow = MutableSharedFlow<String>()
-    val toastMessageFlow: SharedFlow<String> = _toastMessageFlow.asSharedFlow()
+    private val _toastMessageFlow = MutableSharedFlow<Int>()
+    val toastMessageFlow: SharedFlow<Int> = _toastMessageFlow.asSharedFlow()
 
     init {
 
@@ -121,9 +122,9 @@ class HomeViewModel(private val repository: CourseRepository, private val userMa
                 }
                 _topStudiedCoursesFlow.value = updatedTopList
                 
-                _toastMessageFlow.emit(if (isFavorite) "Yêu thích thành công" else "Bỏ yêu thích thành công")
+                _toastMessageFlow.emit(if (isFavorite) R.string.favorite_success else R.string.unfavorite_success)
             }.onFailure {
-                _toastMessageFlow.emit("Lỗi từ hệ thống")
+                _toastMessageFlow.emit(R.string.system_error)
             }
         }
     }

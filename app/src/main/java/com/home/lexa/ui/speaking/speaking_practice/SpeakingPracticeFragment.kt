@@ -43,7 +43,7 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
         activityBinding.appBarLayout.apply {
             removeCustomView()
             setOnClickBack()
-            setText("Ngày ${order + 1}")
+            setText(getString(R.string.speaking_day_order, order + 1))
             setBackButtonVisible(true)
         }
         activityBinding.appBarLayout.apply {
@@ -51,10 +51,10 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
             setOnClickToggleRightButton { _ ->
                 val confirmPopup = Popup(requireContext())
                 confirmPopup.showDialog(
-                    title = "Xóa ngày học",
-                    subTitle = "Bạn có chắc chắn muốn xóa toàn bộ ngày học này? Tất cả các đoạn văn bên trong cũng sẽ bị mất.",
+                    title = getString(R.string.delete_speaking_day_title),
+                    subTitle = getString(R.string.delete_speaking_day_msg),
                     isWarning = true,
-                    confirmText = "Xóa toàn bộ",
+                    confirmText = getString(R.string.delete_all),
                     onConfirm = {
                         viewModel.deleteSpeakingDay(speakingDayId, courseId)
                     }
@@ -68,7 +68,7 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
 
         binding.saveBtn.apply{
             setBackground(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
-            setText("Lưu thông tin", ContextCompat.getColor(requireContext(), R.color.white))
+            setText(getString(R.string.save_info), ContextCompat.getColor(requireContext(), R.color.white))
         }
 
         // Xử lý sự kiện click "Lưu thứ tự mới"
@@ -82,7 +82,7 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
                 requestList.add(ParagraphOrderDto(id = id, order = (i + 1).toLong()))
             }
 
-            binding.btnSaveOrder.text = "Đang lưu..."
+            binding.btnSaveOrder.text = getString(R.string.saving)
             viewModel.reorderParagraphs(courseId, speakingDayId, ReorderParagraphsRequest(requestList))
         }
     }
@@ -110,26 +110,26 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
 
         viewModel.updateStatus.observe(viewLifecycleOwner) { result ->
             result?.onSuccess {
-                Toast.makeText(requireContext(), "Cập nhật tiêu đề thành công!", Toast.LENGTH_SHORT).show()
-                binding.saveBtn.setText("Lưu thông tin", ContextCompat.getColor(requireContext(), R.color.white))
+                Toast.makeText(requireContext(), getString(R.string.update_title_success), Toast.LENGTH_SHORT).show()
+                binding.saveBtn.setText(getString(R.string.save_info), ContextCompat.getColor(requireContext(), R.color.white))
                 viewModel.resetUpdateStatus()
             }
         }
 
         viewModel.updateParagraphStatus.observe(viewLifecycleOwner) { result ->
             result?.onSuccess {
-                Toast.makeText(requireContext(), "Cập nhật đoạn văn thành công!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.update_paragraph_success), Toast.LENGTH_SHORT).show()
                 viewModel.resetUpdateParagraphStatus()
                 viewModel.loadParagraphList(speakingDayId)
             }?.onFailure {
-                Toast.makeText(requireContext(), "Lỗi: ${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.save_error_msg, it.message), Toast.LENGTH_SHORT).show()
                 viewModel.resetUpdateParagraphStatus()
             }
         }
 
         viewModel.createStatus.observe(viewLifecycleOwner){ result ->
             result?.onSuccess {
-                Toast.makeText(requireContext(), "Thêm đoạn văn mới thành công!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.add_paragraph_success), Toast.LENGTH_SHORT).show()
                 viewModel.resetCreateStatus()
                 viewModel.loadParagraphList(speakingDayId)
             }
@@ -137,7 +137,7 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
 
         viewModel.deleteStatus.observe(viewLifecycleOwner) { result ->
             result?.onSuccess {
-                Toast.makeText(requireContext(), "Xóa đoạn văn thành công!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.delete_paragraph_success), Toast.LENGTH_SHORT).show()
                 viewModel.resetDeleteStatus()
                 viewModel.loadParagraphList(speakingDayId)
             }
@@ -145,11 +145,11 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
 
         viewModel.deleteSpeakingDayStatus.observe(viewLifecycleOwner) { result ->
             result?.onSuccess {
-                Toast.makeText(requireContext(), "Đã xóa ngày học thành công!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.delete_day_success), Toast.LENGTH_SHORT).show()
                 viewModel.resetDeleteSpeakingDayStatus()
                 findNavController().popBackStack()
             }?.onFailure {
-                Toast.makeText(requireContext(), "Lỗi khi xóa ngày học: ${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.save_error_msg, it.message), Toast.LENGTH_SHORT).show()
                 viewModel.resetDeleteSpeakingDayStatus()
             }
         }
@@ -157,14 +157,14 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
         // Observer cho API Reorder
         viewModel.reorderStatus.observe(viewLifecycleOwner) { result ->
             result?.onSuccess {
-                Toast.makeText(requireContext(), "Lưu thứ tự thành công!", Toast.LENGTH_SHORT).show()
-                binding.btnSaveOrder.text = "Lưu thứ tự mới"
+                Toast.makeText(requireContext(), getString(R.string.save_order_success), Toast.LENGTH_SHORT).show()
+                binding.btnSaveOrder.text = getString(R.string.save_new_order)
                 binding.btnSaveOrder.visibility = View.GONE
                 viewModel.resetReorderStatus()
                 viewModel.loadParagraphList(speakingDayId)
             }?.onFailure {
-                Toast.makeText(requireContext(), "Lỗi: ${it.message}", Toast.LENGTH_SHORT).show()
-                binding.btnSaveOrder.text = "Lưu thứ tự mới"
+                Toast.makeText(requireContext(), getString(R.string.save_error_msg, it.message), Toast.LENGTH_SHORT).show()
+                binding.btnSaveOrder.text = getString(R.string.save_new_order)
                 viewModel.resetReorderStatus()
             }
         }
@@ -176,7 +176,7 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
                 binding.saveBtn.setOnClickAction {
                     val newTitle = binding.paragraphInput.text.toString().trim()
                     if (newTitle.isNotEmpty()){
-                        binding.saveBtn.setText("Đang lưu...", ContextCompat.getColor(requireContext(), R.color.white))
+                        binding.saveBtn.setText(getString(R.string.saving), ContextCompat.getColor(requireContext(), R.color.white))
                         viewModel.editSpeakingDay(courseId, speakingDayId, EditSpeakingDayRequest(title = newTitle))
                     }
                 }
@@ -271,15 +271,15 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
                     paragraphCard.setOnEditClickListener {
                         val popUpEdit = PopUpInput(requireContext())
                         val editInput = NormalInput(requireContext()).apply {
-                            setLabel("Nội dung đoạn văn")
+                            setLabel(getString(R.string.paragraph_content_label))
                             post {
                                 setText(paragraph.paragraph)
                             }
                         }
                         popUpEdit.insertNormalInput(editInput)
                         popUpEdit.showDialog(
-                            dialogTitle = "Chỉnh sửa đoạn văn",
-                            confirmText = "Cập nhật",
+                            dialogTitle = getString(R.string.edit_paragraph),
+                            confirmText = getString(R.string.update),
                             onConfirm = { dataList ->
                                 viewModel.updateParagraph(speakingDayId, paragraph.id, dataList[0])
                             }
@@ -289,10 +289,10 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
                     paragraphCard.setOnDeleteClickListener {
                         val confirmPopup = Popup(requireContext())
                         confirmPopup.showDialog(
-                            title = "Xác nhận xoá",
-                            subTitle = "Bạn có chắc chắn muốn xoá đoạn văn này không? Hành động này không thể hoàn tác.",
+                            title = getString(R.string.confirm_delete),
+                            subTitle = getString(R.string.delete_paragraph_msg),
                             isWarning = true,
-                            confirmText = "Xoá ngay",
+                            confirmText = getString(R.string.delete_now),
                             onConfirm = {
                                 viewModel.deleteParagraph(speakingDayId, paragraph.id)
                             }
@@ -305,13 +305,13 @@ class SpeakingPracticeFragment : BaseFragment<FragmentSpeakingPracticeBinding>(F
                 binding.addBtn.setOnClickAction {
                     val popUpAdd = PopUpInput(requireContext())
                     val addInput = NormalInput(requireContext()).apply {
-                        setLabel("Nội dung đoạn văn")
-                        setPlaceHolderText("Nhập đoạn văn mới...")
+                        setLabel(getString(R.string.paragraph_content_label))
+                        setPlaceHolderText(getString(R.string.enter_new_paragraph))
                     }
                     popUpAdd.insertNormalInput(addInput)
                     popUpAdd.showDialog(
-                        dialogTitle = "Tạo đoạn văn mới",
-                        confirmText = "Tạo ngay",
+                        dialogTitle = getString(R.string.create_new_paragraph),
+                        confirmText = getString(R.string.create_now),
                         onConfirm = { dataList ->
                             viewModel.createParagraph(speakingDayId, dataList[0], paragraphs.size + 1)
                         }

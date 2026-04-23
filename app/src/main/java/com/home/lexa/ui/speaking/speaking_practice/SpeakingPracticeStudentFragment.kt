@@ -50,7 +50,7 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
         if (isGranted) {
             startRecording()
         } else {
-            Toast.makeText(requireContext(), "Cần quyền ghi âm để thực hiện bài tập", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.recording_permission_msg), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -89,7 +89,7 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
 
         binding.btnNext.setOnClickAction {
             if (!recordedAudios.containsKey(currentIndex)) {
-                Toast.makeText(requireContext(), "Vui lòng ghi âm trước khi tiếp tục", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.please_record_first), Toast.LENGTH_SHORT).show()
                 return@setOnClickAction
             }
 
@@ -164,7 +164,7 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
 
         isRecording = true
         binding.btnRecord.setBackground(Color.RED)
-        binding.tvInstruction.text = "Đang ghi âm... Nhấn lại để dừng"
+        binding.tvInstruction.text = getString(R.string.recording_msg)
     }
 
     private fun stopRecording() {
@@ -174,7 +174,7 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
 
         sttManager.stopListening()
         binding.btnRecord.setBackground(Color.parseColor("#636AE8"))
-        binding.tvInstruction.text = "Đang phân tích giọng nói..."
+        binding.tvInstruction.text = getString(R.string.analyzing_voice)
 
         // Dừng AudioRecord và chờ file WAV flush xong rồi mới xử lý
         audioManager.stopRecording {
@@ -186,7 +186,7 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
     private fun processAndSaveResult() {
         if (currentRecognizedText.isBlank()) {
             activity?.runOnUiThread {
-                binding.tvInstruction.text = "Không nghe rõ, vui lòng thử lại!"
+                binding.tvInstruction.text = getString(R.string.mic_not_clear)
             }
             return
         }
@@ -209,18 +209,18 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
         // Chạy trên MainThread để cập nhật UI
         activity?.runOnUiThread {
             updateContent()
-            binding.tvInstruction.text = "Đã ghi nhận! Nhấn vào micro để nói lại"
+            binding.tvInstruction.text = getString(R.string.recorded_msg)
         }
     }
 
     private fun playRecordedAudio() {
         val path = recordedAudios[currentIndex]
         if (path == null) {
-            Toast.makeText(requireContext(), "Bạn chưa ghi âm đoạn này", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.not_recorded_yet), Toast.LENGTH_SHORT).show()
             return
         }
 
-        Toast.makeText(requireContext(), "Đang phát ghi âm lại", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), getString(R.string.playing_recording), Toast.LENGTH_SHORT).show()
         audioManager.playAudio(path)
     }
 
@@ -272,10 +272,12 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
 
         // Cập nhật tiến độ & nút bấm
         val hasRecording = recordedAudios.containsKey(currentIndex) || cacheItem != null
-        binding.tvProgressTitle.text = "Đoạn văn ${currentIndex + 1}/${paragraphs.size}"
+        binding.tvProgressTitle.text = getString(R.string.paragraph_progress_count, currentIndex + 1, paragraphs.size)
         val progress = ((currentIndex + 1).toFloat() / paragraphs.size * 100).toInt()
         binding.progressBar.setProgress(progress)
         updateNavigationButtons(hasRecording)
+
+        binding.tvCompletedPercent.text = getString(R.string.completed_percent, progress)
     }
 
     override fun observeData() {
@@ -292,12 +294,12 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
             if (result != null) {
                 result.onSuccess { isSuccess ->
                     if (isSuccess) {
-                        Toast.makeText(requireContext(), "Đã lưu tiến độ", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), getString(R.string.progress_saved), Toast.LENGTH_SHORT).show()
                         viewModel.resetBulkSaveStatus() // Reset state để tránh trigger lại
                         findNavController().popBackStack()
                     }
                 }.onFailure { error ->
-                    Toast.makeText(requireContext(), "Lỗi khi lưu: ${error.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.save_error_msg, error.message), Toast.LENGTH_SHORT).show()
                     viewModel.resetBulkSaveStatus()
                 }
             }
@@ -311,13 +313,13 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
 
         if (lastCompletedIndex >= 0 && lastCompletedIndex < paragraphs.size - 1) {
             AlertDialog.Builder(requireContext())
-                .setTitle("Tiếp tục bài học")
-                .setMessage("Bạn có tiến độ học trước đó. Bạn muốn tiếp tục hay học lại từ đầu?")
-                .setPositiveButton("Tiếp tục") { _, _ ->
+                .setTitle(getString(R.string.continue_lesson_title))
+                .setMessage(getString(R.string.continue_lesson_msg))
+                .setPositiveButton(getString(R.string.continue_action)) { _, _ ->
                     currentIndex = lastCompletedIndex + 1
                     updateContent()
                 }
-                .setNegativeButton("Học lại từ đầu") { _, _ ->
+                .setNegativeButton(getString(R.string.start_over)) { _, _ ->
                     currentIndex = 0
                     recordedAudios.clear()
                     sharedViewModel.clearCache()
@@ -350,16 +352,20 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
         binding.btnNgheMau.apply {
             setIconSize(40); setIconColor(Color.parseColor("#636AE8"))
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play)!!)
-            setText("Nghe mẫu", Color.parseColor("#636AE8"))
+            setText(getString(R.string.listen_sample), Color.parseColor("#636AE8"))
             setBackground(Color.parseColor("#F5F5F5"))
         }
-        binding.progressBar.setTitle("TIẾN ĐỘ BÀI HỌC")
+        binding.progressBar.setTitle(getString(R.string.lesson_progress_upper))
     }
 
     private fun showExitDialog() {
-        val options = arrayOf("Lưu tiến độ", "Thoát không lưu", "Hủy")
+        val options = arrayOf(
+            getString(R.string.save_progress_action),
+            getString(R.string.exit_without_saving),
+            getString(R.string.cancel)
+        )
         AlertDialog.Builder(requireContext())
-            .setTitle("Bạn muốn tạm dừng bài học?")
+            .setTitle(getString(R.string.pause_lesson_title))
             .setItems(options) { dialog, which ->
                 when (which) {
                     0 -> {

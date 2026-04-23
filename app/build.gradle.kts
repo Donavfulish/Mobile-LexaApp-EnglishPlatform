@@ -5,9 +5,6 @@ plugins {
     alias(libs.plugins.androidx.navigation.safeargs)
     id("com.google.dagger.hilt.android")
     kotlin("kapt")
-    alias(libs.plugins.google.gms.google.services)
-
-
 }
 val localProperties = Properties()
 val localPropertiesFile = rootProject.file("local.properties")
