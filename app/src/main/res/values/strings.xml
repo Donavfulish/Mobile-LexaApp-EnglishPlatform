@@ -154,4 +154,36 @@
     <string name="study_time_notification_desc">A reminder notification before your scheduled study time.</string>
     <string name="set_reminder_time">Set reminder time</string>
     <string name="home_screen">Home Screen</string>
+
+    <!-- Course Detail Strings -->
+    <string name="create_new_course">Create new course</string>
+    <string name="course_detail">Course detail</string>
+    <string name="speaking">Speaking</string>
+    <string name="vocabulary_tab">Vocabulary</string>
+    <string name="saving_information">Saving information...</string>
+    <string name="please_fill_all_information">Please fill in all information!</string>
+    <string name="course_data_not_found">Course data not found</string>
+    <string name="lesson_count">%1$d Lessons</string>
+    <string name="create_course_success">Course created successfully!</string>
+    <string name="save_information">Save information</string>
+    <string name="status_public">Public</string>
+    <string name="title_label">Title</string>
+    <string name="enter_study_day_title">Enter study day title...</string>
+    <string name="create_new_study_day">Create new study day</string>
+    <string name="create_now">Create now</string>
+    <string name="delete_vocabulary">Delete vocabulary</string>
+    <string name="delete_vocabulary_confirm">Are you sure you want to delete the word \'%1$s\'? Deleted data cannot be recovered.</string>
+    <string name="delete">Delete</string>
+    <string name="update_success">Update successful!</string>
+    <string name="add_data_success">Data added successfully!</string>
+    <string name="no_lessons_available">No lessons available yet!</string>
+    <string name="update_error">Update error</string>
+    <string name="error_message">Error: %1$s</string>
+    <string name="paragraph_count">%1$d paragraphs</string>
+    <string name="speaking_day_list_title">Speaking Day List</string>
+    <string name="enter_course_name">Enter course name</string>
+    <string name="select_course_type">Select course type</string>
+    <string name="course_description_label">Course description</string>
+    <string name="enter_course_description">Enter course description</string>
+    <string name="create_course_first_notice">Save information to CREATE a new course before creating speaking or vocabulary sets</string>
 </resources>
