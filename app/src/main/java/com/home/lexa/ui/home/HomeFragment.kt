@@ -80,28 +80,28 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
         binding.rvStudyingCoursesCard.apply { adapter = studyingAdapter }
 
-        binding.featuredCoursesHeader.setHeaderData("Khóa học nổi bật", iconRes = R.drawable.ic_star_outline,"Xem tất cả",{
+        binding.featuredCoursesHeader.setHeaderData(getString(R.string.featured_course), iconRes = R.drawable.ic_star_outline, getString(R.string.see_all), {
             findNavController().navigate(R.id.action_homeFragment_to_courseFragment)
 
         })
         if(isTeacher){
-            binding.tvTitleStats.text = "THÀNH TỰU DẠY"
-            binding.tvFirstText.text = "Tổng số lượt học"
-            binding.tvSecondText.text = "Lượt tải từ vựng"
-            binding.commonCoursesHeader.setHeaderData("Nhiều lượt học nhất", R.drawable.ic_play_circle)
+            binding.tvTitleStats.text = getString(R.string.teaching_achievements_upper)
+            binding.tvFirstText.text = getString(R.string.total_studied)
+            binding.tvSecondText.text = getString(R.string.vocabulary_downloads)
+            binding.commonCoursesHeader.setHeaderData(getString(R.string.most_studied), R.drawable.ic_play_circle)
             binding.rvStudyingCoursesCard.visibility= View.GONE
             binding.rvTopStudiedCoursesCard.visibility= View.VISIBLE
 
         }else{
-            binding.tvTitleStats.text = "THỜI GIAN HỌC"
-            binding.tvFirstText.text = "Tuần này"
-            binding.tvSecondText.text = "Tháng náy"
-            binding.commonCoursesHeader.setHeaderData("Đang học", R.drawable.ic_play_circle)
+            binding.tvTitleStats.text = getString(R.string.study_time_upper)
+            binding.tvFirstText.text = getString(R.string.this_week)
+            binding.tvSecondText.text = getString(R.string.this_month)
+            binding.commonCoursesHeader.setHeaderData(getString(R.string.studying), R.drawable.ic_play_circle)
             binding.rvStudyingCoursesCard.visibility= View.VISIBLE
             binding.rvTopStudiedCoursesCard.visibility= View.GONE
 
         }
-        binding.myFavoriteHeader.setHeaderData("Yêu thích của bạn", iconRes = R.drawable.ic_outline_book_2)
+        binding.myFavoriteHeader.setHeaderData(getString(R.string.your_favorite), iconRes = R.drawable.ic_outline_book_2)
 
         binding.cardVocabulary.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_libraryFragment)
@@ -152,14 +152,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
           }
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.userStatsFlow.collect { stats ->
-                binding.tvStreakDays.text = "${stats.streakDays} ngày"
+                binding.tvStreakDays.text = getString(R.string.streak_days_count, stats.streakDays)
                 if(isTeacher){
-                    binding.tvFirstNumber.text = "${stats.weeklyHours}"
-                    binding.tvSecondNumber.text = "${stats.monthlyHours}"
+                    binding.tvFirstNumber.text = stats.weeklyHours.toString()
+                    binding.tvSecondNumber.text = stats.monthlyHours.toString()
                 }else{
 
-                    binding.tvFirstNumber.text = "${stats.weeklyHours} h"
-                    binding.tvSecondNumber.text = "${stats.monthlyHours} h"
+                    binding.tvFirstNumber.text = getString(R.string.hours_short, stats.weeklyHours)
+                    binding.tvSecondNumber.text = getString(R.string.hours_short, stats.monthlyHours)
                 }
             }
         }

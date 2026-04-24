@@ -97,7 +97,7 @@ class DailyResultFragment : BaseFragment<FragmentDailyResultBinding>(FragmentDai
                         // Callback khi nghe xong (nếu cần đổi icon nút bấm)
                     }
                 } else {
-                    Toast.makeText(requireContext(), "Bản ghi không tồn tại hoặc đã bị xóa", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.record_not_found), Toast.LENGTH_SHORT).show()
                 }
             }
             binding.paragraphList.addView(card)
@@ -115,7 +115,7 @@ class DailyResultFragment : BaseFragment<FragmentDailyResultBinding>(FragmentDai
             // Gọi ViewModel với đủ 2 tham số
             dailyResultViewModel.submitFinalResult(speakingDayId, cacheData)
         } else {
-            Toast.makeText(requireContext(), "Lỗi: Không tìm thấy ID bài học", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.lesson_id_not_found), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -125,11 +125,11 @@ class DailyResultFragment : BaseFragment<FragmentDailyResultBinding>(FragmentDai
             if (isSuccess == true) {
                 // Xóa cache sau khi lưu DB thành công
                 sharedViewModel.clearCache()
-                Toast.makeText(requireContext(), "Đã lưu kết quả thành công!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.save_result_success), Toast.LENGTH_SHORT).show()
                 // Quay về màn course
                 findNavController().popBackStack(R.id.courseFragment, false)
             } else if (isSuccess == false) {
-                Toast.makeText(requireContext(), "Lỗi khi lưu kết quả lên server", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.save_result_error), Toast.LENGTH_SHORT).show()
             }
         }
     }

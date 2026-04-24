@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:text="Hoàn thành!"
+            android:text="@string/completed_exclamation"
             android:textColor="#202124"
             android:textSize="28sp"
             android:textStyle="bold" />
@@ -75,7 +75,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Đạt (Good)"
+                                android:text="@string/status_good"
                                 android:textColor="#757575"
                                 android:textSize="11sp" />
 
@@ -112,7 +112,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Khá (Accepted)"
+                                android:text="@string/status_accepted"
                                 android:textColor="#757575"
                                 android:textSize="11sp" />
 
@@ -149,7 +149,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Kém (Bad)"
+                                android:text="@string/status_bad"
                                 android:textColor="#757575"
                                 android:textSize="11sp" />
 
@@ -176,7 +176,7 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="32dp"
-            android:text="Học lại"
+            android:text="@string/study_again"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="16sp"
@@ -190,7 +190,7 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="12dp"
-            android:text="Trở về khóa học"
+            android:text="@string/return_to_course"
             android:textAllCaps="false"
             android:textColor="#636AE8"
             android:textSize="16sp"

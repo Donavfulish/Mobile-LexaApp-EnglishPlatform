@@ -1,3 +1,4 @@
+// Localization applied
 package com.home.lexa.ui.course.teacher_course_list
 
 import android.net.Uri
@@ -25,7 +26,7 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
     private val courseAdapter by lazy {
         TeacherCourseListAdapter(
             if(viewModel.courses.value?.data != null)
-            viewModel.courses.value.data
+            viewModel.courses.value!!.data
         else emptyList())
         { course ->
             val bundle = Bundle().apply {
@@ -84,8 +85,8 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
         }
 
         binding.headerSection.setHeaderData(
-            title = "Khoá học của tôi",
-            actionText = "0 tất cả",
+            title = getString(R.string.my_courses),
+            actionText = getString(R.string.all_count, 0),
             onActionClick = {}
         )
 
@@ -93,8 +94,8 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
             if(viewModel.currentFilter.value == TeacherCourseFilter.ALL)
                 return@setOnClickListener
             binding.headerSection.setHeaderData(
-                title = "Khoá học của tôi",
-                actionText = "0 tất cả",
+                title = getString(R.string.my_courses),
+                actionText = getString(R.string.all_count, 0),
                 onActionClick = {}
             )
             viewModel.changeFilter(
@@ -112,8 +113,8 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
             if(viewModel.currentFilter.value == TeacherCourseFilter.MYCOURSE)
                 return@setOnClickListener
             binding.headerSection.setHeaderData(
-                title = "Khoá học của tôi",
-                actionText = "0 tất cả",
+                title = getString(R.string.my_courses),
+                actionText = getString(R.string.all_count, 0),
                 onActionClick = {}
             )
             viewModel.changeFilter(TeacherCourseFilter.MYCOURSE,
@@ -130,8 +131,8 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
             if(viewModel.currentFilter.value == TeacherCourseFilter.FAVORITE)
                 return@setOnClickListener
             binding.headerSection.setHeaderData(
-                title = "Khoá học của tôi",
-                actionText = "0 tất cả",
+                title = getString(R.string.my_courses),
+                actionText = getString(R.string.all_count, 0),
                 onActionClick = {}
             )
             viewModel.changeFilter(TeacherCourseFilter.FAVORITE,
@@ -148,8 +149,8 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
             if(viewModel.currentFilter.value == TeacherCourseFilter.LEARNING)
                 return@setOnClickListener
             binding.headerSection.setHeaderData(
-                title = "Khoá học của tôi",
-                actionText = "0 tất cả",
+                title = getString(R.string.my_courses),
+                actionText = getString(R.string.all_count, 0),
                 onActionClick = {}
             )
             viewModel.changeFilter(TeacherCourseFilter.LEARNING,
@@ -236,15 +237,15 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
             val filter = viewModel.currentFilter.value ?: TeacherCourseFilter.MYCOURSE
 
             val title = when (filter) {
-                TeacherCourseFilter.MYCOURSE -> "Khoá học của tôi"
-                TeacherCourseFilter.ALL -> "Tất cả khoá học"
-                TeacherCourseFilter.FAVORITE -> "Khoá học yêu thích"
-                TeacherCourseFilter.LEARNING -> "Khoá học đang học"
+                TeacherCourseFilter.MYCOURSE -> getString(R.string.my_courses)
+                TeacherCourseFilter.ALL -> getString(R.string.all_courses)
+                TeacherCourseFilter.FAVORITE -> getString(R.string.favorite_courses)
+                TeacherCourseFilter.LEARNING -> getString(R.string.learning_courses)
             }
 
             binding.headerSection.setHeaderData(
                 title = title,
-                actionText = "${viewModel.totalPages} tất cả",
+                actionText = getString(R.string.all_count, viewModel.totalPages),
                 onActionClick = {}
             )
         }
