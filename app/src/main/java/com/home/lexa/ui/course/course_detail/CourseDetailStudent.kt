@@ -29,7 +29,7 @@ class CourseDetailStudent(
     override fun setupViews() {
         binding.learningBtn.apply {
             setTextSize(20f)
-            setText("Tiếp tục học ngay", ContextCompat.getColor(fragment.requireContext(), R.color.white))
+            setText(fragment.getString(R.string.continue_learning_now), ContextCompat.getColor(fragment.requireContext(), R.color.white))
             setBackground(ContextCompat.getColor(fragment.requireContext(), R.color.purple_paragraph))
         }
     }
@@ -78,7 +78,7 @@ class CourseDetailStudent(
                     bundle
                 )
             } else {
-                Toast.makeText(fragment.requireContext(), "Chưa có bài giảng nào!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(fragment.requireContext(), fragment.getString(R.string.no_lessons_available), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -147,10 +147,10 @@ class CourseDetailStudent(
         viewModel.favoriteStatus.observe(fragment.viewLifecycleOwner){
                 result ->
             result?.onSuccess {
-                Toast.makeText(fragment.requireContext(), "Cập nhật thành công!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(fragment.requireContext(), fragment.getString(R.string.update_success), Toast.LENGTH_SHORT).show()
                 viewModel.resetFavoriteStatus()
             }?.onFailure {
-                Toast.makeText(fragment.requireContext(), "Lỗi: ${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(fragment.requireContext(), fragment.getString(R.string.error_message, it.message), Toast.LENGTH_SHORT).show()
                 viewModel.resetFavoriteStatus()
             }
         }

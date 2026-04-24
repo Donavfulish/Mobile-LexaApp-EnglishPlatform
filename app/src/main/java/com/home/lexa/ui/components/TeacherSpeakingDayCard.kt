@@ -1,18 +1,10 @@
 package com.home.lexa.ui.components
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.FrameLayout
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.ColorUtils
 import com.home.lexa.R
-import com.home.lexa.databinding.CardStudentSpeakingDayBinding
 import com.home.lexa.databinding.CardTeacherSpeakingDayBinding
-import com.home.lexa.databinding.ViewTagBinding
-
 
 class TeacherSpeakingDayCard @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -20,8 +12,8 @@ class TeacherSpeakingDayCard @JvmOverloads constructor(
 
     private val binding = CardTeacherSpeakingDayBinding.inflate(LayoutInflater.from(context), this, true)
     private var day = 1
-    private var title = "Chào hỏi cơ bản & Giới thiệu bản thân"
-    private var paragraphNum = 15
+    private var title = ""
+    private var paragraphNum = 0
 
     fun setData(_day: Int, _title: String, _paragraphNum: Int) {
         setDay(_day)
@@ -31,7 +23,7 @@ class TeacherSpeakingDayCard @JvmOverloads constructor(
 
     fun setDay(_day: Int) {
         this.day = _day
-        binding.tvDay.setTagData("Ngày " + day.toString(), "@color/brand_primary", true)
+        binding.tvDay.setTagData(context.getString(R.string.day, day.toString()), "@color/brand_primary", true)
     }
 
     fun setTitle(_title: String) {
@@ -41,7 +33,7 @@ class TeacherSpeakingDayCard @JvmOverloads constructor(
 
     fun setParagraph(_number: Int) {
         this.paragraphNum = _number
-        binding.tvParagraphNum.text = "$paragraphNum đoạn văn"
+        binding.tvParagraphNum.text = context.getString(R.string.paragraph_count, paragraphNum)
     }
 
     fun setOnClickAction(action: () -> Unit) {

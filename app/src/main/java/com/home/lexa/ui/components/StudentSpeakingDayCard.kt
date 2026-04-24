@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import com.home.lexa.R
 import com.home.lexa.databinding.CardStudentSpeakingDayBinding
 
 class StudentSpeakingDayCard @JvmOverloads constructor(
@@ -12,8 +13,8 @@ class StudentSpeakingDayCard @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
     private val binding = CardStudentSpeakingDayBinding.inflate(LayoutInflater.from(context), this, true)
     private var day = 1
-    private var title = "Chào hỏi cơ bản & Giới thiệu bản thân"
-    private var progressPercent = 80
+    private var title = ""
+    private var progressPercent = 0
 
     fun setData(_day: Int, _title: String, _progressPercent: Int) {
         setDay(_day)
@@ -23,7 +24,7 @@ class StudentSpeakingDayCard @JvmOverloads constructor(
 
     fun setDay(_day: Int) {
         this.day = _day
-        binding.tvDayLabel.setTagData("Ngày " + day.toString(), "@color/brand_primary", true)
+        binding.tvDayLabel.setTagData(context.getString(R.string.day, day.toString()), "@color/brand_primary", true)
     }
 
     fun setTitle(_title: String) {
@@ -39,6 +40,8 @@ class StudentSpeakingDayCard @JvmOverloads constructor(
 
         if (progressPercent == 100) {
             binding.ivCheck.visibility = View.VISIBLE
+        } else {
+            binding.ivCheck.visibility = View.GONE
         }
     }
 

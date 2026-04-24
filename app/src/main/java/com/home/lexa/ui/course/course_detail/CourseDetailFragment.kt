@@ -5,8 +5,6 @@ import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,7 +13,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.widget.NestedScrollView
 import androidx.navigation.NavOptions
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import coil.load
 import com.home.lexa.MainActivity
@@ -23,12 +20,8 @@ import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.data.local.UserManager
 import com.home.lexa.databinding.FragmentCourseDetailBinding
 import com.home.lexa.di.AppMemoryCache
-import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.CreateCourseRequest
-import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.Topic
-import com.home.lexa.domain.models.Vocabulary
-import com.home.lexa.ui.components.FlashcardMini
 import org.koin.android.ext.android.inject
 
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -76,14 +69,14 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
         courseId = arguments?.getLong("courseId") ?: -1L
         if (courseId == -1L) {
             activityBinding.appBarLayout.apply {
-                setText("Tạo mới khoá học");
+                setText(getString(R.string.create_new_course))
                 setBackButtonVisible(true)
             }
             viewModel.loadTopics()
         } else {
             activityBinding.appBarLayout.apply {
-                setText("Chi tiết khoá học");
-                setBackButtonVisible(true);
+                setText(getString(R.string.course_detail))
+                setBackButtonVisible(true)
             }
             viewModel.loadCourseDetail(courseId)
         }
@@ -107,7 +100,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             setIconPadding(5)
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_speaking))
             setIconColor(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
-            setText("Speaking", ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
+            setText(getString(R.string.speaking), ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
             setBackground(ContextCompat.getColor(requireContext(), R.color.white))
         }
 
@@ -115,7 +108,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             setTextSize(16f)
             setIconPadding(5)
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_vocabulary))
-            setText("Từ vựng", null)
+            setText(getString(R.string.vocabulary_tab), null)
             setBackground(ContextCompat.getColor(requireContext(), R.color.gray_E0E0E5))
         }
 
@@ -199,8 +192,8 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             if (topics.isNullOrEmpty()) return@observe
             list_topic = topics
             selectedTopicId = list_topic[0].id
-            val list_topic_name = list_topic?.map { it.name }
-            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, list_topic_name!!)
+            val list_topic_name = list_topic.map { it.name }
+            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, list_topic_name)
             binding.topicInput.setAdapter(adapter)
 
             handler = CourseDetailTeacher(this, binding, viewModel, activityBinding)
@@ -221,19 +214,18 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 val newTitle = binding.courseTitleInput.text.toString()
                 val newDesc = binding.introductionInput.text.toString()
                 val newTopicId = selectedTopicId
-                val newImageUrl = null
                 val request = CreateCourseRequest(
                     topicId = newTopicId,
                     title = newTitle,
                     description = newDesc,
                     privacy = if (isPublic) "PUBLIC" else "PRIVATE",
-                    thumbnailUrl = newImageUrl
+                    thumbnailUrl = null
                 )
-                binding.saveBtn.setText("Đang lưu thông tin...", ContextCompat.getColor(requireContext(), R.color.white))
+                binding.saveBtn.setText(getString(R.string.saving_information), ContextCompat.getColor(requireContext(), R.color.white))
                 if (newTitle.isNotBlank() || newDesc.isNotBlank()) {
                     viewModel.createCourse(request, courseImageUri)
                 } else {
-                    Toast.makeText(requireContext(), "Vui lòng điền đầy đủ thông tin!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), getString(R.string.please_fill_all_information), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -241,7 +233,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
         // THEO DOI TINH TRANG KHOA HOC TRA VE
         viewModel.courseDetailData.observe(viewLifecycleOwner) { course ->
             if (course == null){
-                Toast.makeText(requireContext(), "Không tìm thấy dữ liệu khóa học", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.course_data_not_found), Toast.LENGTH_SHORT).show()
                 return@observe
             }
             deckId = course.deckId!!
@@ -278,7 +270,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             binding.teacherNameCourse.text = course.creator.name
             binding.studentNumCourse.text = course.studying_user_count.toString()
             binding.favoriteNumCourse.text = course.favorite_user_count.toString()
-            binding.speakingNum.text = "${course.list_speaking_day.totalItems} Bài học"
+            binding.speakingNum.text = getString(R.string.lesson_count, course.list_speaking_day.totalItems)
             binding.speakingDayLayout.removeAllViews()
 
             // =====================================THONG TIN HIEN THI KHOA HOC=====================================
@@ -330,13 +322,13 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
 
         viewModel.createCourseStatus.observe(viewLifecycleOwner) { result ->
             result?.onSuccess { newId ->
-                Toast.makeText(requireContext(), "Tạo khoá học thành công!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.create_course_success), Toast.LENGTH_SHORT).show()
                 this.courseId = newId
 
                 viewModel.resetCreateCourseStatus()
                 viewModel.resetTopicData()
                 binding.saveBtn.setText(
-                    "Lưu thông tin",
+                    getString(R.string.save_information),
                     ContextCompat.getColor(requireContext(), R.color.white)
                 )
                 AppMemoryCache.removePrefix("getAllCourses_")
@@ -349,10 +341,10 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                     .build())
 
             }?.onFailure {
-                Toast.makeText(requireContext(), "Lỗi: ${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.error_message, it.message), Toast.LENGTH_SHORT).show()
                 viewModel.resetCreateCourseStatus()
                 binding.saveBtn.setText(
-                    "Lưu thông tin",
+                    getString(R.string.save_information),
                     ContextCompat.getColor(requireContext(), R.color.white)
                 )
             }
@@ -371,24 +363,24 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
         if (isSpeakingMode) {
             binding.speakingBtn.apply {
                 setIconColor(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
-                setText("Speaking", ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
+                setText(getString(R.string.speaking), ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
                 setBackground(ContextCompat.getColor(requireContext(), R.color.white))
             }
             binding.vocabularyBtn.apply {
                 setIconColor(ContextCompat.getColor(requireContext(), R.color.black))
-                setText("Từ vựng", ContextCompat.getColor(requireContext(), R.color.black))
+                setText(getString(R.string.vocabulary_tab), ContextCompat.getColor(requireContext(), R.color.black))
                 setBackground(ContextCompat.getColor(requireContext(), R.color.gray_E0E0E5))
             }
         } else {
             binding.speakingBtn.apply {
                 setIconColor(ContextCompat.getColor(requireContext(), R.color.black))
                 setBackground(ContextCompat.getColor(requireContext(), R.color.gray_E0E0E5))
-                setText("Speaking", ContextCompat.getColor(requireContext(), R.color.black))
+                setText(getString(R.string.speaking), ContextCompat.getColor(requireContext(), R.color.black))
             }
             binding.vocabularyBtn.apply {
                 setIconColor(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
                 setBackground(ContextCompat.getColor(requireContext(), R.color.white))
-                setText("Từ vựng", ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
+                setText(getString(R.string.vocabulary_tab), ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
             }
         }
     }
@@ -445,5 +437,3 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
     }
 
 }
-
-

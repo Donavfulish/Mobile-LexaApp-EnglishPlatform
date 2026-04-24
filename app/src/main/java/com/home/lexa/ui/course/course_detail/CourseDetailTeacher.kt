@@ -1,6 +1,5 @@
 package com.home.lexa.ui.course.course_detail
 
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
@@ -11,7 +10,6 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
-import androidx.core.widget.NestedScrollView
 import androidx.navigation.fragment.findNavController
 import coil.load
 import com.home.lexa.R
@@ -22,7 +20,6 @@ import com.home.lexa.domain.models.CreateSpeakingDayRequest
 import com.home.lexa.domain.models.DetailFlashcard
 import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.CourseDetailDto
-import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.ShortSpeakingDayDto
 import com.home.lexa.domain.models.Vocabulary
 import com.home.lexa.ui.components.FlashcardMini
@@ -45,7 +42,7 @@ class CourseDetailTeacher(
                 gravity = android.view.Gravity.CENTER_VERTICAL
             }
             val publicTitleView = TextView(fragment.requireContext()).apply {
-                setText("Public")
+                setText(fragment.getString(R.string.status_public))
                 setTextSize(android.util.TypedValue.COMPLEX_UNIT_DIP, 14f)
 
                 val typeface = androidx.core.content.res.ResourcesCompat.getFont(fragment.requireContext(), R.font.archivo_bold)
@@ -92,7 +89,7 @@ class CourseDetailTeacher(
                 thumbnailUrl = viewModel.courseDetailData.value?.thumbnail_url ?: null
             )
 
-            binding.saveBtn.setText("Đang lưu thông tin...", ContextCompat.getColor(fragment.requireContext(), R.color.white))
+            binding.saveBtn.setText(fragment.getString(R.string.saving_information), ContextCompat.getColor(fragment.requireContext(), R.color.white))
 
             if (newTitle.isNotBlank()) {
                 viewModel.editCourse(fragment.courseId, request, fragment.courseImageUri)
@@ -111,14 +108,14 @@ class CourseDetailTeacher(
         }
         binding.saveBtn.apply{
             setBackground(ContextCompat.getColor(fragment.requireContext(), R.color.purple_paragraph))
-            setText("Lưu thông tin", ContextCompat.getColor(fragment.requireContext(), R.color.white))
+            setText(fragment.getString(R.string.save_information), ContextCompat.getColor(fragment.requireContext(), R.color.white))
         }
     }
 
     override fun bindCourseData(course: CourseDetailDto) {
         fragment.list_topic = viewModel.courseDetailData.value?.list_topic!!
-        val list_topic_name = fragment.list_topic?.map { it.name }
-        val adapter = ArrayAdapter(fragment.requireContext(), android.R.layout.simple_list_item_1, list_topic_name!!)
+        val list_topic_name = fragment.list_topic.map { it.name }
+        val adapter = ArrayAdapter(fragment.requireContext(), android.R.layout.simple_list_item_1, list_topic_name)
         binding.topicInput.setAdapter(adapter)
 
         fragment.selectedTopicId = course.list_topic.find { it.name == course.type }?.id ?: 0
@@ -137,15 +134,15 @@ class CourseDetailTeacher(
 
         val popUpInput = PopUpInput(fragment.requireContext())
         val speakingDayTitle = NormalInput(fragment.requireContext()).apply {
-            setLabel("Tiêu đề")
-            setPlaceHolderText("Nhập tiêu đề ngày học...")
+            setLabel(fragment.getString(R.string.title_label))
+            setPlaceHolderText(fragment.getString(R.string.enter_study_day_title))
         }
         popUpInput.insertNormalInput(speakingDayTitle)
         binding.addBtn.setOnClickAction {
             if(fragment.isSpeakingMode){
                 popUpInput.showDialog(
-                    dialogTitle = "Tạo ngày học mới",
-                    confirmText = "Tạo ngay",
+                    dialogTitle = fragment.getString(R.string.create_new_study_day),
+                    confirmText = fragment.getString(R.string.create_now),
                     onConfirm = { dataList ->
                         viewModel.createSpeakingDay(CreateSpeakingDayRequest(
                             courseId = fragment.courseId,
@@ -219,10 +216,10 @@ class CourseDetailTeacher(
                 val deletePopup = Popup(fragment.requireContext())
 
                 deletePopup.showDialog(
-                    title = "Xóa từ vựng",
-                    subTitle = "Bạn có chắc chắn muốn xóa từ '${item.word}' không? Dữ liệu bị xóa sẽ không thể khôi phục.",
+                    title = fragment.getString(R.string.delete_vocabulary),
+                    subTitle = fragment.getString(R.string.delete_vocabulary_confirm, item.word),
                     isWarning = true,
-                    confirmText = "Xóa",
+                    confirmText = fragment.getString(R.string.delete),
                     onConfirm = {
                         viewModel.deleteFlashcard(fragment.courseId, item.id,item.deckId !!)
                     },
@@ -263,25 +260,25 @@ class CourseDetailTeacher(
         // THEO DOI TINH TRANG CAP NHAT TT KHOA HOCC
         viewModel.updateStatus.observe(fragment.viewLifecycleOwner) { result ->
             result?.onSuccess {
-                Toast.makeText(fragment.requireContext(), "Cập nhật thành công!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(fragment.requireContext(), fragment.getString(R.string.update_success), Toast.LENGTH_SHORT).show()
                 viewModel.loadCourseDetail(fragment.courseId)
                 viewModel.resetUpdateStatus()
-                binding.saveBtn.setText("Lưu thông tin", ContextCompat.getColor(fragment.requireContext(), R.color.white))
+                binding.saveBtn.setText(fragment.getString(R.string.save_information), ContextCompat.getColor(fragment.requireContext(), R.color.white))
             }?.onFailure {
-                Toast.makeText(fragment.requireContext(), "Lỗi: ${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(fragment.requireContext(), fragment.getString(R.string.error_message, it.message), Toast.LENGTH_SHORT).show()
                 viewModel.resetUpdateStatus()
-                binding.saveBtn.setText("Lưu thông tin", ContextCompat.getColor(fragment.requireContext(), R.color.white))
+                binding.saveBtn.setText(fragment.getString(R.string.save_information), ContextCompat.getColor(fragment.requireContext(), R.color.white))
             }
         }
 
         // THEO DOI TINH TRANG KHI THEM DU LIEU MOI
         viewModel.createStatus.observe(fragment.viewLifecycleOwner){ result ->
             result?.onSuccess {
-                Toast.makeText(fragment.requireContext(), "Thêm dữ liệu thành công!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(fragment.requireContext(), fragment.getString(R.string.add_data_success), Toast.LENGTH_SHORT).show()
                 viewModel.resetCreateStatus()
                 viewModel.loadCourseDetail(fragment.courseId)
             }?.onFailure {
-                Toast.makeText(fragment.requireContext(), "Lỗi: ${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(fragment.requireContext(), fragment.getString(R.string.error_message, it.message), Toast.LENGTH_SHORT).show()
                 Log.e("CREATE_STATUS", "Lỗi: ${it.message}", it)
                 viewModel.resetCreateStatus()
             }

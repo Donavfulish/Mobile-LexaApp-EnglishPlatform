@@ -6,9 +6,9 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.home.lexa.R
 import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.CreateCourseRequest
 import com.home.lexa.domain.models.CreateSpeakingDayRequest
@@ -21,7 +21,6 @@ import kotlinx.coroutines.async
 import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.ShortSpeakingDayDto
-import com.home.lexa.domain.models.SpeakingDayPagination
 import com.home.lexa.domain.models.Topic
 import com.home.lexa.domain.repository.DeckRepository
 import com.home.lexa.domain.repository.SpeakingDayRepository
@@ -192,7 +191,7 @@ class CourseDetailViewModel(
                     _courseDetailData.value = data
                     _isLoading.value = false
                     if (data != null){
-                        if(data.list_speaking_day.data.size != 0){
+                        if(data.list_speaking_day.data.isNotEmpty()){
                             currentPages = data.list_speaking_day.data.size
                             totalPages = data.list_speaking_day.totalItems
                             nextItem = data.list_speaking_day.data[data.list_speaking_day.data.size - 1].order
@@ -314,7 +313,7 @@ class CourseDetailViewModel(
         viewModelScope.launch {
             try {
             val courseFavDeferred = async { courseRepository.favoriteCourse(courseId) }
-            val deckFavDeferred = async { deckRepository.favoriteDeck(deckId) } // Giả định flashcardRepository có hàm này
+            val deckFavDeferred = async { deckRepository.favoriteDeck(deckId) } 
 
             val courseResult = courseFavDeferred.await()
             val deckResult = deckFavDeferred.await()
@@ -323,10 +322,10 @@ class CourseDetailViewModel(
                 _favortieStatus.value = Result.success(Unit)
                 AppMemoryCache.remove("getCourseDetail_${courseId}")
             } else {
-                _favortieStatus.value =  Result.failure(Exception("Lỗi cập nhật"))
+                _favortieStatus.value =  Result.failure(Exception(getApplication<Application>().getString(R.string.update_error)))
             }
         } catch (e: Exception) {
-                _favortieStatus.value =  Result.failure(Exception("Lỗi cập nhật"))
+                _favortieStatus.value =  Result.failure(e)
             }
         }
     }
@@ -344,10 +343,10 @@ class CourseDetailViewModel(
                     _favortieStatus.value = Result.success(Unit)
                     AppMemoryCache.remove("getCourseDetail_${courseId}")
                 } else {
-                    _favortieStatus.value =  Result.failure(Exception("Lỗi cập nhật"))
+                    _favortieStatus.value =  Result.failure(Exception(getApplication<Application>().getString(R.string.update_error)))
                 }
             } catch (e: Exception) {
-                _favortieStatus.value =  Result.failure(Exception("Lỗi cập nhật"))
+                _favortieStatus.value =  Result.failure(e)
             }
         }
     }

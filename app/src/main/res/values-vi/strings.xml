@@ -16,7 +16,7 @@
     <string name="register_linked_account">Đăng ký tài khoản liên kết</string>
     <string name="enter_information">Hoặc nhập thông tin</string>
     <string name="birth_date">Ngày sinh</string>
-    <string name="address">Địa chỉ</string>
+    <string name="address">Address</string>
     <string name="login">Đăng nhập</string>
     <string name="register">Đăng ký</string>
     <string name="dont_have_account">Chưa có tài khoản</string>
@@ -38,7 +38,7 @@
     <string name="otp_resend">Gửi lại mã OTP</string>
 
     <string name="hello_user">Chào %1$s</string>
-    <string name="day">%1$s day</string>
+    <string name="day">Ngày %1$s</string>
     <string name="study_time">Thời gian học</string>
     <string name="this_week">Tuần này</string>
     <string name="this_month">Tháng này</string>
@@ -154,4 +154,31 @@
     <string name="home_screen">Trang chủ</string>
     <string name="enter_email_to_reset">Nhập email tài khoản để nhận mã OTP</string>
     <string name="new_password">Mật khẩu mới</string>
+
+    <!-- Course Detail Strings (VI) -->
+    <string name="create_new_course">Tạo mới khoá học</string>
+    <string name="course_detail">Chi tiết khoá học</string>
+    <string name="speaking">Speaking</string>
+    <string name="vocabulary_tab">Từ vựng</string>
+    <string name="saving_information">Đang lưu thông tin...</string>
+    <string name="please_fill_all_information">Vui lòng điền đầy đủ thông tin!</string>
+    <string name="course_data_not_found">Không tìm thấy dữ liệu khóa học</string>
+    <string name="lesson_count">%1$d Bài học</string>
+    <string name="create_course_success">Tạo khoá học thành công!</string>
+    <string name="save_information">Lưu thông tin</string>
+    <string name="status_public">Công khai</string>
+    <string name="title_label">Tiêu đề</string>
+    <string name="enter_study_day_title">Nhập tiêu đề ngày học...</string>
+    <string name="create_new_study_day">Tạo ngày học mới</string>
+    <string name="create_now">Tạo ngay</string>
+    <string name="delete_vocabulary">Xóa từ vựng</string>
+    <string name="delete_vocabulary_confirm">Bạn có chắc chắn muốn xóa từ \'%1$s\' không? Dữ liệu bị xóa sẽ không thể khôi phục.</string>
+    <string name="delete">Xóa</string>
+    <string name="update_success">Cập nhật thành công!</string>
+    <string name="add_data_success">Thêm dữ liệu thành công!</string>
+    <string name="no_lessons_available">Chưa có bài giảng nào!</string>
+    <string name="update_error">Lỗi cập nhật</string>
+    <string name="error_message">Lỗi: %1$s</string>
+    <string name="paragraph_count">%1$d đoạn văn</string>
+    <string name="speaking_day_list_title">Danh sách ngày học</string>
 </resources>
