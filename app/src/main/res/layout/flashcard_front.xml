@@ -79,7 +79,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:letterSpacing="0.1"
-                android:text="CHẠM ĐỂ HIỆN NGHĨA"
+                android:text="@string/tap_to_show_meaning"
                 android:textColor="#9CA3AF"
                 android:textSize="14sp"
                 android:textStyle="bold" />

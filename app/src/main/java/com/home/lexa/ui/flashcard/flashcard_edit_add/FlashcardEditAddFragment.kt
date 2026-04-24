@@ -22,7 +22,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
 import com.home.lexa.BuildConfig
+import com.home.lexa.MainActivity
 import com.home.lexa.R
+import com.home.lexa.domain.models.PartOfSpeech
 import com.home.lexa.domain.models.VocabType
 
 class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(FragmentAddEditFlashcardBinding::inflate) {
@@ -34,13 +36,13 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
     private val transcription by lazy { arguments?.getString("TRANS_KEY") }
     private val meaning by lazy { arguments?.getString("MEANING") }
     private val example by lazy { arguments?.getString("EXAMPLE_KEY") }
-    private val partOfSpeech by lazy { arguments?.getString("POS_KEY") }
+    private val partOfSpeechId by lazy { arguments?.getInt("POS_ID_KEY") }
     private val flashcardId by lazy { arguments?.getLong("FLASHCARD_ID_KEY") }
     private val imageUrl by lazy { arguments?.getString("IMAGE_URL_KEY") }
     private val type by lazy { arguments?.getString("TYPE_KEY") }
 
     private val deckId by lazy { arguments?.getLong("DECK_ID_KEY") }
-
+    private val activityBinding by lazy { (requireActivity() as MainActivity).binding }
 
     private var selectedLocalImageUri: Uri? = null
 
@@ -60,7 +62,12 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
         if(isEditMode == true){
             fillData();
         }
-
+        val topBarTitle = if (isEditMode == true) getString(R.string.edit_flashcard) else getString(
+            R.string.create_flashcard
+        )
+        activityBinding.appBarLayout.apply {
+            setText(topBarTitle);
+        }
         setupButtons()
         setupIpaKeyboard()
     }
@@ -72,31 +79,29 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
     private fun setupInputs() {
 
         binding.apply {
-            inputVocab.setPlaceHolderText("Ví dụ: Ephemeral")
+            inputVocab.setPlaceHolderText(getString(R.string.example)+": Ephemeral")
 
-            inputPronunciation.setPlaceHolderText("Ví dụ: əˈfem(ə)rəl")
+            inputPronunciation.setPlaceHolderText(getString(R.string.example)+": əˈfem(ə)rəl")
 
-            inputDefinition.setPlaceHolderText("Nhập định nghĩa...")
+            inputDefinition.setPlaceHolderText(getString(R.string.enter_defination))
 
-            inputExample.setPlaceHolderText("Nhập câu ví dụ...")
+            inputExample.setPlaceHolderText(getString(R.string.enter_example))
             inputExample.setMaxLength(100)
             inputExample.setInputHeight(100)
             inputExample.setMultipleLines(true)
 
             dropdownWordType.apply {
-                setTile("Loại từ")
-                setSelection("Danh từ")
-                setUpOptions(listOf("Danh từ", "Động từ", "Tính từ", "Trạng từ"))
+                setTile(getString(R.string.word_type))
+                val options = PartOfSpeech.getLocalizedNames(requireContext())
+                setUpOptions(options)
+                setSelection(options.first())
             }
 
             dropdownLevel.apply {
-                setTile("Level")
-                val levelOptions = VocabType.entries.map {
-                    if (it == VocabType.NONE) "Không xác định" else it.name
-                }
-                setUpOptions(levelOptions)
-                setSelection("Không xác định")
-
+                setTile(context.getString(R.string.level))
+                val options = VocabType.getLocalizedNames(requireContext())
+                setUpOptions(options)
+                setSelection(options.first())
             }
         }
 
@@ -109,19 +114,28 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
             inputDefinition.setText(meaning)
             inputExample.setText(example)
 
-            if(partOfSpeech == null){
-                dropdownWordType.setSelection("Chưa có")
+            if(partOfSpeechId == null){
+                dropdownWordType.setSelection(getString(R.string.pos_none))
             }else{
-                dropdownWordType.setSelection(partOfSpeech!!)
+                val posEnum = PartOfSpeech.fromId(partOfSpeechId!!)
+                if (posEnum != null) {
+                    dropdownWordType.setSelection(getString(posEnum.nameRes))
+                }
             }
 
             ivFlashcard.load(imageUrl) {
                 crossfade(true)
             }
-            if(type == null){
-                dropdownLevel.setSelection("Chưa có")
-            }else{
-                dropdownLevel.setSelection(type!!)
+            if (type == null) {
+                dropdownLevel.setSelection(getString(VocabType.NONE.nameRes))
+            } else {
+
+                val enumValue = try {
+                    VocabType.valueOf(type!!)
+                } catch (e: Exception) {
+                    VocabType.NONE
+                }
+                dropdownLevel.setSelection(getString(enumValue.nameRes))
             }
 
         }
@@ -151,7 +165,8 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
             val meaning = binding.inputDefinition.getText().trim()
             val pos = binding.dropdownWordType.getSelection()
             if (word.isEmpty() || meaning.isEmpty()) {
-                Toast.makeText(requireContext(), "Vui lòng nhập từ vựng và định nghĩa để AI có ngữ cảnh", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),
+                    getString(R.string.content_toast_enter_flashcard), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -162,7 +177,8 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
             val word = binding.inputVocab.getText().trim()
             val pos = binding.dropdownWordType.getSelection()
             if (word.isEmpty() || pos.isEmpty()) {
-                Toast.makeText(requireContext(), "Vui lòng nhập từ vựng", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),
+                    getString(R.string.enter_vocabulary), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -187,16 +203,18 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
         val inputMeaning = binding.inputDefinition.getText().trim()
         val inputExample = binding.inputExample.getText().trim()
 
-        val selectedLevelStr = binding.dropdownLevel.getSelection()
         val selectedPosStr = binding.dropdownWordType.getSelection()
 
         if (inputWord.isEmpty() || inputMeaning.isEmpty()) {
-            Toast.makeText(requireContext(), "Vui lòng nhập từ vựng và định nghĩa", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(),
+                getString(R.string.enter_vocabulary_defination), Toast.LENGTH_SHORT).show()
             return
         }
 
-        //  Map String sang ID
-        val levelId = mapLevelToId(selectedLevelStr)
+
+        val selectedLevelStr = binding.dropdownLevel.getSelection()
+        val vocabTypeEnum = VocabType.fromLocalizedName(requireContext(), selectedLevelStr)
+        val levelId = vocabTypeEnum.ordinal
         val posId = mapPartOfSpeechToId(selectedPosStr)
 
 
@@ -234,18 +252,19 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
     override fun observeData() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.btnSave.isEnabled = !isLoading
-            binding.btnSave.text = if (isLoading) "Đang lưu..." else "Lưu"
+            binding.btnSave.text = if (isLoading) getString(R.string.saving) else getString(R.string.save)
         }
 
 
         viewModel.saveSuccess.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
-                Toast.makeText(requireContext(), "Lưu thành công!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),
+                    getString(R.string.save_successfully), Toast.LENGTH_SHORT).show()
                 AppMemoryCache.remove("getAllFlashcard_${deckId}")
                 findNavController().previousBackStackEntry?.savedStateHandle?.set("RELOAD_DATA", true)
                 findNavController().navigateUp()
             } else {
-                Toast.makeText(requireContext(), "Có lỗi xảy ra, vui lòng thử lại", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.error_retry), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -265,8 +284,8 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
                 is WordUiState.Error -> {
                     binding.btnAiSuggest.isEnabled = true
                     binding.loadingOverlay.visibility = android.view.View.GONE
-                    Toast.makeText(context, "Lỗi khi generate bằng AI, vui lòng thử lại", Toast.LENGTH_SHORT).show()
-                    println(state.message)
+                    Toast.makeText(context, getString(R.string.error_retry), Toast.LENGTH_SHORT).show()
+
                 }
                 else -> {
                     binding.loadingOverlay.visibility = android.view.View.GONE
@@ -276,8 +295,7 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
         viewModel.phoneticState.observe(viewLifecycleOwner) { result ->
             when (result) {
                 "ERROR" -> {
-                    Toast.makeText(requireContext(), "Không tìm thấy phiên âm", Toast.LENGTH_SHORT).show()
-
+                    Toast.makeText(requireContext(), getString(R.string.error_retry), Toast.LENGTH_SHORT).show()
                 }
                 null -> { /* Idle */ }
                 else -> {
@@ -305,7 +323,8 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
 
 
         if (inputWord.isEmpty()) {
-            Toast.makeText(requireContext(), "Hãy nhập từ vựng để xem trước!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(),
+                getString(R.string.enter_word_to_preview), Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -329,28 +348,11 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
         previewCard.setData(previewVocab)
         previewCard.zoom()
     }
-    //TODO: Chinh lai map
+
     private fun mapPartOfSpeechToId(posText: String): Int {
-        return when (posText) {
-            "Danh từ" -> 1
-            "Động từ" -> 2
-            "Tính từ" -> 3
-            "Trạng từ" -> 4
-            else -> 1
-        }
+        return PartOfSpeech.getIdFromLocalizedName(requireContext(), posText)
     }
 
-    private fun mapLevelToId(levelText: String): Int {
-        return try {
-            if (levelText == "Không xác định") {
-                VocabType.NONE.ordinal
-            } else {
-                VocabType.valueOf(levelText).ordinal
-            }
-        } catch (e: Exception) {
-            VocabType.NONE.ordinal
-        }
-    }
     private fun setupIpaKeyboard() {
 
         val ipaSymbols = listOf("ˈ", "ˌ", "ː", "ə", "æ", "ʌ", "ɒ", "ɪ", "ʊ", "ɔ", "ɜ", "ɑ", "ɛ",

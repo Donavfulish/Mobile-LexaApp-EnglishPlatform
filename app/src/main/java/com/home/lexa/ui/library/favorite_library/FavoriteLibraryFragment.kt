@@ -37,8 +37,8 @@ class FavoriteLibraryFragment : BaseFragment<FragmentFavoriteLibraryBinding>(Fra
 
     override fun setupViews() {
         binding.headerSection.setHeaderData(
-            title = "BỘ TỪ VỰNG YÊU THÍCH",
-            actionText = "Xem tất cả",
+            title = getString(R.string.favorite_deck),
+            actionText = getString(R.string.see_all),
             onActionClick = {
                 val role = userManager.getUserRole()
 

@@ -5,10 +5,14 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
+import com.home.lexa.MainActivity
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.core.utils.SwipeTouchListener
 import com.home.lexa.databinding.FragmentExerciseModeBinding
+import com.home.lexa.domain.models.ColorLabel
+import com.home.lexa.domain.models.PartOfSpeech
+import com.home.lexa.domain.models.Vocabulary
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ExerciseModeFragment : BaseFragment<FragmentExerciseModeBinding>(FragmentExerciseModeBinding::inflate) {
@@ -28,7 +32,7 @@ class ExerciseModeFragment : BaseFragment<FragmentExerciseModeBinding>(FragmentE
         viewModel.initInitialData(deckId, rememberedCount, forgottenCount, totalCards, isRetryForgotten, isRetryAll)
 
         binding.btnStop.setOnClickListener { showExitConfirmDialog() }
-
+        binding.tvDeckTitle.text= getString(R.string.practice)
         val swipeListener = SwipeTouchListener(
             onSwipeLeft = {
                 viewModel.handleSwipe(isRemembered = false)
@@ -60,9 +64,27 @@ class ExerciseModeFragment : BaseFragment<FragmentExerciseModeBinding>(FragmentE
     }
 
     override fun observeData() {
-        viewModel.currentCard.observe(viewLifecycleOwner) { vocab ->
-            if (vocab != null) {
+        viewModel.currentCard.observe(viewLifecycleOwner) { item ->
+            if (item != null) {
+
+                val posEnum = PartOfSpeech.fromId(item.flashCard.partOfSpeechId)
+
+
+                val vocab = Vocabulary(
+                    level = ColorLabel(item.flashCard.type, "#E0E0E5"),
+                    imageUrl = item.flashCard.imageUrl,
+                    word = item.flashCard.word,
+                    pronunciation_url = item.flashCard.audioUrl ?: "",
+                    transciption = item.flashCard.transcription,
+                    part_of_speech = ColorLabel(
+                        getString(posEnum?.nameRes ?: R.string.pos_none),
+                        "#636AE8"
+                    ),
+                    definition = item.flashCard.meaning,
+                    example = item.flashCard.example ?: ""
+                )
                 binding.flashcardView.setData(vocab)
+
             }
         }
 
@@ -122,12 +144,12 @@ class ExerciseModeFragment : BaseFragment<FragmentExerciseModeBinding>(FragmentE
 
     private fun showExitConfirmDialog() {
         AlertDialog.Builder(requireContext())
-            .setTitle("Dừng luyện tập")
-            .setMessage("Bạn có chắc chắn muốn dừng luyện tập không? Tiến độ hiện tại vẫn được lưu tạm.")
-            .setPositiveButton("Thoát") { _, _ ->
+            .setTitle(getString(R.string.stop_practice))
+            .setMessage(getString(R.string.message_stop_practice))
+            .setPositiveButton(getString(R.string.quit)) { _, _ ->
                 findNavController().popBackStack()
             }
-            .setNegativeButton("Hủy", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 }

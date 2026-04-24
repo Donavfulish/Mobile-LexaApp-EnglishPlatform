@@ -58,12 +58,12 @@
     <string name="total_lesson">Total lessons taken</string>
     <string name="favorite_vocabulary_set">Favorite vocabulary sets</string>
 
-    <string name="search_placeholder_favorite">Search for vocabulary sets, topics,...</string>
+    <string name="search_placeholder_favorite">Search for vocabulary sets, topics,&#8230;</string>
     <string name="favorite">Favorite</string>
     <string name="personal">Personal</string>
 
     <string name="start_practice">Start practicing</string>
-    <string name="search_course">Search for courses,...</string>
+    <string name="search_course">Search for courses,&#8230;</string>
     <string name="word_list">Word list</string>
     <string name="edit">Edit</string>
     <string name="flashcard_detail_desc">You have viewed the entire list. Let\'s start practicing to memorize these words!</string>
@@ -103,7 +103,7 @@
     <string name="learning_path">Learning path</string>
     <string name="continue_learning_now">Continue learning now</string>
 
-    <string name="search_flashcard">Search for vocabulary,...</string>
+    <string name="search_flashcard">Search for vocabulary,&#8230;</string>
     <string name="flashcard_list">Flashcard list</string>
     <string name="quick_learning_tips">Quick learning tips</string>
     <string name="flashcard_note_desc">Tap the card to see the meaning and example. Don\'t forget to turn on the sound to hear the correct pronunciation.</string>
@@ -155,12 +155,73 @@
     <string name="set_reminder_time">Set reminder time</string>
     <string name="home_screen">Home Screen</string>
 
+    <string name="creat_new_deck">Create new deck</string>
+    <string name="create">Create</string>
+    <string name="favorite_deck">FAVORITE DECK</string>
+    <string name="do_you_want_create_your">Do you want create your?</string>
+    <string name="content_create_your">" Switch to the Personal tab to begin building your own deck."</string>
+    <string name="go_to_personal_tab">Go to personal tab</string>
+    <string name="example">Example</string>
+    <string name="enter_defination">Enter defination&#8230;</string>
+    <string name="enter_example">Enter example&#8230;</string>
+
+
+    <string name="pos_noun">Noun</string>
+    <string name="pos_verb">Verb</string>
+    <string name="pos_adjective">Adjective</string>
+    <string name="pos_adverb">Adverb</string>
+    <string name="pos_none">None</string>
+
+    <string name="level">Level</string>
+
+    <string name="level_none">None</string>
+    <string name="level_a1">A1</string>
+    <string name="level_a2">A2</string>
+    <string name="level_b1">B1</string>
+    <string name="level_b2">B2</string>
+    <string name="level_c1">C1</string>
+    <string name="level_c2">C2</string>
+    <string name="content_toast_enter_flashcard">Please enter vocabulary and definitions so the AI has context.</string>
+    <string name="enter_vocabulary">Please enter vocabulary</string>
+    <string name="enter_vocabulary_defination">Please enter vocabulary and definitions.</string>
+    <string name="saving">Saving&#8230;</string>
+    <string name="save_successfully">Saved successfully!</string>
+    <string name="error_retry">An error occurred, please try again.</string>
+    <string name="illustrative_image">Illustrative image</string>
+    <string name="preview">Preview</string>
+    <string name="phonetic">Phonetic</string>
+    <string name="suggestion">Suggestion</string>
+    <string name="defination">Defination</string>
+    <string name="suggestion_gemini">Suggestion with GEMINI</string>
+    <string name="ai_thinking">AI is thingking&#8230;</string>
+    <string name="create_flashcard">Create flashcard</string>
+    <string name="enter_word_to_preview">Enter vocabulary words to see a preview!</string>
+    <string name="stop_practice">Stop practice</string>
+    <string name="message_stop_practice">Are you sure you want to stop practicing? Your current progress will be saved</string>
+    <string name="quit">Quit</string>
+    <string name="progress">Progress</string>
+    <string name="practice">Practice</string>
+    <string name="words_memorized">words memorized</string>
+    <string name="title_practice_again">Start practicing from scratch?</string>
+    <string name="message_practice_again">Your progress on this vocabulary set will be reset to 0%. Are you sure?</string>
+    <string name="accept">Accept</string>
+    <string name="save_and_quit">Save and quit</string>
+    <string name="message_save_quit">Do you want to save your practice progress?</string>
+    <string name="quit_not_save">Quit and not save</string>
+    <string name="stop_upper">STOP</string>
+    <string name="topic">Topic</string>
+    <string name="delete_vocabulary">Delete this vocabulary</string>
+    <string name="delete">Delete</string>
+    <string name="delete_flashcard_subtitle">Are you sure you want to delete \'%1$s\'?</string>
+    <string name="enter_name_deck">Please enter the name of the deck.</string>
+    <string name="enter_name_deck_input">Enter the name of the deck&#8230;</string>
+
     <!-- Course Detail Strings -->
     <string name="create_new_course">Create new course</string>
     <string name="course_detail">Course detail</string>
     <string name="speaking">Speaking</string>
     <string name="vocabulary_tab">Vocabulary</string>
-    <string name="saving_information">Saving information...</string>
+    <string name="saving_information">Saving information&#8230;</string>
     <string name="please_fill_all_information">Please fill in all information!</string>
     <string name="course_data_not_found">Course data not found</string>
     <string name="lesson_count">%1$d Lessons</string>
@@ -168,12 +229,10 @@
     <string name="save_information">Save information</string>
     <string name="status_public">Public</string>
     <string name="title_label">Title</string>
-    <string name="enter_study_day_title">Enter study day title...</string>
+    <string name="enter_study_day_title">Enter study day title&#8230;</string>
     <string name="create_new_study_day">Create new study day</string>
     <string name="create_now">Create now</string>
-    <string name="delete_vocabulary">Delete vocabulary</string>
     <string name="delete_vocabulary_confirm">Are you sure you want to delete the word \'%1$s\'? Deleted data cannot be recovered.</string>
-    <string name="delete">Delete</string>
     <string name="update_success">Update successful!</string>
     <string name="add_data_success">Data added successfully!</string>
     <string name="no_lessons_available">No lessons available yet!</string>

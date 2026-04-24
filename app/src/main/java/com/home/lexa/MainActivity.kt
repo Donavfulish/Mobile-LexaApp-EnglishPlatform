@@ -166,7 +166,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             R.id.libraryFragment -> {
-                tvTitle.text = "Thư viện"
+                tvTitle.text = getString(R.string.library)
                 binding.appBarLayout.insertCustomeView(headerView)
                 binding.bottomNavigationMain.setSelectedTab(R.id.libraryFragment)
             }
@@ -194,6 +194,9 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.exerciseResultFragment->{
                 binding.appBarLayout.visibility = View.GONE
+            }
+            R.id.flashcardAddEditFragment->{
+                binding.appBarLayout.setText("")
             }
         }
     }
@@ -293,31 +296,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun askNotificationPermission() {
-        // Chỉ chạy logic này nếu thiết bị đang dùng Android 13 (TIRAMISU / API 33) trở lên
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 
             when {
-                // Trường hợp 1: Người dùng đã cấp quyền từ trước rồi
+
                 ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.POST_NOTIFICATIONS
                 ) == PackageManager.PERMISSION_GRANTED -> {
-                    // Không cần làm gì thêm, cứ thế dùng thôi
                 }
 
-                // Trường hợp 2: Người dùng từng từ chối trước đó, cần giải thích lý do
-                shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
-                    /*
-                     TODO: Theo chuẩn UX của Google, ở đây bạn nên hiện một Dialog nhỏ (AlertDialog)
-                     giải thích thân thiện: "App cần quyền này để báo cho bạn khi có tin nhắn mới...".
-                     Nếu người dùng bấm "Đồng ý" trên Dialog đó, bạn mới gọi dòng launch bên dưới.
 
-                     Để code chạy nhanh gọn, tôi gọi thẳng hàm launch luôn:
-                    */
+                shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
                     requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
 
-                // Trường hợp 3: Lần đầu tiên mở app, bung popup mặc định của hệ thống lên hỏi luôn
                 else -> {
                     requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }

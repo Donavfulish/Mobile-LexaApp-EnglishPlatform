@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Bạn muốn tạo riêng?"
+                android:text="@string/do_you_want_create_your"
                 android:textColor="#333333"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:text="Hãy chuyển sang tab Cá nhân để bắt đầu xây dựng\nbộ từ vựng của riêng bạn."
+                android:text="@string/content_create_your"
                 android:textColor="#777777"
                 android:textSize="13sp" />
 
@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Đến tab Cá nhân"
+                android:text="@string/go_to_personal_tab"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"

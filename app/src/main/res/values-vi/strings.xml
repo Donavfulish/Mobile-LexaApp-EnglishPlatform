@@ -16,7 +16,7 @@
     <string name="register_linked_account">Đăng ký tài khoản liên kết</string>
     <string name="enter_information">Hoặc nhập thông tin</string>
     <string name="birth_date">Ngày sinh</string>
-    <string name="address">Address</string>
+    <string name="address">Địa chỉ</string>
     <string name="login">Đăng nhập</string>
     <string name="register">Đăng ký</string>
     <string name="dont_have_account">Chưa có tài khoản</string>
@@ -56,12 +56,12 @@
     <string name="total_lesson">Tổng số lượt học</string>
     <string name="favorite_vocabulary_set">Yêu thích bộ từ vựng</string>
 
-    <string name="search_placeholder_favorite">Tìm bộ từ vựng, chủ đề,...</string>
+    <string name="search_placeholder_favorite">Tìm bộ từ vựng, chủ đề,&#8230;</string>
     <string name="favorite">Yêu thích</string>
     <string name="personal">Cá nhân</string>
 
     <string name="start_practice">Bắt đầu luyện tập</string>
-    <string name="search_course">Tìm kiếm khoá học,...</string>
+    <string name="search_course">Tìm kiếm khoá học,&#8230;</string>
     <string name="word_list">Danh sách từ</string>
     <string name="edit">Chỉnh sửa</string>
     <string name="flashcard_detail_desc">Bạn đã xem hết danh sách. Hãy bắt đầu ôn luyện để ghi nhớ các từ vựng này nhé!</string>
@@ -101,7 +101,7 @@
     <string name="learning_path">Lộ trình</string>
     <string name="continue_learning_now">Tiếp tục học ngay</string>
 
-    <string name="search_flashcard">Tìm kiếm từ vựng,...</string>
+    <string name="search_flashcard">Tìm kiếm từ vựng,&#8230;</string>
     <string name="flashcard_list">Danh sách Flashcards</string>
     <string name="quick_learning_tips">Mẹo học nhanh</string>
     <string name="flashcard_note_desc">Chạm vào thẻ để xem nghĩa và ví dụ. Đừng quên bật âm thanh để nghe cách phát âm chuẩn nhé</string>
@@ -155,12 +155,70 @@
     <string name="enter_email_to_reset">Nhập email tài khoản để nhận mã OTP</string>
     <string name="new_password">Mật khẩu mới</string>
 
+    <string name="creat_new_deck">Tạo bộ từ vựng mới</string>
+    <string name="create">Tạo</string>
+    <string name="favorite_deck">BỘ TỪ VỰNG YÊU THÍCH</string>
+    <string name="do_you_want_create_your">Bạn có muốn tạo riêng ?</string>
+    <string name="content_create_your">\nHãy chuyển sang tab Cá nhân để bắt đầu xây dựng\nbộ từ vựng của riêng bạn.</string>
+    <string name="go_to_personal_tab">Đi đến tab cá nhân</string>
+    <string name="example">Ví dụ</string>
+    <string name="enter_defination">Nhập định nghĩa&#8230;</string>
+    <string name="enter_example">Nhập ví dụ&#8230;</string>
+    <string name="pos_noun">Danh từ</string>
+    <string name="pos_verb">Động từ</string>
+    <string name="pos_adjective">Tính từ</string>
+    <string name="pos_adverb">Trạng từ</string>
+    <string name="pos_none">Chưa có</string>
+
+    <string name="level">Cấp độ</string>
+
+    <string name="level_none">Không xác định</string>
+    <string name="level_a1">A1</string>
+    <string name="level_a2">A2</string>
+    <string name="level_b1">B1</string>
+    <string name="level_b2">B2</string>
+    <string name="level_c1">C1</string>
+    <string name="level_c2">C2</string>
+    <string name="content_toast_enter_flashcard">Vui lòng nhập từ vựng và định nghĩa để AI có ngữ cảnh</string>
+    <string name="enter_vocabulary">Vui lòng nhập từ vựng</string>
+    <string name="enter_vocabulary_defination">Vui lòng nhập từ vựng và định nghĩater vocabulary and definitions.</string>
+    <string name="saving">Đang lưu&#8230;</string>
+    <string name="save_successfully">Lưu thành công!</string>
+    <string name="error_retry">Có lỗi xảy ra, vui lòng thử lại</string>
+    <string name="illustrative_image">Ảnh minh họa</string>
+    <string name="preview">Xem trước</string>
+    <string name="phonetic">Phiên âm</string>
+    <string name="suggestion">Gợi ý</string>
+    <string name="defination">Định nghĩa</string>
+    <string name="suggestion_gemini">Gợi ý với GEMINI</string>
+    <string name="ai_thinking">AI đang suy nghĩ&#8230;</string>
+    <string name="create_flashcard">Thêm mới từ vựng</string>
+    <string name="enter_word_to_preview">Nhập từ vựng để xem trước!</string>
+    <string name="stop_practice">Dừng luyện tập</string>
+    <string name="message_stop_practice">Bạn có chắc chắn muốn ngừng luyện tập không? Tiến độ hiện tại của bạn sẽ được lưu lại.</string>
+    <string name="quit">Thoát</string>
+
+    <string name="progress">Tiến độ</string>
+    <string name="practice">Luyện tập</string>
+    <string name="words_memorized">từ đã thuộc</string>
+    <string name="title_practice_again">Luyện lại từ đầu?</string>
+    <string name="message_practice_again">Tiến độ học tập của bạn đối với bộ từ vựng này sẽ được đặt lại về 0%. Bạn có chắc chắn không?</string>
+    <string name="accept">Đồng ý</string>
+    <string name="save_and_quit">Lưu và thoát</string>
+    <string name="message_save_quit">Bạn có muốn lưu lại tiến trình luyện tập của mình không?</string>
+    <string name="quit_not_save">Thoát và không lưu</string>
+    <string name="stop_upper">DỪNG</string>
+    <string name="topic">Chủ đề</string>
+    <string name="delete_flashcard_subtitle">Bạn có chắc muốn xóa \'%1$s\' không?</string>
+    <string name="enter_name_deck">Vui lòng nhập tên bộ từ vựng.</string>
+    <string name="enter_name_deck_input">Nhập tên bộ từ vựng&#8230;</string>
+
     <!-- Course Detail Strings (VI) -->
     <string name="create_new_course">Tạo mới khoá học</string>
     <string name="course_detail">Chi tiết khoá học</string>
     <string name="speaking">Speaking</string>
     <string name="vocabulary_tab">Từ vựng</string>
-    <string name="saving_information">Đang lưu thông tin...</string>
+    <string name="saving_information">Đang lưu thông tin&#8230;</string>
     <string name="please_fill_all_information">Vui lòng điền đầy đủ thông tin!</string>
     <string name="course_data_not_found">Không tìm thấy dữ liệu khóa học</string>
     <string name="lesson_count">%1$d Bài học</string>
@@ -168,7 +226,7 @@
     <string name="save_information">Lưu thông tin</string>
     <string name="status_public">Công khai</string>
     <string name="title_label">Tiêu đề</string>
-    <string name="enter_study_day_title">Nhập tiêu đề ngày học...</string>
+    <string name="enter_study_day_title">Nhập tiêu đề ngày học&#8230;</string>
     <string name="create_new_study_day">Tạo ngày học mới</string>
     <string name="create_now">Tạo ngay</string>
     <string name="delete_vocabulary">Xóa từ vựng</string>
@@ -181,4 +239,9 @@
     <string name="error_message">Lỗi: %1$s</string>
     <string name="paragraph_count">%1$d đoạn văn</string>
     <string name="speaking_day_list_title">Danh sách ngày học</string>
+    <string name="enter_course_name">Nhập tên khóa học</string>
+    <string name="select_course_type">Chọn chủ đề</string>
+    <string name="course_description_label">Mô tả khóa học</string>
+    <string name="enter_course_description">Nhập mô tả khóa học</string>
+    <string name="create_course_first_notice">Lưu thông tin để TẠO khóa học trước khi nhập liệu lộ trình Speaking và Từ vựng</string>
 </resources>

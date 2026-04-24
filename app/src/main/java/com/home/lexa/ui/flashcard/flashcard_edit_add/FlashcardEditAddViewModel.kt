@@ -97,7 +97,7 @@ class FlashcardEditAddViewModel(
 
                 val result = flashcardRepository.getExampleSuggestion(generativeModel, word, meaning, partOfSpeech)
 
-                if (result != null) {
+                if (result != "INVALID_CONTEXT" ) {
                     _uiState.value = WordUiState.Success(result)
                 } else {
                     _uiState.value = WordUiState.Error("Không thể tạo câu ví dụ")

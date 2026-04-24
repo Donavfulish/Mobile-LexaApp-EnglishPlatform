@@ -29,8 +29,8 @@ class ExerciseModeViewModel(
     private var practiceQueue = mutableListOf<DetailFlashcardWithResult>()
     private var currentQueueIndex = 0
 
-    private val _currentCard = MutableLiveData<Vocabulary?>()
-    val currentCard: LiveData<Vocabulary?> = _currentCard
+    private val _currentCard = MutableLiveData<DetailFlashcardWithResult?>()
+    val currentCard: LiveData<DetailFlashcardWithResult?> = _currentCard
 
     private val _rememberedCount = MutableLiveData<Int>()
     val rememberedCount: LiveData<Int> = _rememberedCount
@@ -123,7 +123,7 @@ class ExerciseModeViewModel(
     private fun loadCardAt(index: Int) {
         if (index < practiceQueue.size) {
             val item = practiceQueue[index]
-            _currentCard.value = mapToVocabulary(item)
+            _currentCard.value = item
 
             val alreadyLearnedOutsideQueue = allCards.size - practiceQueue.size
             _progress.value = alreadyLearnedOutsideQueue + index
@@ -164,16 +164,5 @@ class ExerciseModeViewModel(
         startNewSession(onlyForgotten = false)
     }
 
-    private fun mapToVocabulary(item: DetailFlashcardWithResult): Vocabulary {
-        return Vocabulary(
-            level = ColorLabel(item.flashCard.type, "#E0E0E5"),
-            imageUrl = item.flashCard.imageUrl,
-            word = item.flashCard.word,
-            pronunciation_url = item.flashCard.audioUrl ?: "",
-            transciption = item.flashCard.transcription,
-            part_of_speech = ColorLabel(item.flashCard.partOfSpeech, "#636AE8"),
-            definition = item.flashCard.meaning,
-            example = item.flashCard.example ?: ""
-        )
-    }
+
 }

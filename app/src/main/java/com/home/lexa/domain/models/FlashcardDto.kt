@@ -1,8 +1,51 @@
 package com.home.lexa.domain.models
 
+import android.content.Context
+import androidx.annotation.StringRes
+import com.home.lexa.R
 import kotlinx.serialization.Serializable
-enum class VocabType { NONE, A1, A2, B1, B2, C1, C2 }
+enum class VocabType(@StringRes val nameRes: Int) {
+    NONE(R.string.level_none),
+    A1(R.string.level_a1),
+    A2(R.string.level_a2),
+    B1(R.string.level_b1),
+    B2(R.string.level_b2),
+    C1(R.string.level_c1),
+    C2(R.string.level_c2);
 
+    companion object {
+
+        fun getLocalizedNames(context: Context): List<String> {
+            return entries.map { context.getString(it.nameRes) }
+        }
+
+        fun fromLocalizedName(context: Context, name: String): VocabType {
+            return entries.find { context.getString(it.nameRes) == name } ?: NONE
+        }
+    }
+}
+
+enum class PartOfSpeech(val id: Int, @StringRes val nameRes: Int) {
+    NOUN(1, R.string.pos_noun),
+    VERB(2, R.string.pos_verb),
+    ADJECTIVE(3, R.string.pos_adjective),
+    ADVERB(4, R.string.pos_adverb);
+
+    companion object {
+
+        fun getLocalizedNames(context: Context): List<String> {
+            return entries.map { context.getString(it.nameRes) }
+        }
+
+        fun getIdFromLocalizedName(context: Context, name: String): Int {
+            return entries.find { context.getString(it.nameRes) == name }?.id ?: 1 // Mặc định trả về 1 (Danh từ) nếu không tìm thấy
+        }
+
+        fun fromId(id: Int): PartOfSpeech? {
+            return entries.find { it.id == id }
+        }
+    }
+}
 @Serializable
 data class DetailFlashcard(
     val id: Long,
@@ -14,7 +57,7 @@ data class DetailFlashcard(
     val audioUrl: String?,
     val meaning: String,
     val example: String?,
-    val partOfSpeech: String
+    val partOfSpeechId: Int
 )
 
 @Serializable

@@ -124,7 +124,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:letterSpacing="0.05"
-                android:text="CHẠM ĐỂ QUAY LẠI"
+                android:text="@string/tap_to_go_back"
                 android:textColor="#9CA3AF"
                 android:textSize="8sp"
                 android:textStyle="bold"

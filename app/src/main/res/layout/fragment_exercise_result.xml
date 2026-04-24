@@ -49,7 +49,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="HOÀN THÀNH!"
+                android:text="@string/completed_upper"
                 android:textColor="@color/black"
                 android:textSize="22sp"
                 android:textStyle="bold" />
@@ -87,7 +87,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ĐÃ THUỘC"
+                        android:text="@string/memorized_upper"
                         android:textSize="12sp"
                         android:textColor="#757575"
                         android:textStyle="bold"/>
@@ -113,7 +113,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="CHƯA THUỘC"
+                        android:text="@string/not_memorized_upper"
                         android:textSize="12sp"
                         android:textColor="#757575"
                         android:textStyle="bold"/>
@@ -139,7 +139,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Chúc mừng, tiến độ của bạn đã tăng thêm!\nGiữ vững phong độ nhé!"
+                    android:text="@string/congratulation_title"
                     android:textAlignment="center"
                     android:textColor="#424242"
                     android:textSize="14sp" />
@@ -150,7 +150,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="24dp"
-                android:text="Luyện từ chưa thuộc"
+                android:text="@string/practice_unmemorized_words"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:backgroundTint="#636AE8"
@@ -164,7 +164,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="8dp"
-                android:text="Luyện lại"
+                android:text="@string/practice_again"
                 android:textColor="#424242"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -180,7 +180,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="24dp"
-                android:text="Thoát"
+                android:text="@string/quit"
                 android:textColor="#FF4D4F"
                 android:textSize="16sp"
                 android:textStyle="bold" />
