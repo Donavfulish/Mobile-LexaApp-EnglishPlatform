@@ -13,14 +13,17 @@ import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentStudentCourseListBinding
 import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.StudentCourseFilter
-import com.home.lexa.domain.models.TeacherCourseFilter
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>(FragmentStudentCourseListBinding::inflate) {
     private val viewModel: StudentCourseListModel by activityViewModel()
+
     private val courseAdapter by lazy {
-        StudentCourseListAdapter(emptyList()) { course ->
+        StudentCourseListAdapter(
+            if(viewModel.courses.value?.data != null)
+                viewModel.courses.value!!.data
+            else emptyList()
+        ) { course ->
             val bundle = Bundle().apply {
                 putLong("courseId", course.id)
             }
@@ -136,30 +139,50 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
                 null)
         }
 
+        binding.btnFinished.setOnClickListener {
+            if(viewModel.currentFilter.value == StudentCourseFilter.FINISHED)
+                return@setOnClickListener
+            binding.headerSection.setHeaderData(
+                title = getString(R.string.my_courses),
+                actionText = getString(R.string.all_count, 0),
+                onActionClick = {}
+            )
+            viewModel.changeFilter(StudentCourseFilter.FINISHED,
+                SearchInfo(
+                    query= "",
+                    sortBy= "",
+                    order= "",
+                    limit = 10
+                ),
+                null)
+        }
+
         if (viewModel.courses.value == null || viewModel.courses.value?.data.isNullOrEmpty()) {
             val filterArg = arguments?.getString("filter")
             val initialFilter = try {
-                StudentCourseFilter.valueOf(filterArg ?: "MYCOURSE")
+                StudentCourseFilter.valueOf(filterArg ?: "ALL")
             } catch (e: Exception) {
                 StudentCourseFilter.ALL
             }
-            viewModel.changeFilter(initialFilter, viewModel.searchInfo, null)
+            viewModel.fetchAllCourses(false, viewModel.searchInfo, null)
+            updateFilterUI(initialFilter)
         } else {
             binding.searchbarFilter.setTextSearch(viewModel.searchInfo.query ?: "")
             viewModel.currentFilter.value?.let { updateFilterUI(it) }
         }
 
-        val layoutManager = LinearLayoutManager(context)
         binding.rvCourses.apply {
-            this.layoutManager = layoutManager
+            adapter = courseAdapter
+            val lm = layoutManager as? LinearLayoutManager ?: LinearLayoutManager(context).also { layoutManager = it }
+            
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
 
                     if (dy > 0) {
-                        val visibleItemCount = layoutManager.childCount
-                        val totalItemCount = layoutManager.itemCount
-                        val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+                        val visibleItemCount = lm.childCount
+                        val totalItemCount = lm.itemCount
+                        val firstVisibleItemPosition = lm.findFirstVisibleItemPosition()
 
                         val threshold = 3
                         if (viewModel.isLoading.value == false && !viewModel.isLastPage) {
@@ -177,10 +200,6 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
     override fun observeData() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
@@ -191,19 +210,17 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
         }
 
         viewModel.courses.observe(viewLifecycleOwner) { shortCourse ->
+            if (shortCourse.status != viewModel.currentFilter.value) {
+                return@observe
+            }
             courseAdapter.updateData(shortCourse.data)
 
-            val filter = shortCourse.status
+            val filter = viewModel.currentFilter.value ?: StudentCourseFilter.ALL
             val title = when (filter) {
-                is StudentCourseFilter -> {
-                    when (filter) {
-                        StudentCourseFilter.ALL -> getString(R.string.all_courses)
-                        StudentCourseFilter.FAVORITE -> getString(R.string.favorite_courses)
-                        StudentCourseFilter.LEARNING -> getString(R.string.learning_courses)
-                        StudentCourseFilter.FINISHED -> getString(R.string.finished_courses)
-                    }
-                }
-                else -> getString(R.string.course)
+                StudentCourseFilter.ALL -> getString(R.string.all_courses)
+                StudentCourseFilter.FAVORITE -> getString(R.string.favorite_courses)
+                StudentCourseFilter.LEARNING -> getString(R.string.learning_courses)
+                StudentCourseFilter.FINISHED -> getString(R.string.finished_courses)
             }
 
             binding.headerSection.setHeaderData(

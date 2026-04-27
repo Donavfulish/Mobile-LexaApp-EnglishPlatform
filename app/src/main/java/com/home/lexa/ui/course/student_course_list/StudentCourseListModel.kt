@@ -50,7 +50,7 @@ class StudentCourseListModel(private val repository: CourseRepository) : ViewMod
             _isSuggesting.value = true
             val result = repository.getCourseSuggestions(query)
             result.onSuccess { list ->
-                _suggestions.value = list
+                _suggestions.value = list!!
                 _isSuggesting.value = false
             }.onFailure {
                 _suggestions.value = emptyList()
