@@ -75,7 +75,7 @@ val appModule = module {
     }
     single {
         Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8081/")
+            .baseUrl("http://10.0.2.2:8081/") // 10.0.2.2:8081
             .client(get(named("auth_client")))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
