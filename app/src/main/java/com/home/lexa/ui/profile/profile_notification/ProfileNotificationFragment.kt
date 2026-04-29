@@ -61,6 +61,29 @@ class ProfileNotificationFragment : BaseFragment<FragmentProfileNotificationBind
                 }
             }
         }
+        binding.studyHourNotification.apply {
+            setTitle("Thông báo giờ học")
+            setDescription("Thông báo nhắc nhở trước khi đến giờ học đã cài đặt của bạn.")
+            setIcon(R.drawable.ic_book, ContextCompat.getColor(requireContext(), R.color.c_4285f4))
+
+            setOnToggleChangeListener { isOn ->
+
+                viewModel.onTimeToggled(isOn)
+
+                updateReminderVisibility(isOn)
+
+                if (isOn) {
+                    val (hour, minute) = binding.reminderSetting.getSelectedTime()
+                    val selectedDays = binding.reminderSetting.getSelectedDays();
+                    scheduleDailyReminder(hour, minute,selectedDays)
+                }else{
+                    cancelNotification(
+                        requireContext(),
+                        ScheduleNotificationUtils.REQ_CODE_STUDY_HOUR
+                    )
+                }
+            }
+        }
         binding.reminderSetting.setOnTimeChangedListener { hour, minute ->
 
             viewModel.saveScheduleTime(hour, minute)
