@@ -278,7 +278,9 @@
                     app:iconTint="@null"
                     app:layout_constraintStart_toEndOf="@+id/tvExampleLabel"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="RtlSymmetry" />
+                    tools:ignore="RtlSymmetry"
+                    android:gravity="start|center_vertical"
+                    />
 
                 <com.home.lexa.ui.components.NormalInput
                     android:id="@+id/inputExample"

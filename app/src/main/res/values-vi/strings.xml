@@ -190,7 +190,7 @@
     <string name="phonetic">Phiên âm</string>
     <string name="suggestion">Gợi ý</string>
     <string name="defination">Định nghĩa</string>
-    <string name="suggestion_gemini">Gợi ý với GEMINI</string>
+    <string name="suggestion_gemini">Gợi ý với GEMINI(Bạn phải điền đúng từ vựng, định nghĩa và loại từ)</string>
     <string name="ai_thinking">AI đang suy nghĩ&#8230;</string>
     <string name="create_flashcard">Thêm mới từ vựng</string>
     <string name="enter_word_to_preview">Nhập từ vựng để xem trước!</string>
