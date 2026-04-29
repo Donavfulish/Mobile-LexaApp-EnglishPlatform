@@ -124,11 +124,17 @@ class VocabularyFlashcardViewModel(
     fun deleteFlashcard(flashcardId: Long, deckId: Long) {
         viewModelScope.launch {
             try {
-                _deleteResult.postValue(Result.success(Unit))
 
-                flashcardRepository.deleteFlashcard(flashcardId, deckId)
-                loadFlashcardDetail(deckId)
 
+                val result = flashcardRepository.deleteFlashcard(flashcardId, deckId)
+
+                if (result.isSuccess) {
+                    loadFlashcardDetail(deckId)
+                    loadFlashcardsWithResult(false, deckId, searchInfor, null)
+                    _deleteResult.postValue(Result.success(Unit))
+                } else {
+                    _deleteResult.postValue(Result.failure(Exception("Xóa thất bại")))
+                }
             } catch (e: Exception) {
                 _deleteResult.postValue(Result.failure(e))
             }
