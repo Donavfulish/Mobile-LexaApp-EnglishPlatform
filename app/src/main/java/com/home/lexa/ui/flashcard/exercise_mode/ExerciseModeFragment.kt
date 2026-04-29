@@ -111,11 +111,13 @@ class ExerciseModeFragment : BaseFragment<FragmentExerciseModeBinding>(FragmentE
         viewModel.isFinished.observe(viewLifecycleOwner) { isFinished ->
             if (isFinished) {
                 val actualDeckId = arguments?.getLong("deckId") ?: -1L
+                val initialRemembered = arguments?.getInt("rememberedCount") ?: 0
                 val bundle = bundleOf(
                     "deckId" to actualDeckId,
                     "rememberedCount" to (viewModel.rememberedCount.value ?: 0),
                     "forgottenCount" to (viewModel.forgottenCount.value ?: 0),
-                    "totalCards" to (viewModel.totalCards.value ?: 1)
+                    "totalCards" to (viewModel.totalCards.value ?: 1),
+                    "initialRememberedCount" to initialRemembered
                 )
                 findNavController().navigate(
                     R.id.action_exerciseModeFragment_to_exerciseResultFragment,
@@ -127,8 +129,6 @@ class ExerciseModeFragment : BaseFragment<FragmentExerciseModeBinding>(FragmentE
 
     override fun onResume() {
         super.onResume()
-
-        viewModel.fetchFlashcardsFromApi();
     }
     private fun resetFlashcardView() {
         binding.flashcardView.animate()

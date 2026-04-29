@@ -82,11 +82,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
         binding.featuredCoursesHeader.setHeaderData(getString(R.string.featured_course), iconRes = R.drawable.ic_star_outline, getString(R.string.see_all), {
             findNavController().navigate(R.id.action_homeFragment_to_courseFragment)
-
         })
         if(isTeacher){
             binding.tvTitleStats.text = getString(R.string.teaching_achievements_upper)
-            binding.tvFirstText.text = getString(R.string.total_studied)
+            binding.tvFirstText.text = getString(R.string.  total_studied)
             binding.tvSecondText.text = getString(R.string.vocabulary_downloads)
             binding.commonCoursesHeader.setHeaderData(getString(R.string.most_studied), R.drawable.ic_play_circle)
             binding.rvStudyingCoursesCard.visibility= View.GONE
