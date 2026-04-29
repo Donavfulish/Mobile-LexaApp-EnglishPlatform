@@ -31,12 +31,6 @@ class ProfileNotificationFragment : BaseFragment<FragmentProfileNotificationBind
         }
 
 
-        binding.notification.apply {
-            setTitle("Thông báo")
-            setDescription(null)
-            setIcon(R.drawable.ic_notification, ContextCompat.getColor(requireContext(), R.color.c_636ae8))
-            setToggleState(false)
-        }
 
         binding.streakNotification.apply {
             setTitle("Thông báo chuỗi")
@@ -47,42 +41,22 @@ class ProfileNotificationFragment : BaseFragment<FragmentProfileNotificationBind
             setOnToggleChangeListener { isOn ->
                 viewModel.onStreakToggled(isOn)
                 if (isOn) {
-                    val testTime = System.currentTimeMillis() + 10000
-                    scheduleNotification(
-                        requireContext(),
-                        testTime,
-                        "Thông Báo Streak",
-                        "Thông báo này sẽ xuất hiện sau 10 giây",
-                        ScheduleNotificationUtils.REQ_CODE_STREAK
+
+                    val everyday = (1..7).toSet()
+
+                    ScheduleNotificationUtils.scheduleNotification(
+                        context = requireContext(),
+                        hour = 19,
+                        minute = 0,
+                        selectedDays = everyday,
+                        title = "Lexa",
+                        message = context.getString(R.string.notification_streak),
+                        requestCode = ScheduleNotificationUtils.REQ_CODE_STREAK
                     )
-                }else{
-                    cancelNotification(
+                } else {
+                    ScheduleNotificationUtils.cancelNotification(
                         requireContext(),
                         ScheduleNotificationUtils.REQ_CODE_STREAK
-                    )
-                }
-            }
-        }
-
-        binding.studyHourNotification.apply {
-            setTitle("Thông báo giờ học")
-            setDescription("Thông báo nhắc nhở trước khi đến giờ học đã cài đặt của bạn.")
-            setIcon(R.drawable.ic_book, ContextCompat.getColor(requireContext(), R.color.c_4285f4))
-
-            setOnToggleChangeListener { isOn ->
-
-                viewModel.onTimeToggled(isOn)
-
-                updateReminderVisibility(isOn)
-
-                if (isOn) {
-                    val (hour, minute) = binding.reminderSetting.getSelectedTime()
-                    val selectedDays = binding.reminderSetting.getSelectedDays();
-                    scheduleDailyReminder(hour, minute,selectedDays)
-                }else{
-                    cancelNotification(
-                        requireContext(),
-                        ScheduleNotificationUtils.REQ_CODE_STUDY_HOUR
                     )
                 }
             }
@@ -143,34 +117,24 @@ class ProfileNotificationFragment : BaseFragment<FragmentProfileNotificationBind
         }
     }
     private fun scheduleDailyReminder(hour: Int, minute: Int, selectedDays: Set<Int>) {
-        val calendar = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, hour)
-            set(Calendar.MINUTE, minute)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
+        if (selectedDays.isEmpty()) {
+      
+            ScheduleNotificationUtils.cancelNotification(
+                requireContext(),
+                ScheduleNotificationUtils.REQ_CODE_STUDY_HOUR
+            )
+            return
         }
 
 
-
-        if (selectedDays.isNotEmpty()) {
-            var daysAdded = 0
-            while ((calendar.before(Calendar.getInstance()) || !selectedDays.contains(calendar.get(Calendar.DAY_OF_WEEK))) && daysAdded < 7) {
-                calendar.add(Calendar.DATE, 1)
-                daysAdded++
-            }
-        } else {
-
-            if (calendar.before(Calendar.getInstance())) {
-                calendar.add(Calendar.DATE, 1)
-            }
-        }
-
-        scheduleNotification(
-            requireContext(),
-            calendar.timeInMillis,
-            "Đã đến giờ học!",
-            "Hãy vào Lexa duy trì chuỗi học tập ngay nhé!",
-            ScheduleNotificationUtils.REQ_CODE_STUDY_HOUR
+        ScheduleNotificationUtils.scheduleNotification(
+            context = requireContext(),
+            hour = hour,
+            minute = minute,
+            selectedDays = selectedDays,
+            title = "Lexa",
+            message = getString(R.string.time_to_learn),
+            requestCode = ScheduleNotificationUtils.REQ_CODE_STUDY_HOUR
         )
     }
 }

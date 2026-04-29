@@ -322,4 +322,6 @@
     <string name="favorite_success">Favorite successfully</string>
     <string name="unfavorite_success">Unfavorited successfully</string>
     <string name="system_error">System error</string>
+    <string name="time_to_learn">It\'s time for learning!</string>
+    <string name="notification_streak">Please keep your streak!</string>
 </resources>

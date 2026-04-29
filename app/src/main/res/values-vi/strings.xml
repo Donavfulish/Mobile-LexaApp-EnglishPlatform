@@ -321,4 +321,6 @@
     <string name="favorite_success">Yêu thích thành công</string>
     <string name="unfavorite_success">Bỏ yêu thích thành công</string>
     <string name="system_error">Lỗi từ hệ thống</string>
+    <string name="time_to_learn">Đến giờ học rồi bạn ơi!</string>
+    <string name="notification_streak">Hãy vào học để giữ chuỗi bạn nhé!</string>
 </resources>
