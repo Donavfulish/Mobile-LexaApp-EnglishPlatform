@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
+import coil.load
 import com.home.lexa.R
 import com.home.lexa.databinding.ActivityMainBinding
 import com.home.lexa.databinding.FragmentCourseDetailBinding
@@ -48,6 +49,11 @@ class CourseDetailStudent(
                     viewModel.setFavorite(course.id, course.deckId!!)
                 }
             }
+        }
+        binding.backgroundCourse.load(course.thumbnail_url) {
+            crossfade(true)
+            placeholder(R.drawable.background_course)
+            error(R.drawable.background_course)
         }
         binding.topic.apply {
             setTextSize(12f)

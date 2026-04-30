@@ -39,7 +39,7 @@
         <com.home.lexa.ui.components.Tag
             android:id="@+id/tagCategory"
             android:layout_width="wrap_content"
-            android:layout_height="24dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             app:layout_constraintStart_toEndOf="@+id/cvThumbnail"
             app:layout_constraintTop_toTopOf="@+id/cvThumbnail" />
