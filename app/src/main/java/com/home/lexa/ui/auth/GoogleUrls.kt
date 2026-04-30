@@ -1,9 +1,10 @@
 package com.home.lexa.ui.auth
 
 import android.net.Uri
+import com.home.lexa.BuildConfig
 
 object GoogleUrls {
-    const val BASE_URL = "http://10.0.2.2:8081/api/auth"
+    const val BASE_URL = "${BuildConfig.SERVER_BASE_URL}api/auth"
     const val REDIRECT_URI = "lexa://auth-success"
 
     val loginUri: Uri

@@ -133,7 +133,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                     }
                     is AuthState.Error -> {
                         binding.btnLogin.setText("Đăng Nhập", Color.WHITE) // Khôi phục nút
-                        Toast.makeText(requireContext(), "Tài khoản chưa được đăng ký", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), "Sai thông tin đăng nhập", Toast.LENGTH_LONG).show()
                     }
 
                     else -> {}

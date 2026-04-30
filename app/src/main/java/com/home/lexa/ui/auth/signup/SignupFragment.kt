@@ -352,6 +352,8 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
             data?.let {
                 if (data.registered) {
                     Toast.makeText(requireContext(), "Tài khoản đã được sử dụng", Toast.LENGTH_SHORT).show()
+                    viewModel.resetOAuth()
+                    viewModel.logout()
                     return@observe
                 }
                 // Vô hiệu hóa các nút đăng ký OAuth và các UI không cần thiết

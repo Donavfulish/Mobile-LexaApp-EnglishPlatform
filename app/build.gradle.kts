@@ -1,4 +1,5 @@
 import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,12 +7,15 @@ plugins {
     id("com.google.dagger.hilt.android")
     kotlin("kapt")
 }
+
 val localProperties = Properties()
 val localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
     localProperties.load(localPropertiesFile.inputStream())
 }
 val geminiApiKey = localProperties.getProperty("GEMINI_API_KEY")
+val baseUrl = localProperties.getProperty("SERVER_BASE_URL") ?: "\"http://10.0.2.2:8081/\""
+
 android {
     namespace = "com.home.lexa"
     compileSdk = 34
@@ -25,6 +29,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "GEMINI_KEY", "\"$geminiApiKey\"")
+        buildConfigField("String", "SERVER_BASE_URL", "\"$baseUrl\"")
 
         vectorDrawables {
             useSupportLibrary = true

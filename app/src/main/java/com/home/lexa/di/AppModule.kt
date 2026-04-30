@@ -1,5 +1,6 @@
 package com.home.lexa.di
 
+import com.home.lexa.BuildConfig
 import com.home.lexa.core.network.AuthInterceptor
 import com.home.lexa.core.network.TokenAuthenticator
 import com.home.lexa.data.local.ScheduleTimeManager
@@ -75,7 +76,7 @@ val appModule = module {
     }
     single {
         Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8081/") // 10.0.2.2:8081
+            .baseUrl(BuildConfig.SERVER_BASE_URL) // 10.0.2.2:8081
             .client(get(named("auth_client")))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
