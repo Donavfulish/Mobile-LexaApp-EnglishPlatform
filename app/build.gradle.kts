@@ -4,7 +4,12 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.androidx.navigation.safeargs)
     id("com.google.dagger.hilt.android")
+
+    // THÊM DÒNG NÀY VÀO (đúng với file TOML của bạn)
+    alias(libs.plugins.google.gms.google.services)
+
     kotlin("kapt")
+    // id("com.google.devtools.ksp") // Nên dùng KSP thay vì kapt cho Room nếu có thể
 }
 val localProperties = Properties()
 val localPropertiesFile = rootProject.file("local.properties")
@@ -32,6 +37,8 @@ android {
 
     }
 
+
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -54,7 +61,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.7"
+        kotlinCompilerExtensionVersion = "1.5.14"
     }
     packaging {
         resources {
@@ -65,7 +72,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -76,6 +82,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.gridlayout)
     implementation(libs.firebase.messaging)
     implementation(libs.androidx.navigation.runtime.ktx)

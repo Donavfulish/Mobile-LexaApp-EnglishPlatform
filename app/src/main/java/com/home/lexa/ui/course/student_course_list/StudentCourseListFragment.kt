@@ -157,20 +157,6 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
                 null)
         }
 
-        if (viewModel.courses.value == null || viewModel.courses.value?.data.isNullOrEmpty()) {
-            val filterArg = arguments?.getString("filter")
-            val initialFilter = try {
-                StudentCourseFilter.valueOf(filterArg ?: "ALL")
-            } catch (e: Exception) {
-                StudentCourseFilter.ALL
-            }
-            viewModel.fetchAllCourses(false, viewModel.searchInfo, null)
-            updateFilterUI(initialFilter)
-        } else {
-            binding.searchbarFilter.setTextSearch(viewModel.searchInfo.query ?: "")
-            viewModel.currentFilter.value?.let { updateFilterUI(it) }
-        }
-
         binding.rvCourses.apply {
             adapter = courseAdapter
             val lm = layoutManager as? LinearLayoutManager ?: LinearLayoutManager(context).also { layoutManager = it }
@@ -198,6 +184,28 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
                 }
             })
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Kiểm tra filter từ arguments và cập nhật dữ liệu
+        val filterArg = arguments?.getString("filter")
+        val filterFromArgs = try {
+            StudentCourseFilter.valueOf(filterArg ?: "ALL")
+        } catch (e: Exception) {
+            StudentCourseFilter.ALL
+        }
+
+        // Nếu filter hiện tại khác với filter truyền vào, hoặc chưa có dữ liệu, hoặc quay lại để refresh
+        if (viewModel.currentFilter.value != filterFromArgs) {
+            viewModel.changeFilter(filterFromArgs, viewModel.searchInfo, null)
+        } else {
+            // Trường hợp cùng filter nhưng vẫn cần refresh để lấy data mới nhất từ db
+            viewModel.fetchAllCourses(false, viewModel.searchInfo, null)
+        }
+        
+        binding.searchbarFilter.setTextSearch(viewModel.searchInfo.query ?: "")
+        updateFilterUI(filterFromArgs)
     }
 
     override fun observeData() {

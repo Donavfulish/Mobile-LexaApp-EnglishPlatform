@@ -2,6 +2,7 @@ package com.home.lexa.data.repository
 
 import android.net.Uri
 import android.util.Log
+import androidx.compose.ui.draw.CacheDrawModifierNode
 import com.home.lexa.data.remote.CourseApiService
 import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.AllCoursePaginationResponse
@@ -401,6 +402,7 @@ class CourseRepositoryImpl(
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
+                AppMemoryCache.removePrefix("getFavoriteCourses")
                 Result.success(true)
             } else {
                 Result.failure(Exception(body?.message ?: "Yêu thích khóa học thất bại"))
@@ -415,7 +417,7 @@ class CourseRepositoryImpl(
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
-
+                AppMemoryCache.removePrefix("getFavoriteCourses")
                 Result.success(true)
             } else {
                 Result.failure(Exception(body?.message ?: "Bỏ yêu thích khóa học thất bại"))
