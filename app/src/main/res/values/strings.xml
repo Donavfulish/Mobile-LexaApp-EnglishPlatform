@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">My Application</string>
+    <string name="home">Home</string>
 
     <string name="continue_process">Continue</string>
     <string name="toast_please_enter_all_information">Please enter all the information</string>
@@ -172,7 +173,7 @@
     <string name="listen_standard_pronunciation">Listen to standard pronunciation</string>
     <string name="listen_my_audio_again">Listen to my audio again</string>
 
-    <string name="personal_profile">Personal profile</string>
+    <string name="personal_profile">Profile</string>
     <string name="study_statistics">STUDY STATISTICS</string>
     <string name="studying_courses">Current course</string>
     <string name="vocabulary_decks">Vocabulary deck</string>

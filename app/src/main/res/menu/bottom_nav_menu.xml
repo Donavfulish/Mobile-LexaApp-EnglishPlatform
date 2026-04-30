@@ -3,7 +3,7 @@
     <item
         android:id="@+id/homeFragment"
         android:icon="@drawable/ic_home"
-        android:title="Trang chủ" />
+        android:title="@string/home" />
     <item
         android:id="@+id/libraryFragment"
         android:icon="@drawable/ic_book_2"
@@ -11,9 +11,9 @@
     <item
         android:id="@+id/courseFragment"
         android:icon="@drawable/ic_course_menu"
-        android:title="Khóa học" />
+        android:title="@string/course" />
     <item
         android:id="@+id/profileFragment"
         android:icon="@drawable/user_profile"
-        android:title="Cá nhân" />
+        android:title="@string/profile" />
 </menu>

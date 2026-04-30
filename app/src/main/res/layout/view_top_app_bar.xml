@@ -1,70 +1,63 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/topBarLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="68dp"
-    android:background="@color/white"
-    >
+    android:layout_height="56dp"
+    android:background="@color/white">
 
+    <ImageButton
+        android:id="@+id/leftBtn"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="4dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_back_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Chi tiết khoá học"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginStart="20dp"
-        android:maxLines="1"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
         android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Chi tiết khoá học"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toStartOf="@id/rightBtn"
         app:layout_constraintStart_toEndOf="@id/leftBtn"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5" />
-
-    <ImageButton
-        android:id="@+id/leftBtn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:padding="0dp"
-        android:scaleType="fitCenter"
-        android:layout_marginStart="20dp"
-
-        android:background="@android:color/transparent"
-        app:layout_constraintVertical_bias="0.5"
-        android:src="@drawable/ic_back_btn" />
-
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/rightBtn"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="6dp"
+        android:scaleType="fitCenter"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:padding="0dp"
-        android:scaleType="fitCenter"
-        android:layout_marginEnd="20dp"
-        android:visibility="gone"
+        tools:srcCompat="@drawable/ic_favorite_border_btn"
+        tools:visibility="visible" />
 
-        android:background="@android:color/transparent"
-        app:layout_constraintVertical_bias="0.5"
-        tools:srcCompat="@drawable/ic_favorite_border_btn" />
     <View
         android:id="@+id/bottomBorder"
         android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="#D0D0D0"
+        android:layout_height="0.5dp"
+        android:background="#E0E0E0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">My Application</string>
+    <string name="home">Trang chủ</string>
 
     <string name="save_changes_successfully">Lưu thay đổi thành công</string>
     <string name="login_title">Chào mừng trở lại</string>
