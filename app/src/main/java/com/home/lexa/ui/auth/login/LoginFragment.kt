@@ -52,7 +52,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     private fun setupButtons() {
         // Nút Đăng Nhập
         binding.btnLogin.apply {
-            setText("Đăng Nhập", ContextCompat.getColor(requireContext(), R.color.c_ffffff))
+            setText(getString(R.string.login), ContextCompat.getColor(requireContext(), R.color.c_ffffff))
             setBackground(colorPrimary)
             setOnClickAction {
                 val email = binding.inputEmail.getText().trim()
@@ -63,7 +63,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
                     viewModel.login(loginRequest)
                 } else {
-                    Toast.makeText(requireContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.toast_please_enter_all_information), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -75,7 +75,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
         // Nút Google
         binding.btnGoogle.apply {
-            setText(" Đăng nhập bằng Google", colorTextDark)
+            setText(getString(R.string.login_with_google), colorTextDark)
             setBackground(ContextCompat.getColor(requireContext(), R.color.c_ffffff))
             setStroke(1, colorBorder)
             // Thay R.drawable.ic_google bằng icon thực tế của bạn
@@ -88,7 +88,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
         // Click Đăng ký ngay
         binding.tvSignUpAction.setOnClickListener {
-            Toast.makeText(requireContext(), "Chuyển sang màn Đăng ký", Toast.LENGTH_SHORT).show()
             viewModel.resetOAuth()
             findNavController().navigate(R.id.action_loginFragment_to_signUpFragment)
         }
@@ -102,7 +101,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                     is AuthState.Idle -> { /* Không làm gì */ }
                     is AuthState.Loading -> {
                         // TODO: Hiện ProgressDialog hoặc đổi text nút thành "Đang đăng nhập..."
-                        binding.btnLogin.setText("Đang xử lý...", ContextCompat.getColor(requireContext(), R.color.c_ffffff))
+                        binding.btnLogin.setEnabledState(false)
                     }
                     is AuthState.Success -> {
                         val currentRequest = LoginRequest(
@@ -118,7 +117,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
                         viewModel.resetState()
 
-                        Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), getString(R.string.toast_login_successfully), Toast.LENGTH_SHORT).show()
 
                         if (!viewModel.isEmailVerified()) {
                             val email = binding.inputEmail.getText().trim()
@@ -132,8 +131,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                         }
                     }
                     is AuthState.Error -> {
-                        binding.btnLogin.setText("Đăng Nhập", Color.WHITE) // Khôi phục nút
-                        Toast.makeText(requireContext(), "Sai thông tin đăng nhập", Toast.LENGTH_LONG).show()
+                        binding.btnLogin.setEnabledState(true)
+                        Toast.makeText(requireContext(), getString(R.string.toast_account_not_registered), Toast.LENGTH_LONG).show()
                     }
 
                     else -> {}

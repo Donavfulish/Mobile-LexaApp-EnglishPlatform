@@ -26,21 +26,21 @@ class ProfileNotificationFragment : BaseFragment<FragmentProfileNotificationBind
         val activityBinding = (requireActivity() as MainActivity).binding
         activityBinding.appBarLayout.apply {
             removeCustomView()
-            setText("Thông báo")
+            setText(getString(R.string.notification))
             setBackButtonVisible(true)
         }
 
 
         binding.notification.apply {
-            setTitle("Thông báo")
+            setTitle(getString(R.string.notification))
             setDescription(null)
             setIcon(R.drawable.ic_notification, ContextCompat.getColor(requireContext(), R.color.c_636ae8))
             setToggleState(false)
         }
 
         binding.streakNotification.apply {
-            setTitle("Thông báo chuỗi")
-            setDescription("Nhắc nhở bạn duy trì chuỗi học tập hàng ngày để không bỏ lỡ tiến độ.")
+            setTitle(getString(R.string.streak_notification))
+            setDescription(getString(R.string.streak_notification_desc))
             setIcon(R.drawable.ic_fire_outline, ContextCompat.getColor(requireContext(), R.color.c_ff9800))
             setIconBackgroundTint(R.color.c_fff4e5)
 
@@ -51,8 +51,8 @@ class ProfileNotificationFragment : BaseFragment<FragmentProfileNotificationBind
                     scheduleNotification(
                         requireContext(),
                         testTime,
-                        "Thông Báo Streak",
-                        "Thông báo này sẽ xuất hiện sau 10 giây",
+                        getString(R.string.streak_notification),
+                        getString(R.string.this_noti_happens_after_10_secs),
                         ScheduleNotificationUtils.REQ_CODE_STREAK
                     )
                 }else{
@@ -65,8 +65,8 @@ class ProfileNotificationFragment : BaseFragment<FragmentProfileNotificationBind
         }
 
         binding.studyHourNotification.apply {
-            setTitle("Thông báo giờ học")
-            setDescription("Thông báo nhắc nhở trước khi đến giờ học đã cài đặt của bạn.")
+            setTitle(getString(R.string.study_time_notification))
+            setDescription(getString(R.string.study_time_notification_desc))
             setIcon(R.drawable.ic_book, ContextCompat.getColor(requireContext(), R.color.c_4285f4))
 
             setOnToggleChangeListener { isOn ->
@@ -96,7 +96,7 @@ class ProfileNotificationFragment : BaseFragment<FragmentProfileNotificationBind
                 val selectedDays = binding.reminderSetting.getSelectedDays().toSet();
 
                 scheduleDailyReminder(hour, minute,selectedDays)
-                Toast.makeText(requireContext(), "Đã đặt lịch vào $hour:$minute", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.set_schedule_at_hours_minutes, hour, minute), Toast.LENGTH_SHORT).show()
             }
         }
         binding.reminderSetting.setOnDaysChangedListener { days ->
@@ -110,7 +110,7 @@ class ProfileNotificationFragment : BaseFragment<FragmentProfileNotificationBind
                 val (hour, minute) = binding.reminderSetting.getSelectedTime()
 
                 scheduleDailyReminder(hour, minute,safeDaysCopy)
-                Toast.makeText(requireContext(), "Đã đặt lịch vào $hour:$minute", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.set_schedule_at_hours_minutes, hour, minute), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -168,8 +168,8 @@ class ProfileNotificationFragment : BaseFragment<FragmentProfileNotificationBind
         scheduleNotification(
             requireContext(),
             calendar.timeInMillis,
-            "Đã đến giờ học!",
-            "Hãy vào Lexa duy trì chuỗi học tập ngay nhé!",
+            getString(R.string.noti_study_time),
+            getString(R.string.noti_study_time_desc),
             ScheduleNotificationUtils.REQ_CODE_STUDY_HOUR
         )
     }

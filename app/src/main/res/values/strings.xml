@@ -2,6 +2,10 @@
 <resources>
     <string name="app_name">My Application</string>
 
+    <string name="continue_process">Continue</string>
+    <string name="toast_please_enter_all_information">Please enter all the information</string>
+    <string name="save_changes_successfully">Save changes successfully</string>
+
     <string name="login_title">Welcome back</string>
     <string name="login_desc">Log in to continue learning with us</string>
     <string name="remember_me">Remember me</string>
@@ -15,29 +19,67 @@
     <string name="teacher">Teacher</string>
     <string name="register_linked_account">Register linked account</string>
     <string name="enter_information">Or enter information</string>
+    <string name="name">Name</string>
+    <string name="example_name">Nguyen Van A</string>
     <string name="birth_date">Date of birth</string>
     <string name="address">Address</string>
+    <string name="enter_your_address">Enter your address</string>
     <string name="login">Log in</string>
+    <string name="login_with_google">" Login with Google"</string>
     <string name="register">Register</string>
     <string name="dont_have_account">Don\'t have an account ?</string>
     <string name="title_footer">Developed by HCMUS \@ 2024</string>
     <string name="register_now">Register now</string>
     <string name="already_have_account">Already have an account</string>
+    <string name="toast_login_successfully">Login successfully</string>
+    <string name="toast_login_google_successfully">Login with Google successfully</string>
+    <string name="toast_login_google_failed">Login with Google failed</string>
+    <string name="toast_wrong_email_or_password">Incorrect email or password</string>
+    <string name="toast_error_occured">An error occured</string>
+    <string name="toast_change_email_successfully">Update email successfully</string>
+    <string name="toast_change_email_failed">Update email failed</string>
+    <string name="toast_update_password_successfully">Update password successfully</string>
+    <string name="toast_update_password_failed">Update password failed</string>
+    <string name="toast_old_password_incorrect">Old password is incorrect</string>
+
     <string name="forget_password">Forget password</string>
     <string name="enter_email_to_reset">Enter your account email to receive an OTP code</string>
-    <string name="new_password">Reset password</string>
+    <string name="reset_password_title">Reset password</string>
     <string name="enter_your_new_password">Enter new password for your account</string>
+    <string name="toast_account_not_registered">The account is not registered</string>
+    <string name="new_password">New password</string>
+    <string name="verify_new_password">Verify new password</string>
+    <string name="toast_reset_password_successfully">Reset password successfully</string>
+    <string name="toast_reset_password_fail">Reset password fail</string>
 
-    <string name="signup_teacher_title">Create teacher account</string>
+    <string name="signup_teacher_title">Create <teache></teache>r account</string>
     <string name="signup_teacher_desc">Join the teaching staff at Lexa</string>
+    <string name="signup">Sign up</string>
+    <string name="signup_with_google">" Signup with Google"</string>
     <string name="certificate_language">Foreign language certificate</string>
     <string name="certificate_degree">Teaching degree or related (recommended)</string>
     <string name="authenticity_commitment">I guarantee that the degree is original and unedited. I take full responsibility for the authenticity of the documents.</string>
+    <string name="toast_wrong_email_format">Wrong email format</string>
+    <string name="toast_confirm_password_not_match">Verify password does not match</string>
+    <string name="toast_wrong_birthday_format">Wrong birthday format (dd/mm/yyyy)</string>
+    <string name="toast_please_provide_language_cert">Please provide your language certificate</string>
+    <string name="toast_email_already_used">Email has already been used</string>
+    <string name="toast_account_already_used">Account has already been used</string>
+    <string name="toast_signup_successfully">Signup successfully</string>
+    <string name="toast_signup_google_successfully">Signup with Google successfully</string>
+    <string name="toast_signup_google_failed">Signup with Google failed</string>
+    <string name="please_confirm_qualifications">Please confirm your qualifications</string>
+    <string name="open_media_library">Open media library</string>
 
     <string name="otp_title">Enter OTP code</string>
     <string name="otp_desc">Open your %1$s mailbox to get the code</string>
     <string name="otp_confirm">Haven\'t received the code from your mailbox?</string>
     <string name="otp_resend">Resend OTP</string>
+    <string name="otp_resend_enabled_after_seconds">Resend after %1$s seconds</string>
+    <string name="toast_otp_resent">The OTP code has been resent</string>
+    <string name="toast_otp_wrong_or_expired">OTP code is invalid or expired</string>
+    <string name="toast_verify_otp_successfully">Verify OTP successfully</string>
+    <string name="toast_verify_otp_failed">Verify OTP failed</string>
 
     <string name="hello_user">Hello %1$s</string>
     <string name="day">Day %1$s</string>
@@ -131,14 +173,22 @@
     <string name="listen_my_audio_again">Listen to my audio again</string>
 
     <string name="personal_profile">Personal profile</string>
-    <string name="study_statistics">Study statistics</string>
-    <string name="current_course">Current course</string>
-    <string name="vocabulary_set">Vocabulary set</string>
+    <string name="study_statistics">STUDY STATISTICS</string>
+    <string name="studying_courses">Current course</string>
+    <string name="vocabulary_decks">Vocabulary deck</string>
     <string name="weekly_study_time">Weekly study time</string>
     <string name="total_amount">Total %1$s</string>
+    <string name="total_hours_minutes">Total: %1$d hours %2$d minutes</string>
+    <string name="total_minutes">Total: %1$d minutes</string>
+    <string name="streak_days">%1$d days 🔥</string>
     <string name="account_and_security_upper">ACCOUNT AND SECURITY</string>
     <string name="personal_information">Personal information</string>
     <string name="change_password">Change password</string>
+    <string name="old_password">Old password</string>
+    <string name="enter_old_password">Enter old password</string>
+    <string name="enter_new_password">Enter new password</string>
+    <string name="enter_confirm_new_password">Verify new password</string>
+    <string name="change_email">Change email</string>
     <string name="app_settings_upper">APP SETTINGS</string>
     <string name="language">Language</string>
     <string name="notification">Notifications</string>
@@ -147,12 +197,22 @@
     <string name="birth_date_upper">DATE OF BIRTH</string>
     <string name="address_upper">ADDRESS</string>
     <string name="save_changes">Save changes</string>
+    <string name="popup_warning_logout">"Unsaved data may be lost. Do you still want to log out?"</string>
+    <string name="tap_to_permit_statistics">Tap to grant permission to view statistics</string>
+    <string name="toast_unable_open_settings">Unable to open settings</string>
+    <string name="popup_remove_avatar">Remove avatar</string>
+    <string name="warning_remove_avatar">This action can not be undo. Do you still want to remove avatar?</string>
+    <string name="empty_avatar">No avatar yet</string>
 
     <string name="streak_notification">Streak notification</string>
     <string name="streak_notification_desc">A reminder to maintain your daily study streak so you don\'t lose progress.</string>
     <string name="study_time_notification">Study time notification</string>
     <string name="study_time_notification_desc">A reminder notification before your scheduled study time.</string>
     <string name="set_reminder_time">Set reminder time</string>
+    <string name="this_noti_happens_after_10_secs">This notification will execute after 10 seconds</string>
+    <string name="set_schedule_at_hours_minutes">Set schedule at %1$d:$2%d</string>
+    <string name="noti_study_time">Study time!</string>
+    <string name="noti_study_time_desc">Join Lexa and continue your learning streak now!</string>
     <string name="home_screen">Home Screen</string>
 
     <string name="creat_new_deck">Create new deck</string>

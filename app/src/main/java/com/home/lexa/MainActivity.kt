@@ -71,10 +71,10 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         askNotificationPermission()
-        val splashScreen = installSplashScreen()
+        //val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        splashScreen.setKeepOnScreenCondition { !isFirstAuthenticated }
+        //splashScreen.setKeepOnScreenCondition { !isFirstAuthenticated }
 
         authViewModel.getMe()
 
@@ -160,7 +160,7 @@ class MainActivity : AppCompatActivity() {
         when (destinationId) {
 
             R.id.homeFragment -> {
-                tvTitle.text = "Chào ${userManager.getUserName() ?: "Alex"}"
+                tvTitle.text = getString(R.string.hello_user, userManager.getUserName() ?: "Alex")
                 binding.appBarLayout.insertCustomeView(headerView)
                 binding.bottomNavigationMain.setSelectedTab(R.id.homeFragment)
             }
@@ -172,13 +172,13 @@ class MainActivity : AppCompatActivity() {
             }
 
             R.id.courseFragment -> {
-                tvTitle.text = "Khóa học"
+                tvTitle.text = getString(R.string.course)
                 binding.appBarLayout.insertCustomeView(headerView)
                 binding.bottomNavigationMain.setSelectedTab(R.id.courseFragment)
             }
 
             R.id.profileFragment -> {
-                tvTitle.text = "Hồ sơ cá nhân"
+                tvTitle.text = getString(R.string.personal_profile)
                 binding.appBarLayout.insertCustomeView(headerView)
                 binding.bottomNavigationMain.setSelectedTab(R.id.profileFragment)
             }

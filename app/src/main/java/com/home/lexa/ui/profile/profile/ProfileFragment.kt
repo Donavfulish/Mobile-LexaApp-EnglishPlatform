@@ -26,6 +26,7 @@ import com.home.lexa.R
 import com.home.lexa.core.network.AuthEventBus
 import com.home.lexa.data.local.UserManager
 import com.home.lexa.databinding.FragmentProfileBinding
+import com.home.lexa.ui.utils.StringUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -82,12 +83,12 @@ class ProfileFragment : Fragment() {
 
         binding.btnLogout.setOnClickListener {
             requireContext().showConfirmDialog(
-                title = "Đăng xuất",
-                message = "Dữ liệu chưa lưu có thể bị mất. Bạn vẫn muốn đăng xuất?",
+                title = getString(R.string.logout),
+                message = getString(R.string.popup_warning_logout),
                 onConfirm = {
                     handleLogout()
                 },
-                acceptLabel = "Đăng xuất"
+                acceptLabel = getString(R.string.logout)
             )
         }
     }
@@ -95,7 +96,6 @@ class ProfileFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.fetchProfile()
-        Log.d("onResume", "Di vao nhe");
         checkAndLoadUsageData()
     }
 
@@ -104,7 +104,7 @@ class ProfileFragment : Fragment() {
 
             loadUsageData()
         } else {
-            binding.tvChartSub.text = "Chạm để cấp quyền xem thống kê"
+            binding.tvChartSub.text = getString(R.string.tap_to_permit_statistics)
             binding.tvChartSub.setOnClickListener {
                 requestUsagePermission()
             }
@@ -127,12 +127,11 @@ class ProfileFragment : Fragment() {
         try {
             startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
         } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Không thể mở cài đặt", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.toast_unable_open_settings), Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun loadUsageData() {
-        Log.d("ProfileFragment", "Di vao")
         lifecycleScope.launch {
             val usageData = withContext(Dispatchers.IO) {
                 getAppUsageStats(requireContext())
@@ -145,15 +144,15 @@ class ProfileFragment : Fragment() {
             val mins = totalMinutes % 60
             
             binding.tvChartSub.text = if (hours > 0) {
-                "Tổng cộng: $hours giờ $mins phút"
+                getString(R.string.total_hours_minutes, hours, mins)
             } else {
-                "Tổng cộng: $mins phút"
+                getString(R.string.total_minutes, mins)
             }
             
             binding.usageChartView.setData(usageData)
 
             val streak = userManager.getStreakCount()
-            binding.tvStreakInfo.text = "$streak ngày 🔥"
+            binding.tvStreakInfo.text = getString(R.string.streak_days, streak)
         }
     }
 
@@ -196,18 +195,18 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setupInitialUI() {
-        binding.tvUserName.text = userManager.getUserName() ?: "Người dùng Lexa"
+        binding.tvUserName.text = userManager.getUserName() ?: "Lexa user"
         binding.tvUserRole.text = userManager.getUserRole()?.name ?: "Học sinh"
 
-        binding.statsCourses.setCardData(R.drawable.ic_book, 0, "Khóa đang học")
+        binding.statsCourses.setCardData(R.drawable.ic_book, 0, getString(R.string.studying_courses))
         binding.statsCourses.setIconStyle(tintColorRes = R.color.c_4285f4, bgColorRes = R.color.c_e8f0fe)
 
-        binding.statsVocab.setCardData(R.drawable.ic_cup, 0, "Từ vựng")
+        binding.statsVocab.setCardData(R.drawable.ic_cup, 0, getString(R.string.vocabulary))
         binding.statsVocab.setIconStyle(tintColorRes = R.color.c_f4b400, bgColorRes = R.color.c_fef7e0)
 
-        binding.statsVocabSets.setCardData(R.drawable.ic_folder, 0, "Bộ từ vựng")
+        binding.statsVocabSets.setCardData(R.drawable.ic_folder, 0, getString(R.string.vocabulary_decks))
         binding.statsVocabSets.setIconStyle(tintColorRes = R.color.c_0f9d58, bgColorRes = R.color.c_e6f4ea)
-        
+
         binding.menuPersonalInfo.setOnClickListener {
             findNavController().navigate(R.id.action_profileFragment_to_profilePersonalInformationFragment)
         }
@@ -244,11 +243,11 @@ class ProfileFragment : Fragment() {
                 tvUserName.text = profile.fullName ?: userManager.getUserName()
                 tvUserEmail.text = profile.email
 
-                statsCourses.setCardData(R.drawable.ic_book, profile.activeCourses, "Khóa đang học")
-                statsVocab.setCardData(R.drawable.ic_cup, profile.vocabularies, "Từ vựng")
-                statsVocabSets.setCardData(R.drawable.ic_folder, profile.vocabSets, "Bộ từ vựng")
+                statsCourses.setCardData(R.drawable.ic_book, profile.activeCourses, getString(R.string.studying_courses))
+                statsVocab.setCardData(R.drawable.ic_cup, profile.vocabularies, getString(R.string.vocabulary))
+                statsVocabSets.setCardData(R.drawable.ic_folder, profile.vocabSets, getString(R.string.vocabulary_decks))
 
-                menuEmail.setMenuValue(profile.email ?: "")
+                menuEmail.setMenuValue(StringUtils.maskEmail(profile.email) ?: "")
                 menuPersonalInfo.setMenuValue(formatDate(profile.DoB))
 
                 ivAvatar.load(profile.avatarUrl) { 
@@ -290,8 +289,8 @@ class ProfileFragment : Fragment() {
 
             setOnClickListener {
                 requireContext().showConfirmDialog(
-                    title = "Gỡ ảnh đại diện",
-                    message = "Hành động này không thể hoàn tác. Bạn chắc chắn muốn gỡ ảnh đại diện?",
+                    title = getString(R.string.popup_remove_avatar),
+                    message = getString(R.string.warning_remove_avatar),
                     onConfirm = {
                         viewModel.updateAvatar(null, AVATAR_ACTION.DELETE)
 
@@ -301,7 +300,7 @@ class ProfileFragment : Fragment() {
 
                         dialog.dismiss()
                     },
-                    acceptLabel = "Gỡ ảnh"
+                    acceptLabel = getString(R.string.popup_remove_avatar)
                 )
             }
         }
@@ -318,7 +317,7 @@ class ProfileFragment : Fragment() {
                 Glide.with(view).load(image).into(view)
             }.show()
         } else {
-            Toast.makeText(requireContext(), "Chưa có ảnh đại diện", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.empty_avatar), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -367,7 +366,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun formatDate(date: java.util.Date?): String {
-        if (date == null) return "Chỉnh sửa"
+        if (date == null) return getString(R.string.edit)
         val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         return formatter.format(date)
     }

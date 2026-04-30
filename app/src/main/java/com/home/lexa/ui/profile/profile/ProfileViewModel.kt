@@ -45,7 +45,7 @@ class ProfileViewModel(
     fun fetchProfile() {
         val userId = userManager.getUserId()
         if (userId == -1) {
-            _error.value = "Không tìm thấy User ID"
+            _error.value = "Unable to get User ID"
             return
         }
 
@@ -55,7 +55,7 @@ class ProfileViewModel(
             result.onSuccess { profile ->
                 _profileData.value = profile
             }.onFailure { exception ->
-                _error.value = exception.message ?: "Lỗi không xác định"
+                _error.value = exception.message ?: "Unidentified Error"
             }
             _isLoading.value = false
         }
@@ -69,7 +69,7 @@ class ProfileViewModel(
                 _updateSuccess.value = true
                 userManager.updateUserName(data.fullName ?: "");
             }.onFailure { exception ->
-                _error.value = exception.message ?: "Lỗi không xác định"
+                _error.value = exception.message ?: "Unidentified Error"
             }
             _isLoading.value = false
         }
