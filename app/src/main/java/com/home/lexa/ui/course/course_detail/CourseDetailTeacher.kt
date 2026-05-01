@@ -30,6 +30,7 @@ import com.home.lexa.ui.components.Popup
 import com.home.lexa.ui.components.TeacherSpeakingDayCard
 import com.home.lexa.ui.components.ToggleSwitch
 import com.home.lexa.R
+import com.home.lexa.di.AppMemoryCache
 
 class CourseDetailTeacher(
     private val fragment: CourseDetailFragment,
@@ -267,6 +268,9 @@ class CourseDetailTeacher(
                 Toast.makeText(fragment.requireContext(), fragment.getString(R.string.update_success), Toast.LENGTH_SHORT).show()
                 viewModel.loadCourseDetail(fragment.courseId)
                 viewModel.resetUpdateStatus()
+                AppMemoryCache.removePrefix("getAllCourses_")
+                AppMemoryCache.removePrefix("getFavoriteCourses_")
+                AppMemoryCache.removePrefix("getMyCourses_")
                 binding.saveBtn.setText(fragment.getString(R.string.save_information), ContextCompat.getColor(fragment.requireContext(), R.color.white))
             }?.onFailure {
                 Toast.makeText(fragment.requireContext(), fragment.getString(R.string.error_message, it.message), Toast.LENGTH_SHORT).show()

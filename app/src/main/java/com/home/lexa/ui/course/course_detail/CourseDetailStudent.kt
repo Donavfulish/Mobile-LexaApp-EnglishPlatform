@@ -41,12 +41,12 @@ class CourseDetailStudent(
         var isFavorite = course.is_favorite ?: false
         activityBinding.appBarLayout.apply {
             setIconRightButton(ContextCompat.getDrawable(fragment.requireContext(), R.drawable.ic_selector_favorite_btn)!!)
-            setRightButtonSelected(!isFavorite)
+            setRightButtonSelected(isFavorite)
             setOnClickToggleRightButton { isActivated ->
                 if(isActivated){
-                    viewModel.removeFavorite(course.id, course.deckId!!)
-                } else {
                     viewModel.setFavorite(course.id, course.deckId!!)
+                } else {
+                    viewModel.removeFavorite(course.id, course.deckId!!)
                 }
             }
         }
