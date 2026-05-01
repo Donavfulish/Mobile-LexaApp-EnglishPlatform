@@ -284,6 +284,9 @@ class CourseDetailTeacher(
             result?.onSuccess {
                 Toast.makeText(fragment.requireContext(), fragment.getString(R.string.add_data_success), Toast.LENGTH_SHORT).show()
                 viewModel.resetCreateStatus()
+                AppMemoryCache.removePrefix("getAllCourses_")
+                AppMemoryCache.removePrefix("getFavoriteCourses_")
+                AppMemoryCache.removePrefix("getMyCourses_")
                 viewModel.loadCourseDetail(fragment.courseId)
             }?.onFailure {
                 Toast.makeText(fragment.requireContext(), fragment.getString(R.string.error_message, it.message), Toast.LENGTH_SHORT).show()

@@ -68,7 +68,7 @@ class VocabularyFlashcardViewModel(
             _isSuggesting.value = true
             val result = flashcardRepository.getFlashcardSuggestions(query)
             result.onSuccess { list ->
-                _suggestions.value = list
+                _suggestions.value = list!!
                 _isSuggesting.value = false
             }.onFailure {
                 _suggestions.value = emptyList()
