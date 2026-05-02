@@ -1,6 +1,9 @@
 package com.home.lexa.ui.home
 
 
+import android.app.AppOpsManager
+import android.app.usage.UsageStatsManager
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -15,15 +18,18 @@ import androidx.navigation.fragment.findNavController
 import com.home.lexa.MainActivity
 import com.home.lexa.data.local.UserManager
 import com.home.lexa.domain.models.UserRole
+import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.android.inject
+import java.util.Calendar
 import kotlin.getValue
+import kotlinx.coroutines.withContext
+import kotlin.math.roundToInt
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
     private val userManager: UserManager by inject()
     private val isTeacher: Boolean get() = userManager.getUserRole() == UserRole.TEACHER
     private val viewModel: HomeViewModel by viewModel()
-    private val activityBinding by lazy { (requireActivity() as MainActivity).binding }
 
     private val featuredCourseAdapter by lazy {
         FeaturedCourseAdapter(
@@ -119,6 +125,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         viewModel.fetchFeaturedCourses()
         viewModel.fetchStudyingCourses()
         viewModel.fetchTopStudiedCourses()
+        if (!isTeacher) {
+            loadStudyTimeData()
+        }
     }
     override fun observeData() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -154,14 +163,92 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             viewModel.userStatsFlow.collect { stats ->
                 binding.tvStreakDays.text = getString(R.string.streak_days_count, stats.streakDays)
                 if(isTeacher){
-                    binding.tvFirstNumber.text = stats.weeklyHours.toString()
-                    binding.tvSecondNumber.text = stats.monthlyHours.toString()
-                }else{
+                    binding.tvFirstNumber.text = stats.studentCount.toString()
+                    binding.tvSecondNumber.text = stats.favoriteCount.toString()
 
+                }else{
                     binding.tvFirstNumber.text = getString(R.string.hours_short, stats.weeklyHours)
                     binding.tvSecondNumber.text = getString(R.string.hours_short, stats.monthlyHours)
                 }
             }
         }
+    }
+    private fun loadStudyTimeData() {
+        if (!hasUsagePermission(requireContext())) {
+            viewModel.updateStudyTime(0f, 0f)
+            return
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            val (weeklyHours, monthlyHours) = withContext(Dispatchers.IO) {
+                val weekStats = getUsageTime(getStartOfWeek(), System.currentTimeMillis())
+                val monthStats = getUsageTime(getStartOfMonth(), System.currentTimeMillis())
+                Pair(weekStats, monthStats)
+            }
+
+            // Làm tròn đến 1 chữ số thập phân (VD: 1.5 giờ)
+            val formatWeek = (weeklyHours * 10f).roundToInt() / 10f
+            val formatMonth = (monthlyHours * 10f).roundToInt() / 10f
+
+            viewModel.updateStudyTime(formatWeek, formatMonth)
+        }
+    }
+
+    private fun getUsageTime(startTime: Long, endTime: Long): Float {
+        val usageStatsManager = requireContext().getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+
+        val stats = usageStatsManager.queryUsageStats(
+            UsageStatsManager.INTERVAL_DAILY,
+            startTime,
+            endTime
+        )
+
+        val totalTimeMillis = stats.filter { it.packageName == requireContext().packageName }
+            .sumOf { it.totalTimeInForeground }
+
+        // Chuyển đổi từ mili-giây sang giờ
+        return totalTimeMillis / (1000f * 60f * 60f)
+    }
+
+    private fun getStartOfWeek(): Long {
+        val calendar = Calendar.getInstance()
+        calendar.firstDayOfWeek = Calendar.MONDAY
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        return calendar.timeInMillis
+    }
+
+    private fun getStartOfMonth(): Long {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.DAY_OF_MONTH, 1)
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        return calendar.timeInMillis
+    }
+
+    private fun hasUsagePermission(context: Context): Boolean {
+        val appOps = context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+        val mode = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            // Dùng cho Android 10 trở lên
+            appOps.unsafeCheckOpNoThrow(
+                AppOpsManager.OPSTR_GET_USAGE_STATS,
+                android.os.Process.myUid(),
+                context.packageName
+            )
+        } else {
+            // Dùng cho các bản Android cũ hơn (dưới Android 10)
+            @Suppress("DEPRECATION")
+            appOps.checkOpNoThrow(
+                AppOpsManager.OPSTR_GET_USAGE_STATS,
+                android.os.Process.myUid(),
+                context.packageName
+            )
+        }
+        return mode == AppOpsManager.MODE_ALLOWED
     }
 }

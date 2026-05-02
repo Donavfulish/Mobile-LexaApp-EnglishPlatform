@@ -15,14 +15,17 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import com.home.lexa.R
+import com.home.lexa.domain.repository.ProfileRepository
 
 data class UserStats(
     val streakDays: Int,
     val weeklyHours: Float,
-    val monthlyHours: Float
+    val monthlyHours: Float,
+    val studentCount: Int = 0,
+    val favoriteCount: Int = 0,
 )
 
-class HomeViewModel(private val repository: CourseRepository, private val userManager: UserManager) : ViewModel() {
+class HomeViewModel(private val profileRepository: ProfileRepository,private val repository: CourseRepository, private val userManager: UserManager) : ViewModel() {
 
 
 
@@ -53,6 +56,7 @@ class HomeViewModel(private val repository: CourseRepository, private val userMa
 
         if (isTeacher) {
             fetchTopStudiedCourses()
+            fetchTeacherAchievements()
         } else {
             fetchStudyingCourses()
         }
@@ -125,6 +129,29 @@ class HomeViewModel(private val repository: CourseRepository, private val userMa
                 _toastMessageFlow.emit(if (isFavorite) R.string.favorite_success else R.string.unfavorite_success)
             }.onFailure {
                 _toastMessageFlow.emit(R.string.system_error)
+            }
+        }
+    }
+    fun updateStudyTime(weeklyHours: Float, monthlyHours: Float) {
+        val currentStats = _userStatsFlow.value
+        _userStatsFlow.value = currentStats.copy(
+            weeklyHours = weeklyHours,
+            monthlyHours = monthlyHours
+        )
+    }
+    private fun fetchTeacherAchievements() {
+        viewModelScope.launch {
+
+            val result = profileRepository.getAchievements()
+
+            result.onSuccess { response ->
+                val currentStats = _userStatsFlow.value
+                _userStatsFlow.value = currentStats.copy(
+                    studentCount = response.countStudent,
+                    favoriteCount = response.countFavorite
+                )
+            }.onFailure { exception ->
+                println("Lỗi gọi API Achievements: ${exception.message}")
             }
         }
     }

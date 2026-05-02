@@ -1,6 +1,7 @@
 package com.home.lexa.data.remote
 
 import com.home.lexa.core.network.ApiResponse
+import com.home.lexa.domain.models.GetAchievementResponse
 import com.home.lexa.domain.models.Profile
 import com.home.lexa.domain.models.UpdateFcmTokenRequest
 import com.home.lexa.domain.models.UpdateProfileRequest
@@ -26,4 +27,6 @@ interface ProfileApiService {
         @Part avatarPart: MultipartBody.Part?,
         @Query("action") action: String
     ): Response<ApiResponse<Boolean?>>
+    @GET("api/profile/achievements")
+    suspend fun getAchievements(): Response<ApiResponse<GetAchievementResponse>>
 }

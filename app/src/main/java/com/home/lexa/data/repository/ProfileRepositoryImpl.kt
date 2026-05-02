@@ -3,6 +3,7 @@ package com.home.lexa.data.repository
 import android.util.Log
 import com.home.lexa.data.remote.ProfileApiService
 import com.home.lexa.di.AppMemoryCache
+import com.home.lexa.domain.models.GetAchievementResponse
 import com.home.lexa.domain.models.Profile
 import com.home.lexa.domain.models.UpdateFcmTokenRequest
 import com.home.lexa.domain.models.UpdateProfileRequest
@@ -96,6 +97,32 @@ class ProfileRepositoryImpl(private val apiService: ProfileApiService) : Profile
                     Result.success(true)
                 } else {
                     Result.failure(Exception(body.message ?: "Cập nhật avatar thất bại"))
+                }
+            } else {
+                Result.failure(Exception("Lỗi máy chủ: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(Exception("Lỗi kết nối: ${e.message}"))
+        }
+    }
+    override suspend fun getAchievements(): Result<GetAchievementResponse> {
+        return try {
+            val achievementResponse: GetAchievementResponse? = AppMemoryCache.get("getAchievements");
+
+            if (achievementResponse != null){
+                return Result.success(achievementResponse);
+            }
+
+            val response = apiService.getAchievements();
+            val body = response.body()
+
+            if (response.isSuccessful && body != null) {
+                if (body.success == true && body.data != null) {
+                    val data = body.data;
+                    AppMemoryCache.put("getAchievements", data as Any);
+                    Result.success(data)
+                } else {
+                    Result.failure(Exception(body.message ?: "Lấy thành tựu thất bại"))
                 }
             } else {
                 Result.failure(Exception("Lỗi máy chủ: ${response.code()}"))
