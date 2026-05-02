@@ -19,8 +19,8 @@ val localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
     localProperties.load(localPropertiesFile.inputStream())
 }
-val geminiApiKey = localProperties.getProperty("GEMINI_API_KEY")
-val baseUrl = localProperties.getProperty("SERVER_BASE_URL") ?: "\"http://10.0.2.2:8081/\""
+val geminiApiKey = localProperties.getProperty("GEMINI_API_KEY") ?: ""
+val baseUrl = localProperties.getProperty("SERVER_BASE_URL") ?: "http://10.0.2.2:8081/"
 
 
 android {

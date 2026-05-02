@@ -36,6 +36,9 @@ class TeacherCourseListModel(private val repository: CourseRepository) : ViewMod
     private val _courses = MutableLiveData<ShortCourse>()
     val courses: LiveData<ShortCourse> get() = _courses
 
+    private val _deleteStatus = MutableLiveData<Result<Boolean>?>()
+    val deleteStatus: LiveData<Result<Boolean>?> get() = _deleteStatus
+
     var lastId: Long? = null
     var isLastPage = false
     var currentPages = 0
@@ -50,7 +53,7 @@ class TeacherCourseListModel(private val repository: CourseRepository) : ViewMod
             _isSuggesting.value = true
             val result = repository.getCourseSuggestions(query)
             result.onSuccess {list ->
-                _suggestions.value = list
+                _suggestions.value = list!!
                 _isSuggesting.value = false
             }.onFailure {
                 _suggestions.value = emptyList()
@@ -108,5 +111,18 @@ class TeacherCourseListModel(private val repository: CourseRepository) : ViewMod
 
             _isLoading.value = false
         }
+    }
+
+    fun deleteCourse(courseId: Long) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val result = repository.deleteCourse(courseId)
+            _deleteStatus.value = result
+            _isLoading.value = false
+        }
+    }
+
+    fun resetDeleteStatus() {
+        _deleteStatus.value = null
     }
 }
