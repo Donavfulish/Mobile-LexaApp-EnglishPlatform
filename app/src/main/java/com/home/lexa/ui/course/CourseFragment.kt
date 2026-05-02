@@ -18,6 +18,7 @@ class CourseFragment : BaseFragment<FragmentCourseBinding>(FragmentCourseBinding
         val existingFragment = childFragmentManager.findFragmentById(binding.courseContainer.id)
         if (existingFragment == null) {
             val fragment = if (isTeacher) TeacherCourseListFragment() else StudentCourseListFragment()
+            fragment.arguments = this.arguments
             childFragmentManager.commit {
                 replace(binding.courseContainer.id, fragment)
             }

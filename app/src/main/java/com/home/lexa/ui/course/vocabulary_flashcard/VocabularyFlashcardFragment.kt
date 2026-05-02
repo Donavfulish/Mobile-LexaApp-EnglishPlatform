@@ -51,6 +51,8 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
         binding.diTopic.apply {
             setTile(context.getString(R.string.topic))
             onItemSelected =  { topicName ->
+                setSelection(topicName)
+
                 val colorHex = topicColorMap[topicName]
                 if (colorHex != null) {
                     setFrameColor(colorHex)
@@ -212,21 +214,6 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
             }
         }
 
-        viewModel.topicData.observe(viewLifecycleOwner) { topics ->
-            deckTopics = topics
-            binding.diTopic.setUpOptions(topics.map { it ->
-                topicColorMap[it.name] = it.colorHex
-                it.name
-            })
-            binding.diTopic.setSelection(deckTopicName ?: "None")
-            val initialColorHex = topicColorMap[deckTopicName]
-            if (initialColorHex != null) {
-                binding.diTopic.setFrameColor(initialColorHex)
-            } else {
-                binding.diTopic.setFrameColor(R.color.surface)
-            }
-        }
-
         viewModel.suggestions.observe(viewLifecycleOwner) { suggestions ->
             binding.searchBarVocabulary.setSuggestions(suggestions)
         }
@@ -322,7 +309,7 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
             if (initialColorHex != null) {
                 binding.diTopic.setFrameColor(initialColorHex)
             } else {
-                binding.diTopic.setFrameColor(R.color.surface)
+                binding.diTopic.setFrameColor("#E0E0E5")
             }
         }
 

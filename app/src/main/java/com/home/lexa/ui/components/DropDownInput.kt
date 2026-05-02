@@ -59,8 +59,17 @@ class DropDownInput @JvmOverloads constructor(
         return binding.tvSelectedValue.text.toString()
     }
 
-    fun setFrameColor(colorHex: String, hasBorder: Boolean = false) {
-        setFrameColorInt(ColorTokenUtils.resolve(context, colorHex), hasBorder)
+    fun setFrameColor(colorHex: String) {
+        try {
+            val colorInt = Color.parseColor(colorHex)
+            val background = binding.containerDropdown.background as? GradientDrawable
+
+            val strokeWidth = (1.5f * resources.displayMetrics.density).toInt()
+            background?.setStroke(strokeWidth, colorInt)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun setFrameColor(@ColorRes colorRes: Int, hasBorder: Boolean = false) {

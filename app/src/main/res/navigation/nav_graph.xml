@@ -101,7 +101,7 @@
             android:id="@+id/action_courseFragment_to_courseDetailFragment"
             app:destination="@id/courseDetailFragment" />
     </fragment>
-    
+
     <fragment
         android:id="@+id/courseDetailFragment"
         android:name="com.home.lexa.ui.course.course_detail.CourseDetailFragment"
