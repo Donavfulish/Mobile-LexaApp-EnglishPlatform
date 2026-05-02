@@ -27,13 +27,17 @@ data class Profile(
     val address: String?,
     val avatarUrl: String?,
     val email: String?,
-    // Dữ liệu mock thêm vào để hiển thị UI
-    val activeCourses: Int = 12,
-    val vocabularies: Int = 450,
-    val vocabSets: Int = 8
+    val activeCourses: Int ,
+    val vocabularies: Int ,
+    val vocabSets: Int
 )
 @Serializable
 data class UpdateFcmTokenRequest(
     val fcmToken: String
+)
+@Serializable
+data class GetAchievementResponse (
+    val countStudent: Int,
+    val countFavorite: Int
 )
 

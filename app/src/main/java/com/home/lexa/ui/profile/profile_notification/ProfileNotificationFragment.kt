@@ -30,14 +30,6 @@ class ProfileNotificationFragment : BaseFragment<FragmentProfileNotificationBind
             setBackButtonVisible(true)
         }
 
-
-        binding.notification.apply {
-            setTitle(getString(R.string.notification))
-            setDescription(null)
-            setIcon(R.drawable.ic_notification, ContextCompat.getColor(requireContext(), R.color.c_636ae8))
-            setToggleState(false)
-        }
-
         binding.streakNotification.apply {
             setTitle(getString(R.string.streak_notification))
             setDescription(getString(R.string.streak_notification_desc))
@@ -47,23 +39,26 @@ class ProfileNotificationFragment : BaseFragment<FragmentProfileNotificationBind
             setOnToggleChangeListener { isOn ->
                 viewModel.onStreakToggled(isOn)
                 if (isOn) {
-                    val testTime = System.currentTimeMillis() + 10000
-                    scheduleNotification(
-                        requireContext(),
-                        testTime,
-                        getString(R.string.streak_notification),
-                        getString(R.string.this_noti_happens_after_10_secs),
-                        ScheduleNotificationUtils.REQ_CODE_STREAK
+
+                    val everyday = (1..7).toSet()
+
+                    ScheduleNotificationUtils.scheduleNotification(
+                        context = requireContext(),
+                        hour = 19,
+                        minute = 0,
+                        selectedDays = everyday,
+                        title = "Lexa",
+                        message = context.getString(R.string.notification_streak),
+                        requestCode = ScheduleNotificationUtils.REQ_CODE_STREAK
                     )
-                }else{
-                    cancelNotification(
+                } else {
+                    ScheduleNotificationUtils.cancelNotification(
                         requireContext(),
                         ScheduleNotificationUtils.REQ_CODE_STREAK
                     )
                 }
             }
         }
-
         binding.studyHourNotification.apply {
             setTitle(getString(R.string.study_time_notification))
             setDescription(getString(R.string.study_time_notification_desc))
@@ -143,34 +138,24 @@ class ProfileNotificationFragment : BaseFragment<FragmentProfileNotificationBind
         }
     }
     private fun scheduleDailyReminder(hour: Int, minute: Int, selectedDays: Set<Int>) {
-        val calendar = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, hour)
-            set(Calendar.MINUTE, minute)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
+        if (selectedDays.isEmpty()) {
+
+            ScheduleNotificationUtils.cancelNotification(
+                requireContext(),
+                ScheduleNotificationUtils.REQ_CODE_STUDY_HOUR
+            )
+            return
         }
 
 
-
-        if (selectedDays.isNotEmpty()) {
-            var daysAdded = 0
-            while ((calendar.before(Calendar.getInstance()) || !selectedDays.contains(calendar.get(Calendar.DAY_OF_WEEK))) && daysAdded < 7) {
-                calendar.add(Calendar.DATE, 1)
-                daysAdded++
-            }
-        } else {
-
-            if (calendar.before(Calendar.getInstance())) {
-                calendar.add(Calendar.DATE, 1)
-            }
-        }
-
-        scheduleNotification(
-            requireContext(),
-            calendar.timeInMillis,
-            getString(R.string.noti_study_time),
-            getString(R.string.noti_study_time_desc),
-            ScheduleNotificationUtils.REQ_CODE_STUDY_HOUR
+        ScheduleNotificationUtils.scheduleNotification(
+            context = requireContext(),
+            hour = hour,
+            minute = minute,
+            selectedDays = selectedDays,
+            title = "Lexa",
+            message = getString(R.string.time_to_learn),
+            requestCode = ScheduleNotificationUtils.REQ_CODE_STUDY_HOUR
         )
     }
 }

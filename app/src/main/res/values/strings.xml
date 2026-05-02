@@ -118,7 +118,7 @@
     <string name="pronunciation">Pronunciation</string>
     <string name="word_type">Part of speech</string>
     <string name="definition">Definition</string>
-    <string name="example_sentence">Example sentence</string>
+    <string name="example_sentence">Example</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
 
@@ -254,7 +254,7 @@
     <string name="phonetic">Phonetic</string>
     <string name="suggestion">Suggestion</string>
     <string name="defination">Defination</string>
-    <string name="suggestion_gemini">Suggestion with GEMINI</string>
+    <string name="suggestion_gemini">Suggestion with GEMINI ( ExYou must fill in the correct vocabulary, definition, and part of speech)</string>
     <string name="ai_thinking">AI is thingking&#8230;</string>
     <string name="create_flashcard">Create flashcard</string>
     <string name="enter_word_to_preview">Enter vocabulary words to see a preview!</string>
@@ -384,4 +384,6 @@
     <string name="favorite_success">Favorite successfully</string>
     <string name="unfavorite_success">Unfavorited successfully</string>
     <string name="system_error">System error</string>
+    <string name="time_to_learn">It\'s time for learning!</string>
+    <string name="notification_streak">Please keep your streak!</string>
 </resources>
