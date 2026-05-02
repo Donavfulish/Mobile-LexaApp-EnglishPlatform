@@ -124,6 +124,15 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
             val text = paragraphs.getOrNull(currentIndex)?.paragraph ?: ""
             TTSManager.speak(text)
         }
+
+        binding.btnRecord.isEnabled = false
+        audioManager.voskSTTManager.initModel {
+            // Callback này chạy khi model đã sẵn sàng
+            requireActivity().runOnUiThread {
+                binding.btnRecord.isEnabled = true
+                Log.d("LexaApp", "Vosk Model loaded successfully!")
+            }
+        }
     }
 
     private fun handleRecordingAction() {
@@ -148,20 +157,20 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
         // VOICE_RECOGNITION source được thiết kế cho trường hợp này
         currentAudioPath = audioManager.startRecording(fileName)
 
-        sttManager.startListening(
-            onResult = { text ->
-                currentRecognizedText = text
-                if (!userTriggeredStop) {
-                    stopRecording()
-                }
-            },
-            onError = { errorMsg ->
-                Log.e("STT_ERROR", errorMsg)
-                if (!userTriggeredStop) {
-                    stopRecording()
-                }
-            }
-        )
+//        sttManager.startListening(
+//            onResult = { text ->
+//                currentRecognizedText = text
+//                if (!userTriggeredStop) {
+//                    stopRecording()
+//                }
+//            },
+//            onError = { errorMsg ->
+//                Log.e("STT_ERROR", errorMsg)
+//                if (!userTriggeredStop) {
+//                    stopRecording()
+//                }
+//            }
+//        )
 
         isRecording = true
         binding.btnRecord.setBackground(ContextCompat.getColor(requireContext(), R.color.recording_active_bg))
@@ -173,18 +182,24 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
         userTriggeredStop = true
         isRecording = false
 
-        sttManager.stopListening()
+//        sttManager.stopListening()
         binding.btnRecord.setBackground(ContextCompat.getColor(requireContext(), R.color.btn_primary_bg))
         binding.tvInstruction.text = getString(R.string.analyzing_voice)
 
         // Dừng AudioRecord và chờ file WAV flush xong rồi mới xử lý
-        audioManager.stopRecording {
+        audioManager.stopRecording({
             // Callback này chạy trên Main thread sau khi file đã lưu xong
             processAndSaveResult()
-        }
+        })
     }
 
     private fun processAndSaveResult() {
+        audioManager.voskSTTManager.apply {
+            currentRecognizedText = getFinalResult()
+        }
+
+        println("currentRecognizedText = $currentRecognizedText")
+
         if (currentRecognizedText.isBlank()) {
             activity?.runOnUiThread {
                 binding.tvInstruction.text = getString(R.string.mic_not_clear)

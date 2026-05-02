@@ -1,4 +1,5 @@
 import java.util.Properties
+import java.util.UUID
 
 plugins {
     alias(libs.plugins.android.application)
@@ -15,6 +16,7 @@ if (localPropertiesFile.exists()) {
 }
 val geminiApiKey = localProperties.getProperty("GEMINI_API_KEY")
 val baseUrl = localProperties.getProperty("SERVER_BASE_URL") ?: "\"http://10.0.2.2:8081/\""
+
 
 android {
     namespace = "com.home.lexa"
@@ -153,11 +155,13 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
 
-    //13. Display Image for ShapeableImageView
+    //14. Display Image for ShapeableImageView
     implementation ("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
     implementation("com.github.stfalcon-studio:StfalconImageViewer:1.0.1")
 
     implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
 
+    //15. SpeechToText
+    implementation("com.alphacephei:vosk-android:0.3.47")
 }

@@ -15,18 +15,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.collections.plusAssign
 
 class AudioManager(private val context: Context) {
 
     private var audioRecord: AudioRecord? = null
+    val voskSTTManager = VoskSTTManager(context)
     private var mediaPlayer: MediaPlayer? = null
     private var recordingJob: Job? = null
     private var isRecording = false
 
-    private val sampleRate = 44100
+    private val sampleRate = 16000 //44100
     private val channelConfig = AudioFormat.CHANNEL_IN_MONO
     private val audioFormat = AudioFormat.ENCODING_PCM_16BIT
-    private val bufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat)
+    private val bufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat) * 2
 
     // Trả về path file WAV sẽ được lưu (ghi async, path trả về ngay)
     @SuppressLint("MissingPermission")
@@ -39,7 +41,7 @@ class AudioManager(private val context: Context) {
             sampleRate,
             channelConfig,
             audioFormat,
-            bufferSize * 2
+            bufferSize
         )
 
         isRecording = true
@@ -75,38 +77,53 @@ class AudioManager(private val context: Context) {
     }
 
     private fun writePcmToWav(file: File) {
-        val buffer = ByteArray(bufferSize)
-        val outputStream = FileOutputStream(file)
+        voskSTTManager.startListening(16000f) { isReady ->
+            if (isReady) {
+                // CHỈ KHI READY MỚI CHẠY VÒNG LẶP
+                val buffer = ByteArray(bufferSize)
+                val outputStream = FileOutputStream(file)
 
-        // Viết WAV header tạm (44 bytes) — sẽ update sau khi biết tổng data size
-        outputStream.write(ByteArray(44))
+                // Viết WAV header tạm (44 bytes) — sẽ update sau khi biết tổng data size
+                outputStream.write(ByteArray(44))
 
-        var totalDataBytes = 0
+                var totalDataBytes = 0
 
-        while (isRecording) {
-            val bytesRead = audioRecord?.read(buffer, 0, buffer.size) ?: 0
-            if (bytesRead > 0) {
-                outputStream.write(buffer, 0, bytesRead)
-                totalDataBytes += bytesRead
+                while (isRecording) {
+                    val bytesRead = audioRecord?.read(buffer, 0, buffer.size) ?: 0
+                    if (bytesRead > 0) {
+                        outputStream.write(buffer, 0, bytesRead)
+                        totalDataBytes += bytesRead
+                        voskSTTManager.feedAudioData(buffer, bytesRead)
+                    }
+                }
+
+                // QUAN TRỌNG: Dừng Mic ở đây để báo hiệu cho phần cứng
+                // rằng chúng ta muốn "vét" phần cuối rồi đóng.
+                audioRecord?.stop()
+
+                // Đọc nốt buffer còn lại sau khi isRecording = false
+                var remaining: Int
+                do {
+                    remaining = audioRecord?.read(buffer, 0, buffer.size) ?: 0
+                    if (remaining > 0) {
+                        outputStream.write(buffer, 0, remaining)
+                        totalDataBytes += remaining
+
+                        voskSTTManager.feedAudioData(buffer, remaining)
+                    }
+                } while (remaining > 0)
+
+                outputStream.flush()
+                outputStream.close()
+
+                // Ghi lại WAV header đúng với tổng size thực tế
+                writeWavHeader(file, totalDataBytes)
+                Log.d("AudioManager", "File WAV đã lưu: ${file.absolutePath}, size: $totalDataBytes bytes")
+            } else {
+                Log.e("AudioManager", "Hủy ghi âm vì Vosk không khởi tạo được.")
+                isRecording = false
             }
         }
-
-        // Đọc nốt buffer còn lại sau khi isRecording = false
-        var remaining: Int
-        do {
-            remaining = audioRecord?.read(buffer, 0, buffer.size) ?: 0
-            if (remaining > 0) {
-                outputStream.write(buffer, 0, remaining)
-                totalDataBytes += remaining
-            }
-        } while (remaining > 0)
-
-        outputStream.flush()
-        outputStream.close()
-
-        // Ghi lại WAV header đúng với tổng size thực tế
-        writeWavHeader(file, totalDataBytes)
-        Log.d("AudioManager", "File WAV đã lưu: ${file.absolutePath}, size: $totalDataBytes bytes")
     }
 
     private fun writeWavHeader(file: File, totalDataBytes: Int) {
@@ -186,6 +203,8 @@ class AudioManager(private val context: Context) {
         recordingJob?.cancel()
         audioRecord?.release()
         audioRecord = null
+        voskSTTManager.releaseModel()
         resetMediaPlayer()
+
     }
 }
