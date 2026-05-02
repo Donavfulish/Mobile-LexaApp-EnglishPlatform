@@ -7,6 +7,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import coil.load
 import com.home.lexa.R
+import com.home.lexa.core.Constants
 import com.home.lexa.databinding.CardStudyingCourseBinding
 import com.home.lexa.domain.models.GetStudyingCourseResponse
 
@@ -25,16 +26,15 @@ class StudyingCourseCard @JvmOverloads constructor(
 
     fun setData(course: GetStudyingCourseResponse) {
         binding.title.text = course.title
-        binding.topic.setText(course.topic.name, null) // Gọi từ PrimaryButton
+        binding.topic.setText(course.topic.name, null)
         setThumbnail(course.thumbnail_url)
         binding.linearProgressBar.progress = course.progress
         binding.titleProgress.text = "Đã hoàn thành ${course.progress}%"
     }
     fun setThumbnail(url: String?){
-        binding.background.load(url) {
+        val finalUrl = if (url.isNullOrBlank()) Constants.DEFAULT_COURSE_IMAGE_URL else url
+        binding.background.load(finalUrl) {
             crossfade(true)
-            placeholder(R.drawable.ic_launcher_background) // Ảnh hiển thị trong lúc chờ tải
-            error(R.drawable.ic_launcher_background)       // Ảnh hiển thị nếu tải URL bị lỗi
         }
     }
     fun setOnClickTopic(action: () -> Unit){

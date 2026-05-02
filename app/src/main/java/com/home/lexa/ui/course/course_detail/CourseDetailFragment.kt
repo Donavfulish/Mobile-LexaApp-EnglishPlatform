@@ -22,6 +22,7 @@ import com.home.lexa.databinding.FragmentCourseDetailBinding
 import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.CreateCourseRequest
 import com.home.lexa.domain.models.Topic
+import com.home.lexa.core.Constants
 import org.koin.android.ext.android.inject
 
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -161,6 +162,25 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             }
         }
 
+        // Xử lý nút yêu thích
+        binding.circleFavorite.setOnClickListener {
+            val course = viewModel.courseDetailData.value
+            if (course != null && course.deckId != null) {
+                val isCurrentlyFavorite = course.is_favorite == true
+                if (isCurrentlyFavorite) {
+                    viewModel.removeFavorite(course.id, course.deckId)
+                } else {
+                    viewModel.setFavorite(course.id, course.deckId)
+                }
+            }
+        }
+
+        // Xử lý nút đóng Mẹo học nhanh
+        binding.btnCloseTips.setOnClickListener {
+            binding.rememberCard.visibility = View.GONE
+            userManager.setHideQuickTips()
+        }
+
         syncTabUI()
     }
 
@@ -260,18 +280,27 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             }
 
             // =====================================THANH THONG TIN CHUNG=====================================
-            if(course.creator.image != null) {
-                binding.imgTeacher.load(course.creator.image) {
-                    crossfade(true)
-                    placeholder(R.drawable.placeholder_teacher)
-                    error(R.drawable.placeholder_teacher)
-                }
+            binding.imgTeacher.load(course.creator.image ?: Constants.DEFAULT_AVATAR_URL) {
+                crossfade(true)
+                placeholder(R.drawable.placeholder_teacher)
+                error(R.drawable.placeholder_teacher)
             }
             binding.teacherNameCourse.text = course.creator.name
             binding.studentNumCourse.text = course.studying_user_count.toString()
             binding.favoriteNumCourse.text = course.favorite_user_count.toString()
             binding.speakingNum.text = getString(R.string.lesson_count, course.list_speaking_day.totalItems)
             binding.speakingDayLayout.removeAllViews()
+
+            // Cập nhật icon yêu thích
+            val isFavorite = course.is_favorite == true
+            binding.circleFavorite.setIconResource(
+                if (isFavorite) R.drawable.ic_favorite_btn else R.drawable.ic_favorite_border_btn
+            )
+            binding.circleFavorite.setIconTint(
+                android.content.res.ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), if (isFavorite) R.color.red else R.color.purple_paragraph)
+                )
+            )
 
             // =====================================THONG TIN HIEN THI KHOA HOC=====================================
             handler?.bindCourseData(course)
@@ -292,6 +321,29 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                     }
                 }
             })
+        }
+
+        // Quan sát trạng thái thay đổi yêu thích
+        viewModel.favoriteStatus.observe(viewLifecycleOwner) { result ->
+            if (result == null) return@observe
+            
+            result.onSuccess {
+                // Kiểm tra trạng thái hiện tại (trước khi refresh) để hiện thông báo đúng
+                val isCurrentlyFavorite = viewModel.courseDetailData.value?.is_favorite == true
+                
+                // Nếu trạng thái cũ là false -> vừa thực hiện yêu thích -> hiện "yêu thích thành công"
+                // Nếu trạng thái cũ là true -> vừa thực hiện bỏ yêu thích -> hiện "bỏ yêu thích thành công"
+                val messageRes = if (isCurrentlyFavorite) R.string.unfavorite_success else R.string.favorite_success
+                
+                Toast.makeText(requireContext(), getString(messageRes), Toast.LENGTH_SHORT).show()
+                
+                // Tải lại dữ liệu mới nhất
+                viewModel.loadCourseDetail(courseId)
+                viewModel.resetFavoriteStatus()
+            }.onFailure {
+                Toast.makeText(requireContext(), getString(R.string.error_message, it.message), Toast.LENGTH_SHORT).show()
+                viewModel.resetFavoriteStatus()
+            }
         }
 
         // THEO DOI TINH TRANG SPEAKINGDAY TRA VE
@@ -433,6 +485,9 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             binding.topLayoutTeacher.visibility = View.GONE
             binding.middleLayoutTeacher.visibility = View.GONE
             binding.bottomLayoutTeacher.visibility = View.GONE
+
+            // Kiểm tra trạng thái hiển thị Mẹo học nhanh (chỉ dành cho học sinh)
+            binding.rememberCard.visibility = if (userManager.shouldShowQuickTips()) View.VISIBLE else View.GONE
         }
     }
 

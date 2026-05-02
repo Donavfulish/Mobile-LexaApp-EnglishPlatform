@@ -30,6 +30,7 @@ import com.home.lexa.ui.components.Popup
 import com.home.lexa.ui.components.TeacherSpeakingDayCard
 import com.home.lexa.ui.components.ToggleSwitch
 import com.home.lexa.R
+import com.home.lexa.core.Constants
 
 class CourseDetailTeacher(
     private val fragment: CourseDetailFragment,
@@ -128,7 +129,7 @@ class CourseDetailTeacher(
             binding.topicInput.setText(course.type, false)
             binding.topicInput.clearFocus()
         }
-        binding.backgroundCourse.load(course.thumbnail_url) {
+        binding.backgroundCourse.load(course.thumbnail_url ?: Constants.DEFAULT_COURSE_IMAGE_URL) {
             crossfade(true)
         }
         binding.courseTitleInput.setText(course.title)

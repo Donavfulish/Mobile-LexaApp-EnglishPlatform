@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import coil.load
 import com.home.lexa.R
+import com.home.lexa.core.Constants
 import com.home.lexa.databinding.CardStudentCourseBinding
 import com.home.lexa.domain.models.ShortCourseDto
 
@@ -40,15 +41,13 @@ class StudentCourseCard @JvmOverloads constructor(
             hasBorder = false
         )
 
-        binding.ivThumbnail.load(data.thumbnail_url) {
+        binding.ivThumbnail.load(data.thumbnail_url ?: Constants.DEFAULT_COURSE_IMAGE_URL) {
             crossfade(true)
-            placeholder(R.drawable.ic_launcher_background)
-            error(R.drawable.ic_launcher_background)
+            // Đã gỡ bỏ ic_launcher_background (màu xanh)
         }
-        binding.ivAuthorAvatar.load(data.creator_avatar_url) {
+        binding.ivAuthorAvatar.load(data.creator_avatar_url ?: Constants.DEFAULT_AVATAR_URL) {
             crossfade(true)
-            placeholder(R.drawable.ic_launcher_background)
-            error(R.drawable.ic_launcher_background)
+            // Đã gỡ bỏ ic_launcher_background (màu xanh)
         }
 
         binding.btnAction.setOnClickListener {

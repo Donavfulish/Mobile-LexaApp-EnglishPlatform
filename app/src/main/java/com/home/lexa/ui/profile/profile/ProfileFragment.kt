@@ -23,6 +23,7 @@ import coil.load
 import coil.size.ViewSizeResolver
 import com.bumptech.glide.Glide
 import com.home.lexa.R
+import com.home.lexa.core.Constants
 import com.home.lexa.core.network.AuthEventBus
 import com.home.lexa.data.local.UserManager
 import com.home.lexa.databinding.FragmentProfileBinding
@@ -251,7 +252,7 @@ class ProfileFragment : Fragment() {
                 menuEmail.setMenuValue(profile.email ?: "")
                 menuPersonalInfo.setMenuValue(formatDate(profile.DoB))
 
-                ivAvatar.load(profile.avatarUrl) { 
+                ivAvatar.load(profile.avatarUrl ?: Constants.DEFAULT_AVATAR_URL) { 
                     placeholder(R.drawable.ic_person)
                     error(R.drawable.ic_person)
                 }
@@ -297,7 +298,7 @@ class ProfileFragment : Fragment() {
 
                         avatarUri = null
 
-                        binding.ivAvatar.load(R.drawable.ic_person)
+                        binding.ivAvatar.load(Constants.DEFAULT_AVATAR_URL)
 
                         dialog.dismiss()
                     },
@@ -311,15 +312,11 @@ class ProfileFragment : Fragment() {
     }
 
     private fun showFullAvatar() {
-        val avatarUrl = viewModel.profileData.value?.avatarUrl
+        val avatarUrl = viewModel.profileData.value?.avatarUrl ?: Constants.DEFAULT_AVATAR_URL
 
-        if (avatarUrl != null) {
-            StfalconImageViewer.Builder<String>(requireContext(), listOf(avatarUrl)) { view, image ->
-                Glide.with(view).load(image).into(view)
-            }.show()
-        } else {
-            Toast.makeText(requireContext(), "Chưa có ảnh đại diện", Toast.LENGTH_SHORT).show()
-        }
+        StfalconImageViewer.Builder<String>(requireContext(), listOf(avatarUrl)) { view, image ->
+            Glide.with(view).load(image).into(view)
+        }.show()
     }
 
     private fun showLanguageBottomSheet() {
