@@ -2,6 +2,7 @@ package com.home.lexa.data.repository
 
 import android.net.Uri
 import android.util.Log
+import androidx.compose.ui.draw.CacheDrawModifierNode
 import com.home.lexa.data.remote.CourseApiService
 import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.AllCoursePaginationResponse
@@ -401,6 +402,7 @@ class CourseRepositoryImpl(
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
+                clearFavoriteRelatedCache(courseId)
                 Result.success(true)
             } else {
                 Result.failure(Exception(body?.message ?: "Yêu thích khóa học thất bại"))
@@ -415,7 +417,7 @@ class CourseRepositoryImpl(
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
-
+                clearFavoriteRelatedCache(courseId)
                 Result.success(true)
             } else {
                 Result.failure(Exception(body?.message ?: "Bỏ yêu thích khóa học thất bại"))
@@ -423,5 +425,16 @@ class CourseRepositoryImpl(
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    private fun clearFavoriteRelatedCache(courseId: Long) {
+        AppMemoryCache.removePrefix("getFavoriteCourses")
+        AppMemoryCache.remove("getFeaturedCourses")
+        AppMemoryCache.remove("getTopStudiedCourses")
+        AppMemoryCache.remove("getStudyingCourses")
+        AppMemoryCache.removePrefix("getAllCourses")
+        AppMemoryCache.removePrefix("getMyCourses")
+        AppMemoryCache.removePrefix("getLearningCourses")
+        AppMemoryCache.remove("getCourseDetail_${courseId}")
     }
 }

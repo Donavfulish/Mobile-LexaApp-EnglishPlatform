@@ -15,6 +15,7 @@ import androidx.room.util.query
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentTeacherCourseListBinding
 import com.home.lexa.domain.models.SearchInfo
+import com.home.lexa.domain.models.StudentCourseFilter
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import com.home.lexa.domain.models.TeacherCourseFilter
 
@@ -213,6 +214,24 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
 
     override fun onResume() {
         super.onResume()
+        // Ưu tiên lấy filter từ arguments nếu có (ví dụ bấm "See all" từ Dashboard)
+        val filterArg = arguments?.getString("filter")
+
+        if (filterArg != null) {
+            val targetFilter = try {
+                TeacherCourseFilter.valueOf(filterArg) } catch (e: Exception) { null }
+            if (targetFilter != null && targetFilter != viewModel.currentFilter.value) {
+                viewModel.changeFilter(targetFilter, viewModel.searchInfo, null)
+                arguments?.remove("filter")
+            } else {
+                viewModel.fetchAllCourses(false, viewModel.searchInfo, null)
+            }
+        } else {
+            viewModel.fetchAllCourses(false, viewModel.searchInfo, null)
+        }
+
+        binding.searchbarFilter.setTextSearch(viewModel.searchInfo.query ?: "")
+        viewModel.currentFilter.value?.let { updateFilterUI(it) }
     }
 
     override fun observeData() {

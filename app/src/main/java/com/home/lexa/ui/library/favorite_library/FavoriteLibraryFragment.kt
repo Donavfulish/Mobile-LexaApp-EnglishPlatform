@@ -40,12 +40,25 @@ class FavoriteLibraryFragment : BaseFragment<FragmentFavoriteLibraryBinding>(Fra
             title = getString(R.string.favorite_deck),
             actionText = getString(R.string.see_all),
             onActionClick = {
+                val role = userManager.getUserRole()
 
                 val bundle = Bundle().apply {
                     putString("filter", StudentCourseFilter.FAVORITE.name)
                 }
 
-                findNavController().navigate(R.id.courseFragment, bundle)
+                when (role) {
+                    UserRole.TEACHER -> {
+                        findNavController().navigate(R.id.teacherCourseListFragment, bundle)
+                    }
+
+                    UserRole.STUDENT -> {
+                        findNavController().navigate(R.id.studentCourseListFragment, bundle)
+                    }
+
+                    else -> {
+                        findNavController().navigate(R.id.studentCourseListFragment, bundle)
+                    }
+                }
             }
         )
 
@@ -53,14 +66,6 @@ class FavoriteLibraryFragment : BaseFragment<FragmentFavoriteLibraryBinding>(Fra
             (parentFragment as? LibraryFragment)?.let { libraryFragment ->
                 libraryFragment.navigateToTab(1)
             }
-        }
-
-        if (viewModel.courses.value.isNullOrEmpty()) {
-            viewModel.fetchAllCourses(
-                isLoadMore = false,
-                searchInfo = SearchInfo(query = "", limit = 10),
-                nextCursor = null
-            )
         }
 
         val layoutManager = LinearLayoutManager(context)
@@ -80,7 +85,6 @@ class FavoriteLibraryFragment : BaseFragment<FragmentFavoriteLibraryBinding>(Fra
                         val threshold = 3
                         if (viewModel.isLoading.value == false && !viewModel.isLastPage) {
                             if ((visibleItemCount + firstVisibleItemPosition) >= (totalItemCount - threshold)) {
-
                                 viewModel.fetchAllCourses(
                                     isLoadMore = true,
                                     searchInfo = viewModel.searchInfor,
@@ -96,6 +100,12 @@ class FavoriteLibraryFragment : BaseFragment<FragmentFavoriteLibraryBinding>(Fra
 
     override fun onResume() {
         super.onResume()
+        // Luôn làm mới dữ liệu khi Fragment hiển thị lại
+        viewModel.fetchAllCourses(
+            isLoadMore = false,
+            searchInfo = viewModel.searchInfor,
+            nextCursor = null
+        )
     }
 
     override fun observeData() {

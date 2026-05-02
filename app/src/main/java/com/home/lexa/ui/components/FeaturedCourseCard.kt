@@ -3,13 +3,12 @@ package com.home.lexa.ui.components
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.home.lexa.R
+import com.home.lexa.core.Constants
 import com.home.lexa.databinding.CardFeaturedCourseBinding
-import com.home.lexa.domain.models.ShortCourseDto
 import coil.load
 import com.home.lexa.domain.models.GetFeaturedCourseResponse
 
@@ -59,17 +58,19 @@ class FeaturedCourseCard @JvmOverloads constructor(
         binding.favoriteBtn.isSelected = isSelected
     }
     fun setThumbnail(url: String?){
-        binding.background.load(url) {
+        val finalUrl = if (url.isNullOrBlank()) Constants.DEFAULT_COURSE_IMAGE_URL else url
+        binding.background.load(finalUrl) {
             crossfade(true)
-            placeholder(R.drawable.ic_launcher_background) // Ảnh hiển thị trong lúc chờ tải
-            error(R.drawable.ic_launcher_background)       // Ảnh hiển thị nếu tải URL bị lỗi
+            placeholder(null) // Xóa bỏ ảnh xanh khi đang load
+            error(R.drawable.default_course) // Dùng ảnh mặc định nếu link lỗi
         }
     }
     fun setTeacherImage(url: String?){
-        binding.teacherIcon.load(url) {
+        val finalUrl = if (url.isNullOrBlank()) Constants.DEFAULT_AVATAR_URL else url
+        binding.teacherIcon.load(finalUrl) {
             crossfade(true)
-            placeholder(R.drawable.ic_launcher_background) // Ảnh hiển thị trong lúc chờ tải
-            error(R.drawable.ic_launcher_background)       // Ảnh hiển thị nếu tải URL bị lỗi
+            placeholder(null)
+            error(R.drawable.default_course)
         }
     }
     fun setOnClickToggleFavoriteButton(onToggle: (Boolean) -> Unit){
