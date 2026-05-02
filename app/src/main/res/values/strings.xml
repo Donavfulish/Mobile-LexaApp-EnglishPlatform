@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">My Application</string>
-    <string name="home">Home</string>
 
     <string name="continue_process">Continue</string>
     <string name="toast_please_enter_all_information">Please enter all the information</string>
