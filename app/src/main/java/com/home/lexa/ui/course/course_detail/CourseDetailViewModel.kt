@@ -84,7 +84,7 @@ class CourseDetailViewModel(
             _isSuggesting.value = true
             val result = flashcardRepository.getFlashcardSuggestions(query)
             result.onSuccess { list ->
-                _suggestions.value = list
+                _suggestions.value = list!!
                 _isSuggesting.value = false
             }.onFailure {
                 _suggestions.value = emptyList()
@@ -182,8 +182,17 @@ class CourseDetailViewModel(
 
     // LOGIC XU LY VAI TRO GIAO VIEN
 
+    fun clearData() {
+        _courseDetailData.value = null
+        _speakingDayDetailData.value = emptyList()
+        _flashcardDetailData.value = emptyList()
+    }
 
     fun loadCourseDetail(courseId: Long) {
+        _courseDetailData.value = null
+        _speakingDayDetailData.value = emptyList()
+        _flashcardDetailData.value = emptyList()
+
         viewModelScope.launch {
             try {
                 _isLoading.value = true
@@ -302,6 +311,7 @@ class CourseDetailViewModel(
             val result = flashcardRepository.deleteFlashcard(flashcardId, deckId)
             result.onSuccess {
                 AppMemoryCache.remove("getAllFlashcard_${deckId}")
+                AppMemoryCache.remove("getCourseDetail_${courseId}")
                 _updateStatus.value = Result.success(Unit)
             }.onFailure {
                 Log.e("DELETE_FLASHCARD", "Lỗi: ${it.message}", it)

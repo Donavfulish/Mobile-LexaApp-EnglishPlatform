@@ -3,11 +3,9 @@ package com.home.lexa.data.repository
 import android.util.Log
 import com.home.lexa.data.remote.SpeakingDayApiService
 import com.home.lexa.di.AppMemoryCache
-import com.home.lexa.domain.models.AllCoursePaginationResponse
 import com.home.lexa.domain.models.CreateSpeakingDayRequest
 import com.home.lexa.domain.models.EditSpeakingDayRequest
 import com.home.lexa.domain.models.ReorderParagraphsRequest
-import com.home.lexa.domain.models.ShortCourseDto
 import com.home.lexa.domain.models.ShortParagraphSpeakingDayDto
 import com.home.lexa.domain.models.SpeakingDayPagination
 import com.home.lexa.domain.repository.SpeakingDayRepository
@@ -69,7 +67,8 @@ class SpeakingDayRepositoryImpl(
 
             if (response.isSuccessful && body?.success == true) {
                 val data = body.data;
-                AppMemoryCache.put("getParagraphSpeakingDay", data as Any);
+                // SỬA: Thêm ID vào key để không bị ghi đè lung tung
+                AppMemoryCache.put("getParagraphSpeakingDay_$speakingDayId", data as Any);
                 Result.success(body.data ?: null)
             } else {
                 Result.failure(Exception(body?.message ?: "Lấy danh sách bài học thất bại"))
@@ -85,8 +84,8 @@ class SpeakingDayRepositoryImpl(
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
-                Log.d("Đã xoá cache create", "Cache create đã được xoá")
                 AppMemoryCache.removePrefix("getSpeakingDays_${request.courseId}");
+                AppMemoryCache.remove("getCourseDetail_${request.courseId}")
                 val newId = body.data ?: throw Exception("Không lấy được ID")
                 Result.success(newId)
             } else {
@@ -102,8 +101,8 @@ class SpeakingDayRepositoryImpl(
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
-                Log.d("Đã xoá cache update", "Cache update đã được xoá")
                 AppMemoryCache.removePrefix("getSpeakingDays_${courseId}");
+                AppMemoryCache.remove("getCourseDetail_${courseId}")
                 Result.success(true)
             } else {
                 Result.failure(Exception(body?.message ?: "Chỉnh sửa bài học thất bại"))
@@ -118,8 +117,8 @@ class SpeakingDayRepositoryImpl(
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
-                Log.d("Đã xoá cache delete", "Cache delete đã được xoá")
                 AppMemoryCache.removePrefix("getSpeakingDays_${courseId}");
+                AppMemoryCache.remove("getCourseDetail_${courseId}")
                 Result.success(true)
             } else {
                 Result.failure(Exception(body?.message ?: "Xóa bài học thất bại"))
@@ -135,8 +134,8 @@ class SpeakingDayRepositoryImpl(
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
-                Log.d("Đã xoá cache reorder", "Cache getParagraphSpeakingDay đã được xoá")
                 AppMemoryCache.removePrefix("getSpeakingDays_${courseId}")
+                AppMemoryCache.remove("getCourseDetail_${courseId}")
                 Result.success(true)
             } else {
                 Result.failure(Exception(body?.message ?: "Cập nhật thứ tự thất bại"))
