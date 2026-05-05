@@ -31,4 +31,23 @@ object StringUtils {
             "****@$domainPart"
         }
     }
+
+    fun findWordRange(fullText: String, word: String, startIndex: Int): Pair<Int, Int>? {
+        // Loại bỏ các ký tự đặc biệt khỏi từ để tìm kiếm chính xác hơn
+        val cleanWord = word.replace(Regex("[^a-zA-Z0-9]"), "").lowercase()
+        if (cleanWord.isEmpty()) return null
+
+        val textToSearch = fullText.lowercase()
+        var currentPos = startIndex
+
+        while (currentPos < textToSearch.length) {
+            val foundIndex = textToSearch.indexOf(cleanWord, currentPos)
+            if (foundIndex == -1) return null
+
+            // Kiểm tra xem đây có phải là một từ độc lập không (tránh tìm "eat" trong "great")
+            val endIndex = foundIndex + cleanWord.length
+            return Pair(foundIndex, endIndex)
+        }
+        return null
+    }
 }

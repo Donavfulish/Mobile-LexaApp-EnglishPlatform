@@ -47,26 +47,23 @@ class VoskSTTManager(private val context: Context) {
         }
     }
 
-    // Quan trọng: Hàm này nhận byte array từ chính AudioManager của bạn
+    // Quan trọng: Hàm này nhận byte array từ chính AudioManager
     fun feedAudioData(buffer: ByteArray, numRead: Int): String {
         val isReady = recognizer?.acceptWaveForm(buffer, numRead) ?: false
 
         // DEBUG ==========================
-        Log.d("Vosk", "Is Voice Ready: $isReady") // Nếu luôn là false, nghĩa là Vosk không nhận diện được âm thanh
+//        Log.d("Vosk", "Is Voice Ready: $isReady") // Nếu luôn là false, nghĩa là Vosk không nhận diện được âm thanh
 
-        if (!isReady) {
-            // NGAY CẢ KHI FALSE, HÃY LOG THỬ CÁI NÀY
-            Log.d("Vosk", "Partial: ${recognizer?.partialResult}")
-        } else {
+        if (isReady) {
             Log.d("Vosk", "Final: ${recognizer?.result}")
         }
 
-        var sum = 0.0
-        for (i in 0 until numRead) {
-            sum += buffer[i].toInt() * buffer[i].toInt()
-        }
-        val amplitude = Math.sqrt(sum / numRead)
-        Log.d("Vosk", "Amplitude: $amplitude | NumRead: $numRead")
+//        var sum = 0.0
+//        for (i in 0 until numRead) {
+//            sum += buffer[i].toInt() * buffer[i].toInt()
+//        }
+//        val amplitude = Math.sqrt(sum / numRead)
+//        Log.d("Vosk", "Amplitude: $amplitude | NumRead: $numRead")
 
         // ================================
 

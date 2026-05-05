@@ -81,7 +81,7 @@ class CourseDetailStudent(
         // Sửa: Chỉ dùng URL và error URL từ Constants
         binding.backgroundCourse.load(if (course.thumbnail_url.isNullOrBlank()) Constants.DEFAULT_COURSE_IMAGE_URL else course.thumbnail_url) {
             crossfade(true)
-            error(Constants.DEFAULT_COURSE_IMAGE_URL)
+//            error(Constants.DEFAULT_COURSE_IMAGE_URL)
         }
     }
 
