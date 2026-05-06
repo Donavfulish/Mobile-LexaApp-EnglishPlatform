@@ -20,8 +20,10 @@ import com.home.lexa.ui.utils.AudioManager
 import com.home.lexa.ui.utils.SpeechEvaluator
 import com.home.lexa.ui.utils.SpeechToTextManager
 import android.app.AlertDialog
+import android.text.SpannableString
 import android.util.TypedValue
 import androidx.activity.OnBackPressedCallback
+import com.home.lexa.ui.utils.StringUtils
 import com.home.lexa.ui.utils.TTSManager
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -259,56 +261,104 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
         if (paragraphs.isEmpty()) return
 
         val currentParagraph = paragraphs[currentIndex]
+        val originalText = currentParagraph.paragraph ?: ""
         val cacheItem = sharedViewModel.sessionCache[currentIndex]
 
-        // SET CỠ CHỮ PHÙ HỢP
-        currentParagraph.paragraph?.let { it ->
-            val charCount = it.length
-
-            val newTextSizeSp = when {
-                charCount <= 50 -> 22f      // Câu ngắn: Giữ nguyên size to nhất
-                charCount <= 100 -> 20f     // Hơi dài: Giảm xuống 20sp
-                charCount <= 150 -> 18f     // Dài hơn: Giảm xuống 18sp
-                charCount <= 200 -> 16f     // Khá dài: Giảm xuống 16sp
-                else -> 14f                 // Rất dài: Chạm đáy 14sp
-            }
-
-            binding.tvParagraphContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, newTextSizeSp)
+        // 1. SET CỠ CHỮ
+        val charCount = originalText.length
+        val newTextSizeSp = when {
+            charCount <= 50 -> 22f
+            charCount <= 100 -> 20f
+            charCount <= 150 -> 18f
+            charCount <= 200 -> 16f
+            else -> 14f
         }
+        binding.tvParagraphContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, newTextSizeSp)
 
-        // LOGIC TÔ MÀU SPANNABLE
+        // 2. LOGIC TÔ MÀU SPANNABLE THÔNG MINH
         if (cacheItem != null && cacheItem.paragraphId == currentParagraph.id) {
-            val builder = SpannableStringBuilder()
-            cacheItem.evaluationResults.forEach { item ->
-                val start = builder.length
-                builder.append(item.word).append(" ")
-                val end = builder.length - 1
+            val spannable = SpannableString(originalText)
 
-                val color = when (item.status) {
-                    "GOOD" -> ContextCompat.getColor(requireContext(), R.color.status_success)
-                    "MEDIUM" -> ContextCompat.getColor(requireContext(), R.color.status_warning)
-                    else -> ContextCompat.getColor(requireContext(), R.color.status_error_alt)
-                }
+            val colorSuccess = ContextCompat.getColor(requireContext(), R.color.status_success)
+            val colorWarning = ContextCompat.getColor(requireContext(), R.color.status_warning)
+            val colorError = ContextCompat.getColor(requireContext(), R.color.status_error_alt)
 
-                builder.setSpan(
-                    ForegroundColorSpan(color),
-                    start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            // BƯỚC 1: Tô màu Xanh cho toàn bộ text (Dấu câu và khoảng trắng sẽ nhận màu này)
+            spannable.setSpan(
+                ForegroundColorSpan(colorSuccess),
+                0, originalText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+
+            // Regex lấy các từ (Bao gồm chữ, số và dấu nháy đơn cho các từ như "don't")
+            val wordRegex = Regex("[a-zA-Z0-9-'’]+")
+            val originalWords = wordRegex.findAll(originalText).toList()
+
+            // BƯỚC 2: Phủ màu ĐỎ lên tất cả các TỪ (Mặc định coi là đọc sai hoặc bỏ sót)
+            originalWords.forEach { match ->
+                spannable.setSpan(
+                    ForegroundColorSpan(colorError),
+                    match.range.first, match.range.last + 1,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
             }
-            binding.tvParagraphContent.text = builder
+
+            // BƯỚC 3: Dò kết quả API với văn bản gốc bằng 1 con trỏ
+            var pointerOriginal = 0
+
+            cacheItem.evaluationResults.forEach { evalItem ->
+                // Làm sạch từ của API (xóa các ký tự đặc biệt thừa nếu có)
+                val evalClean = evalItem.word.lowercase()
+                    .replace('’', '\'')
+                    .replace(Regex("[^a-zA-Z0-9-']"), "")
+                if (evalClean.isEmpty()) return@forEach
+
+                // Tìm kiếm tuần tự trong các từ gốc chưa được duyệt
+                for (i in pointerOriginal until originalWords.size) {
+                    val originalMatch = originalWords[i]
+                    // Làm sạch từ gốc để so sánh chính xác (Bỏ qua hoa thường, ngoặc kép...)
+                    val originalClean = originalMatch.value.lowercase()
+                        .replace('’', '\'')
+                        .replace(Regex("[^a-zA-Z0-9-']"), "")
+
+                    if (evalClean == originalClean) {
+                        // ĐÃ MATCH! Quyết định màu dựa trên API
+                        val correctColor = when (evalItem.status) {
+                            "GOOD", "Correct" -> colorSuccess
+                            "MEDIUM" -> colorWarning
+                            else -> colorError
+                        }
+
+                        // Ghi đè màu mới lên khoảng vị trí của từ này
+                        spannable.setSpan(
+                            ForegroundColorSpan(correctColor),
+                            originalMatch.range.first, originalMatch.range.last + 1,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+
+                        // Đẩy con trỏ lên vị trí TỪ TIẾP THEO để không xét lại từ cũ và các từ đã bị nhảy cóc
+                        pointerOriginal = i + 1
+                        break
+                    }
+                }
+            }
+
+            binding.tvParagraphContent.text = spannable
         } else {
-            binding.tvParagraphContent.text = currentParagraph.paragraph
+            // Trạng thái chưa có bản ghi
+            binding.tvParagraphContent.text = originalText
             binding.tvParagraphContent.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary))
         }
 
-        // Cập nhật tiến độ & nút bấm
-        val hasRecording = recordedAudios.containsKey(currentIndex) || cacheItem != null
-        binding.tvProgressTitle.text = getString(R.string.paragraph_progress_count, currentIndex + 1, paragraphs.size)
-        val progress = ((currentIndex + 1).toFloat() / paragraphs.size * 100).toInt()
-        binding.progressBar.setProgress(progress)
-        updateNavigationButtons(hasRecording)
+        // 3. Cập nhật tiến độ & nút bấm
+        val progress = (currentIndex.toFloat() / paragraphs.size * 100).toInt()
+        binding.apply {
+            tvProgressTitle.text = getString(R.string.paragraph_progress_count, currentIndex + 1, paragraphs.size)
+            progressBar.setProgress(progress)
+            tvCompletedPercent.text = getString(R.string.completed_percent, progress)
+        }
 
-        binding.tvCompletedPercent.text = getString(R.string.completed_percent, progress)
+        val hasRecording = recordedAudios.containsKey(currentIndex) || cacheItem != null
+        updateNavigationButtons(hasRecording)
     }
 
     override fun observeData() {

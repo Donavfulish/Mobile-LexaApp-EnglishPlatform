@@ -3,7 +3,9 @@ package com.home.lexa.ui.flashcard.exercise_result
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.home.lexa.data.local.UserManager
 import com.home.lexa.di.AppMemoryCache
+import com.home.lexa.domain.models.CreateDeckResultRequest
 import com.home.lexa.domain.models.DetailFlashcardWithResult
 import com.home.lexa.domain.models.FlashcardResultItem
 import com.home.lexa.domain.models.UpdateDeckResultRequest
@@ -15,7 +17,8 @@ import kotlinx.coroutines.launch
 
 class ExerciseResultViewModel(
     private val flashcardRepository: FlashcardRepository,
-    private val deckRepository: DeckRepository
+    private val deckRepository: DeckRepository,
+    private val userManager: UserManager
 ) : ViewModel() {
 
     fun saveProgressToApi(deckId: Long, remembered: Int, forgotten: Int, onComplete: (Boolean) -> Unit) {
@@ -50,7 +53,34 @@ class ExerciseResultViewModel(
             try {
                 // 3. Gọi 2 API song song (Concurrent)
                 val flashcardDeferred = async { flashcardRepository.updateFlashcardResults(deckId, flashcardRequest) }
-                val deckDeferred = async { deckRepository.updateDeckResult(deckRequest) }
+                val deckDeferred = async {
+                    val updateResult = deckRepository.updateDeckResult(deckRequest)
+                    if (updateResult.isSuccess) {
+                        updateResult
+                    } else {
+                        Log.w(
+                            "ExerciseResultViewModel",
+                            "updateDeckResult thất bại, thử createDeckResult cho deckId=$deckId"
+                        )
+                        val userId = userManager.getUserId()
+                        if (userId <= 0) {
+                            Log.e(
+                                "ExerciseResultViewModel",
+                                "Không thể createDeckResult vì userId không hợp lệ: $userId"
+                            )
+                            Result.failure(Exception("Invalid userId"))
+                        } else {
+                        deckRepository.createDeckResult(
+                            CreateDeckResultRequest(
+                                deckId = deckId,
+                                userId = userId,
+                                rememberedCount = remembered,
+                                forgottenCount = forgotten
+                            )
+                        )
+                        }
+                    }
+                }
 
                 // Chờ cả 2 hoàn thành
                 val flashcardResult = flashcardDeferred.await()

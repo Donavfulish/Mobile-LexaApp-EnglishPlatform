@@ -5,36 +5,37 @@ import com.home.lexa.domain.models.WordEvaluationItem
 object SpeechEvaluator {
 
     fun evaluate(originalSentence: String, recognizedText: String): List<WordEvaluationItem> {
-        // 1. Làm sạch chuỗi: Chuyển chữ thường và loại bỏ các dấu câu (, . ? !) để so sánh chính xác hơn
-        val cleanOriginal = originalSentence.replace(Regex("[^a-zA-Z0-9\\s]"), "").lowercase()
-        val cleanRecognized = recognizedText.replace(Regex("[^a-zA-Z0-9\\s]"), "").lowercase()
+        // 1. Hàm chuẩn hóa: Chuyển thường, đưa nháy nghiêng về nháy thẳng, và giữ lại dấu nháy trong Regex
+        fun normalize(text: String): String {
+            return text.lowercase()
+                .replace('’', '\'') // Đồng nhất dấu nháy nghiêng thành nháy thẳng
+                .replace(Regex("[^a-zA-Z0-9-'\\s]"), "") // Giữ lại chữ, số, khoảng trắng và DẤU NHÁY THẲNG
+        }
 
-        // 2. Tách thành các mảng từ vựng
+        val cleanOriginal = normalize(originalSentence)
+        val cleanRecognized = normalize(recognizedText)
+
+        // 2. Tách mảng từ vựng
         val originalWords = cleanOriginal.split(Regex("\\s+")).filter { it.isNotEmpty() }
         val recognizedWords = cleanRecognized.split(Regex("\\s+")).filter { it.isNotEmpty() }
 
-        // 3. Tiến hành so khớp từng từ
+        // 3. So khớp
         return originalWords.map { original ->
-
-            // 1. Kiểm tra khớp hoàn toàn
             val isExactMatch = recognizedWords.any { it == original }
 
-            // 2. Kiểm tra khớp một phần (ví dụ: sai 's', 'ed' hoặc gần giống)
-            // Bạn có thể dùng thuật toán Levenshtein ở đây nếu muốn xịn hơn
-            val isPartialMatch = recognizedWords.any {
+            // Khớp một phần: vẫn nên dùng normalize để tránh dấu nháy làm lệch kết quả
+            val isPartialMatch = !isExactMatch && recognizedWords.any {
                 it.contains(original) || original.contains(it)
             }
 
-            // 4. Định chuẩn Điểm số (Score) và Trạng thái (Status)
             val (score, status) = when {
-                isExactMatch -> Pair(100, "GOOD")     // Hoàn hảo: 100 điểm
-                isPartialMatch -> Pair(50, "MEDIUM")  // Tạm được: 50 điểm
-                else -> Pair(0, "BAD")                // Sai/Bỏ sót: 0 điểm
+                isExactMatch -> Pair(100, "GOOD")
+                isPartialMatch -> Pair(50, "MEDIUM")
+                else -> Pair(0, "BAD")
             }
 
-            // Trả về Object theo đúng yêu cầu
             WordEvaluationItem(
-                word = original,
+                word = original, // Lúc này word sẽ là "i'm", "don't"... giúp bên ngoài khớp đúng vị trí
                 score = score,
                 status = status
             )

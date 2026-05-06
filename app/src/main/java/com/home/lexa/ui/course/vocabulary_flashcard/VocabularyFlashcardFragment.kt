@@ -27,6 +27,8 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
     private val viewModel: VocabularyFlashcardViewModel by viewModel()
 
     private var vocabLearning = 0
+    private var vocabForgotten = 0
+    private var totalVocabCount = 0
     private val deckId by lazy { arguments?.getLong("DECK_ID_KEY") }
     private val deckTitle by lazy { arguments?.getString("DECK_TITLE_KEY") }
     private val deckVocabNum by lazy { arguments?.getInt("DECK_VOCAB_NUMBER_KEY") }
@@ -158,14 +160,20 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
         Log.d("LEXA_DEBUG", "Hàm navigateToExerciseMode được gọi")
 
         try {
-            val forgotten = deckVocabNum?.minus(vocabLearning)
-            Log.d("LEXA_DEBUG", "Dữ liệu chuẩn bị chuyển: deckId=${deckId}, rem=$vocabLearning, forg=$forgotten, total=${deckVocabNum}")
+            val totalCards = when {
+                totalVocabCount > 0 -> totalVocabCount
+                (vocabLearning + vocabForgotten) > 0 -> vocabLearning + vocabForgotten
+                (deckVocabNum ?: 0) > 0 -> deckVocabNum ?: 0
+                else -> 0
+            }
+            val forgotten = (totalCards - vocabLearning).coerceAtLeast(0)
+            Log.d("LEXA_DEBUG", "Dữ liệu chuẩn bị chuyển: deckId=${deckId}, rem=$vocabLearning, forg=$forgotten, total=$totalCards")
 
             val bundle = bundleOf(
                 "deckId" to deckId,
                 "rememberedCount" to vocabLearning,
                 "forgottenCount" to forgotten,
-                "totalCards" to deckVocabNum
+                "totalCards" to totalCards
             )
 
             Log.d("LEXA_DEBUG", "Bắt đầu gọi findNavController().navigate...")
@@ -205,12 +213,23 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
 
         viewModel.flashcardWithResultData.observe(viewLifecycleOwner) { list ->
             renderFlashcards(list)
-            updateProgress(viewModel.totalPages)
+            if (viewModel.totalPages > 0) {
+                totalVocabCount = viewModel.totalPages
+            }
+            updateProgress()
         }
 
         viewModel.deckResultData.observe(viewLifecycleOwner){result ->
             if (result != null){
-                vocabLearning = result.rememberedCount!!
+                vocabLearning = result.rememberedCount ?: 0
+                vocabForgotten = result.forgottenCount ?: 0
+                Log.d(
+                    "LEXA_DEBUG",
+                    "deckResult received -> deckId=${result.deckId}, remembered=${result.rememberedCount}, forgotten=${result.forgottenCount}"
+                )
+                updateProgress()
+            } else {
+                Log.d("LEXA_DEBUG", "deckResult received -> null")
             }
         }
 
@@ -231,9 +250,6 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
     private fun renderFlashcards(list: List<DetailFlashcardWithResult>) {
         binding.flashcardNum.text = "${viewModel.totalPages}"
         binding.vocabularyGrid.removeAllViews()
-
-
-        vocabLearning = list.count { it.result == "REMEMBER" }
 
         list.forEach { item ->
             val card = FlashcardMini(requireContext())
@@ -288,7 +304,17 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
         }
     }
 
-    private fun updateProgress(total: Int) {
+    private fun updateProgress() {
+        val total = when {
+            totalVocabCount > 0 -> totalVocabCount
+            (vocabLearning + vocabForgotten) > 0 -> vocabLearning + vocabForgotten
+            (deckVocabNum ?: 0) > 0 -> deckVocabNum ?: 0
+            else -> 0
+        }
+        Log.d(
+            "LEXA_DEBUG",
+            "updateProgress -> remembered=$vocabLearning, forgotten=$vocabForgotten, totalVocabCount=$totalVocabCount, deckVocabNum=${deckVocabNum ?: 0}, resolvedTotal=$total"
+        )
         if (total > 0) {
             val percentage = (vocabLearning * 100) / total
             binding.progressText.text = getString(R.string.progress)+": $percentage%"
