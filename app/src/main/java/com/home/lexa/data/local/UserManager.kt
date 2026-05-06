@@ -21,7 +21,7 @@ object PreferenceKeys {
     const val IS_REMEMBERED = "is_remembered"
     const val STREAK_COUNT = "streak_count"
     const val LAST_ACTIVE_DATE = "last_active_date"
-
+    const val SHOW_QUICK_TIPS = "show_quick_tips"
 }
 
 class UserManager(context: Context) {
@@ -36,6 +36,7 @@ class UserManager(context: Context) {
             .putString(PreferenceKeys.USER_NAME, user.name)
             .putString(PreferenceKeys.USER_ROLE, user.role.name)
             .putBoolean(PreferenceKeys.IS_EMAIL_VERIFIED, user.isEmailVerified ?: false)
+            .putBoolean(PreferenceKeys.SHOW_QUICK_TIPS, true) // Mặc định hiện mẹo khi đăng nhập
             .apply()
     }
 
@@ -95,6 +96,12 @@ class UserManager(context: Context) {
     fun commitEmailVerified() = prefs.edit()
         .putBoolean(PreferenceKeys.IS_EMAIL_VERIFIED, true)
         .apply()
+
+    fun shouldShowQuickTips(): Boolean = prefs.getBoolean(PreferenceKeys.SHOW_QUICK_TIPS, true)
+
+    fun setHideQuickTips() {
+        prefs.edit().putBoolean(PreferenceKeys.SHOW_QUICK_TIPS, false).apply()
+    }
 
     fun clearUser() {
         prefs.edit().clear().apply()

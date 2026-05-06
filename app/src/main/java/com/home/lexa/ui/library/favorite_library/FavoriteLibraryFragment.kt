@@ -56,7 +56,6 @@ class FavoriteLibraryFragment : BaseFragment<FragmentFavoriteLibraryBinding>(Fra
                     }
 
                     else -> {
-                        // fallback nếu null
                         findNavController().navigate(R.id.studentCourseListFragment, bundle)
                     }
                 }
@@ -67,14 +66,6 @@ class FavoriteLibraryFragment : BaseFragment<FragmentFavoriteLibraryBinding>(Fra
             (parentFragment as? LibraryFragment)?.let { libraryFragment ->
                 libraryFragment.navigateToTab(1)
             }
-        }
-
-        if (viewModel.courses.value.isNullOrEmpty()) {
-            viewModel.fetchAllCourses(
-                isLoadMore = false,
-                searchInfo = SearchInfo(query = "", limit = 10),
-                nextCursor = null
-            )
         }
 
         val layoutManager = LinearLayoutManager(context)
@@ -94,7 +85,6 @@ class FavoriteLibraryFragment : BaseFragment<FragmentFavoriteLibraryBinding>(Fra
                         val threshold = 3
                         if (viewModel.isLoading.value == false && !viewModel.isLastPage) {
                             if ((visibleItemCount + firstVisibleItemPosition) >= (totalItemCount - threshold)) {
-
                                 viewModel.fetchAllCourses(
                                     isLoadMore = true,
                                     searchInfo = viewModel.searchInfor,
@@ -110,6 +100,12 @@ class FavoriteLibraryFragment : BaseFragment<FragmentFavoriteLibraryBinding>(Fra
 
     override fun onResume() {
         super.onResume()
+        // Luôn làm mới dữ liệu khi Fragment hiển thị lại
+        viewModel.fetchAllCourses(
+            isLoadMore = false,
+            searchInfo = viewModel.searchInfor,
+            nextCursor = null
+        )
     }
 
     override fun observeData() {

@@ -8,6 +8,7 @@ import android.widget.FrameLayout
 import com.home.lexa.databinding.CardTeacherCourseBinding
 import coil.load
 import com.home.lexa.R
+import com.home.lexa.core.Constants
 import com.home.lexa.domain.models.ShortCourseDto
 
 class TeacherCourseCard @JvmOverloads constructor(
@@ -33,15 +34,20 @@ class TeacherCourseCard @JvmOverloads constructor(
             hasBorder = false
         )
 
-        binding.ivThumbnail.load(data.thumbnail_url) {
+        // Thumbnail
+        val thumbnailUrl = if (data.thumbnail_url.isNullOrBlank()) Constants.DEFAULT_COURSE_IMAGE_URL else data.thumbnail_url
+        binding.ivThumbnail.load(thumbnailUrl) {
             crossfade(true)
-            placeholder(R.drawable.ic_launcher_background)
-            error(R.drawable.ic_launcher_background)
+            placeholder(null) 
+            error(Constants.DEFAULT_COURSE_IMAGE_URL)
         }
-        binding.ivAuthorAvatar.load(data.creator_avatar_url) {
+
+        // Author Avatar
+        val avatarUrl = if (data.creator_avatar_url.isNullOrBlank()) Constants.DEFAULT_AVATAR_URL else data.creator_avatar_url
+        binding.ivAuthorAvatar.load(avatarUrl) {
             crossfade(true)
-            placeholder(R.drawable.ic_launcher_background)
-            error(R.drawable.ic_launcher_background)
+            placeholder(null)
+            error(Constants.DEFAULT_AVATAR_URL)
         }
 
         binding.ivOptions.setOnClickListener {

@@ -16,6 +16,9 @@ class TeacherCourseListAdapter(
 //    private val onOptionsClick: (DeckDto) -> Unit
 ) : RecyclerView.Adapter<TeacherCourseListAdapter.ViewHolder>() {
 
+    private var isDeleteMode = false
+    private var onDeleteListener: ((ShortCourseDto) -> Unit)? = null
+
     class ViewHolder(val favoriteDeckCard: TeacherCourseCard) :
         RecyclerView.ViewHolder(favoriteDeckCard)
 
@@ -51,6 +54,11 @@ class TeacherCourseListAdapter(
             },
             onOptionsClick = { }
         )
+
+        // Đảm bảo trạng thái xóa được duy trì khi scroll
+        holder.favoriteDeckCard.ToggleDeleteMode(isDeleteMode) {
+            onDeleteListener?.invoke(course)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -64,16 +72,20 @@ class TeacherCourseListAdapter(
         notifyDataSetChanged()
     }
 
-    fun ToggleDeleteBtn(recyclerView: RecyclerView, status: Boolean){
+    fun ToggleDeleteBtn(recyclerView: RecyclerView, status: Boolean, onDelete: (ShortCourseDto) -> Unit = {}){
+        this.isDeleteMode = status
+        this.onDeleteListener = onDelete
+        
         for(i in 0 until recyclerView.childCount){
             val child = recyclerView.getChildAt(i)
             val holder = recyclerView.getChildViewHolder(child) as? TeacherCourseListAdapter.ViewHolder
             holder?.let{
-                if(status){
-                    it.favoriteDeckCard.ToggleDeleteMode(true) {
+                val position = it.bindingAdapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val course = courses[position]
+                    it.favoriteDeckCard.ToggleDeleteMode(status) {
+                        onDeleteListener?.invoke(course)
                     }
-                } else {
-                    it.favoriteDeckCard.ToggleDeleteMode(false){}
                 }
             }
         }

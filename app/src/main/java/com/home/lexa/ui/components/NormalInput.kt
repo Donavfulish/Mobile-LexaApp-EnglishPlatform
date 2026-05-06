@@ -107,9 +107,9 @@ class NormalInput @JvmOverloads constructor(
         binding.containerInput.layoutParams = params
 
         // Nếu chiều cao lớn, cho chữ lên phía trên cho đẹp
-        if (heightInDp > 60) {
-            binding.etInput.gravity = Gravity.TOP or Gravity.START
-        }
+//        if (heightInDp > 60) {
+//            binding.etInput.gravity = Gravity.TOP or Gravity.START
+//        }
     }
 
     fun setEnable(isEnable: Boolean) {

@@ -19,7 +19,7 @@
         android:id="@+id/containerDropdown"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@drawable/bg_lightgray"
+        android:background="@drawable/bg_dropdown_outline"
         android:paddingHorizontal="16dp">
 
         <TextView

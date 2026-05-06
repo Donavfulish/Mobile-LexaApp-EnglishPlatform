@@ -25,7 +25,7 @@ class ProfileEmailFragment : BaseFragment<FragmentProfileEmailBinding>(FragmentP
         val activityBinding = (requireActivity() as MainActivity).binding
         activityBinding.appBarLayout.apply {
             removeCustomView()
-            setText("Cập nhật Email")
+            setText(getString(R.string.change_email))
             setBackButtonVisible(true)
             setOnClickBack()
         }
@@ -35,7 +35,7 @@ class ProfileEmailFragment : BaseFragment<FragmentProfileEmailBinding>(FragmentP
         binding.inputEmail.apply {
             setLabel("EMAIL")
             setText(currentEmail)
-            setPlaceHolderText("Nhập email tài khoản")
+            setPlaceHolderText("nguyenvana@gmail.com")
             setHorizontalScroll()
             setMaxLength(255)
 
@@ -48,7 +48,7 @@ class ProfileEmailFragment : BaseFragment<FragmentProfileEmailBinding>(FragmentP
         val colorPrimary = ContextCompat.getColor(requireContext(), R.color.btn_primary_bg)
         val colorOnPrimary = ContextCompat.getColor(requireContext(), R.color.icon_tint_inverse)
         binding.btnSave.apply {
-            setText("Lưu thay đổi", colorOnPrimary)
+            setText(getString(R.string.save_changes), colorOnPrimary)
             setBackground(colorPrimary)
             setEnabledState(false)
 
@@ -56,7 +56,7 @@ class ProfileEmailFragment : BaseFragment<FragmentProfileEmailBinding>(FragmentP
                 val email = binding.inputEmail.getText().trim()
 
                 if (!StringUtils.isValidEmail(email)) {
-                    Toast.makeText(requireContext(), "Email không hợp lệ", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.toast_wrong_email_format), Toast.LENGTH_SHORT).show()
                     return@setOnClickAction
                 }
 

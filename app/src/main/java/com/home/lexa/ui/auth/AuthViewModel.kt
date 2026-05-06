@@ -23,6 +23,7 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import androidx.lifecycle.AndroidViewModel
+import com.home.lexa.R
 import com.home.lexa.domain.models.ChangeEmailRequest
 import com.home.lexa.domain.models.ChangePasswordRequest
 import com.home.lexa.domain.models.OtpRequest
@@ -35,8 +36,8 @@ import com.home.lexa.domain.repository.ProfileRepository
 sealed class AuthState {
     object Idle : AuthState()
     object Loading : AuthState()
-    data class Success(val message: String) : AuthState()
-    data class Error(val error: String) : AuthState()
+    data class Success(val message: String? = "") : AuthState()
+    data class Error(val error: String? = "") : AuthState()
 }
 
 class AuthViewModel (
@@ -88,14 +89,12 @@ class AuthViewModel (
                         println("Đã đồng bộ FCM Token với tài khoản user này!")
                     }
 
-                    _loginState.value =
-                        AuthState.Success(authResult.message ?: "Đăng nhập thành công")
+                    _loginState.value = AuthState.Success()
                 } else {
-                    _loginState.value =
-                        AuthState.Error(authResult.message ?: "Sai email hoặc mật khẩu")
+                    _loginState.value = AuthState.Error()
                 }
-            }.onFailure { error ->
-                _loginState.value = AuthState.Error(error.message ?: "Có lỗi xảy ra")
+            }.onFailure {
+                _loginState.value = AuthState.Error()
             }
         }
     }
@@ -122,12 +121,12 @@ class AuthViewModel (
                     saveUserAndToken(authResult)
 
                     _signupState.value =
-                        AuthState.Success(authResult.message ?: "Đăng ký thành công")
+                        AuthState.Success()
                 } else {
-                    _signupState.value = AuthState.Error("Email đã được sử dụng")
+                    _signupState.value = AuthState.Error()
                 }
             }.onFailure { error ->
-                _signupState.value = AuthState.Error(error.message ?: "Có lỗi xảy ra")
+                _signupState.value = AuthState.Error()
             }
         }
     }
@@ -151,12 +150,12 @@ class AuthViewModel (
                 if (user != null) {
                     userManager.saveUser(user)
 
-                    _loginState.value = AuthState.Success("Lấy thông tin User thành công")
+                    _loginState.value = AuthState.Success()
                 } else {
-                    _loginState.value = AuthState.Error("Người dùng chưa đăng nhập")
+                    _loginState.value = AuthState.Error()
                 }
             }.onFailure { error ->
-                _loginState.value = AuthState.Error(error.message ?: "Có lỗi xảy ra")
+                _loginState.value = AuthState.Error()
             }
         }
     }
@@ -185,13 +184,13 @@ class AuthViewModel (
                     saveUserAndToken(authResult)
 
                     _signupState.value =
-                        AuthState.Success(authResult.message ?: "Đăng ký với Google thành công")
+                        AuthState.Success()
                 } else {
                     _signupState.value =
-                        AuthState.Error(authResult.message ?: "Lỗi đăng ký bằng Google")
+                        AuthState.Error()
                 }
             }.onFailure { error ->
-                _signupState.value = AuthState.Error(error.message ?: "Có lỗi xảy ra")
+                _signupState.value = AuthState.Error()
             }
         }
     }
@@ -208,13 +207,13 @@ class AuthViewModel (
                     saveUserAndToken(authResult)
 
                     _loginState.value =
-                        AuthState.Success(authResult.message ?: "Đăng nhập bằng Google thành công")
+                        AuthState.Success()
                 } else {
                     _loginState.value =
-                        AuthState.Error(authResult.message ?: "Sai thông tin tài khoản Google")
+                        AuthState.Error()
                 }
             }.onFailure { error ->
-                _loginState.value = AuthState.Error(error.message ?: "Có lỗi xảy ra")
+                _loginState.value = AuthState.Error()
             }
         }
     }
@@ -247,9 +246,9 @@ class AuthViewModel (
             val result = repository.verifyOTP(request)
 
             result.onSuccess {
-                _OTPState.value = AuthState.Success("Xác nhận OTP thành công")
+                _OTPState.value = AuthState.Success()
             }.onFailure { error ->
-                _OTPState.value = AuthState.Error("Xác nhận OTP không hợp lệ hoặc đã hết hạn")
+                _OTPState.value = AuthState.Error()
             }
         }
     }
@@ -277,13 +276,13 @@ class AuthViewModel (
                     saveUserAndToken(authResult)
 
                     _changeEmailState.value =
-                        AuthState.Success(authResult.message ?: "Cập nhật email thành công")
+                        AuthState.Success()
                 } else {
                     _changeEmailState.value =
-                        AuthState.Error(authResult.message ?: "Cập nhật email thất bại ")
+                        AuthState.Error()
                 }
             }.onFailure { error ->
-                _changeEmailState.value = AuthState.Error("Email đã được sử dụng")
+                _changeEmailState.value = AuthState.Error()
             }
         }
     }
@@ -299,13 +298,13 @@ class AuthViewModel (
                     saveUserAndToken(authResult)
 
                     _changePasswordState.value =
-                        AuthState.Success(authResult.message ?: "Cập nhật mật khẩu thành công")
+                        AuthState.Success()
                 } else {
                     _changePasswordState.value =
-                        AuthState.Error(authResult.message ?: "Cập nhật mật khẩu thất bại ")
+                        AuthState.Error()
                 }
             }.onFailure { error ->
-                _changePasswordState.value = AuthState.Error("Mật khẩu cũ chưa chính xác")
+                _changePasswordState.value = AuthState.Error()
             }
         }
     }

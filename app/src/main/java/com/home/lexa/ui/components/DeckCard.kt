@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import coil.load
 import com.home.lexa.R
+import com.home.lexa.core.Constants
 import com.home.lexa.databinding.CardDeckBinding
 import com.home.lexa.domain.models.ShortCourseDto
 
@@ -40,16 +41,12 @@ class DeckCard @JvmOverloads constructor(
         )
 
 
-        binding.ivThumbnail.load(data.thumbnail_url) {
+        binding.ivThumbnail.load(if (data.thumbnail_url.isNullOrBlank()) Constants.DEFAULT_COURSE_IMAGE_URL else data.thumbnail_url) {
             crossfade(true)
-            placeholder(R.drawable.ic_launcher_background)
-            error(R.drawable.ic_launcher_background)
         }
 
-        binding.ivAuthorAvatar.load(data.creator_avatar_url) {
+        binding.ivAuthorAvatar.load(if (data.creator_avatar_url.isNullOrBlank()) Constants.DEFAULT_AVATAR_URL else data.creator_avatar_url) {
             crossfade(true)
-            placeholder(R.drawable.ic_launcher_background)
-            error(R.drawable.ic_launcher_background)
         }
 
 

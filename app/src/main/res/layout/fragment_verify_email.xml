@@ -35,11 +35,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Nhập mã OTP"
+        android:text="@string/otp_title"
         android:textColor="@android:color/black"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivLogo" />
 
@@ -79,7 +80,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chưa nhận được mã từ hộp thư?"
+            android:text="@string/otp_confirm"
             android:textColor="#AAAAAA"
             android:textSize="14sp" />
 
@@ -88,7 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="Gửi lại mã OTP"
+            android:text="@string/otp_resend"
             android:textColor="#4A69FF"
             android:textSize="14sp"
             android:textStyle="bold" />

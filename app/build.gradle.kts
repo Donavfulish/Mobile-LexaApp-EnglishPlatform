@@ -1,17 +1,28 @@
 import java.util.Properties
+import java.util.UUID
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.androidx.navigation.safeargs)
     id("com.google.dagger.hilt.android")
+
+    // THÊM DÒNG NÀY VÀO (đúng với file TOML của bạn)
+    alias(libs.plugins.google.gms.google.services)
+
     kotlin("kapt")
+    // id("com.google.devtools.ksp") // Nên dùng KSP thay vì kapt cho Room nếu có thể
 }
+
 val localProperties = Properties()
 val localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
     localProperties.load(localPropertiesFile.inputStream())
 }
-val geminiApiKey = localProperties.getProperty("GEMINI_API_KEY")
+val geminiApiKey = localProperties.getProperty("GEMINI_API_KEY") ?: ""
+val baseUrl = localProperties.getProperty("SERVER_BASE_URL") ?: "http://10.0.2.2:8081/"
+
+
 android {
     namespace = "com.home.lexa"
     compileSdk = 34
@@ -25,12 +36,15 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "GEMINI_KEY", "\"$geminiApiKey\"")
+        buildConfigField("String", "SERVER_BASE_URL", "\"$baseUrl\"")
 
         vectorDrawables {
             useSupportLibrary = true
         }
 
     }
+
+
 
     buildTypes {
         release {
@@ -65,7 +79,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -76,6 +89,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.gridlayout)
     implementation(libs.firebase.messaging)
     implementation(libs.androidx.navigation.runtime.ktx)
@@ -148,11 +162,13 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
 
-    //13. Display Image for ShapeableImageView
+    //14. Display Image for ShapeableImageView
     implementation ("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
     implementation("com.github.stfalcon-studio:StfalconImageViewer:1.0.1")
 
     implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
 
+    //15. SpeechToText
+    implementation("com.alphacephei:vosk-android:0.3.47")
 }

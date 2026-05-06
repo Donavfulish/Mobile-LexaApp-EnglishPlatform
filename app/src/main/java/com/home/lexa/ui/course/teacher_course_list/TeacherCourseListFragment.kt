@@ -6,6 +6,7 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import com.google.android.material.button.MaterialButton
 import androidx.navigation.fragment.findNavController
 import com.home.lexa.R
@@ -14,9 +15,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.room.util.query
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentTeacherCourseListBinding
+import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.SearchInfo
+import com.home.lexa.domain.models.StudentCourseFilter
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import com.home.lexa.domain.models.TeacherCourseFilter
+import com.home.lexa.ui.components.Popup
 
 
 class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>(FragmentTeacherCourseListBinding::inflate) {
@@ -213,6 +217,24 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
 
     override fun onResume() {
         super.onResume()
+        // Ưu tiên lấy filter từ arguments nếu có (ví dụ bấm "See all" từ Dashboard)
+        val filterArg = arguments?.getString("filter")
+
+        if (filterArg != null) {
+            val targetFilter = try {
+                TeacherCourseFilter.valueOf(filterArg) } catch (e: Exception) { null }
+            if (targetFilter != null && targetFilter != viewModel.currentFilter.value) {
+                viewModel.changeFilter(targetFilter, viewModel.searchInfo, null)
+                arguments?.remove("filter")
+            } else {
+                viewModel.fetchAllCourses(false, viewModel.searchInfo, null)
+            }
+        } else {
+            viewModel.fetchAllCourses(false, viewModel.searchInfo, null)
+        }
+
+        binding.searchbarFilter.setTextSearch(viewModel.searchInfo.query ?: "")
+        viewModel.currentFilter.value?.let { updateFilterUI(it) }
     }
 
     override fun observeData() {
@@ -227,7 +249,18 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
             courseAdapter.updateData(list.data)
             if(list.status == TeacherCourseFilter.MYCOURSE){
                 binding.rvCourses.post{
-                    courseAdapter.ToggleDeleteBtn(binding.rvCourses, true)
+                    courseAdapter.ToggleDeleteBtn(binding.rvCourses, true) { course ->
+                        val confirmPopup = Popup(requireContext())
+                        confirmPopup.showDialog(
+                            title = getString(R.string.confirm_delete),
+                            subTitle = getString(R.string.delete_flashcard_subtitle, course.title),
+                            isWarning = true,
+                            confirmText = getString(R.string.delete_now),
+                            onConfirm = {
+                                viewModel.deleteCourse(course.id)
+                            }
+                        )
+                    }
                 }
             } else {
                 binding.rvCourses.post{
@@ -254,6 +287,20 @@ class TeacherCourseListFragment : BaseFragment<FragmentTeacherCourseListBinding>
         }
         viewModel.suggestions.observe(viewLifecycleOwner) { list ->
             binding.searchbarFilter.setSuggestions(list)
+        }
+
+        viewModel.deleteStatus.observe(viewLifecycleOwner) { result ->
+            result?.onSuccess {
+                Toast.makeText(requireContext(), getString(R.string.save_successfully), Toast.LENGTH_SHORT).show()
+                viewModel.resetDeleteStatus()
+                AppMemoryCache.removePrefix("getAllCourses_")
+                AppMemoryCache.removePrefix("getFavoriteCourses_")
+                AppMemoryCache.removePrefix("getMyCourses_")
+                viewModel.fetchAllCourses(false, viewModel.searchInfo, null)
+            }?.onFailure {
+                Toast.makeText(requireContext(), getString(R.string.error_retry), Toast.LENGTH_SHORT).show()
+                viewModel.resetDeleteStatus()
+            }
         }
     }
 }

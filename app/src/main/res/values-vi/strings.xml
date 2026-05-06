@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">My Application</string>
 
+    <string name="save_changes_successfully">Lưu thay đổi thành công</string>
     <string name="login_title">Chào mừng trở lại</string>
     <string name="login_desc">Đăng nhập để tiếp tục học tập cùng chúng tôi</string>
     <string name="remember_me">Ghi nhớ tôi</string>
@@ -15,28 +16,49 @@
     <string name="teacher">Giáo viên</string>
     <string name="register_linked_account">Đăng ký tài khoản liên kết</string>
     <string name="enter_information">Hoặc nhập thông tin</string>
+    <string name="name">Họ và tên</string>
+    <string name="example_name">Nguyễn Văn A</string>
     <string name="birth_date">Ngày sinh</string>
     <string name="address">Địa chỉ</string>
+    <string name="enter_your_address">Nhập địa chỉ của bạn</string>
     <string name="login">Đăng nhập</string>
+    <string name="login_with_google">" Đăng nhập bằng Google"</string>
     <string name="register">Đăng ký</string>
     <string name="dont_have_account">Chưa có tài khoản</string>
     <string name="title_footer">Phát triển bởi HCMUS \@ 2024</string>
     <string name="register_now">Đăng ký ngay</string>
     <string name="already_have_account">Đã có tài khoản</string>
 
+    <string name="toast_old_password_incorrect">Mật khẩu cũ không chính xác</string>
     <string name="forget_password">Quên mật khẩu</string>
+    <string name="reset_password_title">Khôi phục mật khẩu</string>
     <string name="enter_your_new_password">Cập nhật mật khẩu mới cho tài khoản</string>
+    <string name="toast_please_enter_all_information">Vui lòng nhập đầy đủ thông tin</string>
+    <string name="toast_account_not_registered">Tài khoản chưa được đăng ký</string>
+    <string name="toast_reset_password_fail">Cập nhật mật khẩu thất bại</string>
     <string name="signup_teacher_title">Tạo tài khoản giáo viên</string>
     <string name="signup_teacher_desc">Tham gia đội ngũ giảng dạy tại Lexa</string>
+    <string name="signup">Đăng ký</string>
+    <string name="signup_with_google">" Đăng ký bằng Google"</string>
     <string name="certificate_language">Chứng chỉ ngoại ngữ</string>
     <string name="certificate_degree">Bằng sư phạm hoặc liên quan (khuyến khích)</string>
     <string name="authenticity_commitment">Tôi cam kết bằng cấp là bản gốc và chưa qua chỉnh sửa. Tôi hoàn toàn chịu trách nhiệm về tính xác thực của tài liệu</string>
 
+    <string name="toast_email_already_used">Email đã được sử dụng</string>
+    <string name="toast_account_already_used">Tài khoản đã được sử dụng</string>
+    <string name="toast_signup_google_failed">Đăng ký bằng Google thất bại</string>
+    <string name="please_confirm_qualifications">Vui lòng xác nhận bằng cấp không qua chỉnh sửa</string>
+    <string name="open_media_library">Mở thư viện file/ảnh</string>
     <string name="otp_title">Nhập mã OTP</string>
     <string name="otp_desc">Mở hộp thư %1$s để lấy mã</string>
     <string name="otp_confirm">Chưa nhận được mã từ hộp thư?</string>
     <string name="otp_resend">Gửi lại mã OTP</string>
 
+    <string name="otp_resend_enabled_after_seconds">Gửi lại sau %1$s giây</string>
+    <string name="toast_otp_resent">Mã OTP đã được gửi lại</string>
+    <string name="toast_otp_wrong_or_expired">OTP sai hoặc đã hết hạn</string>
+    <string name="continue_process">Tiếp tục</string>
+    <string name="toast_verify_otp_failed">Xác thực OTP thất bại</string>
     <string name="hello_user">Chào %1$s</string>
     <string name="day">Ngày %1$s</string>
     <string name="study_time">Thời gian học</string>
@@ -49,6 +71,7 @@
     <string name="vocabulary">Từ vựng</string>
     <string name="lesson">Bài học</string>
     <string name="library">Thư viện</string>
+    <string name="home">Trang chủ</string>
     <string name="course">Khoá học</string>
     <string name="profile">Hồ sơ</string>
 
@@ -129,14 +152,19 @@
     <string name="listen_my_audio_again">Nghe lại âm của tôi</string>
 
     <string name="personal_profile">Hồ sơ cá nhân</string>
-    <string name="study_statistics">Thống kê học tập</string>
-    <string name="current_course">Khoá đang học</string>
-    <string name="vocabulary_set">Bộ từ vựng</string>
+    <string name="study_statistics">THỐNG KÊ HỌC TẬP</string>
+    <string name="vocabulary_decks">Bộ từ vựng</string>
     <string name="weekly_study_time">Thời gian học trong tuần</string>
     <string name="total_amount">Tổng cộng %1$s</string>
+    <string name="total_minutes">Tổng cộng: %1$d phút</string>
+    <string name="streak_days">%1$d ngày 🔥</string>
     <string name="account_and_security_upper">TÀI KHOẢN VÀ BẢO MẬT</string>
     <string name="personal_information">Thông tin cá nhân</string>
     <string name="change_password">Đổi mật khẩu</string>
+    <string name="old_password">Mật khẩu cũ</string>
+    <string name="enter_old_password">Nhập mật khẩu cũ</string>
+    <string name="enter_confirm_new_password">Xác nhận mật khẩu mới</string>
+    <string name="change_email">Chỉnh sửa email</string>
     <string name="app_settings_upper">CÀI ĐẶT ỨNG DỤNG</string>
     <string name="language">Ngôn ngữ</string>
     <string name="notification">Thông báo</string>
@@ -146,14 +174,45 @@
     <string name="address_upper">ĐỊA CHỈ</string>
     <string name="save_changes">Lưu thay đổi</string>
 
+    <string name="popup_warning_logout">Dữ liệu chưa lưu có thể bị mất. Bạn vẫn muốn đăng xuất?</string>
+    <string name="tap_to_permit_statistics">Chạm để cấp quyền xem thống kê</string>
+    <string name="toast_unable_open_settings">Không thể mở cài đặt</string>
+    <string name="warning_remove_avatar">Hành động này không thể hoàn tác. Bạn chắc chắn muốn gỡ ảnh đại diện?</string>
+    <string name="empty_avatar">Chưa có ảnh đại diện</string>
     <string name="streak_notification">Thông báo chuỗi</string>
     <string name="streak_notification_desc">Nhắc nhở bạn duy trì chuỗi học tập hàng ngày để không bỏ lỡ tiến độ.</string>
     <string name="study_time_notification">Thông báo giờ học</string>
     <string name="study_time_notification_desc">Thông báo nhắc nhở trước khi đến giờ học đã cài đặt của bạn.</string>
     <string name="set_reminder_time">Cài đặt giờ nhắc nhở</string>
+    <string name="set_schedule_at_hours_minutes">Đã đặt lịch vào %1$d:$2%d</string>
+    <string name="noti_study_time">Giờ học đến rồi!</string>
+    <string name="noti_study_time_desc">Hãy vào Lexa duy trì chuỗi học tập ngay nhé!</string>
     <string name="home_screen">Trang chủ</string>
     <string name="enter_email_to_reset">Nhập email tài khoản để nhận mã OTP</string>
     <string name="new_password">Mật khẩu mới</string>
+    <string name="toast_wrong_email_format">Email sai định dạng</string>
+    <string name="toast_confirm_password_not_match">Mật khẩu xác nhận không trùng khớp</string>
+    <string name="toast_wrong_birthday_format">Ngày sinh sai định dạng (dd/mm/yyyy)</string>
+    <string name="toast_please_provide_language_cert">Vui lòng cung cấp bằng ngoại ngữ</string>
+    <string name="verify_new_password">Xác nhận mật khẩu mới</string>
+    <string name="toast_reset_password_successfully">Cập nhật mật khẩu thành công</string>
+    <string name="toast_login_successfully">Đăng nhập thành công</string>
+    <string name="toast_login_google_successfully">Đăng nhập với Google thành công</string>
+    <string name="toast_login_google_failed">Đăng nhập với Google thất bại</string>
+    <string name="toast_wrong_email_or_password">Email hoặc mật khẩu chưa chính xác</string>
+    <string name="toast_error_occured">Đã có lỗi xảy ra</string>
+    <string name="toast_change_email_successfully">Cập nhật email thành công</string>
+    <string name="toast_change_email_failed">Cập nhật email thất bại</string>
+    <string name="toast_update_password_successfully">Cập nhật mật khẩu thành công</string>
+    <string name="toast_update_password_failed">Cập nhật mật khẩu thất bại</string>
+    <string name="toast_signup_successfully">Đăng ký thành công</string>
+    <string name="toast_signup_google_successfully">Đăng ký bằng Google thành công</string>
+    <string name="toast_verify_otp_successfully">Xác thực OTP thành công</string>
+    <string name="total_hours_minutes">Tổng cộng: %1$d giờ %2$d phút</string>
+    <string name="studying_courses">Khóa đang học</string>
+    <string name="popup_remove_avatar">Gỡ ảnh đại diện</string>
+    <string name="enter_new_password">Nhập mật khẩu mới</string>
+    <string name="this_noti_happens_after_10_secs">Thông báo này sẽ xuất hiện sau 10 giây</string>
 
     <string name="creat_new_deck">Tạo bộ từ vựng mới</string>
     <string name="create">Tạo</string>
@@ -190,7 +249,7 @@
     <string name="phonetic">Phiên âm</string>
     <string name="suggestion">Gợi ý</string>
     <string name="defination">Định nghĩa</string>
-    <string name="suggestion_gemini">Gợi ý với GEMINI</string>
+    <string name="suggestion_gemini">Gợi ý với GEMINI(Bạn phải điền đúng từ vựng, định nghĩa và loại từ)</string>
     <string name="ai_thinking">AI đang suy nghĩ&#8230;</string>
     <string name="create_flashcard">Thêm mới từ vựng</string>
     <string name="enter_word_to_preview">Nhập từ vựng để xem trước!</string>
@@ -321,4 +380,6 @@
     <string name="favorite_success">Yêu thích thành công</string>
     <string name="unfavorite_success">Bỏ yêu thích thành công</string>
     <string name="system_error">Lỗi từ hệ thống</string>
+    <string name="time_to_learn">Đến giờ học rồi bạn ơi!</string>
+    <string name="notification_streak">Hãy vào học để giữ chuỗi bạn nhé!</string>
 </resources>

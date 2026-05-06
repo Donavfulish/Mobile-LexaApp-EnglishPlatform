@@ -11,6 +11,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.home.lexa.MainActivity // Thay bằng Activity bạn muốn mở
 import com.home.lexa.R
+import com.home.lexa.ui.utils.ScheduleNotificationUtils
 
 const val notificationId = 1
 const val channelId = "channel1"
@@ -19,6 +20,7 @@ const val messageExtra = "message"
 
 class ScheduleNotification: BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
+
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         // 1. TẠO CHANNEL (Xử lý lỗi No Channel found)
@@ -33,7 +35,7 @@ class ScheduleNotification: BroadcastReceiver() {
             manager.createNotificationChannel(channel)
         }
 
-        // 2. TẠO HÀNH ĐỘNG KHI BẤM VÀO THÔNG BÁO (Mở MainActivity)
+
         val tapIntent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
@@ -56,5 +58,26 @@ class ScheduleNotification: BroadcastReceiver() {
 
         // Hiển thị
         manager.notify(notificationId, notification)
+        val hour = intent.getIntExtra("hour", 0)
+        val minute = intent.getIntExtra("minute", 0)
+        val title = intent.getStringExtra("title") ?: ""
+        val message = intent.getStringExtra("message") ?: ""
+        val requestCode = intent.getIntExtra("requestCode", 0)
+        val selectedDaysArray = intent.getIntArrayExtra("selectedDays") ?: intArrayOf()
+        val selectedDays = selectedDaysArray.toSet()
+
+
+        // LÊN LỊCH LẶP LẠI THEO NGÀY
+        if (selectedDays.isNotEmpty()) {
+            ScheduleNotificationUtils.scheduleNotification(
+                context,
+                hour,
+                minute,
+                selectedDays,
+                title,
+                message,
+                requestCode
+            )
+        }
     }
 }

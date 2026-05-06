@@ -54,7 +54,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ivAvatar"
-                tools:text="Nguyễn Văn A" />
+                tools:text="@string/example_name" />
 
             <TextView
                 android:id="@+id/tvUserEmail"
@@ -92,7 +92,7 @@
             android:layout_marginBottom="12dp"
             android:drawableStart="@drawable/ic_trending"
             android:drawablePadding="8dp"
-            android:text="THỐNG KÊ HỌC TẬP"
+            android:text="@string/study_statistics"
             android:textColor="@color/c_757575"
             android:textSize="11sp"
             android:textStyle="bold"
@@ -157,7 +157,7 @@
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_clock"
                     android:drawablePadding="6dp"
-                    android:text="Thời gian học trong tuần"
+                    android:text="@string/weekly_study_time"
                     android:textColor="@color/c_202124"
                     android:textSize="14sp"
                     android:textStyle="bold"
@@ -203,7 +203,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp"
-            android:text="TÀI KHOẢN &amp; BẢO MẬT"
+            android:text="@string/account_and_security_upper"
             android:textColor="@color/c_757575"
             android:textSize="11sp"
             android:textStyle="bold" />
@@ -234,7 +234,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:menuIcon="@drawable/ic_person"
-                    app:menuTitle="Thông tin cá nhân"
+                    app:menuTitle="@string/personal_information"
                     app:menuValue="Chỉnh sửa" />
 
                 <com.home.lexa.ui.components.SettingMenuItem
@@ -256,7 +256,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:menuIcon="@drawable/ic_lock"
-                    app:menuTitle="Đổi mật khẩu"
+                    app:menuTitle="@string/change_password"
                     app:showValue="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -267,7 +267,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp"
-            android:text="CÀI ĐẶT ỨNG DỤNG"
+            android:text="@string/app_settings_upper"
             android:textColor="@color/c_757575"
             android:textSize="11sp"
             android:textStyle="bold" />
@@ -292,7 +292,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:menuIcon="@drawable/ic_language"
-                    app:menuTitle="Ngôn ngữ"
+                    app:menuTitle="@string/language"
                     app:menuValue="Tiếng Việt" />
 
                 <View
@@ -306,7 +306,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:menuIcon="@drawable/ic_notification"
-                    app:menuTitle="Thông báo"
+                    app:menuTitle="@string/notification"
                     app:menuValue="Bật" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -318,7 +318,7 @@
             android:layout_height="56dp"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="32dp"
-            android:text="Đăng xuất"
+            android:text="@string/logout"
             android:textColor="@color/c_ff3b30"
             android:textSize="14sp"
             app:cornerRadius="8dp"

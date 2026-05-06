@@ -7,7 +7,9 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
+import coil.load
 import com.home.lexa.R
+import com.home.lexa.core.Constants
 import com.home.lexa.databinding.ActivityMainBinding
 import com.home.lexa.databinding.FragmentCourseDetailBinding
 import com.home.lexa.domain.models.ColorLabel
@@ -36,18 +38,37 @@ class CourseDetailStudent(
     }
 
     override fun bindCourseData(course: CourseDetailDto) {
-        android.util.Log.e("DEBUG_FAVORITE", "Course ID: ${course.id}, is_favorite: ${course.is_favorite}")
-        var isFavorite = course.is_favorite ?: false
+        val isFavorite = course.is_favorite == true
+
         activityBinding.appBarLayout.apply {
             setIconRightButton(ContextCompat.getDrawable(fragment.requireContext(), R.drawable.ic_selector_favorite_btn)!!)
-            setRightButtonSelected(!isFavorite)
+            setRightButtonSelected(isFavorite)
             setOnClickToggleRightButton { isActivated ->
                 if(isActivated){
+                    viewModel.setFavorite(course.id, course.deckId!!)
+                } else {
+                    viewModel.removeFavorite(course.id, course.deckId!!)
+                }
+            }
+        }
+
+        binding.circleFavorite.apply {
+            setIconResource(if (isFavorite) R.drawable.ic_favorite_btn else R.drawable.ic_favorite_border_btn)
+            setIconTint(android.content.res.ColorStateList.valueOf(
+                ContextCompat.getColor(fragment.requireContext(), if (isFavorite) R.color.red else R.color.purple_paragraph)
+            ))
+            setOnClickListener {
+                if (isFavorite) {
                     viewModel.removeFavorite(course.id, course.deckId!!)
                 } else {
                     viewModel.setFavorite(course.id, course.deckId!!)
                 }
             }
+        }
+        binding.backgroundCourse.load(course.thumbnail_url) {
+            crossfade(true)
+            placeholder(R.drawable.background_course)
+            error(R.drawable.background_course)
         }
         binding.topic.apply {
             setTextSize(12f)
@@ -56,6 +77,12 @@ class CourseDetailStudent(
         }
         binding.titleCourse.text = course.title
         binding.introduction.text = course.description ?: ""
+
+        // Sửa: Chỉ dùng URL và error URL từ Constants
+        binding.backgroundCourse.load(if (course.thumbnail_url.isNullOrBlank()) Constants.DEFAULT_COURSE_IMAGE_URL else course.thumbnail_url) {
+            crossfade(true)
+            error(Constants.DEFAULT_COURSE_IMAGE_URL)
+        }
     }
 
     override fun bindSpeakingData(courseId: Long, list: List<ShortSpeakingDayDto>) {
@@ -146,12 +173,18 @@ class CourseDetailStudent(
     }
 
     override fun observerViewModel() {
-        viewModel.favoriteStatus.observe(fragment.viewLifecycleOwner){
-                result ->
-            result?.onSuccess {
-                Toast.makeText(fragment.requireContext(), fragment.getString(R.string.update_success), Toast.LENGTH_SHORT).show()
+        viewModel.favoriteStatus.observe(fragment.viewLifecycleOwner) { result ->
+            if (result == null) return@observe
+
+            result.onSuccess {
+                val isCurrentlyFavorite = viewModel.courseDetailData.value?.is_favorite == true
+                val messageRes = if (isCurrentlyFavorite) R.string.unfavorite_success else R.string.favorite_success
+
+                Toast.makeText(fragment.requireContext(), fragment.getString(messageRes), Toast.LENGTH_SHORT).show()
+
+                viewModel.loadCourseDetail(viewModel.courseDetailData.value?.id ?: -1L)
                 viewModel.resetFavoriteStatus()
-            }?.onFailure {
+            }.onFailure {
                 Toast.makeText(fragment.requireContext(), fragment.getString(R.string.error_message, it.message), Toast.LENGTH_SHORT).show()
                 viewModel.resetFavoriteStatus()
             }

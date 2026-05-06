@@ -23,9 +23,27 @@ class ExerciseResultFragment : BaseFragment<FragmentExerciseResultBinding>(Fragm
         forgottenCount = arguments?.getInt("forgottenCount") ?: 0
         totalCards = arguments?.getInt("totalCards") ?: 1 // Tránh chia 0
 
+
+        val initialRememberedCount = arguments?.getInt("initialRememberedCount") ?: 0
+
         // Gắn data lên UI
         val percentage = (rememberedCount * 100) / totalCards
         binding.progressRing.setProgress(percentage)
+
+        val increasedCount = rememberedCount - initialRememberedCount
+        val increasedPercentage = if (totalCards > 0) {
+            // Dùng max(0, ...) để tránh trường hợp người dùng lỡ quên từ làm % bị âm
+            (Math.max(0, increasedCount) * 100) / totalCards
+        } else 0
+
+        // 4. Hiển thị text thông báo dựa trên mức tăng
+        if (increasedPercentage > 0) {
+            // Nếu có tăng -> Congratulations, your progress has increased by X%
+            binding.tvCongratulationTitle.text = getString(R.string.congratulation_title, "$increasedPercentage%")
+        } else {
+            // Nếu không tăng (hệ số = 0) -> Đổi câu thông báo khác cho hợp lý (VD: Keep up the good work)
+            binding.tvCongratulationTitle.text = getString(R.string.congratulation_desc)
+        }
 
         binding.tvTotalLearned.text = "$rememberedCount/$totalCards " + getString(R.string.words_memorized)
         binding.tvResultRemembered.text = rememberedCount.toString()
