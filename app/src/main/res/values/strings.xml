@@ -374,8 +374,8 @@
 
     <!-- Home -->
     <string name="teaching_achievements_upper">TEACHING ACHIEVEMENTS</string>
-    <string name="total_studied">Total times studied</string>
-    <string name="vocabulary_downloads">Vocabulary downloads</string>
+    <string name="total_studied">Total student studied</string>
+    <string name="count_course_favorited">Course favorited</string>
     <string name="most_studied">Most studied</string>
     <string name="study_time_upper">STUDY TIME</string>
     <string name="streak_days_count">%1$d days</string>

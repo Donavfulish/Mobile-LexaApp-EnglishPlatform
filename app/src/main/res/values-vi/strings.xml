@@ -372,7 +372,7 @@
     <!-- Home -->
     <string name="teaching_achievements_upper">THÀNH TỰU DẠY</string>
     <string name="total_studied">Tổng số lượt học</string>
-    <string name="vocabulary_downloads">Lượt tải từ vựng</string>
+    <string name="count_course_favorited">Lượt yêu thích khóa học</string>
     <string name="most_studied">Nhiều lượt học nhất</string>
     <string name="study_time_upper">THỜI GIAN HỌC</string>
     <string name="streak_days_count">%1$d ngày</string>
