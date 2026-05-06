@@ -15,7 +15,6 @@ import com.home.lexa.databinding.FragmentHomeBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlinx.coroutines.launch
 import androidx.navigation.fragment.findNavController
-import com.home.lexa.MainActivity
 import com.home.lexa.data.local.UserManager
 import com.home.lexa.domain.models.UserRole
 import kotlinx.coroutines.Dispatchers
@@ -92,7 +91,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         if(isTeacher){
             binding.tvTitleStats.text = getString(R.string.teaching_achievements_upper)
             binding.tvFirstText.text = getString(R.string.  total_studied)
-            binding.tvSecondText.text = getString(R.string.vocabulary_downloads)
+            binding.tvSecondText.text = getString(R.string.count_course_favorited)
             binding.commonCoursesHeader.setHeaderData(getString(R.string.most_studied), R.drawable.ic_play_circle)
             binding.rvStudyingCoursesCard.visibility= View.GONE
             binding.rvTopStudiedCoursesCard.visibility= View.VISIBLE
