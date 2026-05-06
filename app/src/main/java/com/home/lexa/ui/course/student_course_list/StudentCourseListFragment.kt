@@ -51,13 +51,11 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
         setInactive(binding.btnAll)
         setInactive(binding.btnFavorite)
         setInactive(binding.btnLearning)
-        setInactive(binding.btnFinished)
 
         when (filter) {
             StudentCourseFilter.ALL -> setActive(binding.btnAll)
             StudentCourseFilter.FAVORITE -> setActive(binding.btnFavorite)
             StudentCourseFilter.LEARNING -> setActive(binding.btnLearning)
-            StudentCourseFilter.FINISHED -> setActive(binding.btnFinished)
         }
     }
 
@@ -105,14 +103,6 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
             if(viewModel.currentFilter.value == StudentCourseFilter.LEARNING)
                 return@setOnClickListener
             viewModel.changeFilter(StudentCourseFilter.LEARNING,
-                SearchInfo(query= "", sortBy= "", order= "", limit = 10),
-                null)
-        }
-
-        binding.btnFinished.setOnClickListener {
-            if(viewModel.currentFilter.value == StudentCourseFilter.FINISHED)
-                return@setOnClickListener
-            viewModel.changeFilter(StudentCourseFilter.FINISHED,
                 SearchInfo(query= "", sortBy= "", order= "", limit = 10),
                 null)
         }
@@ -179,7 +169,6 @@ class StudentCourseListFragment : BaseFragment<FragmentStudentCourseListBinding>
             StudentCourseFilter.ALL -> getString(R.string.all_courses)
             StudentCourseFilter.FAVORITE -> getString(R.string.favorite_courses)
             StudentCourseFilter.LEARNING -> getString(R.string.learning_courses)
-            StudentCourseFilter.FINISHED -> getString(R.string.finished_courses)
         }
 
         val isLoading = viewModel.isLoading.value == true
