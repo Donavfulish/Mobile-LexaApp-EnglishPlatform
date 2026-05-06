@@ -11,6 +11,7 @@ import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentPersonalLibraryBinding
 import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.ui.components.DeckInput
+import com.home.lexa.ui.components.Popup
 import com.home.lexa.ui.components.SearchbarFilter
 import com.home.lexa.ui.library.LibraryModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -22,18 +23,32 @@ class PersonalLibraryFragment : BaseFragment<FragmentPersonalLibraryBinding>(Fra
         ownerProducer = { requireParentFragment() }
     )
     private val deckAdapter by lazy {
-        PersonalLibraryAdapter(emptyList())
-        { deck ->
-
-            val bundle = Bundle().apply {
-                putLong("DECK_ID_KEY", deck.id)
-                putString("DECK_TITLE_KEY", deck.title)
-                putInt("DECK_VOCAB_NUMBER_KEY", deck.vocabNumber)
-                putString("DECK_TOPIC_NAME_KEY", deck.topic?.name ?: "")
+        PersonalLibraryAdapter(
+            decks = emptyList(),
+            onItemClick = { deck ->
+                // Hàm thứ 1: Xử lý khi click vào toàn bộ Card
+                val bundle = Bundle().apply {
+                    putLong("DECK_ID_KEY", deck.id)
+                    putString("DECK_TITLE_KEY", deck.title)
+                    putInt("DECK_VOCAB_NUMBER_KEY", deck.vocabNumber)
+                    putString("DECK_TOPIC_NAME_KEY", deck.topic?.name ?: "")
+                }
+                findNavController().navigate(R.id.action_libraryFragment_to_vocabularyFlashcardFragment, bundle)
+            },
+            onOptionsClick = { deck ->
+                val confirmPopup = Popup(requireContext())
+                confirmPopup.showDialog(
+                    title = getString(R.string.confirm_delete),
+                    subTitle = getString(R.string.delete_flashcard_subtitle, deck.title),
+                    isWarning = true,
+                    confirmText = getString(R.string.delete_now),
+                    onConfirm = {
+                        viewModel.deleteDeck(deck.id)
+                    }
+                )
             }
+        )
 
-            findNavController().navigate(R.id.action_libraryFragment_to_vocabularyFlashcardFragment, bundle)
-        }
     }
     override fun setupViews() {
 

@@ -3,6 +3,7 @@ package com.home.lexa.ui.components
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
 import com.home.lexa.databinding.CardPersonalDeckBinding
 import com.home.lexa.domain.models.DeckDto
@@ -31,12 +32,18 @@ class PersonalDeckCard @JvmOverloads constructor(
             colorHex = data.topic?.colorHex ?: "#000000",
             hasBorder = false
         )
-        binding.ivOptions.setOnClickListener {
+        if(data.canDelete){
+            binding.ivDelete.visibility = View.VISIBLE;
+        }else{
+            binding.ivDelete.visibility = View.GONE;
+        }
+        binding.ivDelete.setOnClickListener {
             onOptionsClick.invoke()
         }
 
         binding.root.setOnClickListener {
             onItemClick.invoke()
         }
+
     }
 }

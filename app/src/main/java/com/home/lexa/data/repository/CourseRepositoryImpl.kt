@@ -158,6 +158,8 @@ class CourseRepositoryImpl(
                 AppMemoryCache.remove("getFeaturedCourses");
                 AppMemoryCache.remove("getStudyingCourses");
                 AppMemoryCache.remove("getTopStudiedCourses");
+                AppMemoryCache.removePrefix("getAllDecks");
+
                 Result.success(true)
             } else {
                 Result.failure(Exception(body?.message ?: "Xóa khóa học thất bại"))

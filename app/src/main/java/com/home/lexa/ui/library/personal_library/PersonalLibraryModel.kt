@@ -93,4 +93,19 @@ class PersonalLibraryModel(private val repository: DeckRepository) : ViewModel()
     fun updateInfor(searchInfo: SearchInfo){
         searchInfor = searchInfo
     }
+
+    fun deleteDeck(id: Long) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val request = repository.deleteDeck(id)
+            fetchAllDecks(false, SearchInfo(
+                query= "",
+                sortBy= "",
+                order= "",
+                limit = 10
+            ), null)
+            _isLoading.value = false
+        }
+    }
+
 }

@@ -31,7 +31,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <ImageView
-        android:id="@+id/ivOptions"
+        android:id="@+id/ivDelete"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:background="?attr/selectableItemBackgroundBorderless"
@@ -41,8 +41,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvTitle"
         app:layout_constraintBottom_toBottomOf="@+id/tvTitle"
-        app:srcCompat="@drawable/ic_clock_outline"
-        app:tint="#888888" />
+        app:srcCompat="@drawable/trash"
+        app:tint="@color/c_ff4d4d" />
 
     <TextView
         android:id="@+id/tvTitle"
