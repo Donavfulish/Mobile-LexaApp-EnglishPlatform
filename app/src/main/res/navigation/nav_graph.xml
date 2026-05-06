@@ -124,6 +124,9 @@
             android:id="@+id/action_courseDetailFragment_to_speakingPracticeStudentFragment"
             app:destination="@+id/speakingPracticeStudentFragment"
             />
+        <action
+            android:id="@+id/action_courseDetailFragment_to_dailyResultFragment"
+            app:destination="@+id/dailyResultFragment" />
     </fragment>
 
 
@@ -296,7 +299,11 @@
     <fragment
         android:id="@+id/dailyResultFragment"
         android:name="com.home.lexa.ui.speaking.daily_result.DailyResultFragment"
-        android:label="DailyResultFragment" />
+        android:label="DailyResultFragment" >
+        <action
+            android:id="@+id/action_dailyResultFragment_to_speakingPracticeStudentFragment"
+            app:destination="@id/speakingPracticeStudentFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/speakingDayListFragment"

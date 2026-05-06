@@ -88,6 +88,14 @@ class ParagraphRepositoryImpl (
             val body = response.body()
 
             if (response.isSuccessful && body?.success == true) {
+                // Invalidate related caches so UI reflects newest completed progress immediately.
+                AppMemoryCache.remove("getParagraphSpeakingDay_${request.speakingDayId}")
+                AppMemoryCache.removePrefix("getCourseDetail_")
+                AppMemoryCache.removePrefix("getSpeakingDays_")
+                AppMemoryCache.removePrefix("getLearningCourses")
+                AppMemoryCache.remove("getFeaturedCourses")
+                AppMemoryCache.remove("getStudyingCourses")
+                AppMemoryCache.remove("getTopStudiedCourses")
                 Result.success(true)
             } else {
                 Result.failure(Exception(body?.message ?: "Lỗi từ máy chủ khi lưu tiến độ"))

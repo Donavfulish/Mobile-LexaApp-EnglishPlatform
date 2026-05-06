@@ -1,6 +1,7 @@
 package com.home.lexa.ui.speaking.daily_result
 
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
@@ -22,9 +23,16 @@ class DailyResultFragment : BaseFragment<FragmentDailyResultBinding>(FragmentDai
     private val dailyResultViewModel: DailyResultViewModel by viewModel()
 
     private lateinit var audioManager: AudioManager
+    private var fromCompletedDay = false
+    private var courseId = -1L
+    private var speakingDayId = -1L
 
     override fun setupViews() {
         audioManager = AudioManager(requireContext())
+        fromCompletedDay = arguments?.getBoolean("fromCompletedDay", false) ?: false
+        courseId = arguments?.getLong("courseId") ?: -1L
+        speakingDayId = arguments?.getLong("speakingDayId") ?: -1L
+        sharedViewModel.bindSpeakingDay(speakingDayId, resetOnChange = true)
 
         // 1. LẤY DỮ LIỆU TỪ CACHE VÀ HIỂN THỊ NGAY LẬP TỨC
         loadDataFromCache()
@@ -32,7 +40,20 @@ class DailyResultFragment : BaseFragment<FragmentDailyResultBinding>(FragmentDai
         // 2. NÚT HỌC LẠI: Hủy cache và quay về
         binding.btnRetry.setOnClickListener {
             sharedViewModel.clearCache()
-            findNavController().popBackStack()
+            if (fromCompletedDay && courseId != -1L && speakingDayId != -1L) {
+                val bundle = bundleOf(
+                    "courseId" to courseId,
+                    "speakingDayId" to speakingDayId,
+                    "forceStartOver" to true,
+                    "returnToCourseAfterSave" to true
+                )
+                findNavController().navigate(
+                    R.id.action_dailyResultFragment_to_speakingPracticeStudentFragment,
+                    bundle
+                )
+            } else {
+                findNavController().popBackStack()
+            }
         }
 
         // 3. NÚT TRỞ VỀ KHÓA HỌC: Đẩy cache lên Database -> Hủy cache -> Quay về
@@ -109,8 +130,6 @@ class DailyResultFragment : BaseFragment<FragmentDailyResultBinding>(FragmentDai
         val cacheData = sharedViewModel.sessionCache.values.toList()
 
         // Lấy speakingDayId từ arguments (được truyền từ SpeakingPracticeStudentFragment sang)
-        val speakingDayId = arguments?.getLong("speakingDayId") ?: -1L
-
         if (speakingDayId != -1L) {
             // Gọi ViewModel với đủ 2 tham số
             dailyResultViewModel.submitFinalResult(speakingDayId, cacheData)
