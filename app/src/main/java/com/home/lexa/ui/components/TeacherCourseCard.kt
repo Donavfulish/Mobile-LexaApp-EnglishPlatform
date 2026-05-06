@@ -39,7 +39,7 @@ class TeacherCourseCard @JvmOverloads constructor(
         binding.ivThumbnail.load(thumbnailUrl) {
             crossfade(true)
             placeholder(null) 
-            error(Constants.DEFAULT_COURSE_IMAGE_URL)
+            error(R.drawable.default_course_thumbnail)
         }
 
         // Author Avatar
@@ -47,7 +47,7 @@ class TeacherCourseCard @JvmOverloads constructor(
         binding.ivAuthorAvatar.load(avatarUrl) {
             crossfade(true)
             placeholder(null)
-            error(Constants.DEFAULT_AVATAR_URL)
+            error(R.drawable.default_avatar)
         }
 
         binding.ivOptions.setOnClickListener {
