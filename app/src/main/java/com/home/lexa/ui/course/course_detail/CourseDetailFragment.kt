@@ -70,6 +70,14 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
     override fun setupViews() {
         isOwner = true
         courseId = arguments?.getLong("courseId") ?: -1L
+        findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<Boolean>("refreshCourseDetail")
+            ?.observe(viewLifecycleOwner) { shouldRefresh ->
+                if (shouldRefresh == true && courseId != -1L) {
+                    viewModel.loadCourseDetail(courseId)
+                    findNavController().currentBackStackEntry?.savedStateHandle?.set("refreshCourseDetail", false)
+                }
+            }
         if (courseId == -1L) {
             activityBinding.appBarLayout.apply {
                 setText(getString(R.string.create_new_course))

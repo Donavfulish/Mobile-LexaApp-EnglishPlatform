@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
@@ -29,6 +30,55 @@ class CourseDetailStudent(
     private val viewModel: CourseDetailViewModel,
     private val activityBinding: ActivityMainBinding
 ): CourseDetailHandler {
+    private fun navigateToSpeakingPractice(
+        courseId: Long,
+        speakingDayId: Long,
+        order: Int,
+        forceStartOver: Boolean = false,
+        skipResumeDialog: Boolean = false
+    ) {
+        val bundle = bundleOf(
+            "courseId" to courseId,
+            "speakingDayId" to speakingDayId,
+            "order" to order,
+            "forceStartOver" to forceStartOver,
+            "skipResumeDialog" to skipResumeDialog
+        )
+        fragment.findNavController().navigate(
+            R.id.action_courseDetailFragment_to_speakingPracticeStudentFragment,
+            bundle
+        )
+    }
+
+    private fun navigateToDailyResult(courseId: Long, speakingDayId: Long) {
+        val bundle = bundleOf(
+            "courseId" to courseId,
+            "speakingDayId" to speakingDayId,
+            "fromCompletedDay" to true
+        )
+        fragment.findNavController().navigate(
+            R.id.action_courseDetailFragment_to_dailyResultFragment,
+            bundle
+        )
+    }
+
+    private fun showResumeDialog(
+        day: ShortSpeakingDayDto,
+        courseId: Long,
+        order: Int
+    ) {
+        AlertDialog.Builder(fragment.requireContext())
+            .setTitle(fragment.getString(R.string.continue_lesson_title))
+            .setMessage(fragment.getString(R.string.continue_lesson_msg))
+            .setPositiveButton(fragment.getString(R.string.continue_action)) { _, _ ->
+                navigateToSpeakingPractice(courseId, day.speakingDayId, order, false, true)
+            }
+            .setNegativeButton(fragment.getString(R.string.start_over)) { _, _ ->
+                navigateToSpeakingPractice(courseId, day.speakingDayId, order, true, true)
+            }
+            .show()
+    }
+
     override fun setupViews() {
         binding.learningBtn.apply {
             setTextSize(20f)
@@ -118,15 +168,17 @@ class CourseDetailStudent(
                         _progressPercent = day.completed
                     )
                 setOnClickAction {
-                    val bundle = bundleOf(
-                        "courseId" to courseId,
-                        "speakingDayId" to day.speakingDayId,
-                        "order" to index
-                    )
-                    fragment.findNavController().navigate(
-                        R.id.action_courseDetailFragment_to_speakingPracticeStudentFragment,
-                        bundle
-                    )
+                    when {
+                        day.completed >= 100 -> {
+                            navigateToDailyResult(courseId, day.speakingDayId)
+                        }
+                        day.completed > 0 -> {
+                            showResumeDialog(day, courseId, index)
+                        }
+                        else -> {
+                            navigateToSpeakingPractice(courseId, day.speakingDayId, index, false)
+                        }
+                    }
                 }
             }
 
