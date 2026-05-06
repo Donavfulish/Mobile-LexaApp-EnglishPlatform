@@ -51,6 +51,8 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
 
     override fun onDestroyView() {
         super.onDestroyView()
+        // RESET DU LIEU KHI THOAT DE TRANH UI NHAY KHI QUAY LAI
+        viewModel.clearData()
         handler = null
     }
 
@@ -253,7 +255,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
         // THEO DOI TINH TRANG KHOA HOC TRA VE
         viewModel.courseDetailData.observe(viewLifecycleOwner) { course ->
             if (course == null){
-                Toast.makeText(requireContext(), getString(R.string.course_data_not_found), Toast.LENGTH_SHORT).show()
+                // SỬA: Không Toast báo lỗi ở đây vì có thể nó null do clearData
                 return@observe
             }
             deckId = course.deckId!!
