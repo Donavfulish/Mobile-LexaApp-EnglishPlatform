@@ -38,8 +38,7 @@ class TeacherCourseCard @JvmOverloads constructor(
         val thumbnailUrl = if (data.thumbnail_url.isNullOrBlank()) Constants.DEFAULT_COURSE_IMAGE_URL else data.thumbnail_url
         binding.ivThumbnail.load(thumbnailUrl) {
             crossfade(true)
-            placeholder(null) 
-            error(Constants.DEFAULT_COURSE_IMAGE_URL)
+            placeholder(null)
         }
 
         // Author Avatar
@@ -47,7 +46,6 @@ class TeacherCourseCard @JvmOverloads constructor(
         binding.ivAuthorAvatar.load(avatarUrl) {
             crossfade(true)
             placeholder(null)
-            error(Constants.DEFAULT_AVATAR_URL)
         }
 
         binding.ivOptions.setOnClickListener {

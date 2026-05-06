@@ -17,6 +17,7 @@ class ExerciseModeViewModel(
 ) : ViewModel() {
 
     companion object {
+        private const val API_PAGE_LIMIT = 10
         const val RESULT_REMEMBER = "REMEMBER"
         const val RESULT_FORGOTTEN = "FORGOTTEN"
         const val RESULT_NULL = "NULL"
@@ -60,13 +61,22 @@ class ExerciseModeViewModel(
         // Điều hướng dữ liệu: Đọc từ Cache hay Gọi API?
         if (isRetryForgotten) {
             loadFromCache()
-            startNewSession(onlyForgotten = true)
+            if (allCards.isEmpty()) {
+                fetchFlashcardsFromApi(onlyForgotten = true)
+            } else {
+                updateStatsFromAllCards()
+                startNewSession(onlyForgotten = true)
+            }
         } else if (isRetryAll) {
             loadFromCache()
-            resetAndPracticeAll()
+            if (allCards.isEmpty()) {
+                fetchFlashcardsFromApi(onlyForgotten = false)
+            } else {
+                resetAndPracticeAll()
+            }
         } else {
             // Mới vào lần đầu tiên -> Fetch dữ liệu mới nhất từ Server
-            fetchFlashcardsFromApi()
+            fetchFlashcardsFromApi(onlyForgotten = true)
         }
     }
 
@@ -77,25 +87,48 @@ class ExerciseModeViewModel(
         }
     }
 
-    // GỌI API Ở ĐÂY
-    public fun fetchFlashcardsFromApi() {
+    // Fetch toàn bộ dữ liệu theo cursor để không phụ thuộc lazy loading ở màn trước
+    fun fetchFlashcardsFromApi(onlyForgotten: Boolean) {
         viewModelScope.launch {
             try {
-                val result = repository.getAllFlashcardWithResult(deckId, SearchInfo(null, null, null, totalCards.value), null)
+                val fetchedCards = mutableListOf<DetailFlashcardWithResult>()
+                var nextCursor: Long? = null
+                var shouldContinue: Boolean
 
-                result.onSuccess { data ->
-                    allCards = data.data.toMutableList()
+                do {
+                    val result = repository.getAllFlashcardWithResult(
+                        deckId,
+                        SearchInfo(null, null, null, API_PAGE_LIMIT),
+                        nextCursor
+                    )
 
-                    // Lấy về xong thì mới cất vào Cache để quản lý việc vuốt thẻ
-                    AppMemoryCache.put(cacheKey, allCards.toList())
+                    shouldContinue = false
+                    result.onSuccess { data ->
+                        if (data.data.isNotEmpty()) {
+                            fetchedCards.addAll(data.data)
+                        }
+                        nextCursor = data.nextCursor
+                        shouldContinue = data.nextCursor != null && data.data.isNotEmpty()
+                    }.onFailure {
+                        nextCursor = null
+                    }
+                } while (shouldContinue)
 
-                    // Tính toán lại để đảm bảo đồng bộ tuyệt đối với API
-                    updateStatsFromAllCards()
+                allCards = fetchedCards
+                    .distinctBy { it.flashCard.id }
+                    .toMutableList()
 
-                    // Bắt đầu luyện (chỉ các từ chưa thuộc)
+                // Lấy về xong thì mới cất vào Cache để quản lý việc vuốt thẻ
+                AppMemoryCache.put(cacheKey, allCards.toList())
+
+                // Tính toán lại để đảm bảo đồng bộ tuyệt đối với API
+                updateStatsFromAllCards()
+
+                // Bắt đầu luyện
+                if (onlyForgotten) {
                     startNewSession(onlyForgotten = true)
-                }.onFailure {
-                    // Xử lý lỗi load API nếu cần
+                } else {
+                    resetAndPracticeAll()
                 }
             } catch (e: Exception) {
                 // Xử lý exception
