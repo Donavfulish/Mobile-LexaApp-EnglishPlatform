@@ -54,9 +54,9 @@ class VoskSTTManager(private val context: Context) {
         // DEBUG ==========================
 //        Log.d("Vosk", "Is Voice Ready: $isReady") // Nếu luôn là false, nghĩa là Vosk không nhận diện được âm thanh
 
-        if (isReady) {
-            Log.d("Vosk", "Final: ${recognizer?.result}")
-        }
+//        if (isReady) {
+//            Log.d("Vosk", "Final: ${recognizer?.result}")
+//        }
 
 //        var sum = 0.0
 //        for (i in 0 until numRead) {

@@ -264,7 +264,7 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
         val originalText = currentParagraph.paragraph ?: ""
         val cacheItem = sharedViewModel.sessionCache[currentIndex]
 
-        // 1. SET CỠ CHỮ (Giữ nguyên logic của bạn)
+        // 1. SET CỠ CHỮ
         val charCount = originalText.length
         val newTextSizeSp = when {
             charCount <= 50 -> 22f
@@ -275,55 +275,90 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
         }
         binding.tvParagraphContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, newTextSizeSp)
 
-        // 2. LOGIC TÔ MÀU
+        // 2. LOGIC TÔ MÀU SPANNABLE THÔNG MINH
         if (cacheItem != null && cacheItem.paragraphId == currentParagraph.id) {
             val spannable = SpannableString(originalText)
 
-            // Mặc định tô màu xanh cho toàn bộ (bao gồm cả dấu câu)
+            val colorSuccess = ContextCompat.getColor(requireContext(), R.color.status_success)
+            val colorWarning = ContextCompat.getColor(requireContext(), R.color.status_warning)
+            val colorError = ContextCompat.getColor(requireContext(), R.color.status_error_alt)
+
+            // BƯỚC 1: Tô màu Xanh cho toàn bộ text (Dấu câu và khoảng trắng sẽ nhận màu này)
             spannable.setSpan(
-                ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.status_success)),
+                ForegroundColorSpan(colorSuccess),
                 0, originalText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
 
-            var lastSearchIndex = 0
-            cacheItem.evaluationResults.forEach { item ->
-                // Tìm vị trí của từ này trong văn bản gốc
-                val range = StringUtils.findWordRange(originalText, item.word, lastSearchIndex)
+            // Regex lấy các từ (Bao gồm chữ, số và dấu nháy đơn cho các từ như "don't")
+            val wordRegex = Regex("[a-zA-Z0-9-'’]+")
+            val originalWords = wordRegex.findAll(originalText).toList()
 
-                if (range != null) {
-                    val (start, end) = range
+            // BƯỚC 2: Phủ màu ĐỎ lên tất cả các TỪ (Mặc định coi là đọc sai hoặc bỏ sót)
+            originalWords.forEach { match ->
+                spannable.setSpan(
+                    ForegroundColorSpan(colorError),
+                    match.range.first, match.range.last + 1,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
 
-                    // Chỉ tô màu nếu trạng thái không phải GOOD (vì mặc định ta đã tô xanh rồi)
-                    if (item.status != "GOOD" && item.status != "Correct") {
-                        val color = when (item.status) {
-                            "MEDIUM" -> ContextCompat.getColor(requireContext(), R.color.status_warning)
-                            else -> ContextCompat.getColor(requireContext(), R.color.status_error_alt)
+            // BƯỚC 3: Dò kết quả API với văn bản gốc bằng 1 con trỏ
+            var pointerOriginal = 0
+
+            cacheItem.evaluationResults.forEach { evalItem ->
+                // Làm sạch từ của API (xóa các ký tự đặc biệt thừa nếu có)
+                val evalClean = evalItem.word.lowercase()
+                    .replace('’', '\'')
+                    .replace(Regex("[^a-zA-Z0-9-']"), "")
+                if (evalClean.isEmpty()) return@forEach
+
+                // Tìm kiếm tuần tự trong các từ gốc chưa được duyệt
+                for (i in pointerOriginal until originalWords.size) {
+                    val originalMatch = originalWords[i]
+                    // Làm sạch từ gốc để so sánh chính xác (Bỏ qua hoa thường, ngoặc kép...)
+                    val originalClean = originalMatch.value.lowercase()
+                        .replace('’', '\'')
+                        .replace(Regex("[^a-zA-Z0-9-']"), "")
+
+                    if (evalClean == originalClean) {
+                        // ĐÃ MATCH! Quyết định màu dựa trên API
+                        val correctColor = when (evalItem.status) {
+                            "GOOD", "Correct" -> colorSuccess
+                            "MEDIUM" -> colorWarning
+                            else -> colorError
                         }
 
+                        // Ghi đè màu mới lên khoảng vị trí của từ này
                         spannable.setSpan(
-                            ForegroundColorSpan(color),
-                            start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                            ForegroundColorSpan(correctColor),
+                            originalMatch.range.first, originalMatch.range.last + 1,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                         )
+
+                        // Đẩy con trỏ lên vị trí TỪ TIẾP THEO để không xét lại từ cũ và các từ đã bị nhảy cóc
+                        pointerOriginal = i + 1
+                        break
                     }
-                    // Cập nhật index để tìm từ tiếp theo, tránh tìm trùng từ cũ
-                    lastSearchIndex = end
                 }
             }
+
             binding.tvParagraphContent.text = spannable
         } else {
-            // Trạng thái chưa có kết quả: Hiển thị văn bản gốc màu đen/xám
+            // Trạng thái chưa có bản ghi
             binding.tvParagraphContent.text = originalText
             binding.tvParagraphContent.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary))
         }
 
-        // 3. Cập nhật tiến độ (Giữ nguyên logic của bạn)
+        // 3. Cập nhật tiến độ & nút bấm
         val progress = (currentIndex.toFloat() / paragraphs.size * 100).toInt()
         binding.apply {
             tvProgressTitle.text = getString(R.string.paragraph_progress_count, currentIndex + 1, paragraphs.size)
             progressBar.setProgress(progress)
             tvCompletedPercent.text = getString(R.string.completed_percent, progress)
         }
-        updateNavigationButtons(recordedAudios.containsKey(currentIndex) || cacheItem != null)
+
+        val hasRecording = recordedAudios.containsKey(currentIndex) || cacheItem != null
+        updateNavigationButtons(hasRecording)
     }
 
     override fun observeData() {
