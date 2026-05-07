@@ -16,8 +16,7 @@ interface BaseCourseFilter
 enum class StudentCourseFilter : BaseCourseFilter {
     ALL,
     FAVORITE,
-    LEARNING,
-    FINISHED
+    LEARNING
 }
 
 enum class TeacherCourseFilter : BaseCourseFilter {

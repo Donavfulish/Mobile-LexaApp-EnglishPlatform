@@ -35,6 +35,9 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
 
     private var speakingDayId = -1L
     private var courseId = -1L
+    private var forceStartOver = false
+    private var skipResumeDialog = false
+    private var returnToCourseAfterSave = false
     private var paragraphs: List<ShortParagraphDto> = emptyList()
     private var currentIndex = 0
     private var isRecording = false
@@ -61,7 +64,7 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
         if (paragraphs.isEmpty() || speakingDayId == -1L) return
 
         paragraphs.forEachIndexed { index, _ ->
-            val fileName = "record_day${speakingDayId}_idx$index.mp3"
+            val fileName = "record_day${speakingDayId}_idx$index.wav"
             val file = java.io.File(requireContext().filesDir, fileName)
 
             if (file.exists()) {
@@ -74,6 +77,10 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
     override fun setupViews() {
         courseId = arguments?.getLong("courseId") ?: -1L
         speakingDayId = arguments?.getLong("speakingDayId") ?: -1L
+        forceStartOver = arguments?.getBoolean("forceStartOver", false) ?: false
+        skipResumeDialog = arguments?.getBoolean("skipResumeDialog", false) ?: false
+        returnToCourseAfterSave = arguments?.getBoolean("returnToCourseAfterSave", false) ?: false
+        sharedViewModel.bindSpeakingDay(speakingDayId, resetOnChange = true)
 
         audioManager = AudioManager(requireContext())
         sttManager = SpeechToTextManager(requireContext())
@@ -350,7 +357,14 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
         }
 
         // 3. Cập nhật tiến độ & nút bấm
-        val progress = (currentIndex.toFloat() / paragraphs.size * 100).toInt()
+        val completedCount = paragraphs.indices.count { index ->
+            recordedAudios.containsKey(index) || sharedViewModel.sessionCache[index] != null
+        }
+        val progress = if (paragraphs.isNotEmpty()) {
+            (completedCount.toFloat() / paragraphs.size * 100).toInt()
+        } else {
+            0
+        }
         binding.apply {
             tvProgressTitle.text = getString(R.string.paragraph_progress_count, currentIndex + 1, paragraphs.size)
             progressBar.setProgress(progress)
@@ -377,7 +391,13 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
                     if (isSuccess) {
                         Toast.makeText(requireContext(), getString(R.string.progress_saved), Toast.LENGTH_SHORT).show()
                         viewModel.resetBulkSaveStatus() // Reset state để tránh trigger lại
-                        findNavController().popBackStack()
+                        if (returnToCourseAfterSave && courseId != -1L) {
+                            findNavController().getBackStackEntry(R.id.courseDetailFragment)
+                                .savedStateHandle["refreshCourseDetail"] = true
+                            findNavController().popBackStack(R.id.courseDetailFragment, false)
+                        } else {
+                            findNavController().popBackStack()
+                        }
                     }
                 }.onFailure { error ->
                     Toast.makeText(requireContext(), getString(R.string.save_error_msg, error.message), Toast.LENGTH_SHORT).show()
@@ -388,23 +408,39 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
     }
 
     private fun checkAndShowContinueDialog() {
-        // Tùy vào cách backend trả data, giả sử ta biết user đã làm đến câu index thứ N:
-        // (Ở đây giả lập tìm index đầu tiên chưa có thu âm)
-        val lastCompletedIndex = recordedAudios.keys.maxOrNull() ?: -1
+        val hasProgress = recordedAudios.isNotEmpty() || sharedViewModel.sessionCache.isNotEmpty()
+        val nextPendingIndex = paragraphs.indices.firstOrNull { index ->
+            !recordedAudios.containsKey(index) && sharedViewModel.sessionCache[index] == null
+        } ?: paragraphs.lastIndex
 
-        if (lastCompletedIndex >= 0 && lastCompletedIndex < paragraphs.size - 1) {
+        if (forceStartOver) {
+            currentIndex = 0
+            recordedAudios.clear()
+            sharedViewModel.clearCache()
+            clearDayLocalRecordings()
+            updateContent()
+            return
+        }
+
+        if (skipResumeDialog) {
+            currentIndex = if (hasProgress) nextPendingIndex else 0
+            updateContent()
+            return
+        }
+
+        if (hasProgress && nextPendingIndex in 1 until paragraphs.size) {
             AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.continue_lesson_title))
                 .setMessage(getString(R.string.continue_lesson_msg))
                 .setPositiveButton(getString(R.string.continue_action)) { _, _ ->
-                    currentIndex = lastCompletedIndex + 1
+                    currentIndex = nextPendingIndex
                     updateContent()
                 }
                 .setNegativeButton(getString(R.string.start_over)) { _, _ ->
                     currentIndex = 0
                     recordedAudios.clear()
                     sharedViewModel.clearCache()
-                    // Gửi request xoá tiến độ cũ lên server nếu backend yêu cầu
+                    clearDayLocalRecordings()
                     updateContent()
                 }
                 .setCancelable(false)
@@ -471,14 +507,52 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
     }
 
     private fun saveProgressAndExit() {
-        val cacheData = sharedViewModel.sessionCache.values.toList()
+        val cacheData = buildSavePayload()
         if (cacheData.isEmpty()) {
-            findNavController().popBackStack()
+            if (returnToCourseAfterSave && courseId != -1L) {
+                findNavController().getBackStackEntry(R.id.courseDetailFragment)
+                    .savedStateHandle["refreshCourseDetail"] = true
+                findNavController().popBackStack(R.id.courseDetailFragment, false)
+            } else {
+                findNavController().popBackStack()
+            }
             return
         }
 
         viewModel.submitBulkProgress(speakingDayId, cacheData)
 
+    }
+
+    private fun buildSavePayload(): List<ParagraphCacheItem> {
+        val currentCache = sharedViewModel.sessionCache
+        if (!forceStartOver) {
+            return currentCache.values.toList()
+        }
+        if (paragraphs.isEmpty()) return emptyList()
+
+        // Force start-over means previous server results must be overwritten,
+        // so we always send all paragraphs (untouched ones are reset to empty).
+        return paragraphs.mapIndexed { index, paragraph ->
+            currentCache[index] ?: ParagraphCacheItem(
+                paragraphId = paragraph.id,
+                originalText = paragraph.paragraph.orEmpty(),
+                evaluationResults = emptyList(),
+                localAudioPath = "",
+                goodCount = 0,
+                mediumCount = 0,
+                badCount = 0
+            )
+        }
+    }
+
+    private fun clearDayLocalRecordings() {
+        if (speakingDayId == -1L) return
+        paragraphs.indices.forEach { index ->
+            val file = java.io.File(requireContext().filesDir, "record_day${speakingDayId}_idx$index.wav")
+            if (file.exists()) {
+                file.delete()
+            }
+        }
     }
 
     override fun onDestroy() {

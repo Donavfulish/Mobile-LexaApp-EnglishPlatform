@@ -64,17 +64,6 @@
                 app:backgroundTint="@color/purple_paragraph"
                 app:icon="@drawable/ic_clock_outline"
                 android:backgroundTint="@null" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnFinished"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/finished"
-                android:textStyle="bold"
-                android:fontFamily="@font/archivo_bold"
-                app:backgroundTint="@color/purple_paragraph"
-                app:icon="@drawable/ic_lightning"
-                android:backgroundTint="@null" />
         </LinearLayout>
     </HorizontalScrollView>
 
