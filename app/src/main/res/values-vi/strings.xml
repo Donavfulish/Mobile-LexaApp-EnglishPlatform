@@ -382,4 +382,10 @@
     <string name="system_error">Lỗi từ hệ thống</string>
     <string name="time_to_learn">Đến giờ học rồi bạn ơi!</string>
     <string name="notification_streak">Hãy vào học để giữ chuỗi bạn nhé!</string>
+    <string name="order_by">Sắp xếp theo</string>
+    <string name="creation_date">Ngày tạo</string>
+    <string name="title">Tiêu đề</string>
+    <string name="order">Thứ tự</string>
+    <string name="ascending">Tăng dần</string>
+    <string name="descending">Giảm dần</string>
 </resources>
