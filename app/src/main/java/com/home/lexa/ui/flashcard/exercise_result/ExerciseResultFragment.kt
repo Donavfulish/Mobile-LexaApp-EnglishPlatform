@@ -6,6 +6,7 @@ import androidx.navigation.fragment.findNavController
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentExerciseResultBinding
+import com.home.lexa.di.AppMemoryCache
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ExerciseResultFragment : BaseFragment<FragmentExerciseResultBinding>(FragmentExerciseResultBinding::inflate) {
@@ -83,6 +84,7 @@ class ExerciseResultFragment : BaseFragment<FragmentExerciseResultBinding>(Fragm
             .setMessage(getString(R.string.message_save_quit))
             .setPositiveButton(getString(R.string.save_and_quit)) { _, _ ->
                 viewModel.saveProgressToApi(deckId, remembered = rememberedCount, forgotten = forgottenCount) {
+                    AppMemoryCache.removePrefix("getAllFlashcard")
                     // Pop ngược về màn hình chi tiết bộ từ vựng
                     findNavController().popBackStack(R.id.vocabularyFlashcardFragment, false)
                 }

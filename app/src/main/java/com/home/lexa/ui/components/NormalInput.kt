@@ -106,10 +106,7 @@ class NormalInput @JvmOverloads constructor(
         params.height = (heightInDp * context.resources.displayMetrics.density).toInt()
         binding.containerInput.layoutParams = params
 
-        // Nếu chiều cao lớn, cho chữ lên phía trên cho đẹp
-//        if (heightInDp > 60) {
-//            binding.etInput.gravity = Gravity.TOP or Gravity.START
-//        }
+        // binding.etInput.gravity = Gravity.TOP or Gravity.START
     }
 
     fun setEnable(isEnable: Boolean) {
@@ -140,7 +137,7 @@ class NormalInput @JvmOverloads constructor(
 
                 setHorizontallyScrolling(false)
 
-                setGravity(Gravity.TOP or Gravity.START)
+                binding.containerInput.gravity = Gravity.TOP or Gravity.START
 
                 imeOptions = EditorInfo.IME_ACTION_NONE
             } else {
@@ -151,7 +148,7 @@ class NormalInput @JvmOverloads constructor(
 
                 setHorizontallyScrolling(true)
 
-                gravity = Gravity.CENTER_VERTICAL
+                binding.containerInput.gravity = Gravity.CENTER_VERTICAL
 
                 imeOptions = EditorInfo.IME_ACTION_DONE
             }

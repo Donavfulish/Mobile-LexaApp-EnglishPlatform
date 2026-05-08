@@ -85,10 +85,13 @@ class FlashcardEditAddFragment : BaseFragment<FragmentAddEditFlashcardBinding>(F
 
             inputDefinition.setPlaceHolderText(getString(R.string.enter_defination))
 
-            inputExample.setPlaceHolderText(getString(R.string.enter_example))
-            inputExample.setMaxLength(100)
-            inputExample.setInputHeight(100)
-            inputExample.setMultipleLines(true)
+            inputExample.apply {
+                setMultipleLines(true)
+                setPlaceHolderText(getString(R.string.enter_example))
+                setMaxLength(100)
+                setInputHeight(100)
+                setMultipleLines(true)
+            }
 
             dropdownWordType.apply {
                 setTile(getString(R.string.word_type))

@@ -93,6 +93,7 @@ class ProfilePersonalInformationFragment : BaseFragment<FragmentProfilePersonalI
         }
 
         binding.addressInput.apply {
+            setMultipleLines(true)
             setInputHeight(150)
             setLabel(getString(R.string.address).uppercase())
             setPlaceHolderText(getString(R.string.enter_your_address))

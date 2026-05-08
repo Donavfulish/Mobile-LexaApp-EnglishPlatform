@@ -84,7 +84,7 @@ class ProfileChangePasswordFragment : BaseFragment<FragmentProfileChangePassword
                         binding.inputNewPassword.setText(null)
                         binding.inputConfirmPassword.setText(null)
 
-                        Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), getString(R.string.save_changes_successfully), Toast.LENGTH_SHORT).show()
                         viewModel.clearChangeEmailState()
                     }
                     is AuthState.Error -> {

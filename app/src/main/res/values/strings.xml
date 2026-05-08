@@ -206,12 +206,14 @@
     <string name="empty_avatar">No avatar yet</string>
 
     <string name="streak_notification">Streak notification</string>
-    <string name="streak_notification_desc">A reminder to maintain your daily study streak so you don\'t lose progress.</string>
+    <string name="streak_notification_desc">A reminder to maintain your daily study streak</string>
     <string name="study_time_notification">Study time notification</string>
     <string name="study_time_notification_desc">A reminder notification before your scheduled study time.</string>
     <string name="set_reminder_time">Set reminder time</string>
     <string name="this_noti_happens_after_10_secs">This notification will execute after 10 seconds</string>
-    <string name="set_schedule_at_hours_minutes">Set schedule at %1$d:$2%d</string>
+    <string name="set_schedule_at_hours_minutes">Set schedule at %1$d:%2$d</string>
+    <string name="hour">Hour</string>
+    <string name="minute">Minute</string>
     <string name="noti_study_time">Study time!</string>
     <string name="noti_study_time_desc">Join Lexa and continue your learning streak now!</string>
     <string name="home_screen">Home Screen</string>

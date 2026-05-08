@@ -86,7 +86,7 @@ class ProfileEmailFragment : BaseFragment<FragmentProfileEmailBinding>(FragmentP
                         binding.inputEmail.setText(currentEmail)
                         binding.inputEmail.setEnable(true)
 
-                        Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), getString(R.string.toast_change_email_successfully), Toast.LENGTH_SHORT).show()
                         viewModel.clearChangeEmailState()
                     }
                     is AuthState.Error -> {

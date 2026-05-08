@@ -180,11 +180,13 @@
     <string name="warning_remove_avatar">Hành động này không thể hoàn tác. Bạn chắc chắn muốn gỡ ảnh đại diện?</string>
     <string name="empty_avatar">Chưa có ảnh đại diện</string>
     <string name="streak_notification">Thông báo chuỗi</string>
-    <string name="streak_notification_desc">Nhắc nhở bạn duy trì chuỗi học tập hàng ngày để không bỏ lỡ tiến độ.</string>
+    <string name="streak_notification_desc">Nhắc nhở bạn duy trì chuỗi học tập hàng ngày</string>
     <string name="study_time_notification">Thông báo giờ học</string>
-    <string name="study_time_notification_desc">Thông báo nhắc nhở trước khi đến giờ học đã cài đặt của bạn.</string>
+    <string name="study_time_notification_desc">Thông báo nhắc nhở trước khi đến giờ học của bạn</string>
     <string name="set_reminder_time">Cài đặt giờ nhắc nhở</string>
-    <string name="set_schedule_at_hours_minutes">Đã đặt lịch vào %1$d:$2%d</string>
+    <string name="set_schedule_at_hours_minutes">Đã đặt lịch vào %1$d:%2$d</string>
+    <string name="hour">Giờ</string>
+    <string name="minute">Phút</string>
     <string name="noti_study_time">Giờ học đến rồi!</string>
     <string name="noti_study_time_desc">Hãy vào Lexa duy trì chuỗi học tập ngay nhé!</string>
     <string name="home_screen">Trang chủ</string>

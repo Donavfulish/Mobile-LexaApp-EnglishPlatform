@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F9FA"
+    android:background="#FDFDFF"
     android:fillViewport="true">
 
     <LinearLayout
@@ -11,17 +11,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingHorizontal="20dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="40dp">
+        android:paddingTop="24dp">
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="0dp"
-            app:strokeColor="#E0E0E0"
-            app:strokeWidth="1dp">
+            app:cardCornerRadius="20dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="@android:color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -32,23 +30,23 @@
                     android:id="@+id/streakNotification"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingVertical="2dp"
                     app:cardCornerRadius="0dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="0dp" />
+                    app:cardElevation="0dp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginHorizontal="16dp"
-                    android:background="#F3F4F6" />
+                    android:layout_marginHorizontal="60dp"
+                    android:background="#F0F0F0" />
 
                 <com.home.lexa.ui.components.NotificationCardView
                     android:id="@+id/studyHourNotification"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingVertical="12dp"
                     app:cardCornerRadius="0dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="0dp" />
+                    app:cardElevation="0dp" />
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -57,7 +55,7 @@
             android:id="@+id/reminderSetting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="40dp" />
+            android:layout_marginTop="20dp" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

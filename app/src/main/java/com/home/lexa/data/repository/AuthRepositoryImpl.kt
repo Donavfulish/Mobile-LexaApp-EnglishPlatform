@@ -1,6 +1,7 @@
 package com.home.lexa.data.repository
 
 import com.home.lexa.data.remote.AuthApiService
+import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.AuthResult
 import com.home.lexa.domain.models.ChangeEmailRequest
 import com.home.lexa.domain.models.ChangePasswordRequest
@@ -203,6 +204,7 @@ class AuthRepositoryImpl(private val apiService: AuthApiService) : AuthResposito
 
             if (response.isSuccessful && body != null) {
                 if (body.success == true && body.data != null) {
+                    AppMemoryCache.remove("getProfile")
                     Result.success(body.data)
                 } else {
                     Result.failure(Exception(body.message ?: "Cập nhật email thất bại"))
