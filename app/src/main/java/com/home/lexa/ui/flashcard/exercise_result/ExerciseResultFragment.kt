@@ -1,6 +1,7 @@
 package com.home.lexa.ui.flashcard.exercise_result
 
 import android.app.AlertDialog
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.home.lexa.R
@@ -83,10 +84,21 @@ class ExerciseResultFragment : BaseFragment<FragmentExerciseResultBinding>(Fragm
             .setTitle(getString(R.string.save_and_quit))
             .setMessage(getString(R.string.message_save_quit))
             .setPositiveButton(getString(R.string.save_and_quit)) { _, _ ->
-                viewModel.saveProgressToApi(deckId, remembered = rememberedCount, forgotten = forgottenCount) {
-                    AppMemoryCache.removePrefix("getAllFlashcard")
-                    // Pop ngược về màn hình chi tiết bộ từ vựng
-                    findNavController().popBackStack(R.id.vocabularyFlashcardFragment, false)
+                viewModel.saveProgressToApi(deckId, remembered = rememberedCount, forgotten = forgottenCount) { isSuccess ->
+                    if (isSuccess) {
+                        AppMemoryCache.removePrefix("getAllFlashcard")
+                        findNavController()
+                            .getBackStackEntry(R.id.vocabularyFlashcardFragment)
+                            .savedStateHandle["RELOAD_DATA"] = true
+                        // Pop ngược về màn hình chi tiết bộ từ vựng
+                        findNavController().popBackStack(R.id.vocabularyFlashcardFragment, false)
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.save_result_error),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
             .setNegativeButton(getString(R.string.quit_not_save)) { _, _ ->
