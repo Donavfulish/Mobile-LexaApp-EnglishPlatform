@@ -25,34 +25,44 @@ class ExerciseResultViewModel(
         viewModelScope.launch {
             val cacheKey = "FLASHCARD_DECK_RESULT_$deckId"
             val allCards = AppMemoryCache.get<List<DetailFlashcardWithResult>>(cacheKey)
+            val hasFlashcardPayload = !allCards.isNullOrEmpty()
+            val rememberedFromCards = allCards?.count { it.result == "REMEMBER" } ?: 0
+            val forgottenFromCards = allCards?.count { it.result == "FORGOTTEN" } ?: 0
+            val finalRemembered = if (hasFlashcardPayload) rememberedFromCards else remembered
+            val finalForgotten = if (hasFlashcardPayload) forgottenFromCards else forgotten
 
-            if (allCards.isNullOrEmpty()) {
-                onComplete(false)
-                return@launch
-            }
-
-            Log.d("ExerciseResultViewModel", "Bắt đầu đồng bộ ${allCards.size} cards lên BE...")
+            Log.d(
+                "ExerciseResultViewModel",
+                "Bắt đầu đồng bộ deckId=$deckId, cards=${allCards?.size ?: 0}, rem=$finalRemembered, forg=$finalForgotten"
+            )
 
             // 1. Chuẩn bị Request cho Flashcard Results
             // Chuyển đổi "NULL" string thành giá trị null thực sự để BE parse thành Enum null
-            val flashcardItems = allCards.map {
+            val flashcardItems = allCards?.map {
                 FlashcardResultItem(
                     flashcardId = it.flashCard.id,
                     status = if (it.result == "NULL") null else it.result
                 )
-            }
+            } ?: emptyList()
             val flashcardRequest = UpdateFlashcardResultRequest(deckId, flashcardItems)
 
             // 2. Chuẩn bị Request cho Deck Results
             val deckRequest = UpdateDeckResultRequest(
                 deckId = deckId,
-                rememberedCount = remembered,
-                forgottenCount = forgotten
+                rememberedCount = finalRemembered,
+                forgottenCount = finalForgotten
             )
 
             try {
                 // 3. Gọi 2 API song song (Concurrent)
-                val flashcardDeferred = async { flashcardRepository.updateFlashcardResults(deckId, flashcardRequest) }
+                val flashcardDeferred = async {
+                    if (hasFlashcardPayload) {
+                        flashcardRepository.updateFlashcardResults(deckId, flashcardRequest)
+                    } else {
+                        Log.w("ExerciseResultViewModel", "Không có cache flashcard để sync chi tiết, bỏ qua updateFlashcardResults")
+                        Result.success(true)
+                    }
+                }
                 val deckDeferred = async {
                     val updateResult = deckRepository.updateDeckResult(deckRequest)
                     if (updateResult.isSuccess) {
@@ -74,8 +84,8 @@ class ExerciseResultViewModel(
                             CreateDeckResultRequest(
                                 deckId = deckId,
                                 userId = userId,
-                                rememberedCount = remembered,
-                                forgottenCount = forgotten
+                                rememberedCount = finalRemembered,
+                                forgottenCount = finalForgotten
                             )
                         )
                         }

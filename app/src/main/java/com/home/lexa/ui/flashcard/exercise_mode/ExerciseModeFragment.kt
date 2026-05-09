@@ -8,16 +8,19 @@ import androidx.navigation.fragment.findNavController
 import com.home.lexa.MainActivity
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
+import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.core.utils.SwipeTouchListener
 import com.home.lexa.databinding.FragmentExerciseModeBinding
 import com.home.lexa.domain.models.ColorLabel
 import com.home.lexa.domain.models.PartOfSpeech
 import com.home.lexa.domain.models.Vocabulary
+import com.home.lexa.ui.flashcard.exercise_result.ExerciseResultViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ExerciseModeFragment : BaseFragment<FragmentExerciseModeBinding>(FragmentExerciseModeBinding::inflate) {
 
     private val viewModel: ExerciseModeViewModel by viewModel()
+    private val resultViewModel: ExerciseResultViewModel by viewModel()
 
     override fun setupViews() {
         val deckId = arguments?.getLong("deckId") ?: -1L
@@ -147,7 +150,28 @@ class ExerciseModeFragment : BaseFragment<FragmentExerciseModeBinding>(FragmentE
             .setTitle(getString(R.string.stop_practice))
             .setMessage(getString(R.string.message_stop_practice))
             .setPositiveButton(getString(R.string.quit)) { _, _ ->
-                findNavController().popBackStack()
+                val actualDeckId = arguments?.getLong("deckId") ?: -1L
+                val remembered = viewModel.rememberedCount.value ?: 0
+                val forgotten = viewModel.forgottenCount.value ?: 0
+                resultViewModel.saveProgressToApi(
+                    deckId = actualDeckId,
+                    remembered = remembered,
+                    forgotten = forgotten
+                ) { isSuccess ->
+                    if (isSuccess) {
+                        AppMemoryCache.removePrefix("getAllFlashcard")
+                        findNavController()
+                            .getBackStackEntry(R.id.vocabularyFlashcardFragment)
+                            .savedStateHandle["RELOAD_DATA"] = true
+                        findNavController().popBackStack(R.id.vocabularyFlashcardFragment, false)
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.save_result_error),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
             }
             .setNegativeButton(getString(R.string.cancel), null)
             .show()

@@ -151,10 +151,7 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
     override fun onResume() {
         super.onResume()
         println("DEBUG: deckId = $deckId")
-        if (deckId == null) return
-
-        viewModel.loadFlashcardDetail(deckId!!);
-        viewModel.loadFlashcardsWithResult(false, deckId!!, SearchInfo(null, null, null), null)
+        reloadDeckData()
     }
     private fun navigateToExerciseMode() {
         Log.d("LEXA_DEBUG", "Hàm navigateToExerciseMode được gọi")
@@ -240,12 +237,26 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
 
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("RELOAD_DATA")
             ?.observe(viewLifecycleOwner) { shouldReload ->
-                if (shouldReload) {
-
-                    viewModel.loadFlashcardDetail(deckId!!)
+                if (shouldReload == true) {
+                    reloadDeckData()
                     findNavController().currentBackStackEntry?.savedStateHandle?.remove<Boolean>("RELOAD_DATA")
                 }
             }
+
+        viewModel.topicData.observe(viewLifecycleOwner) { topics ->
+            deckTopics = topics
+            binding.diTopic.setUpOptions(topics.map {
+                topicColorMap[it.name] = it.colorHex
+                it.name
+            })
+            binding.diTopic.setSelection(deckTopicName ?: "None")
+            val initialColorHex = topicColorMap[deckTopicName]
+            if (initialColorHex != null) {
+                binding.diTopic.setFrameColor(initialColorHex)
+            } else {
+                binding.diTopic.setFrameColor("#E0E0E5")
+            }
+        }
     }
     private fun renderFlashcards(list: List<DetailFlashcardWithResult>) {
         binding.flashcardNum.text = "${viewModel.totalPages}"
@@ -323,29 +334,11 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
             binding.progressText.text = getString(R.string.progress)+": 0%"
             binding.progress.setProgressVocabulary(0, 0, 0)
         }
+    }
 
-        viewModel.topicData.observe(viewLifecycleOwner) { topics ->
-            deckTopics = topics
-            binding.diTopic.setUpOptions(topics.map { it ->
-                topicColorMap[it.name] = it.colorHex
-                it.name
-            })
-            binding.diTopic.setSelection(deckTopicName ?: "None")
-            val initialColorHex = topicColorMap[deckTopicName]
-            if (initialColorHex != null) {
-                binding.diTopic.setFrameColor(initialColorHex)
-            } else {
-                binding.diTopic.setFrameColor("#E0E0E5")
-            }
-        }
-
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("RELOAD_DATA")
-            ?.observe(viewLifecycleOwner) { shouldReload ->
-                if (shouldReload) {
-
-                    viewModel.loadFlashcardDetail(deckId!!)
-                    findNavController().currentBackStackEntry?.savedStateHandle?.remove<Boolean>("RELOAD_DATA")
-                }
-            }
+    private fun reloadDeckData() {
+        val currentDeckId = deckId ?: return
+        viewModel.loadFlashcardDetail(currentDeckId)
+        viewModel.loadFlashcardsWithResult(false, currentDeckId, SearchInfo(null, null, null), null)
     }
 }
