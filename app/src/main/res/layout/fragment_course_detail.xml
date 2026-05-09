@@ -723,7 +723,7 @@
                     <androidx.core.widget.NestedScrollView
                         android:id="@+id/vocabularyListLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="400dp"
+                        android:layout_height="550dp"
                         android:fillViewport="true"
                         android:layout_marginTop="20dp"
                         app:layout_constraintVertical_bias="0.0"
@@ -752,9 +752,10 @@
                         app:strokeWidth="1dp"
                         app:strokeColor="@color/gray_E0E0E5"
                         app:cardBackgroundColor="@color/gray_F4F4F6"
+                        android:layout_marginBottom="16dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/vocabularyListLayout">
+                        app:layout_constraintBottom_toBottomOf="parent">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
