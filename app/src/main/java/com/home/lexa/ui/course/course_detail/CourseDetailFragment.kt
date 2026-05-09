@@ -300,7 +300,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             binding.studentNumCourse.text = course.studying_user_count.toString()
             binding.favoriteNumCourse.text = course.favorite_user_count.toString()
             binding.speakingNum.text = getString(R.string.lesson_count, course.list_speaking_day.totalItems)
-            binding.speakingDayLayout.removeAllViews()
+            //binding.speakingDayLayout.removeAllViews()
 
             // Cập nhật icon yêu thích
             val isFavorite = course.is_favorite == true
@@ -319,7 +319,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 val content = v.getChildAt(0)
                 val totalContentHeight = content.measuredHeight
                 val screenHeight = v.measuredHeight
-                val threshold = 300
+                val threshold = 1000
                 if (scrollY + screenHeight >= totalContentHeight - threshold) {
                     if (viewModel.paginationLoading.value == false && !viewModel.isLastPage) {
                         if (isSpeakingMode) {
@@ -365,7 +365,11 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             if (speakingDays.isNullOrEmpty()){
                 return@observe
             }
-            handler?.bindSpeakingData(courseId, speakingDays)
+            binding.root.post {
+                binding.speakingDayLayout.removeAllViews()
+                handler?.bindSpeakingData(courseId, speakingDays)
+            }
+//            handler?.bindSpeakingData(courseId, speakingDays)
         }
 
         // THEO DOI TINH TRANG FLASHCARD TRA VE
@@ -387,22 +391,28 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 binding.flashcardNum.text = flashcards.size.toString()
             }
 
-            binding.vocabularyGrid.removeAllViews()
-            binding.vocabularyGrid2.removeAllViews()
-            handler?.bindFlashcardData(flashcards)
+//            binding.vocabularyGrid.removeAllViews()
+//            binding.vocabularyGrid2.removeAllViews()
+//            handler?.bindFlashcardData(flashcards)
 
             binding.vocabularyListLayout.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _->
                 val content = v.getChildAt(0)
                 val totalContentHeight = content.measuredHeight
                 val screenHeight = v.measuredHeight
-                val threshold = 300
+                val threshold = 1000
                 if (scrollY + screenHeight >= totalContentHeight - threshold) {
                     if (viewModel.paginationLoading.value == false && !viewModel.isLastPage) {
-                        if (!isSpeakingMode && !isOwner) {
+                        if (!isSpeakingMode) {
                             viewModel.loadMoreFlashcards(true, deckId, viewModel.searchInfor, viewModel.nextItem)                        }
                     }
                 }
             })
+
+            binding.root.post {
+                binding.vocabularyGrid.removeAllViews()
+                binding.vocabularyGrid2.removeAllViews()
+                handler?.bindFlashcardData(flashcards)
+            }
         }
 
         viewModel.createCourseStatus.observe(viewLifecycleOwner) { result ->
