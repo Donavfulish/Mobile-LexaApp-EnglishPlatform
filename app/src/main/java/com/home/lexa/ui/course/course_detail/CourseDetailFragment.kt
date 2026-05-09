@@ -145,6 +145,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 updateToggleUI()
                 binding.speakingLayout.visibility = View.GONE
                 binding.vocabularyLayout.visibility = View.VISIBLE
+                binding.learningBtn.visibility = View.GONE
             }
         }
 
