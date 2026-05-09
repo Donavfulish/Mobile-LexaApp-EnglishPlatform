@@ -324,10 +324,13 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                     if (viewModel.paginationLoading.value == false && !viewModel.isLastPage) {
                         if (isSpeakingMode) {
                             viewModel.loadMoreSpeakingDay(true, courseId, viewModel.nextItem)
-                        } else {
-                            viewModel.loadMoreFlashcards(
-                                true, deckId, viewModel.searchInfor, viewModel.nextItem
-                            )
+                        }
+                        else {
+                            if (isOwner) {
+                                viewModel.loadMoreFlashcards(
+                                    true, deckId, viewModel.searchInfor, viewModel.nextItem
+                                )
+                            }
                         }
                     }
                 }
@@ -377,10 +380,30 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                     binding.vocabularyListLayout.visibility = View.VISIBLE
                 }
             }
-            binding.flashcardNum.text = "${viewModel.totalPages}"
+
+            if (viewModel.totalPages > 0) {
+                binding.flashcardNum.text = "${viewModel.totalPages}"
+            } else if (flashcards.isNotEmpty()) {
+                binding.flashcardNum.text = flashcards.size.toString()
+            }
+
             binding.vocabularyGrid.removeAllViews()
             binding.vocabularyGrid2.removeAllViews()
             handler?.bindFlashcardData(flashcards)
+
+            binding.vocabularyListLayout.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _->
+                val content = v.getChildAt(0)
+                val totalContentHeight = content.measuredHeight
+                val screenHeight = v.measuredHeight
+                val threshold = 300
+                if (scrollY + screenHeight >= totalContentHeight - threshold) {
+                    if (viewModel.paginationLoading.value == false && !viewModel.isLastPage) {
+                        if (!isSpeakingMode && !isOwner) {
+                            viewModel.loadMoreSpeakingDay(true, courseId, viewModel.nextItem)
+                        }
+                    }
+                }
+            })
         }
 
         viewModel.createCourseStatus.observe(viewLifecycleOwner) { result ->
