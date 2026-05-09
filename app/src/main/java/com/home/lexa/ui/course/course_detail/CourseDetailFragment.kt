@@ -399,8 +399,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 if (scrollY + screenHeight >= totalContentHeight - threshold) {
                     if (viewModel.paginationLoading.value == false && !viewModel.isLastPage) {
                         if (!isSpeakingMode && !isOwner) {
-                            viewModel.loadMoreSpeakingDay(true, courseId, viewModel.nextItem)
-                        }
+                            viewModel.loadMoreFlashcards(true, deckId, viewModel.searchInfor, viewModel.nextItem)                        }
                     }
                 }
             })
