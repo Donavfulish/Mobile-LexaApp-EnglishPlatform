@@ -235,6 +235,9 @@
         <action
             android:id="@+id/action_libraryFragment_to_vocabularyFlashcardFragment"
             app:destination="@id/vocabularyFlashcardFragment" />
+        <action
+            android:id="@+id/action_favoriteLibraryFragment_to_courseFragment"
+            app:destination="@id/courseFragment" />
     </fragment>
     <fragment
         android:id="@+id/favoriteLibraryFragment"
