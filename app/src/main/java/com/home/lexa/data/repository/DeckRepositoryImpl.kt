@@ -258,10 +258,10 @@ class DeckRepositoryImpl(
         return try {
             val response = apiService.updateDeckResult(request.deckId, request)
             val body = response.body()
-            if (response.isSuccessful && body?.success == true) {
+            if (response.isSuccessful && body?.data == true) {
                 Log.d("Đã xoá cache update  result", "Cache update result đã được xoá")
                 AppMemoryCache.remove("getDeckResult_${request.deckId}");
-                Result.success(body.data ?: true)
+                Result.success(true)
             } else {
                 Result.failure(Exception(body?.message ?: "Lỗi khi cập nhật kết quả deck"))
             }

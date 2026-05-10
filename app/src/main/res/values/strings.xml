@@ -309,6 +309,7 @@
     <string name="enter_course_description">Enter course description</string>
     <string name="create_course_first_notice">Save information to CREATE a new course before creating speaking or vocabulary sets</string>
 
+
     <!-- Student Course List -->
     <string name="my_courses">My courses</string>
     <string name="all_courses">All courses</string>
@@ -396,6 +397,9 @@
     <string name="copy_deck_success">Vocabulary set has been copied.</string>
     <string name="copy_deck_error">Copy deck failure.</string>
     <string name="copying_deck_background">Copying Deck.</string>
+    <string name="copy_deck_title">Duplicate vocabulary deck</string>
+    <string name="copy_deck_desc">You want to duplicate this vocabulary deck to your Personal Deck?</string>
+    <string name="clone">Copy</string>
 
 
 </resources>

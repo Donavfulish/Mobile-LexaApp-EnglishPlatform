@@ -65,6 +65,7 @@ class ExerciseResultViewModel(
                 }
                 val deckDeferred = async {
                     val updateResult = deckRepository.updateDeckResult(deckRequest)
+                    println("updateResult: $updateResult")
                     if (updateResult.isSuccess) {
                         updateResult
                     } else {

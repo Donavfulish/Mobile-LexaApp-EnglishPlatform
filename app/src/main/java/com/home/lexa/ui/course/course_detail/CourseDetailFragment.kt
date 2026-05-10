@@ -23,6 +23,7 @@ import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.CreateCourseRequest
 import com.home.lexa.domain.models.Topic
 import com.home.lexa.core.Constants
+import com.home.lexa.ui.profile.profile.showConfirmDialog
 import org.koin.android.ext.android.inject
 
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -230,13 +231,18 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
 //            }
 //        })
         binding.vocabularyIconBtn.setOnClickAction {
-            binding.vocabularyIconBtn.setOnClickAction {
-                if (deckId != -1L) {
-                    viewModel.copyDeck(deckId)
-                    Toast.makeText(requireContext(), getString(R.string.copying_deck_background), Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(requireContext(), "Không tìm thấy bộ từ vựng!", Toast.LENGTH_SHORT).show()
-                }
+            if (deckId != -1L) {
+                requireContext().showConfirmDialog(
+                    title = getString(R.string.copy_deck_title),
+                    message = getString(R.string.copy_deck_desc),
+                    onConfirm = {
+                        viewModel.copyDeck(deckId)
+                        Toast.makeText(requireContext(), getString(R.string.copying_deck_background), Toast.LENGTH_SHORT).show()
+                    },
+                    acceptLabel = getString(R.string.clone)
+                )
+            } else {
+                Toast.makeText(requireContext(), "Không tìm thấy bộ từ vựng!", Toast.LENGTH_SHORT).show()
             }
 
         }
