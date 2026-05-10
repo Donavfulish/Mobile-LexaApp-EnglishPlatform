@@ -104,7 +104,7 @@
                 android:id="@+id/imgTeacher"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:layout_marginStart="70dp"
+                android:layout_marginStart="55dp"
                 android:layout_marginTop="24dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintStart_toStartOf="parent"
@@ -126,13 +126,23 @@
 
             <TextView
                 android:id="@+id/teacherNameCourse"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:fontFamily="@font/archivo_bold"
-                tools:text="John Smith"
-                android:textSize="14sp"
+                android:text="John Smith John Smith"
                 android:textStyle="bold"
+
+                android:gravity="center"
+                android:textAlignment="center"
+
+                android:maxLines="2"
+                android:ellipsize="end"
+
+                app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeMaxTextSize="14sp"
+                app:autoSizeStepGranularity="1sp"
                 app:layout_constraintEnd_toEndOf="@+id/imgTeacher"
                 app:layout_constraintStart_toStartOf="@+id/imgTeacher"
                 app:layout_constraintTop_toBottomOf="@+id/teacher" />
@@ -728,7 +738,7 @@
                         android:layout_marginTop="20dp"
                         app:layout_constraintVertical_bias="0.0"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toTopOf="@+id/rememberCard">
+                        app:layout_constraintBottom_toBottomOf="parent">
 
                         <androidx.gridlayout.widget.GridLayout
                             android:id="@+id/vocabularyGrid"
@@ -740,87 +750,6 @@
                             app:alignmentMode="alignMargins"/>
 
                     </androidx.core.widget.NestedScrollView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/rememberCard"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="16dp"
-                        android:layout_marginVertical="8dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="2dp"
-                        app:strokeWidth="1dp"
-                        app:strokeColor="@color/gray_E0E0E5"
-                        app:cardBackgroundColor="@color/gray_F4F4F6"
-                        android:layout_marginBottom="16dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent">
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:padding="16dp">
-
-                            <ImageView
-                                android:id="@+id/btnCloseTips"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:src="@drawable/ic_close"
-                                android:padding="4dp"
-                                android:background="?attr/selectableItemBackgroundBorderless"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:tint="@color/black" />
-
-                            <ImageView
-                                android:id="@+id/icon_remember"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_marginStart="10dp"
-                                android:layout_marginTop="15dp"
-                                android:background="@drawable/bg_white_circle"
-                                android:padding="6dp"
-                                android:src="@drawable/ic_priority"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <TextView
-                                android:id="@+id/text_remember"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/archivo_bold"
-                                android:text="@string/quick_learning_tips"
-                                android:textColor="@color/black"
-                                android:textSize="14dp"
-                                android:textStyle="bold"
-                                android:layout_marginStart="25dp"
-                                app:layout_constraintStart_toEndOf="@+id/icon_remember"
-                                app:layout_constraintTop_toTopOf="parent"/>
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:text="@string/flashcard_note_desc"
-                                android:textSize="13dp"
-                                android:fontFamily="@font/archivo_regular"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginStart="25dp"
-                                android:lineHeight="18dp"
-                                android:layout_marginEnd="24dp"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toEndOf="@+id/icon_remember"
-                                app:layout_constraintTop_toBottomOf="@+id/text_remember"/>
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-                    </com.google.android.material.card.MaterialCardView>
-                    <com.home.lexa.ui.components.CircleButton
-                        android:id="@+id/vocabularyIconBtn"
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="16dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/rememberCard"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -839,6 +768,90 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/rememberCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/gray_E0E0E5"
+        app:cardBackgroundColor="@color/gray_F4F4F6"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/vocabularyIconBtn">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/btnCloseTips"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_close"
+                android:padding="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:tint="@color/black" />
+
+            <ImageView
+                android:id="@+id/icon_remember"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/bg_white_circle"
+                android:padding="6dp"
+                android:src="@drawable/ic_priority"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_remember"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/archivo_bold"
+                android:text="@string/quick_learning_tips"
+                android:textColor="@color/black"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:layout_marginStart="25dp"
+                app:layout_constraintStart_toEndOf="@+id/icon_remember"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/flashcard_note_desc"
+                android:textSize="13dp"
+                android:fontFamily="@font/archivo_regular"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="25dp"
+                android:lineHeight="18dp"
+                android:layout_marginEnd="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/icon_remember"
+                app:layout_constraintTop_toBottomOf="@+id/text_remember"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.home.lexa.ui.components.CircleButton
+        android:id="@+id/vocabularyIconBtn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <com.home.lexa.ui.components.PrimaryButton
         android:id="@+id/learningBtn"

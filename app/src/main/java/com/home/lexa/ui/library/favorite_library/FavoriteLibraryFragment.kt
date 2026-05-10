@@ -40,25 +40,29 @@ class FavoriteLibraryFragment : BaseFragment<FragmentFavoriteLibraryBinding>(Fra
             title = getString(R.string.favorite_deck),
             actionText = getString(R.string.see_all),
             onActionClick = {
-                val role = userManager.getUserRole()
+//                val role = userManager.getUserRole()
+//
+//                val bundle = Bundle().apply {
+//                    putString("filter", StudentCourseFilter.FAVORITE.name)
+//                }
 
-                val bundle = Bundle().apply {
-                    putString("filter", StudentCourseFilter.FAVORITE.name)
-                }
+                findNavController().navigate(R.id.action_favoriteLibraryFragment_to_courseFragment)
 
-                when (role) {
-                    UserRole.TEACHER -> {
-                        findNavController().navigate(R.id.courseFragment, bundle)
-                    }
+//                when (role) {
+//                    UserRole.TEACHER -> {
+//                        findNavController().navigate(R.id.courseFragment, bundle)
+//                    }
+//
+//                    UserRole.STUDENT -> {
+//                        findNavController().navigate(R.id.studentCourseListFragment, bundle)
+//                    }
+//
+//                    else -> {
+//                        findNavController().navigate(R.id.studentCourseListFragment, bundle)
+//                    }
+//                }
 
-                    UserRole.STUDENT -> {
-                        findNavController().navigate(R.id.courseFragment, bundle)
-                    }
 
-                    else -> {
-                        findNavController().navigate(R.id.courseFragment, bundle)
-                    }
-                }
             }
         )
 
