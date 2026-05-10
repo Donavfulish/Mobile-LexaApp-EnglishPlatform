@@ -396,4 +396,5 @@
     <string name="copy_deck_success">Đã sao chép bộ từ vựng.</string>
     <string name="copy_deck_error">Sao chép bộ từ vựng thất bại.</string>
     <string name="copying_deck_background">Đang sao chép bộ từ vựng… </string>
+    <string name="empty_speaking_day">Ngày học đang trống, hiện chưa thể học</string>
 </resources>

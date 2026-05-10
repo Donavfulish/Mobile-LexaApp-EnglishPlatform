@@ -26,6 +26,7 @@ fun ShortParagraphSpeakingDayDto.toDailyResultSummary(): DailyResultSummary {
         val orderStr = (p.paragraph_order?.toInt() ?: (index + 1)).toString()
         ParagraphResult(
             id = p.id.toInt(),
+            original = p.paragraph ?: "",
             paragraph = paragraphWords,
             order = orderStr,
             audioUrl = p.audioUrl ?: "",

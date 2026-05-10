@@ -2,6 +2,7 @@ package com.home.lexa.ui.components
 
 import android.content.Context
 import android.text.Spannable
+import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
@@ -49,34 +50,104 @@ class ParagraphCard @JvmOverloads constructor(
         }
     }
 
-    fun displayParagraph(paragraph: ParagraphResult) {
+    fun displayParagraph(paragraphResult: ParagraphResult) {
         val textView = binding.content
-        binding.title.setText("PARAGRAPH ${paragraph.order}")
-        val builder = SpannableStringBuilder()
+        binding.title.setText("PARAGRAPH ${paragraphResult.order}")
+//        val builder = SpannableStringBuilder()
+//
+//        paragraphResult.paragraph.forEach { item ->
+//            val start = builder.length
+//            builder.append(item.w).append(" ")
+//            val end = builder.length - 1
+//
+//            // Ánh xạ status sang màu sắc
+//            val color = when (item.s) {
+//                "green" -> R.color.green
+//                "yellow" -> R.color.yellow_paragraph
+//                "red" -> R.color.red_paragraph
+//                else -> android.R.color.black
+//            }
+//            val actualColor = ContextCompat.getColor(context, color)
+//
+//            builder.setSpan(
+//                ForegroundColorSpan(actualColor),
+//                start,
+//                end,
+//                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+//            )
+//        }
+//
+//        textView.text = builder
 
-        paragraph.paragraph.forEach { item ->
-            val start = builder.length
-            builder.append(item.w).append(" ")
-            val end = builder.length - 1
+        val tvTitle = binding.title
+        val tvContent = binding.content
 
-            // Ánh xạ status sang màu sắc
-            val color = when (item.s) {
-                "green" -> R.color.green
-                "yellow" -> R.color.yellow_paragraph
-                "red" -> R.color.red_paragraph
-                else -> android.R.color.black
+        tvTitle.text = "PARAGRAPH ${paragraphResult.order}"
+
+        val originalText = paragraphResult.original
+        if (originalText.isEmpty()) return
+
+        val spannable = SpannableString(originalText)
+
+        // 1. Định nghĩa màu sắc
+        val colorSuccess = ContextCompat.getColor(binding.root.context, R.color.status_success)
+        val colorWarning = ContextCompat.getColor(binding.root.context, R.color.status_warning)
+        val colorError = ContextCompat.getColor(binding.root.context, R.color.status_error_alt)
+
+        // 2. Tô màu mặc định (xanh) cho toàn bộ văn bản gốc trước khi xử lý từ
+        spannable.setSpan(
+            ForegroundColorSpan(ContextCompat.getColor(binding.root.context, R.color.status_success)),
+            0, originalText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        // 3. Regex lấy các từ trong văn bản gốc (để biết vị trí chính xác của chúng trong chuỗi original)
+        val wordRegex = Regex("[a-zA-Z0-9-'’]+")
+        val originalWords = wordRegex.findAll(originalText).toList()
+
+        // 4. Thuật toán con trỏ: Dò danh sách kết quả chấm điểm (paragraph) với các từ gốc
+        var pointerOriginal = 0
+
+        paragraphResult.paragraph.forEach { evalItem ->
+            // Làm sạch từ từ API/Result (xóa ký tự đặc biệt để so sánh)
+            val evalClean = evalItem.w.lowercase()
+                .replace('’', '\'')
+                .replace(Regex("[^a-zA-Z0-9-']"), "")
+
+            if (evalClean.isEmpty()) return@forEach
+
+            // Tìm kiếm tuần tự trong các từ gốc chưa được duyệt
+            for (i in pointerOriginal until originalWords.size) {
+                val originalMatch = originalWords[i]
+                val originalClean = originalMatch.value.lowercase()
+                    .replace('’', '\'')
+                    .replace(Regex("[^a-zA-Z0-9-']"), "")
+
+                if (evalClean == originalClean) {
+                    // ĐÃ KHỚP! Xác định màu dựa trên thuộc tính 's' của ParagraphWord
+                    val correctColor = when (evalItem.s) {
+                        "green" -> colorSuccess
+                        "yellow" -> colorWarning
+                        "red" -> colorError
+                        else -> colorSuccess
+                    }
+
+                    // Tô màu lên đúng vị trí của từ đó trong văn bản gốc (giữ nguyên dấu câu xung quanh)
+                    spannable.setSpan(
+                        ForegroundColorSpan(correctColor),
+                        originalMatch.range.first,
+                        originalMatch.range.last + 1,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+
+                    // Cập nhật con trỏ để không xét lại các từ đã qua
+                    pointerOriginal = i + 1
+                    break
+                }
             }
-            val actualColor = ContextCompat.getColor(context, color)
-
-            builder.setSpan(
-                ForegroundColorSpan(actualColor),
-                start,
-                end,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
         }
 
-        textView.text = builder
+        // 5. Cập nhật lên giao diện
+        tvContent.text = spannable
     }
 
 

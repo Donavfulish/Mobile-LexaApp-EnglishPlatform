@@ -400,6 +400,7 @@
     <string name="copy_deck_title">Duplicate vocabulary deck</string>
     <string name="copy_deck_desc">You want to duplicate this vocabulary deck to your Personal Deck?</string>
     <string name="clone">Copy</string>
+    <string name="empty_speaking_day">This speaking day is not available to study yet</string>
 
 
 </resources>

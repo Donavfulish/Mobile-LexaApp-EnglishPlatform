@@ -4,6 +4,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
+import coil.size.ViewSizeResolver
+import com.home.lexa.MainActivity
 import com.home.lexa.R
 import com.home.lexa.core.base.BaseFragment
 import com.home.lexa.databinding.FragmentDailyResultBinding
@@ -31,6 +33,11 @@ class DailyResultFragment : BaseFragment<FragmentDailyResultBinding>(FragmentDai
     private var expectingRemoteSummary = false
 
     override fun setupViews() {
+        binding.layoutResultScreen.visibility = View.GONE
+
+        val activityBinding = (requireActivity() as MainActivity).binding
+        activityBinding.appBarLayout.visibility = View.GONE
+
         audioManager = AudioManager(requireContext())
         fromCompletedDay = arguments?.getBoolean("fromCompletedDay", false) ?: false
         courseId = arguments?.getLong("courseId") ?: -1L
@@ -102,6 +109,7 @@ class DailyResultFragment : BaseFragment<FragmentDailyResultBinding>(FragmentDai
             }
             ParagraphResult(
                 id = cacheItem.paragraphId.toInt(),
+                original = cacheItem.originalText,
                 paragraph = uiWords,
                 order = (index + 1).toString(),
                 audioUrl = "",
@@ -172,6 +180,8 @@ class DailyResultFragment : BaseFragment<FragmentDailyResultBinding>(FragmentDai
         }
 
         dailyResultViewModel.dailyResultData.observe(viewLifecycleOwner) { summary ->
+            binding.layoutResultScreen.visibility = View.VISIBLE
+
             if (sharedViewModel.sessionCache.isEmpty() && summary != null) {
                 displayDailySummary(summary)
                 expectingRemoteSummary = false

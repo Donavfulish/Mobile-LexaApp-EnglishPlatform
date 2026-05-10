@@ -11,6 +11,7 @@ data class ParagraphWord(
 )
 data class ParagraphResult(
     val id: Int,
+    val original: String,
     val paragraph: List<ParagraphWord>,
     val order: String,
     val audioUrl: String,

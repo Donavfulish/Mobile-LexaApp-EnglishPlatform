@@ -379,6 +379,10 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
     override fun observeData() {
         viewModel.paragraphDetailData.observe(viewLifecycleOwner) { data ->
             if (data != null) {
+                if (data.list_paragraphs.isEmpty()) {
+                    findNavController().popBackStack()
+                    Toast.makeText(requireContext(), "Day trống", Toast.LENGTH_SHORT).show()
+                }
                 paragraphs = data.list_paragraphs.sortedBy { it.paragraph_order }
                 restoreRecordedAudios()
                 checkAndShowContinueDialog()
