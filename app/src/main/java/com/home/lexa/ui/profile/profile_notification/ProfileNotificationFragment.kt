@@ -28,6 +28,7 @@ class ProfileNotificationFragment : BaseFragment<FragmentProfileNotificationBind
             removeCustomView()
             setText(getString(R.string.notification))
             setBackButtonVisible(true)
+            setOnClickBack()
         }
 
         binding.streakNotification.apply {
@@ -71,6 +72,7 @@ class ProfileNotificationFragment : BaseFragment<FragmentProfileNotificationBind
                 updateReminderVisibility(isOn)
 
                 if (isOn) {
+
                     val (hour, minute) = binding.reminderSetting.getSelectedTime()
                     val selectedDays = binding.reminderSetting.getSelectedDays();
                     scheduleDailyReminder(hour, minute,selectedDays)

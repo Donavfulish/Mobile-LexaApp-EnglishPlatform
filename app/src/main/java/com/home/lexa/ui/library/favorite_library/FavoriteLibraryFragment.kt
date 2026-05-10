@@ -50,7 +50,7 @@ class FavoriteLibraryFragment : BaseFragment<FragmentFavoriteLibraryBinding>(Fra
 
 //                when (role) {
 //                    UserRole.TEACHER -> {
-//                        findNavController().navigate(R.id.teacherCourseListFragment, bundle)
+//                        findNavController().navigate(R.id.courseFragment, bundle)
 //                    }
 //
 //                    UserRole.STUDENT -> {

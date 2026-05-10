@@ -192,6 +192,40 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             userManager.setHideQuickTips()
         }
 
+        binding.contentScroll.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _->
+            val content = v.getChildAt(0)
+            val totalContentHeight = content.measuredHeight
+            val screenHeight = v.measuredHeight
+            val threshold = 1000
+            if (scrollY + screenHeight >= totalContentHeight - threshold) {
+                if (viewModel.paginationLoading.value == false && !viewModel.isLastPage) {
+                    if (isSpeakingMode) {
+                        viewModel.loadMoreSpeakingDay(true, courseId, viewModel.nextItem)
+                    }
+                    else {
+                        if (isOwner) {
+                            viewModel.loadMoreFlashcards(
+                                true, deckId, viewModel.searchInfor, viewModel.nextItem
+                            )
+                        }
+                    }
+                }
+            }
+        })
+
+        binding.vocabularyListLayout.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _->
+            val content = v.getChildAt(0)
+            val totalContentHeight = content.measuredHeight
+            val screenHeight = v.measuredHeight
+            val threshold = 1000
+            if (scrollY + screenHeight >= totalContentHeight - threshold) {
+                if (viewModel.paginationLoading.value == false && !viewModel.isLastPage) {
+                    if (!isSpeakingMode) {
+                        viewModel.loadMoreFlashcards(true, deckId, viewModel.searchInfor, viewModel.nextItem)                        }
+                }
+            }
+        })
+
         syncTabUI()
     }
 
@@ -315,26 +349,6 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
 
             // =====================================THONG TIN HIEN THI KHOA HOC=====================================
             handler?.bindCourseData(course)
-            binding.contentScroll.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _->
-                val content = v.getChildAt(0)
-                val totalContentHeight = content.measuredHeight
-                val screenHeight = v.measuredHeight
-                val threshold = 1000
-                if (scrollY + screenHeight >= totalContentHeight - threshold) {
-                    if (viewModel.paginationLoading.value == false && !viewModel.isLastPage) {
-                        if (isSpeakingMode) {
-                            viewModel.loadMoreSpeakingDay(true, courseId, viewModel.nextItem)
-                        }
-                        else {
-                            if (isOwner) {
-                                viewModel.loadMoreFlashcards(
-                                    true, deckId, viewModel.searchInfor, viewModel.nextItem
-                                )
-                            }
-                        }
-                    }
-                }
-            })
         }
 
         // Quan sát trạng thái thay đổi yêu thích
@@ -395,18 +409,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
 //            binding.vocabularyGrid2.removeAllViews()
 //            handler?.bindFlashcardData(flashcards)
 
-            binding.vocabularyListLayout.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _->
-                val content = v.getChildAt(0)
-                val totalContentHeight = content.measuredHeight
-                val screenHeight = v.measuredHeight
-                val threshold = 1000
-                if (scrollY + screenHeight >= totalContentHeight - threshold) {
-                    if (viewModel.paginationLoading.value == false && !viewModel.isLastPage) {
-                        if (!isSpeakingMode) {
-                            viewModel.loadMoreFlashcards(true, deckId, viewModel.searchInfor, viewModel.nextItem)                        }
-                    }
-                }
-            })
+
 
             binding.root.post {
                 binding.vocabularyGrid.removeAllViews()
