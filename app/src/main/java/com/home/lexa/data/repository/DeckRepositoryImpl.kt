@@ -5,6 +5,7 @@ import com.home.lexa.data.remote.DeckApiService
 import com.home.lexa.di.AppMemoryCache
 import com.home.lexa.domain.models.AllCoursePaginationResponse
 import com.home.lexa.domain.models.AllDeckPaginationResponse
+import com.home.lexa.domain.models.CopyDeckRequest
 import com.home.lexa.domain.models.CreateDeckRequest
 import com.home.lexa.domain.models.CreateDeckResultRequest
 import com.home.lexa.domain.models.DeckDto
@@ -281,6 +282,21 @@ class DeckRepositoryImpl(
             }
         } catch (e: Exception) {
             Result.failure(e)
+        }
+    }
+    override suspend fun copyDeck(request: CopyDeckRequest): Result<Boolean> {
+        return try {
+            val response = apiService.copyDeck(request)
+            val body = response.body()
+            if (response.isSuccessful && body?.success == true) {
+                AppMemoryCache.removePrefix("getAllDecks");
+                AppMemoryCache.remove("getAllDecks");
+                Result.success( true)
+            } else {
+                Result.failure(Exception(body?.message ?: "Lỗi khi sao chép deck"))
+            }
+        } catch (e: Exception) {
+            Result.failure(Exception("Lỗi kết nối: ${e.message}"))
         }
     }
 }
