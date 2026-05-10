@@ -133,6 +133,8 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 updateToggleUI()
                 binding.vocabularyLayout.visibility = View.GONE
                 binding.speakingLayout.visibility = View.VISIBLE
+                binding.rememberCard.visibility = View.GONE
+                binding.vocabularyIconBtn.visibility = View.GONE
                 if(!isOwner){
                     binding.learningBtn.visibility = View.VISIBLE
                 }
@@ -146,6 +148,10 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 binding.speakingLayout.visibility = View.GONE
                 binding.vocabularyLayout.visibility = View.VISIBLE
                 binding.learningBtn.visibility = View.GONE
+                if (!isOwner) {
+                    binding.vocabularyIconBtn.visibility = View.VISIBLE
+                    binding.rememberCard.visibility = if (userManager.shouldShowQuickTips()) View.VISIBLE else View.GONE
+                }
             }
         }
 
@@ -203,28 +209,26 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                         viewModel.loadMoreSpeakingDay(true, courseId, viewModel.nextItem)
                     }
                     else {
-                        if (isOwner) {
                             viewModel.loadMoreFlashcards(
                                 true, deckId, viewModel.searchInfor, viewModel.nextItem
                             )
-                        }
                     }
                 }
             }
         })
 
-        binding.vocabularyListLayout.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _->
-            val content = v.getChildAt(0)
-            val totalContentHeight = content.measuredHeight
-            val screenHeight = v.measuredHeight
-            val threshold = 1000
-            if (scrollY + screenHeight >= totalContentHeight - threshold) {
-                if (viewModel.paginationLoading.value == false && !viewModel.isLastPage) {
-                    if (!isSpeakingMode) {
-                        viewModel.loadMoreFlashcards(true, deckId, viewModel.searchInfor, viewModel.nextItem)                        }
-                }
-            }
-        })
+//        binding.vocabularyListLayout.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _->
+//            val content = v.getChildAt(0)
+//            val totalContentHeight = content.measuredHeight
+//            val screenHeight = v.measuredHeight
+//            val threshold = 300
+//            if (scrollY + screenHeight >= totalContentHeight - threshold) {
+//                if (viewModel.paginationLoading.value == false && !viewModel.isLastPage) {
+//                    if (!isSpeakingMode) {
+//                        viewModel.loadMoreFlashcards(true, deckId, viewModel.searchInfor, viewModel.nextItem)                        }
+//                }
+//            }
+//        })
 
         syncTabUI()
     }
@@ -533,7 +537,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             binding.bottomLayoutTeacher.visibility = View.GONE
 
             // Kiểm tra trạng thái hiển thị Mẹo học nhanh (chỉ dành cho học sinh)
-            binding.rememberCard.visibility = if (userManager.shouldShowQuickTips()) View.VISIBLE else View.GONE
+            // binding.rememberCard.visibility = if (userManager.shouldShowQuickTips()) View.VISIBLE else View.GONE
         }
     }
 
