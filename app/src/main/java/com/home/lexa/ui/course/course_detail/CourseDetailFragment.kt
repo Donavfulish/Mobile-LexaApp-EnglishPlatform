@@ -147,11 +147,22 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 isSpeakingMode = false
                 updateToggleUI()
                 binding.speakingLayout.visibility = View.GONE
-                binding.vocabularyLayout.visibility = View.VISIBLE
-                binding.learningBtn.visibility = View.GONE
-                if (!isOwner) {
-                    binding.vocabularyIconBtn.visibility = View.VISIBLE
-                    binding.rememberCard.visibility = if (userManager.shouldShowQuickTips()) View.VISIBLE else View.GONE
+                
+                binding.paginationProgressBar.visibility = View.VISIBLE
+                
+                // Sử dụng post để đẩy việc render nặng vào hàng đợi, tránh đơ UI khi bật layout lớn
+                binding.root.post {
+                    binding.vocabularyLayout.visibility = View.VISIBLE
+                    binding.learningBtn.visibility = View.GONE
+                    if (!isOwner) {
+                        binding.vocabularyIconBtn.visibility = View.VISIBLE
+                        binding.rememberCard.visibility = if (userManager.shouldShowQuickTips()) View.VISIBLE else View.GONE
+                    }
+                    
+                    // Chỉ ẩn loading nếu không có tác vụ mạng nào đang chạy
+                    if (viewModel.paginationLoading.value == false) {
+                        binding.paginationProgressBar.visibility = View.GONE
+                    }
                 }
             }
         }
@@ -193,43 +204,28 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             }
         }
 
-        // Xử lý nút đóng Mẹo học nhanh
         binding.btnCloseTips.setOnClickListener {
             binding.rememberCard.visibility = View.GONE
             userManager.setHideQuickTips()
         }
 
         binding.contentScroll.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _->
-            val content = v.getChildAt(0)
+            val content = v.getChildAt(0) ?: return@OnScrollChangeListener
             val totalContentHeight = content.measuredHeight
             val screenHeight = v.measuredHeight
             val threshold = 1000
+            
             if (scrollY + screenHeight >= totalContentHeight - threshold) {
-                if (viewModel.paginationLoading.value == false && !viewModel.isLastPage) {
-                    if (isSpeakingMode) {
-                        viewModel.loadMoreSpeakingDay(true, courseId, viewModel.nextItem)
-                    }
-                    else {
-                            viewModel.loadMoreFlashcards(
-                                true, deckId, viewModel.searchInfor, viewModel.nextItem
-                            )
+                if (viewModel.paginationLoading.value == false) {
+                    if (isSpeakingMode && !viewModel.isLastPageSpeaking) {
+                        viewModel.loadMoreSpeakingDay(true, courseId, viewModel.nextItemSpeaking)
+                    } else if (!isSpeakingMode && deckId != -1L && !viewModel.isLastPageFlashcard) {
+                        viewModel.loadMoreFlashcards(true, deckId, viewModel.searchInfor, viewModel.nextItemFlashcard)
                     }
                 }
             }
         })
 
-//        binding.vocabularyListLayout.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _->
-//            val content = v.getChildAt(0)
-//            val totalContentHeight = content.measuredHeight
-//            val screenHeight = v.measuredHeight
-//            val threshold = 300
-//            if (scrollY + screenHeight >= totalContentHeight - threshold) {
-//                if (viewModel.paginationLoading.value == false && !viewModel.isLastPage) {
-//                    if (!isSpeakingMode) {
-//                        viewModel.loadMoreFlashcards(true, deckId, viewModel.searchInfor, viewModel.nextItem)                        }
-//                }
-//            }
-//        })
         binding.vocabularyIconBtn.setOnClickAction {
             if (deckId != -1L) {
                 requireContext().showConfirmDialog(
@@ -268,7 +264,10 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             if(isLoading){
                 binding.paginationProgressBar.visibility = View.VISIBLE
             } else {
-                binding.paginationProgressBar.visibility = View.GONE
+                // Đừng ẩn ở đây nếu đang load Flashcard, để Flashcard observer tự ẩn sau khi render xong
+                if (isSpeakingMode) {
+                    binding.paginationProgressBar.visibility = View.GONE
+                }
             }
         }
 
@@ -318,7 +317,6 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
         // THEO DOI TINH TRANG KHOA HOC TRA VE
         viewModel.courseDetailData.observe(viewLifecycleOwner) { course ->
             if (course == null){
-                // SỬA: Không Toast báo lỗi ở đây vì có thể nó null do clearData
                 return@observe
             }
             deckId = course.deckId!!
@@ -354,7 +352,6 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             binding.studentNumCourse.text = course.studying_user_count.toString()
             binding.favoriteNumCourse.text = course.favorite_user_count.toString()
             binding.speakingNum.text = getString(R.string.lesson_count, course.list_speaking_day.totalItems)
-            //binding.speakingDayLayout.removeAllViews()
 
             // Cập nhật icon yêu thích
             val isFavorite = course.is_favorite == true
@@ -376,16 +373,9 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             if (result == null) return@observe
             
             result.onSuccess {
-                // Kiểm tra trạng thái hiện tại (trước khi refresh) để hiện thông báo đúng
                 val isCurrentlyFavorite = viewModel.courseDetailData.value?.is_favorite == true
-                
-                // Nếu trạng thái cũ là false -> vừa thực hiện yêu thích -> hiện "yêu thích thành công"
-                // Nếu trạng thái cũ là true -> vừa thực hiện bỏ yêu thích -> hiện "bỏ yêu thích thành công"
                 val messageRes = if (isCurrentlyFavorite) R.string.unfavorite_success else R.string.favorite_success
-                
                 Toast.makeText(requireContext(), getString(messageRes), Toast.LENGTH_SHORT).show()
-                
-                // Tải lại dữ liệu mới nhất
                 viewModel.loadCourseDetail(courseId)
                 viewModel.resetFavoriteStatus()
             }.onFailure {
@@ -399,11 +389,16 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             if (speakingDays.isNullOrEmpty()){
                 return@observe
             }
+            
+            // Cập nhật số lượng bài học hiển thị
+            if (viewModel.totalPagesSpeaking > 0) {
+                binding.speakingNum.text = getString(R.string.lesson_count, viewModel.totalPagesSpeaking)
+            }
+            
             binding.root.post {
                 binding.speakingDayLayout.removeAllViews()
                 handler?.bindSpeakingData(courseId, speakingDays)
             }
-//            handler?.bindSpeakingData(courseId, speakingDays)
         }
 
         // THEO DOI TINH TRANG FLASHCARD TRA VE
@@ -412,6 +407,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 if(!isOwner){
                     binding.vocabularyListLayout.visibility = View.GONE
                 }
+                binding.paginationProgressBar.visibility = View.GONE
                 return@observe
             } else {
                 if(!isOwner){
@@ -419,22 +415,26 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 }
             }
 
-            if (viewModel.totalPages > 0) {
-                binding.flashcardNum.text = "${viewModel.totalPages}"
+            if (viewModel.totalPagesFlashcard > 0) {
+                binding.flashcardNum.text = "${viewModel.totalPagesFlashcard}"
             } else if (flashcards.isNotEmpty()) {
                 binding.flashcardNum.text = flashcards.size.toString()
             }
 
-//            binding.vocabularyGrid.removeAllViews()
-//            binding.vocabularyGrid2.removeAllViews()
-//            handler?.bindFlashcardData(flashcards)
-
-
+            // Đảm bảo progress bar vẫn hiện diện trong lúc đợi khối post xử lý render nặng
+            if (!isSpeakingMode) {
+                binding.paginationProgressBar.visibility = View.VISIBLE
+            }
 
             binding.root.post {
                 binding.vocabularyGrid.removeAllViews()
                 binding.vocabularyGrid2.removeAllViews()
                 handler?.bindFlashcardData(flashcards)
+                
+                // Ẩn progress bar sau khi đã vẽ xong toàn bộ View mới
+                if (!isSpeakingMode) {
+                    binding.paginationProgressBar.visibility = View.GONE
+                }
             }
         }
 
@@ -442,7 +442,6 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             result?.onSuccess { newId ->
                 Toast.makeText(requireContext(), getString(R.string.create_course_success), Toast.LENGTH_SHORT).show()
                 this.courseId = newId
-
                 viewModel.resetCreateCourseStatus()
                 viewModel.resetTopicData()
                 binding.saveBtn.setText(
@@ -455,7 +454,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 val bundle = bundleOf("courseId" to newId)
                 findNavController().navigate(R.id.courseDetailFragment, bundle,
                     NavOptions.Builder()
-                    .setPopUpTo(R.id.courseDetailFragment, true) // Xoá màn hình "Tạo mới" khỏi BackStack
+                    .setPopUpTo(R.id.courseDetailFragment, true)
                     .build())
 
             }?.onFailure {
@@ -471,35 +470,24 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
         viewModel.suggestions.observe(viewLifecycleOwner) { suggestions ->
             binding.searchBarVocabulary.setSuggestions(suggestions)
         }
+        
         viewModel.copyStatus.observe(viewLifecycleOwner) { result ->
-
             if (result == null) return@observe
-
             result.onSuccess { isSuccess ->
-
                 if (isSuccess) {
                     Toast.makeText(requireContext(), getString(R.string.copy_deck_success), Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(requireContext(), getString(R.string.copy_deck_error), Toast.LENGTH_SHORT).show()
                 }
-
                 viewModel.resetActionStatus()
-
             }.onFailure { exception ->
-                // Bắt các lỗi văng ra Exception (VD: rớt mạng, lỗi 500 Server, JSON lỗi...)
                 Toast.makeText(requireContext(), "Lỗi hệ thống: ${exception.message}", Toast.LENGTH_SHORT).show()
-
-                // Nhớ reset lại LiveData
                 viewModel.resetActionStatus()
             }
         }
     }
 
     internal fun updateToggleUI() {
-        viewModel.nextItem = null
-        viewModel.currentPages = 0
-        viewModel.totalPages = 0
-        viewModel.isLastPage = false
         if (isSpeakingMode) {
             binding.speakingBtn.apply {
                 setIconColor(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
@@ -558,7 +546,6 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             binding.topLayoutTeacher.visibility = View.VISIBLE
             binding.middleLayoutTeacher.visibility = View.VISIBLE
             binding.bottomLayoutTeacher.visibility = View.VISIBLE
-
             binding.learningBtn.visibility = View.GONE
             binding.topLayoutStudent.visibility = View.GONE
             binding.middleLayoutStudent.visibility = View.GONE
@@ -568,14 +555,10 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             binding.topLayoutStudent.visibility = View.VISIBLE
             binding.middleLayoutStudent.visibility = View.VISIBLE
             binding.bottomLayoutStudent.visibility = View.VISIBLE
-
             binding.addBtn.visibility = View.GONE
             binding.topLayoutTeacher.visibility = View.GONE
             binding.middleLayoutTeacher.visibility = View.GONE
             binding.bottomLayoutTeacher.visibility = View.GONE
-
-            // Kiểm tra trạng thái hiển thị Mẹo học nhanh (chỉ dành cho học sinh)
-            // binding.rememberCard.visibility = if (userManager.shouldShowQuickTips()) View.VISIBLE else View.GONE
         }
     }
 

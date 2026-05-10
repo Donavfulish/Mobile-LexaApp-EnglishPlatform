@@ -227,7 +227,7 @@ class CourseDetailTeacher(
                     isWarning = true,
                     confirmText = fragment.getString(R.string.delete),
                     onConfirm = {
-                        viewModel.deleteFlashcard(fragment.courseId, item.id,item.deckId !!)
+                        viewModel.deleteFlashcard(fragment.courseId, item.deckId !!)
                     },
                     onCancel = {
                     }

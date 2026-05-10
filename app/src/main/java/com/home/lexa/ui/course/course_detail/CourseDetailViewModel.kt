@@ -3,7 +3,6 @@ package com.home.lexa.ui.course.course_detail
 import android.app.Application
 import android.net.Uri
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,7 +10,6 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.home.lexa.R
 import com.home.lexa.di.AppMemoryCache
-import com.home.lexa.domain.models.CopyDeckRequest
 import com.home.lexa.domain.models.CreateCourseRequest
 import com.home.lexa.domain.models.CreateSpeakingDayRequest
 import com.home.lexa.domain.models.DetailFlashcard
@@ -20,6 +18,7 @@ import com.home.lexa.domain.repository.CourseRepository
 import com.home.lexa.domain.repository.FlashcardRepository
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.async
+import com.home.lexa.domain.models.CopyDeckRequest
 import com.home.lexa.domain.models.EditCourseRequest
 import com.home.lexa.domain.models.SearchInfo
 import com.home.lexa.domain.models.ShortSpeakingDayDto
@@ -62,14 +61,22 @@ class CourseDetailViewModel(
 
     private val _suggestions = MutableLiveData<List<String>>(emptyList())
     val suggestions: LiveData<List<String>> get() = _suggestions
-    private val _copyStatus = MutableLiveData<Result<Boolean>?>()
-    val copyStatus: LiveData<Result<Boolean>?> get() = _copyStatus
+
     private val _isSuggesting = MutableLiveData<Boolean>(false)
     val isSuggesting: LiveData<Boolean> get() = _isSuggesting
-    var isLastPage = false
-    var currentPages = 0
-    var totalPages = 0
-    var nextItem: Long? = null
+    
+    // TACH RIENG BIEN PHAN TRANG CHO SPEAKING
+    var isLastPageSpeaking = false
+    var currentPagesSpeaking = 0
+    var totalPagesSpeaking = 0
+    var nextItemSpeaking: Long? = null
+
+    // TACH RIENG BIEN PHAN TRANG CHO FLASHCARD
+    var isLastPageFlashcard = false
+    var currentPagesFlashcard = 0
+    var totalPagesFlashcard = 0
+    var nextItemFlashcard: Long? = null
+
     var searchInfor = SearchInfo(
         query = null,
         sortBy = null,
@@ -86,7 +93,7 @@ class CourseDetailViewModel(
             _isSuggesting.value = true
             val result = flashcardRepository.getFlashcardSuggestions(query)
             result.onSuccess { list ->
-                _suggestions.value = list!!
+                _suggestions.value = list ?: emptyList()
                 _isSuggesting.value = false
             }.onFailure {
                 _suggestions.value = emptyList()
@@ -108,7 +115,6 @@ class CourseDetailViewModel(
                 }.onFailure {
                     _topicData.value = emptyList()
                     _isLoading.value = false
-                    Log.e("DEBUG_VM", "Load Topics failed: ${it.message}")
                 }
             } catch (e: Exception){
                 _topicData.value = emptyList()
@@ -147,11 +153,11 @@ class CourseDetailViewModel(
     }
 
     fun loadMoreSpeakingDay(isLoadMore: Boolean, courseId: Long, nextOrder: Long?){
-        if(isLoadMore && (paginationLoading.value == true || isLastPage)) return
+        if(isLoadMore && (paginationLoading.value == true || isLastPageSpeaking)) return
         if(!isLoadMore){
-            isLastPage = false
-            currentPages = 0
-            nextItem = null
+            isLastPageSpeaking = false
+            currentPagesSpeaking = 0
+            nextItemSpeaking = null
             _speakingDayDetailData.value = emptyList()
         }
 
@@ -160,23 +166,21 @@ class CourseDetailViewModel(
             val result = speakingDayRepository.getSpeakingDays(courseId, nextOrder)
             result.onSuccess { list ->
                 if(!list.data.isNullOrEmpty()){
-                    currentPages =  list.data.size
-                    totalPages = list.totalItems
-                    nextItem = list.data[list.data.size - 1].order
-                    Log.d("PAGINATION_DEBUG", "curr: $currentPages, totalPages: $totalPages, nextItem: $nextItem")
+                    currentPagesSpeaking =  list.data.size
+                    totalPagesSpeaking = list.totalItems
+                    nextItemSpeaking = list.data[list.data.size - 1].order
 
-                    if(currentPages == totalPages){
-                        isLastPage = true
+                    if(currentPagesSpeaking >= totalPagesSpeaking){
+                        isLastPageSpeaking = true
                     }
                     _speakingDayDetailData.value = list.data
                 } else {
-                    isLastPage = true
-                    _speakingDayDetailData.value = emptyList()
+                    isLastPageSpeaking = true
+                    if (!isLoadMore) _speakingDayDetailData.value = emptyList()
                 }
-
                 _paginationLoading.value = false
             } .onFailure {
-                _speakingDayDetailData.value = emptyList()
+                if (!isLoadMore) _speakingDayDetailData.value = emptyList()
                 _paginationLoading.value = false
             }
         }
@@ -204,17 +208,14 @@ class CourseDetailViewModel(
                     _isLoading.value = false
                     if (data != null){
                         if(data.list_speaking_day.data.isNotEmpty()){
-                            currentPages = data.list_speaking_day.data.size
-                            totalPages = data.list_speaking_day.totalItems
-                            nextItem = data.list_speaking_day.data[data.list_speaking_day.data.size - 1].order
+                            currentPagesSpeaking = data.list_speaking_day.data.size
+                            totalPagesSpeaking = data.list_speaking_day.totalItems
+                            nextItemSpeaking = data.list_speaking_day.data[data.list_speaking_day.data.size - 1].order
 
-                            Log.d("PAGINATION_DEBUG", "curr: $currentPages, totalPages: $totalPages, nextItem: $nextItem")
-
-                            if(currentPages == totalPages){
-                                isLastPage = true
+                            if(currentPagesSpeaking >= totalPagesSpeaking){
+                                isLastPageSpeaking = true
                             }
                             _speakingDayDetailData.value = data.list_speaking_day.data
-                            _paginationLoading.value = false
                         }
                         if(data.deckId != null) {
                             loadMoreFlashcards(false, data.deckId, SearchInfo(null, null, null), null)
@@ -236,11 +237,11 @@ class CourseDetailViewModel(
     }
 
      fun loadMoreFlashcards(isLoadMore: Boolean, deckId: Long, searchInfo: SearchInfo, nextOrder: Long?) {
-        if(isLoadMore && (paginationLoading.value == true || isLastPage)) return
+        if(isLoadMore && (paginationLoading.value == true || isLastPageFlashcard)) return
         if(!isLoadMore){
-            isLastPage = false
-            currentPages = 0
-            nextItem = null
+            isLastPageFlashcard = false
+            currentPagesFlashcard = 0
+            nextItemFlashcard = null
             _flashcardDetailData.value = emptyList()
         }
 
@@ -249,23 +250,22 @@ class CourseDetailViewModel(
             val result = flashcardRepository.getAllFlashcard(deckId, searchInfo, nextOrder)
             result.onSuccess { list ->
                 if(!list.data.isNullOrEmpty()){
-                    currentPages =  list.data.size
-                    totalPages = list.totalItem.toInt()
-                    nextItem = list.nextCursor
-                    Log.d("PAGINATION_DEBUG", "curr: $currentPages, totalPages: $totalPages, nextItem: $nextItem")
+                    currentPagesFlashcard =  list.data.size
+                    totalPagesFlashcard = list.totalItem.toInt()
+                    nextItemFlashcard = list.nextCursor
 
-                    if(currentPages == totalPages){
-                        isLastPage = true
+                    if(currentPagesFlashcard >= totalPagesFlashcard){
+                        isLastPageFlashcard = true
                     }
                     _flashcardDetailData.value = list.data
                 } else {
-                    isLastPage = true
-                    _flashcardDetailData.value = emptyList()
+                    isLastPageFlashcard = true
+                    if (!isLoadMore) _flashcardDetailData.value = emptyList()
                 }
 
                 _paginationLoading.value = false
             } .onFailure {
-                _flashcardDetailData.value = emptyList()
+                if (!isLoadMore) _flashcardDetailData.value = emptyList()
                 _paginationLoading.value = false
             }
         }
@@ -298,7 +298,6 @@ class CourseDetailViewModel(
                 AppMemoryCache.remove("getCourseDetail_${request.courseId}")
                 _createStatus.value = Result.success(Unit)
             }.onFailure {
-                Log.e("CREATE_STATUS", "Lỗi: ${it.message}", it)
                 _createStatus.value = Result.failure(it)
             }
         }
@@ -308,15 +307,14 @@ class CourseDetailViewModel(
         _createStatus.value = null
     }
 
-    fun deleteFlashcard(courseId: Long, flashcardId: Long, deckId: Long) {
+    fun deleteFlashcard(flashcardId: Long, deckId: Long) {
         viewModelScope.launch {
             val result = flashcardRepository.deleteFlashcard(flashcardId, deckId)
             result.onSuccess {
                 AppMemoryCache.remove("getAllFlashcard_${deckId}")
-                AppMemoryCache.remove("getCourseDetail_${courseId}")
+                AppMemoryCache.removePrefix("getCourseDetail_")
                 _updateStatus.value = Result.success(Unit)
             }.onFailure {
-                Log.e("DELETE_FLASHCARD", "Lỗi: ${it.message}", it)
                 _updateStatus.value = Result.failure(it)
             }
         }
@@ -366,21 +364,24 @@ class CourseDetailViewModel(
     fun resetFavoriteStatus() {
         _favortieStatus.value = null
     }
-    fun resetActionStatus() {
-        _copyStatus.value = null
-    }
+    
+    // API COPY DECK
+    private val _copyStatus = MutableLiveData<Result<Boolean>?>()
+    val copyStatus: LiveData<Result<Boolean>?> get() = _copyStatus
+
     fun copyDeck(deckId: Long) {
         viewModelScope.launch {
-            try {
-                _isLoading.value = true
-                val result = deckRepository.copyDeck(CopyDeckRequest(deckId))
-                AppMemoryCache.remove("getAllDecks")
-                _copyStatus.value = result
-                _isLoading.value = false
-            } catch (e: Exception) {
-
-                Log.e("COPY_DECK", "Lỗi khi sao chép: ${e.message}")
+            val result = deckRepository.copyDeck(CopyDeckRequest(deckId))
+            AppMemoryCache.remove("getAllDecks")
+            result.onSuccess {
+                _copyStatus.value = Result.success(true)
+            }.onFailure {
+                _copyStatus.value = Result.failure(it)
             }
         }
+    }
+
+    fun resetActionStatus() {
+        _copyStatus.value = null
     }
 }
