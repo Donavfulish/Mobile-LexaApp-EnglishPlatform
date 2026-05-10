@@ -27,6 +27,7 @@ class TeacherCourseCard @JvmOverloads constructor(
         binding.tvAuthorName.text = data.creator_name
         binding.tvHeartCount.text = data.favorite_user_count.toString()
         binding.tvUserCount.text = data.studying_user_count.toString()
+        binding.progressBar.setProgress((data.completed ?: 0).coerceIn(0, 100))
 
         binding.tagCategory.setTagData(
             text = data.topic.name,

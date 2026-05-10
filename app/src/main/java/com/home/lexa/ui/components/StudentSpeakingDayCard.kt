@@ -33,9 +33,7 @@ class StudentSpeakingDayCard @JvmOverloads constructor(
     }
 
     fun setProgress(_progressPercent: Int) {
-        if (_progressPercent > 100) return
-
-        this.progressPercent = _progressPercent
+        progressPercent = _progressPercent.coerceIn(0, 100)
         binding.progressBar.setProgress(progressPercent)
 
         if (progressPercent == 100) {

@@ -100,12 +100,21 @@
             app:layout_constraintStart_toStartOf="@+id/tagCategory"
             app:layout_constraintTop_toBottomOf="@+id/tvCourseTitle" />
 
+        <com.home.lexa.ui.components.ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tagCategory"
+            app:layout_constraintTop_toBottomOf="@+id/tvCourseDesc" />
+
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="cvThumbnail,tvCourseDesc" />
+            app:constraint_referenced_ids="cvThumbnail,progressBar" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cvAvatar"

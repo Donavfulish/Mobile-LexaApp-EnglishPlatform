@@ -1,4 +1,6 @@
 package com.home.lexa.domain.models
+
+import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 
@@ -43,6 +45,7 @@ data class ShortCourseDto(
     val vocabNumber: Int,
     val studying_user_count: Int,
     val favorite_user_count: Int,
+    @SerializedName(value = "completed", alternate = ["progress", "completion_percent", "completionPercent"])
     val completed: Int? = null
 )
 data class GetFeaturedCourseResponse(

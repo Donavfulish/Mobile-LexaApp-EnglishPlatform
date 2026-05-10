@@ -56,11 +56,14 @@ class SpeakingDayRepositoryImpl(
             Result.failure(e)
         }
     }
-    override suspend fun getParagraphSpeakingDay(speakingDayId: Long): Result<ShortParagraphSpeakingDayDto?> {
+    override suspend fun getParagraphSpeakingDay(speakingDayId: Long, skipCache: Boolean): Result<ShortParagraphSpeakingDayDto?> {
         return try {
-            val speakingDay: ShortParagraphSpeakingDayDto? = AppMemoryCache.get("getParagraphSpeakingDay_$speakingDayId");
-            if (speakingDay != null){
-                return Result.success(speakingDay);
+            if (skipCache) {
+                AppMemoryCache.remove("getParagraphSpeakingDay_$speakingDayId")
+            }
+            val speakingDay: ShortParagraphSpeakingDayDto? = AppMemoryCache.get("getParagraphSpeakingDay_$speakingDayId")
+            if (speakingDay != null) {
+                return Result.success(speakingDay)
             }
             val response = apiService.getParagraphSpeakingDay(speakingDayId)
             val body = response.body()

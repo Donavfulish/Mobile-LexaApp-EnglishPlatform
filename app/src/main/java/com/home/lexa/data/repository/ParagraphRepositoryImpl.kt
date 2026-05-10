@@ -93,6 +93,8 @@ class ParagraphRepositoryImpl (
                 AppMemoryCache.removePrefix("getCourseDetail_")
                 AppMemoryCache.removePrefix("getSpeakingDays_")
                 AppMemoryCache.removePrefix("getLearningCourses")
+                AppMemoryCache.removePrefix("getAllCourses_")
+                AppMemoryCache.removePrefix("getFavoriteCourses_")
                 AppMemoryCache.remove("getFeaturedCourses")
                 AppMemoryCache.remove("getStudyingCourses")
                 AppMemoryCache.remove("getTopStudiedCourses")

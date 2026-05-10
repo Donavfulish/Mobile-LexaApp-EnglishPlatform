@@ -1,5 +1,6 @@
 package com.home.lexa.domain.models
 
+import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 // --- REQUESTS ---
@@ -7,7 +8,20 @@ import kotlinx.serialization.Serializable
 data class ShortParagraphDto(
     val id: Long,
     val paragraph: String?,
+    @SerializedName(value = "paragraph_order", alternate = ["paragraphOrder"])
     val paragraph_order: Long?,
+    @SerializedName(value = "audioUrl", alternate = ["audio_url"])
+    val audioUrl: String? = null,
+    @SerializedName(value = "wordEvaluation", alternate = ["word_evaluation"])
+    val wordEvaluation: List<WordEvaluationItem>? = null,
+    @SerializedName(value = "goodCount", alternate = ["good_count"])
+    val goodCount: Int? = null,
+    @SerializedName(value = "mediumCount", alternate = ["medium_count"])
+    val mediumCount: Int? = null,
+    @SerializedName(value = "badCount", alternate = ["bad_count"])
+    val badCount: Int? = null,
+    @SerializedName(value = "userAudioUrl", alternate = ["user_audio_url"])
+    val userAudioUrl: String? = null
 )
 
 data class CreateParagraphRequest(
@@ -29,6 +43,7 @@ data class ParagraphResponseDto(
     val paragraphOrder: Int
 )
 
+@Serializable
 data class WordEvaluationItem(
     val word: String,
     val score: Int,

@@ -12,6 +12,15 @@
         android:orientation="vertical"
         android:padding="20dp">
 
+        <ProgressBar
+            android:id="@+id/progressSpinner"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="12dp"
+            android:visibility="gone" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -83,7 +92,7 @@
                                 android:id="@+id/tvGoodCount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="253"
+                                android:text="0"
                                 android:textColor="#4CAF50"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
@@ -120,7 +129,7 @@
                                 android:id="@+id/tvAcceptedCount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="39"
+                                android:text="0"
                                 android:textColor="#FFB300"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
@@ -157,7 +166,7 @@
                                 android:id="@+id/tvBadCount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="12"
+                                android:text="0"
                                 android:textColor="#F44336"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />

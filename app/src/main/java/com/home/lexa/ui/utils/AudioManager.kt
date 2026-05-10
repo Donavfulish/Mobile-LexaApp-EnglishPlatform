@@ -163,6 +163,39 @@ class AudioManager(private val context: Context) {
         )
     }
 
+    /** Play local path or remote URL (e.g. user recording from API). */
+    fun playFromSource(source: String, onComplete: () -> Unit = {}) {
+        resetMediaPlayer()
+        if (source.isBlank()) {
+            onComplete()
+            return
+        }
+        val isRemote = source.startsWith("http", ignoreCase = true)
+        if (!isRemote) {
+            val file = File(source)
+            if (!file.exists()) {
+                Log.e("AudioManager", "File không tồn tại: $source")
+                onComplete()
+                return
+            }
+        }
+        try {
+            mediaPlayer = MediaPlayer().apply {
+                setDataSource(source)
+                prepare()
+                start()
+                setOnCompletionListener { onComplete(); resetMediaPlayer() }
+                setOnErrorListener { _, what, extra ->
+                    Log.e("AudioManager", "playFromSource error: $what, $extra")
+                    resetMediaPlayer(); onComplete(); true
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("AudioManager", "Lỗi playFromSource: ${e.message}")
+            onComplete()
+        }
+    }
+
     fun playAudio(path: String, onComplete: () -> Unit = {}) {
         resetMediaPlayer()
         val file = File(path)

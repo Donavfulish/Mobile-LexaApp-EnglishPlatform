@@ -33,7 +33,7 @@ class StudentCourseCard @JvmOverloads constructor(
         binding.btnAction.text = "HỌC NGAY"
 
 
-        binding.progressBar.setProgress(data.completed ?: 0)
+        binding.progressBar.setProgress((data.completed ?: 0).coerceIn(0, 100))
 
         binding.tagCategory.setTagData(
             text = data.topic.name,

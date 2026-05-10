@@ -109,6 +109,7 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
             } else {
                 val bundle = Bundle().apply {
                     putLong("speakingDayId", speakingDayId)
+                    putLong("courseId", courseId)
                 }
                 findNavController().navigate(R.id.action_speakingPracticeStudentFragment_to_dailyResultFragment, bundle)
             }

@@ -8,7 +8,7 @@ import com.home.lexa.domain.models.SpeakingDayPagination
 
 interface SpeakingDayRepository {
     suspend fun getSpeakingDays(courseId: Long, nextOrder: Long?): Result<SpeakingDayPagination>
-    suspend fun getParagraphSpeakingDay(speakingDayId: Long) : Result<ShortParagraphSpeakingDayDto?>
+    suspend fun getParagraphSpeakingDay(speakingDayId: Long, skipCache: Boolean = false) : Result<ShortParagraphSpeakingDayDto?>
     suspend fun createSpeakingDay(request: CreateSpeakingDayRequest): Result<Long>
     suspend fun editSpeakingDay(courseId: Long, speakingDayId: Long, request: EditSpeakingDayRequest): Result<Boolean>
     suspend fun reorderParagraphs(courseId: Long, speakingDayId: Long, request: ReorderParagraphsRequest): Result<Boolean>
