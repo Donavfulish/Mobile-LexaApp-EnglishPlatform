@@ -139,15 +139,20 @@ class CourseDetailStudent(
         binding.speakingDayLayout.removeAllViews()
 
         binding.learningBtn.setOnClickAction {
-
             if (list.isNotEmpty()) {
                 var targetDayIndex = list.indexOfFirst { it.completed < 100 }
-
                 targetDayIndex = if (targetDayIndex != -1) targetDayIndex else 0
+                
+                val selectedDay = list[targetDayIndex]
+                
+                if (selectedDay.paragraphNum == 0) {
+                    Toast.makeText(fragment.requireContext(), fragment.getString(R.string.empty_speaking_day), Toast.LENGTH_SHORT).show()
+                    return@setOnClickAction
+                }
 
                 val bundle = bundleOf(
                     "courseId" to courseId,
-                    "speakingDayId" to list[targetDayIndex].speakingDayId,
+                    "speakingDayId" to selectedDay.speakingDayId,
                     "order" to targetDayIndex
                 )
 
@@ -168,6 +173,11 @@ class CourseDetailStudent(
                         _progressPercent = day.completed
                     )
                 setOnClickAction {
+                    if (day.paragraphNum == 0 && day.completed < 100) {
+                        Toast.makeText(fragment.requireContext(), fragment.getString(R.string.empty_speaking_day), Toast.LENGTH_SHORT).show()
+                        return@setOnClickAction
+                    }
+
                     when {
                         day.completed >= 100 -> {
                             navigateToDailyResult(courseId, day.speakingDayId)
