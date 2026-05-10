@@ -102,7 +102,7 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             setIconColor(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
         }
         binding.vocabularyIconBtn.apply {
-            setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_book)!!)
+            setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.copy_linear)!!)
             setBackground(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
         }
 
