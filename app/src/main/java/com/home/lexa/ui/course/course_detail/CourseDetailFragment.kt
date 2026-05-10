@@ -229,7 +229,17 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
 //                }
 //            }
 //        })
+        binding.vocabularyIconBtn.setOnClickAction {
+            binding.vocabularyIconBtn.setOnClickAction {
+                if (deckId != -1L) {
+                    viewModel.copyDeck(deckId)
+                    Toast.makeText(requireContext(), getString(R.string.copying_deck_background), Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "Không tìm thấy bộ từ vựng!", Toast.LENGTH_SHORT).show()
+                }
+            }
 
+        }
         syncTabUI()
     }
 
@@ -454,6 +464,28 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
         
         viewModel.suggestions.observe(viewLifecycleOwner) { suggestions ->
             binding.searchBarVocabulary.setSuggestions(suggestions)
+        }
+        viewModel.copyStatus.observe(viewLifecycleOwner) { result ->
+
+            if (result == null) return@observe
+
+            result.onSuccess { isSuccess ->
+
+                if (isSuccess) {
+                    Toast.makeText(requireContext(), getString(R.string.copy_deck_success), Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), getString(R.string.copy_deck_error), Toast.LENGTH_SHORT).show()
+                }
+
+                viewModel.resetActionStatus()
+
+            }.onFailure { exception ->
+                // Bắt các lỗi văng ra Exception (VD: rớt mạng, lỗi 500 Server, JSON lỗi...)
+                Toast.makeText(requireContext(), "Lỗi hệ thống: ${exception.message}", Toast.LENGTH_SHORT).show()
+
+                // Nhớ reset lại LiveData
+                viewModel.resetActionStatus()
+            }
         }
     }
 

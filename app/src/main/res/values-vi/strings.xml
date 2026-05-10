@@ -390,4 +390,7 @@
     <string name="order">Thứ tự</string>
     <string name="ascending">Tăng dần</string>
     <string name="descending">Giảm dần</string>
+    <string name="copy_deck_success">Đã sao chép bộ từ vựng.</string>
+    <string name="copy_deck_error">Sao chép bộ từ vựng thất bại.</string>
+    <string name="copying_deck_background">Đang sao chép bộ từ vựng… </string>
 </resources>

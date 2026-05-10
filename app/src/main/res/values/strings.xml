@@ -393,4 +393,9 @@
     <string name="order">Order</string>
     <string name="ascending">Ascending</string>
     <string name="descending">Descending</string>
+    <string name="copy_deck_success">Vocabulary set has been copied.</string>
+    <string name="copy_deck_error">Copy deck failure.</string>
+    <string name="copying_deck_background">Copying Deck.</string>
+
+
 </resources>

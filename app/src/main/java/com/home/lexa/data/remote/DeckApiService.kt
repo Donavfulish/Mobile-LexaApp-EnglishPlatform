@@ -3,6 +3,7 @@ package com.home.lexa.data.remote
 import com.home.lexa.core.network.ApiResponse
 import com.home.lexa.domain.models.AllCoursePaginationResponse
 import com.home.lexa.domain.models.AllDeckPaginationResponse
+import com.home.lexa.domain.models.CopyDeckRequest
 import com.home.lexa.domain.models.CreateDeckRequest
 import com.home.lexa.domain.models.CreateDeckResultRequest
 import com.home.lexa.domain.models.DeckDto
@@ -84,4 +85,8 @@ interface DeckApiService {
 
     @GET("api/decks/suggestions")
     suspend fun getDeckSuggestions(@Query("query") query: String? = null): Response<ApiResponse<List<String>>>
+
+    @POST("api/user/me/decks/copy")
+    suspend fun copyDeck(@Body request: CopyDeckRequest): Response<ApiResponse<Boolean>>
+
 }

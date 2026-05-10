@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.home.lexa.R
 import com.home.lexa.di.AppMemoryCache
+import com.home.lexa.domain.models.CopyDeckRequest
 import com.home.lexa.domain.models.CreateCourseRequest
 import com.home.lexa.domain.models.CreateSpeakingDayRequest
 import com.home.lexa.domain.models.DetailFlashcard
@@ -61,7 +62,8 @@ class CourseDetailViewModel(
 
     private val _suggestions = MutableLiveData<List<String>>(emptyList())
     val suggestions: LiveData<List<String>> get() = _suggestions
-
+    private val _copyStatus = MutableLiveData<Result<Boolean>?>()
+    val copyStatus: LiveData<Result<Boolean>?> get() = _copyStatus
     private val _isSuggesting = MutableLiveData<Boolean>(false)
     val isSuggesting: LiveData<Boolean> get() = _isSuggesting
     var isLastPage = false
@@ -363,5 +365,22 @@ class CourseDetailViewModel(
     }
     fun resetFavoriteStatus() {
         _favortieStatus.value = null
+    }
+    fun resetActionStatus() {
+        _copyStatus.value = null
+    }
+    fun copyDeck(deckId: Long) {
+        viewModelScope.launch {
+            try {
+                _isLoading.value = true
+                val result = deckRepository.copyDeck(CopyDeckRequest(deckId))
+                AppMemoryCache.remove("getAllDecks")
+                _copyStatus.value = result
+                _isLoading.value = false
+            } catch (e: Exception) {
+
+                Log.e("COPY_DECK", "Lỗi khi sao chép: ${e.message}")
+            }
+        }
     }
 }

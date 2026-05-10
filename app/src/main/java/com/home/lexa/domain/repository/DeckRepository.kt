@@ -2,6 +2,7 @@ package com.home.lexa.domain.repository
 
 import com.home.lexa.domain.models.AllCoursePaginationResponse
 import com.home.lexa.domain.models.AllDeckPaginationResponse
+import com.home.lexa.domain.models.CopyDeckRequest
 import com.home.lexa.domain.models.CreateDeckRequest
 import com.home.lexa.domain.models.CreateDeckResultRequest
 import com.home.lexa.domain.models.DeckDto
@@ -27,4 +28,6 @@ interface DeckRepository {
 
     // ==== TOPIC ====
     suspend fun getAllTopics(): Result<List<Topic>>
+    suspend fun copyDeck(request: CopyDeckRequest): Result<Boolean>
+
 }
