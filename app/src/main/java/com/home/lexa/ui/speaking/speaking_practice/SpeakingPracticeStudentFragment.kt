@@ -475,10 +475,10 @@ class SpeakingPracticeStudentFragment : BaseFragment<FragmentSpeakingPracticeStu
             setIconTint(ContextCompat.getColor(requireContext(), R.color.text_tertiary))
         }
         binding.btnNgheMau.apply {
-            setIconSize(40); setIconColor(ContextCompat.getColor(requireContext(), R.color.brand_primary))
+            setIconSize(60); setIconColor(ContextCompat.getColor(requireContext(), R.color.white))
             setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_play)!!)
-            setText(getString(R.string.listen_sample), ContextCompat.getColor(requireContext(), R.color.brand_primary))
-            setBackground(ContextCompat.getColor(requireContext(), R.color.control_bg))
+            setText(getString(R.string.listen_sample), ContextCompat.getColor(requireContext(), R.color.white))
+            setBackground(ContextCompat.getColor(requireContext(), R.color.btn_primary_bg))
         }
         binding.progressBar.setTitle(getString(R.string.lesson_progress_upper))
     }

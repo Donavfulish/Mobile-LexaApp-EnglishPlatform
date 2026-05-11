@@ -96,7 +96,7 @@ class VocabularyFlashcardFragment : BaseFragment<FragmentVocabularyFlashcardBind
             }
         }
         binding.vocabularyIconBtn.apply {
-            setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_book)!!)
+            setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_add_btn)!!)
             setBackground(ContextCompat.getColor(requireContext(), R.color.purple_paragraph))
         }
         binding.searchBarVocabulary.apply {
