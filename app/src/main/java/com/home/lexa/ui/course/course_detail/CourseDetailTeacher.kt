@@ -1,0 +1,299 @@
+package com.home.lexa.ui.course.course_detail
+
+import android.os.Bundle
+import android.util.Log
+import android.widget.ArrayAdapter
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
+import androidx.navigation.fragment.findNavController
+import coil.load
+import com.home.lexa.databinding.ActivityMainBinding
+import com.home.lexa.databinding.FragmentCourseDetailBinding
+import com.home.lexa.domain.models.ColorLabel
+import com.home.lexa.domain.models.CreateSpeakingDayRequest
+import com.home.lexa.domain.models.DetailFlashcard
+import com.home.lexa.domain.models.EditCourseRequest
+import com.home.lexa.domain.models.CourseDetailDto
+import com.home.lexa.domain.models.PartOfSpeech
+import com.home.lexa.domain.models.SearchInfo
+import com.home.lexa.domain.models.ShortSpeakingDayDto
+import com.home.lexa.domain.models.Vocabulary
+import com.home.lexa.ui.components.FlashcardMini
+import com.home.lexa.ui.components.NormalInput
+import com.home.lexa.ui.components.PopUpInput
+import com.home.lexa.ui.components.Popup
+import com.home.lexa.ui.components.TeacherSpeakingDayCard
+import com.home.lexa.ui.components.ToggleSwitch
+import com.home.lexa.R
+import com.home.lexa.core.Constants
+import com.home.lexa.di.AppMemoryCache
+
+class CourseDetailTeacher(
+    private val fragment: CourseDetailFragment,
+    private val binding: FragmentCourseDetailBinding,
+    private val viewModel: CourseDetailViewModel,
+    private val activityBinding: ActivityMainBinding
+): CourseDetailHandler {
+    override fun setupViews() {
+        activityBinding.appBarLayout.apply {
+            val linearLayout = LinearLayout(fragment.requireContext()).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = android.view.Gravity.CENTER_VERTICAL
+            }
+            val publicTitleView = TextView(fragment.requireContext()).apply {
+                setText(fragment.getString(R.string.status_public))
+                setTextSize(android.util.TypedValue.COMPLEX_UNIT_DIP, 14f)
+
+                val typeface = androidx.core.content.res.ResourcesCompat.getFont(fragment.requireContext(), R.font.archivo_bold)
+                setTypeface(typeface)
+                setTextColor(ContextCompat.getColor(fragment.requireContext(), R.color.black))
+                setPadding(0, 0, 20, 0)
+            }
+            val publicToggleView = ToggleSwitch(fragment.requireContext())
+            publicToggleView.isChecked = fragment.isPublic
+            publicToggleView.onCheckedChangeListener = { isChecked ->
+                fragment.isPublic = isChecked
+            }
+            linearLayout.addView(publicTitleView)
+            linearLayout.addView(publicToggleView)
+            insertCustomeViewRight(linearLayout)
+        }
+
+        binding.editToggle.onCheckedChangeListener = { isChecked ->
+            for (i in 0 until binding.vocabularyGrid2.childCount) {
+                val child = binding.vocabularyGrid2.getChildAt(i)
+                if (child is FlashcardMini) {
+                    child.setIsEditable(isChecked)
+                }
+            }
+        }
+
+        binding.topicInput.setOnItemClickListener{_, _, position, _->
+            fragment.selectedTopicId = fragment.list_topic[position].id
+            fragment.updateTopicColor(fragment.list_topic[position].colorHex)
+            binding.topicInput.setText(fragment.list_topic[position].name, false)
+            binding.topicInput.clearFocus()
+        }
+
+        binding.saveBtn.setOnClickAction {
+            val newTitle = binding.courseTitleInput.text.toString()
+            val newDesc = binding.introductionInput.text.toString()
+            val newTopicId = fragment.selectedTopicId
+
+            val request = EditCourseRequest(
+                topicId = newTopicId,
+                title = newTitle,
+                description = newDesc,
+                privacy = if (fragment.isPublic) "PUBLIC" else "PRIVATE",
+                thumbnailUrl = viewModel.courseDetailData.value?.thumbnail_url ?: null
+            )
+
+            binding.saveBtn.setText(fragment.getString(R.string.saving_information), ContextCompat.getColor(fragment.requireContext(), R.color.white))
+
+            if (newTitle.isNotBlank()) {
+                viewModel.editCourse(fragment.courseId, request, fragment.courseImageUri)
+            }
+        }
+
+        binding.cameraBtn.apply{
+            setIcon(ContextCompat.getDrawable(fragment.requireContext(), R.drawable.ic_camera)!!)
+            setBackground(ContextCompat.getColor(fragment.requireContext(), R.color.white_opacity))
+            setOnClickAction {
+                fragment.pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            }
+        }
+        binding.addBtn.apply {
+            setBackground(ContextCompat.getColor(fragment.requireContext(), R.color.purple_paragraph))
+        }
+        binding.saveBtn.apply{
+            setBackground(ContextCompat.getColor(fragment.requireContext(), R.color.purple_paragraph))
+            setText(fragment.getString(R.string.save_information), ContextCompat.getColor(fragment.requireContext(), R.color.white))
+        }
+    }
+
+    override fun bindCourseData(course: CourseDetailDto) {
+        fragment.list_topic = viewModel.courseDetailData.value?.list_topic!!
+        val list_topic_name = fragment.list_topic.map { it.name }
+        val adapter = ArrayAdapter(fragment.requireContext(), android.R.layout.simple_list_item_1, list_topic_name)
+        binding.topicInput.setAdapter(adapter)
+
+        fragment.selectedTopicId = course.list_topic.find { it.name == course.type }?.id ?: 0
+        binding.topicInput.setTextSize(14f)
+        binding.topicInput.setTextColor(ContextCompat.getColor(fragment.requireContext(), android.R.color.white))
+        fragment.updateTopicColor(course.typeColor ?: fragment.list_topic[0].colorHex)
+        binding.topicInput.post {
+            binding.topicInput.setText(course.type, false)
+            binding.topicInput.clearFocus()
+        }
+        binding.backgroundCourse.load(course.thumbnail_url ?: Constants.DEFAULT_COURSE_IMAGE_URL) {
+            crossfade(true)
+        }
+        binding.courseTitleInput.setText(course.title)
+        binding.introductionInput.setText(course.description)
+
+        val popUpInput = PopUpInput(fragment.requireContext())
+        val speakingDayTitle = NormalInput(fragment.requireContext()).apply {
+            setLabel(fragment.getString(R.string.title_label))
+            setPlaceHolderText(fragment.getString(R.string.enter_study_day_title))
+        }
+        popUpInput.insertNormalInput(speakingDayTitle)
+        binding.addBtn.setOnClickAction {
+            if(fragment.isSpeakingMode){
+                popUpInput.showDialog(
+                    dialogTitle = fragment.getString(R.string.create_new_study_day),
+                    confirmText = fragment.getString(R.string.create_now),
+                    onConfirm = { dataList ->
+                        viewModel.createSpeakingDay(CreateSpeakingDayRequest(
+                            courseId = fragment.courseId,
+                            title = dataList[0]
+                        ))
+                    },
+                    onCancel = {
+                        Log.d("DEBUG_POPUP", "Đã hủy bỏ")
+                    }
+                )
+            }
+            else {
+                val bundle = Bundle().apply {
+                    putBoolean("IS_EDIT_KEY", false)
+                    putLong("DECK_ID_KEY", course.deckId!!)
+                }
+                fragment.findNavController().navigate(R.id.action_courseDetailFragment_to_flashcardAddEditFragment,bundle)
+            }
+        }
+    }
+
+    override fun bindSpeakingData(courseId: Long, list: List<ShortSpeakingDayDto>) {
+        binding.speakingDayLayout.removeAllViews()
+        list.forEachIndexed {index, day ->
+            val dayCard = TeacherSpeakingDayCard(fragment.requireContext()).apply {
+                setData(
+                    _day = index + 1,
+                    _title = day.title,
+                    _paragraphNum = day.paragraphNum
+                )
+                setOnClickAction {
+                    val bundle = bundleOf(
+                        "courseId" to courseId,
+                        "speakingDayId" to day.speakingDayId
+                    )
+                    fragment.findNavController().navigate(
+                        R.id.action_courseDetailFragment_to_speakingPracticeFragment,
+                        bundle
+                    )
+                }
+            }
+
+            val params = android.widget.LinearLayout.LayoutParams(
+                android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(0, 0, 0, 32) // Khoảng cách dưới 32px (hoặc dùng dp)
+            }
+            dayCard.layoutParams = params
+            binding.speakingDayLayout.addView(dayCard)
+        }
+    }
+
+    override fun bindFlashcardData(flashcards:  List<DetailFlashcard>) {
+        binding.vocabularyGrid2.removeAllViews()
+        flashcards.forEach { item ->
+            val card = FlashcardMini(fragment.requireContext())
+            val posEnum = PartOfSpeech.fromId(item.partOfSpeechId)
+
+            val vocab = Vocabulary(
+                level = ColorLabel(item.type, "#E0E0E5"),
+                imageUrl = item.imageUrl,
+                word = item.word,
+                pronunciation_url = item.audioUrl ?: "",
+                transciption = item.transcription,
+                part_of_speech = ColorLabel(fragment.getString(posEnum?.nameRes ?:R.string.pos_none ), "#636AE8"),
+                definition = item.meaning,
+                example = item.example ?: ""
+            )
+            card.setData(vocab)
+            card.onDeleteClick = {
+
+                val deletePopup = Popup(fragment.requireContext())
+
+                deletePopup.showDialog(
+                    title = fragment.getString(R.string.delete_vocabulary),
+                    subTitle = fragment.getString(R.string.delete_vocabulary_confirm, item.word),
+                    isWarning = true,
+                    confirmText = fragment.getString(R.string.delete),
+                    onConfirm = {
+                        viewModel.deleteFlashcard(fragment.courseId, item.deckId !!)
+                    },
+                    onCancel = {
+                    }
+                )
+
+            }
+            card.onEditClick = {
+
+                val bundle = Bundle().apply {
+                    putBoolean("IS_EDIT_KEY", true)
+                    putString("WORD_KEY", item.word)
+                    putString("TRANS_KEY", item.transcription)
+                    putString("MEANING", item.meaning)
+                    putString("EXAMPLE_KEY", item.example)
+                    putInt("POS_ID_KEY", item.partOfSpeechId)
+                    putLong("FLASHCARD_ID_KEY", item.id)
+                    putString("IMAGE_URL_KEY", item.imageUrl)
+                    putString("TYPE_KEY", item.type)
+                    putLong("DECK_ID_KEY", item.deckId!!)
+
+                }
+                fragment.findNavController().navigate(R.id.action_courseDetailFragment_to_flashcardAddEditFragment,bundle)
+            }
+            val params = androidx.gridlayout.widget.GridLayout.LayoutParams().apply {
+                width = 0
+                height = androidx.gridlayout.widget.GridLayout.LayoutParams.WRAP_CONTENT
+                columnSpec = androidx.gridlayout.widget.GridLayout.spec(androidx.gridlayout.widget.GridLayout.UNDEFINED, 1f)
+                setMargins(16, 16, 16, 16)
+            }
+            card.layoutParams = params
+            binding.vocabularyGrid2.addView(card)
+        }
+    }
+
+    override fun observerViewModel() {
+        // THEO DOI TINH TRANG CAP NHAT TT KHOA HOCC
+        viewModel.updateStatus.observe(fragment.viewLifecycleOwner) { result ->
+            result?.onSuccess {
+                Toast.makeText(fragment.requireContext(), fragment.getString(R.string.update_success), Toast.LENGTH_SHORT).show()
+                viewModel.loadCourseDetail(fragment.courseId)
+                viewModel.resetUpdateStatus()
+                AppMemoryCache.removePrefix("getAllCourses_")
+                AppMemoryCache.removePrefix("getFavoriteCourses_")
+                AppMemoryCache.removePrefix("getMyCourses_")
+                binding.saveBtn.setText(fragment.getString(R.string.save_information), ContextCompat.getColor(fragment.requireContext(), R.color.white))
+            }?.onFailure {
+                Toast.makeText(fragment.requireContext(), fragment.getString(R.string.error_message, it.message), Toast.LENGTH_SHORT).show()
+                viewModel.resetUpdateStatus()
+                binding.saveBtn.setText(fragment.getString(R.string.save_information), ContextCompat.getColor(fragment.requireContext(), R.color.white))
+            }
+        }
+
+        // THEO DOI TINH TRANG KHI THEM DU LIEU MOI
+        viewModel.createStatus.observe(fragment.viewLifecycleOwner){ result ->
+            result?.onSuccess {
+                Toast.makeText(fragment.requireContext(), fragment.getString(R.string.add_data_success), Toast.LENGTH_SHORT).show()
+                viewModel.resetCreateStatus()
+                AppMemoryCache.removePrefix("getAllCourses_")
+                AppMemoryCache.removePrefix("getFavoriteCourses_")
+                AppMemoryCache.removePrefix("getMyCourses_")
+                viewModel.loadCourseDetail(fragment.courseId)
+            }?.onFailure {
+                Toast.makeText(fragment.requireContext(), fragment.getString(R.string.error_message, it.message), Toast.LENGTH_SHORT).show()
+                Log.e("CREATE_STATUS", "Lỗi: ${it.message}", it)
+                viewModel.resetCreateStatus()
+            }
+        }
+    }
+}

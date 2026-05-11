@@ -1,0 +1,889 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        app:shimmer_auto_start="true">
+        <include layout="@layout/layout_course_detail_skeleton" />
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/contentScroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Background Image -->
+            <ImageView
+                android:id="@+id/backgroundCourse"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/background_course"
+                app:layout_constraintDimensionRatio="16:9"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+<!--            TEACHER ROLE -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/topLayoutTeacher"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:visibility="gone">
+                <com.home.lexa.ui.components.CircleButton
+                    android:id="@+id/cameraBtn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_margin="10dp"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+<!--            STUDENT ROLE-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/topLayoutStudent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                >
+                <!-- Topic Button -->
+                <com.home.lexa.ui.components.PrimaryButton
+                    android:id="@+id/topic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="22dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="113dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- Title Course -->
+                <TextView
+                    android:id="@+id/titleCourse"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="143dp"
+                    android:layout_marginEnd="16dp"
+                    android:fontFamily="@font/archivo_bold"
+                    android:lineHeight="30dp"
+                    tools:text="Làm Chủ Tiếng Anh Công Sở Trong 30 Ngày"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+            <!-- ==================== KHU VỰC THÔNG TIN (TEACHER) ==================== -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imgTeacher"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="55dp"
+                android:layout_marginTop="24dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/backgroundCourse"
+                app:shapeAppearanceOverlay="@style/RoundedCorner"
+                android:src="@drawable/placeholder_teacher" />
+
+            <TextView
+                android:id="@+id/teacher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/archivo_regular"
+                android:text="@string/teacher_upper"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="@+id/imgTeacher"
+                app:layout_constraintStart_toStartOf="@+id/imgTeacher"
+                app:layout_constraintTop_toBottomOf="@+id/imgTeacher" />
+
+            <TextView
+                android:id="@+id/teacherNameCourse"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/archivo_bold"
+                android:text="John Smith John Smith"
+                android:textStyle="bold"
+
+                android:gravity="center"
+                android:textAlignment="center"
+
+                android:maxLines="2"
+                android:ellipsize="end"
+
+                app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeMaxTextSize="14sp"
+                app:autoSizeStepGranularity="1sp"
+                app:layout_constraintEnd_toEndOf="@+id/imgTeacher"
+                app:layout_constraintStart_toStartOf="@+id/imgTeacher"
+                app:layout_constraintTop_toBottomOf="@+id/teacher" />
+
+
+            <!-- ==================== ĐƯỜNG KẺ DỌC ==================== -->
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/verticalDivider"
+                android:layout_width="1dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="24dp"
+                app:dividerColor="@color/gray_E0E0E5"
+                app:layout_constraintStart_toEndOf="@+id/teacherNameCourse"
+                app:layout_constraintTop_toBottomOf="@+id/backgroundCourse" />
+
+
+            <!-- ==================== KHU VỰC THÔNG TIN (STUDENT) ==================== -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/circleStudent"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="24dp"
+                android:backgroundTint="@color/purple_100"
+                android:gravity="center"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                app:cornerRadius="100dp"
+                app:icon="@drawable/ic_group"
+                app:iconTint="@color/purple_paragraph"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="24dp"
+                app:layout_constraintStart_toEndOf="@+id/verticalDivider"
+                app:layout_constraintTop_toBottomOf="@+id/backgroundCourse" />
+
+            <TextView
+                android:id="@+id/student"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/archivo_regular"
+                android:text="@string/student_upper"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="@+id/circleStudent"
+                app:layout_constraintStart_toStartOf="@+id/circleStudent"
+                app:layout_constraintTop_toBottomOf="@+id/circleStudent" />
+
+            <TextView
+                android:id="@+id/studentNumCourse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/archivo_bold"
+                tools:text="0"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/circleStudent"
+                app:layout_constraintStart_toStartOf="@+id/circleStudent"
+                app:layout_constraintTop_toBottomOf="@+id/student" />
+
+
+            <!-- ==================== KHU VỰC THÔNG TIN (FAVORITE) ==================== -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/circleFavorite"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="65dp"
+                android:layout_marginTop="24dp"
+                android:backgroundTint="@color/purple_100"
+                android:gravity="center"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                app:cornerRadius="100dp"
+                app:icon="@drawable/ic_favorite_border_btn"
+                app:iconTint="@color/purple_paragraph"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="24dp"
+                app:layout_constraintStart_toEndOf="@+id/circleStudent"
+                app:layout_constraintTop_toBottomOf="@+id/backgroundCourse" />
+
+            <TextView
+                android:id="@+id/favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/archivo_regular"
+                android:text="@string/favorite_upper"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="@+id/circleFavorite"
+                app:layout_constraintStart_toStartOf="@+id/circleFavorite"
+                app:layout_constraintTop_toBottomOf="@+id/circleFavorite" />
+
+            <TextView
+                android:id="@+id/favoriteNumCourse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/archivo_bold"
+                android:gravity="center"
+                tools:text="0"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/circleFavorite"
+                app:layout_constraintStart_toStartOf="@+id/circleFavorite"
+                app:layout_constraintTop_toBottomOf="@+id/favorite" />
+
+
+            <!-- ==================== ĐƯỜNG KẺ NGANG BÊN DƯỚI CÙNG ==================== -->
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/horizontalDivider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                app:dividerColor="@color/gray_E0E0E5"
+                app:layout_constraintTop_toBottomOf="@+id/teacherNameCourse" />
+
+<!--            TEACHER ROLE-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/middleLayoutTeacher"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/horizontalDivider"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:visibility="gone">
+                <TextView
+                    android:id="@+id/courseTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:text="@string/course_name"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/archivo_bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/courseTitleInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintTop_toBottomOf="@id/courseTitle"
+                    android:textColorHint="@color/gray_E0E0E5"
+                    app:hintEnabled="false"
+                    app:boxStrokeColor="@color/gray_E0E0E5"
+                    app:boxStrokeWidth="1dp"
+                    app:boxStrokeWidthFocused="1dp"
+                    app:boxCornerRadiusBottomEnd="8dp"
+                    app:boxCornerRadiusBottomStart="8dp"
+                    app:boxCornerRadiusTopEnd="8dp"
+                    app:boxCornerRadiusTopStart="8dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/courseTitleInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/enter_course_name"
+                        android:fontFamily="@font/archivo_regular"
+                        android:inputType="text"
+                        android:textSize="16dp"
+                        android:padding="12dp"
+                        android:maxLength="200" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/topicTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:text="@string/course_type"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/archivo_bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/courseTitleInputLayout"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/topicInputLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="150dp"
+                    android:layout_marginStart="16dp"
+
+                    app:hintEnabled="false"
+                    app:boxStrokeColor="@color/gray_E0E0E5"
+                    app:boxStrokeWidth="1dp"
+                    app:boxStrokeWidthFocused="1dp"
+                    app:boxCornerRadiusBottomEnd="8dp"
+                    app:boxCornerRadiusBottomStart="8dp"
+                    app:boxCornerRadiusTopEnd="8dp"
+                    app:boxCornerRadiusTopStart="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/topicTitle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/topicInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:padding="12dp"
+                        android:hint="@string/select_course_type"
+                        android:fontFamily="@font/archivo_regular"
+                        android:textSize="16sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <TextView
+                    android:id="@+id/introductionTitleTeacher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:text="@string/course_description_label"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/archivo_bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/topicInputLayout"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/introductionInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="5dp"
+                    app:layout_constraintTop_toBottomOf="@id/introductionTitleTeacher"
+                    app:hintEnabled="false"
+                    android:textColorHint="@color/gray_E0E0E5"
+                    app:boxStrokeColor="@color/gray_E0E0E5"
+                    app:boxStrokeWidth="1dp"
+                    app:boxStrokeWidthFocused="1dp"
+                    app:boxCornerRadiusBottomEnd="8dp"
+                    app:boxCornerRadiusBottomStart="8dp"
+                    app:boxCornerRadiusTopEnd="8dp"
+                    app:boxCornerRadiusTopStart="8dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/introductionInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:gravity="top"
+                        android:hint="@string/enter_course_description"
+                        android:fontFamily="@font/archivo_regular"
+
+                        android:inputType="textMultiLine"
+                        android:imeOptions="actionDone"
+
+                        android:singleLine="false"
+                        android:padding="12dp"
+                        android:textSize="16dp"
+                        android:lineHeight="23dp"
+                        android:maxLength="2000"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.home.lexa.ui.components.PrimaryButton
+                    android:id="@+id/saveBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginEnd="50dp"
+                    app:layout_constraintTop_toBottomOf="@+id/introductionInputLayout"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--            STUDENT ROLE-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/middleLayoutStudent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/horizontalDivider"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+                <TextView
+                    android:id="@+id/introductionTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="28dp"
+                    android:textStyle="bold"
+                    android:text="@string/course_introduction"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/archivo_bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                    android:id="@+id/introduction"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14dp"
+                    android:lineHeight="23dp"
+                    tools:text="Khóa học tập trung vào các tình huống giao tiếp thực tế nhất trong môi trường văn phòng chuyên nghiệp. Bạn sẽ được rèn luyện phát âm chuẩn AI và xây dựng vốn từ vựng chuyên ngành vững chắc."
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/archivo_regular"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/introductionTitle"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--            DUNG KHI TAO MOI BO TU VUNG-->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/creatingRememberCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/gray_E0E0E5"
+                app:cardBackgroundColor="@color/gray_F4F4F6"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/middleLayoutTeacher">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:id="@+id/icon_notice"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/bg_white_circle"
+                        android:padding="6dp"
+                        android:src="@drawable/ic_priority"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/create_course_first_notice"
+                        android:textSize="13dp"
+                        android:fontFamily="@font/archivo_regular"
+                        android:layout_marginStart="25dp"
+                        android:lineHeight="18dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/icon_notice"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+<!--           BARRIER-->
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/middleBarrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="middleLayoutTeacher,middleLayoutStudent,creatingRememberCard" />
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/gray_E0E0E5"
+                app:strokeWidth="0dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/middleBarrier"
+                >
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dp">
+                    <com.home.lexa.ui.components.IconButton
+                        android:id="@+id/speakingBtn"
+                        android:layout_width="175dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+                    <com.home.lexa.ui.components.IconButton
+                        android:id="@+id/vocabularyBtn"
+                        android:layout_width="175dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/speakingBtn"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+<!--            Speaking-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/speakingLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/cardLayout"
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                >
+                <ImageView
+                    android:id="@+id/icon_play"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_play_circle"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+                <TextView
+                    android:id="@+id/routeTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text="@string/learning_path"
+                    android:fontFamily="@font/archivo_bold"
+                    android:textSize="16dp"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintStart_toEndOf="@+id/icon_play"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
+                <TextView
+                    android:id="@+id/speakingNum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    tools:text="15 Bài học"
+                    android:textColor="@color/purple_paragraph"
+                    android:fontFamily="@font/archivo_bold"
+                    android:textSize="16dp"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+                <LinearLayout
+                    android:id="@+id/speakingDayLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@+id/icon_play"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:layout_marginBottom="50dp"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <ProgressBar
+                    android:id="@+id/loadingSpeakingDayProgressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="70dp"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@+id/speakingDayLayout"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--            Vocabulary-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/vocabularyLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/cardLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+                <com.home.lexa.ui.components.SearchbarFilter
+                    android:id="@+id/search_bar_vocabulary"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+                <TextView
+                    android:id="@+id/titleFlashcard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="16dp"
+                    android:text="@string/flashcard_list"
+                    android:textStyle="bold"
+                    android:textSize="18dp"
+                    android:fontFamily="@font/archivo_bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/search_bar_vocabulary"
+                    />
+
+                <TextView
+                    android:id="@+id/flashcardNum"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/bg_gray_rounded"
+                    android:gravity="center"
+                    tools:text="0"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/titleFlashcard"
+                    app:layout_constraintStart_toEndOf="@id/titleFlashcard"
+                    app:layout_constraintTop_toTopOf="@id/titleFlashcard" />
+
+<!--                TEACHER ROLE-->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/bottomLayoutTeacher"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/search_bar_vocabulary"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+                    <TextView
+                        android:id="@+id/titleToggle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/edit"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/archivo_bold"
+                        android:textSize="14sp"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintBottom_toBottomOf="@id/editToggle"
+                        app:layout_constraintTop_toTopOf="@id/editToggle"
+                        app:layout_constraintEnd_toStartOf="@id/editToggle"/>
+
+                    <com.home.lexa.ui.components.ToggleSwitch
+                        android:id="@+id/editToggle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="16dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <androidx.gridlayout.widget.GridLayout
+                        android:id="@+id/vocabularyGrid_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        app:layout_constraintVertical_bias="0.0"
+                        app:layout_constraintTop_toBottomOf="@+id/titleToggle"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:padding="8dp"
+                        app:columnCount="2"
+                        app:alignmentMode="alignMargins"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--                    STUDENT ROLE-->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/bottomLayoutStudent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/titleFlashcard">
+                    <androidx.core.widget.NestedScrollView
+                        android:id="@+id/vocabularyListLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="550dp"
+                        android:fillViewport="true"
+                        android:layout_marginTop="20dp"
+                        app:layout_constraintVertical_bias="0.0"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent">
+
+                        <androidx.gridlayout.widget.GridLayout
+                            android:id="@+id/vocabularyGrid"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:padding="8dp"
+                            app:columnCount="2"
+                            app:alignmentMode="alignMargins"/>
+
+                    </androidx.core.widget.NestedScrollView>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ProgressBar
+                android:id="@+id/paginationProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="70dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/speakingLayout"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/rememberCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/gray_E0E0E5"
+        app:cardBackgroundColor="@color/gray_F4F4F6"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/vocabularyIconBtn">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/btnCloseTips"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_close"
+                android:padding="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:tint="@color/black" />
+
+            <ImageView
+                android:id="@+id/icon_remember"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/bg_white_circle"
+                android:padding="6dp"
+                android:src="@drawable/ic_priority"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_remember"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/archivo_bold"
+                android:text="@string/quick_learning_tips"
+                android:textColor="@color/black"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:layout_marginStart="25dp"
+                app:layout_constraintStart_toEndOf="@+id/icon_remember"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/flashcard_note_desc"
+                android:textSize="13dp"
+                android:fontFamily="@font/archivo_regular"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="25dp"
+                android:lineHeight="18dp"
+                android:layout_marginEnd="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/icon_remember"
+                app:layout_constraintTop_toBottomOf="@+id/text_remember"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.home.lexa.ui.components.CircleButton
+        android:id="@+id/vocabularyIconBtn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <com.home.lexa.ui.components.PrimaryButton
+        android:id="@+id/learningBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.home.lexa.ui.components.CircleButton
+        android:id="@+id/addBtn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

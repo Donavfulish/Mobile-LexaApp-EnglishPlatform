@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/background"
+        android:layout_width="260dp"
+        android:layout_height="147dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:shapeAppearanceOverlay="@style/RoundedCorner" />
+
+    <com.home.lexa.ui.components.PrimaryButton
+        android:id="@+id/topic"
+        android:layout_width="68dp"
+        android:layout_height="28dp"
+        app:layout_constraintBottom_toBottomOf="@+id/background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.053"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/background"
+        app:layout_constraintVertical_bias="0.09" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/favoriteBtn"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        app:backgroundTint="@color/white_opacity"
+        android:gravity="center"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        app:cornerRadius="100dp"
+        app:icon="@drawable/ic_selector_favorite_btn"
+        app:iconTint="@null"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconSize="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.964"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.095" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"  android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/archivo_bold"
+        android:text="Tiếng Anh Giao Tiếp Cấp Tốc"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/background" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/teacherIcon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:shapeAppearanceOverlay="@style/CircleCorner" />
+
+    <TextView
+        android:id="@+id/teacherName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="@font/archivo_regular"
+        android:text="Ms.Lan Phương"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/teacherIcon"
+        app:layout_constraintEnd_toStartOf="@+id/groupIcon"
+        app:layout_constraintStart_toEndOf="@+id/teacherIcon"
+        app:layout_constraintTop_toTopOf="@+id/teacherIcon" />
+
+    <ImageView
+        android:id="@+id/groupIcon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginEnd="4dp"
+        android:src="@drawable/ic_group"
+        app:layout_constraintBottom_toBottomOf="@+id/teacherIcon"
+        app:layout_constraintEnd_toStartOf="@+id/groupNum"
+        app:layout_constraintTop_toTopOf="@+id/teacherIcon" />
+
+    <TextView
+        android:id="@+id/groupNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:fontFamily="@font/archivo_regular"
+        android:text="1240"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/teacherIcon"
+        app:layout_constraintEnd_toStartOf="@+id/favoriteIcon"
+        app:layout_constraintTop_toTopOf="@+id/teacherIcon" />
+
+    <ImageView
+        android:id="@+id/favoriteIcon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginEnd="4dp"
+        android:src="@drawable/ic_favorite_border_small"
+        app:layout_constraintBottom_toBottomOf="@+id/teacherIcon"
+        app:layout_constraintEnd_toStartOf="@+id/favoriteNum"
+        app:layout_constraintTop_toTopOf="@+id/teacherIcon" />
+
+    <TextView
+        android:id="@+id/favoriteNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/archivo_regular"
+        android:text="450"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/teacherIcon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/teacherIcon" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

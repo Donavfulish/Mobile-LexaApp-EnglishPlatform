@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:cardCornerRadius="32dp"
+        app:cardElevation="0dp"
+        app:strokeColor="#6366F1"
+        app:strokeWidth="7dp"
+        app:layout_constraintDimensionRatio="H,2:3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F9FAFB"
+            android:padding="20dp">
+
+            <!-- Sound button: nằm ngoài chain, góc trên phải độc lập -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/btnSound"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="6dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_sound_filled_1"
+                app:tint="#6366F1" />
+
+            <!--
+                CHIẾN LƯỢC:
+                - tvLevel + ivIllustration: pin cứng vào TOP, ảnh dùng
+                  layout_constraintHeight_percent=0.30 → luôn chiếm 30% chiều cao card,
+                  KHÔNG bị chain chữ kéo co.
+                - Phần chữ (tvWord → tvTapHint): chain packed riêng từ
+                  bottom của ảnh đến bottom của card.
+                - Font size giảm so với bản gốc để vừa không gian còn lại.
+            -->
+
+            <!-- Level pill — pin top -->
+            <TextView
+                android:id="@+id/tvLevel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_pill_label"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="4dp"
+                android:layout_marginTop="12dp"
+                android:text="C1"
+                android:textColor="#374151"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!--
+                Ảnh: layout_height=0dp + constraintHeight_percent=0.30
+                → luôn = 30% chiều cao card bất kể nội dung chữ nhiều hay ít
+            -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivIllustration"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="20dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ephemeral_image"
+                app:layout_constraintHeight_percent="0.30"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvLevel"
+                app:cornerFamily="rounded"
+                app:cornerSize="16dp" />
+
+            <!--
+                CHAIN PACKED cho phần chữ:
+                top anchor = bottom of ivIllustration
+                bottom anchor = bottom of parent
+                → tự phân bổ đều trong phần còn lại
+            -->
+
+            <!-- Word -->
+            <TextView
+                android:id="@+id/tvWord"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginHorizontal="4dp"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:text="Ephemeral"
+                android:textColor="#111827"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMaxTextSize="26sp"
+                app:autoSizeMinTextSize="14sp"
+                app:autoSizeStepGranularity="1sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ivIllustration"
+                app:layout_constraintBottom_toTopOf="@id/tvTranscription"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <!-- Transcription -->
+            <TextView
+                android:id="@+id/tvTranscription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="/əˈfem(ə)rəl/"
+                android:textColor="#6B7280"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvWord"
+                app:layout_constraintBottom_toTopOf="@id/tvPartOfSpeech" />
+
+            <!-- Part of speech pill -->
+            <TextView
+                android:id="@+id/tvPartOfSpeech"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_pill_label"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="3dp"
+                android:text="adjective"
+                android:textColor="#6366F1"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvTranscription"
+                app:layout_constraintBottom_toTopOf="@id/tvDefinition" />
+
+            <!-- Definition -->
+            <TextView
+                android:id="@+id/tvDefinition"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginHorizontal="10dp"
+                android:gravity="center"
+                android:text="lasting for a very short time."
+                android:textColor="#111827"
+                android:textStyle="bold"
+                android:maxLines="2"
+                android:textSize="16sp"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMaxTextSize="16sp"
+                app:autoSizeMinTextSize="11sp"
+                app:autoSizeStepGranularity="1sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvPartOfSpeech"
+                app:layout_constraintBottom_toTopOf="@id/exampleBox" />
+
+            <!-- Example box -->
+            <LinearLayout
+                android:id="@+id/exampleBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginHorizontal="10dp"
+                android:background="@drawable/bg_lightgray"
+                android:orientation="vertical"
+                android:padding="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvDefinition"
+                app:layout_constraintBottom_toTopOf="@id/tvTapHint">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:text="@string/example"
+                    android:textColor="#6B7280"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvExample"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:lineSpacingExtra="2dp"
+                    android:textStyle="italic"
+                    android:text="&quot;The autumnal colors are beautiful but ephemeral.&quot;"
+                    android:textColor="#4B5563"
+                    android:textSize="14sp"
+                    android:maxLines="2"
+                    app:autoSizeMinTextSize="10sp"
+                    app:autoSizeMaxTextSize="14sp"
+                    app:autoSizeStepGranularity="1sp"
+                    app:autoSizeTextType="uniform" />
+            </LinearLayout>
+
+            <!-- Tap hint — chain cuối -->
+            <TextView
+                android:id="@+id/tvTapHint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:letterSpacing="0.1"
+                android:text="@string/tap_to_go_back"
+                android:textColor="#9CA3AF"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/exampleBox" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

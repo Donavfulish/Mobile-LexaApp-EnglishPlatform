@@ -1,0 +1,13 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <include
+        android:id="@+id/layout_front"
+        layout="@layout/flashcard_front" />
+
+    <include
+        android:id="@+id/layout_back"
+        layout="@layout/flashcard_back"
+        android:visibility="gone" />
+
+</merge>

@@ -1,0 +1,109 @@
+package com.home.lexa.ui.components
+
+import android.content.Context
+import android.graphics.Color
+import android.text.InputType
+import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.inputmethod.InputMethodManager
+import android.widget.FrameLayout
+import androidx.core.content.ContextCompat
+import com.home.lexa.R
+import com.home.lexa.databinding.InputOtpBarBinding
+import com.patrykandpatrick.vico.core.DefaultColors.Dark.lineColor
+
+class Auth_OTPBar @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : FrameLayout(context, attrs, defStyleAttr) {
+
+    private val binding: InputOtpBarBinding =
+        InputOtpBarBinding.inflate(LayoutInflater.from(context), this)
+
+    // Callback để báo cho Fragment/Activity khi nhập 6 số
+    var onOtpCompletionListener: ((String) -> Unit)? = null
+
+    private var lastCompletedOtp: String = ""
+
+    init {
+        clearError()
+        setupOtpListener()
+
+        setOnClickListener {
+            focusAndShowKeyboard()
+        }
+    }
+
+    private fun setupOtpListener() {
+        binding.pinview.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: android.text.Editable?) {
+                val otp = s?.toString() ?: ""
+
+                if (otp.length == 6 && otp != lastCompletedOtp) {
+                    lastCompletedOtp = otp
+                    onOtpCompletionListener?.invoke(otp)
+
+                    // Optional: Tự động ẩn bàn phím khi xong
+                    // hideKeyboard()
+                } else if (otp.length == 5) {
+                    clearError()
+                    lastCompletedOtp = ""
+                }
+            }
+        })
+    }
+
+    fun focusAndShowKeyboard() {
+        binding.pinview.requestFocus()
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(binding.pinview, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    fun setInputEnabled(enabled: Boolean) {
+        binding.pinview.apply {
+            isFocusable = true
+            isFocusableInTouchMode = true
+            isFocusable = enabled
+            isFocusableInTouchMode = enabled
+            isCursorVisible = enabled
+            alpha = if (enabled) 1.0f else 0.5f
+
+            if (enabled) {
+                focusAndShowKeyboard()
+            } else {
+                inputType = InputType.TYPE_NULL
+                val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(windowToken, 0)
+            }
+        }
+    }
+
+    fun getOtp(): String = binding.pinview.text?.toString() ?: ""
+
+    fun clearOtp() {
+        binding.pinview.setText("")
+    }
+
+    fun showError() {
+        val errorColor = ContextCompat.getColor(context, R.color.c_ff0000)
+        binding.pinview.apply {
+            alpha = 1.0f
+            setLineColor(errorColor)
+            // setItemBackgroundColor(Color.WHITE)
+            // Lắc nhẹ máy để báo lỗi (User sẽ hiểu là sai mà không cần nhìn màu xám)
+            animate().translationX(10f).setDuration(50).setInterpolator(android.view.animation.CycleInterpolator(3f)).start()
+        }
+    }
+
+    fun clearError() {
+        val defaultColor = ContextCompat.getColor(context, R.color.c_bdbdbd)
+        binding.pinview.apply {
+            setLineColor(defaultColor)
+            alpha = 1.0f
+        }
+    }
+}

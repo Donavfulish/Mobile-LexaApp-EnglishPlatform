@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ProgressBar
+        android:id="@+id/customProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:indeterminate="false"
+        android:max="100"
+        android:progressDrawable="@drawable/custom_progress_ring"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvPercentage"
+        android:layout_width="0dp"
+        android:layout_height="0dp" android:text="100"
+        android:textAlignment="center"
+        android:gravity="center" android:textColor="#6A65E9"
+        android:textStyle="bold"
+        android:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="16sp"
+        app:autoSizeMaxTextSize="112sp"
+        app:autoSizeStepGranularity="2sp"
+        app:layout_constraintWidth_percent="0.9"
+        app:layout_constraintHeight_percent="0.2" app:layout_constraintBottom_toTopOf="@+id/tvPercentSign"
+        app:layout_constraintEnd_toEndOf="@+id/customProgressBar"
+        app:layout_constraintStart_toStartOf="@+id/customProgressBar"
+        app:layout_constraintTop_toTopOf="@+id/customProgressBar"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/tvPercentSign"
+        android:layout_width="0dp"
+        android:layout_height="0dp" android:text="%"
+        android:textAlignment="center"
+        android:gravity="center" android:textColor="#6A65E9"
+        android:textStyle="bold"
+        android:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeMaxTextSize="48sp" app:autoSizeStepGranularity="2sp"
+        app:layout_constraintWidth_percent="0.3"
+        app:layout_constraintHeight_percent="0.2" app:layout_constraintBottom_toBottomOf="@+id/customProgressBar"
+        app:layout_constraintEnd_toEndOf="@+id/customProgressBar"
+        app:layout_constraintStart_toStartOf="@+id/customProgressBar"
+        app:layout_constraintTop_toBottomOf="@+id/tvPercentage" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <!-- 1. SHIMMER LAYER -->
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:shimmer_auto_start="true">
+        <include layout="@layout/layout_vocabulary_flashcard_skeleton" />
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <!-- 2. CONTENT LAYER (Bọc trong NestedScrollView để cuộn được) -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/contentScroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:visibility="visible"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="40dp">
+
+            <com.home.lexa.ui.components.DropDownInput
+                android:id="@+id/diTopic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/flashcardCard"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="8dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/gray_E0E0E5"
+                app:cardBackgroundColor="@color/purple_100"
+                app:layout_constraintTop_toBottomOf="@id/diTopic"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="24dp">
+                    <TextView
+                        android:id="@+id/progressText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="13dp"
+                        android:text="Tiến độ: 0%"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:background="@drawable/bg_purple_rounded"
+                        android:fontFamily="@font/archivo_bold"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"/>
+                    <ImageView
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:padding="8dp"
+                        android:background="@drawable/bg_white_circle"
+                        app:tint="@color/purple_paragraph"
+                        android:src="@drawable/ic_book"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+                    <TextView
+                        android:id="@+id/deckTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TOEFL Essentials"
+                        android:fontFamily="@font/archivo_bold"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintTop_toBottomOf="@+id/progressText"
+                        app:layout_constraintStart_toStartOf="parent"/>
+                    
+                    <com.home.lexa.ui.components.ProgressBar
+                        android:id="@+id/progress"
+                        android:layout_marginTop="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@+id/deckTitle"/>
+                    
+                    <com.home.lexa.ui.components.IconButton
+                        android:id="@+id/startBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        app:layout_constraintTop_toBottomOf="@+id/progress"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.home.lexa.ui.components.SearchbarFilter
+                android:id="@+id/search_bar_vocabulary"
+                android:layout_margin="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/flashcardCard"/>
+
+            <TextView
+                android:id="@+id/titleFlashcard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="16dp"
+                android:text="@string/word_list"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:fontFamily="@font/archivo_bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/search_bar_vocabulary"/>
+
+            <TextView
+                android:id="@+id/flashcardNum"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/bg_gray_rounded"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/titleFlashcard"
+                app:layout_constraintStart_toEndOf="@id/titleFlashcard"
+                app:layout_constraintTop_toTopOf="@id/titleFlashcard" />
+
+            <TextView
+                android:id="@+id/titleToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/edit"
+                android:textStyle="bold"
+                android:fontFamily="@font/archivo_bold"
+                android:textSize="14sp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintBottom_toBottomOf="@id/editToggle"
+                app:layout_constraintTop_toTopOf="@id/editToggle"
+                app:layout_constraintEnd_toStartOf="@id/editToggle"/>
+
+            <com.home.lexa.ui.components.ToggleSwitch
+                android:id="@+id/editToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/search_bar_vocabulary"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.gridlayout.widget.GridLayout
+                android:id="@+id/vocabularyGrid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:layout_constraintVertical_bias="0.0"
+                app:layout_constraintTop_toBottomOf="@+id/titleFlashcard"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:padding="8dp"
+                app:columnCount="2"
+                app:alignmentMode="alignMargins" />
+
+            <ProgressBar
+                android:id="@+id/paginationProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/vocabularyGrid"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:visibility="visible"/>
+
+            <ImageView
+                android:id="@+id/icon_tick"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:padding="8dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/bg_gray_rounded"
+                app:tint="@color/purple_paragraph"
+                android:src="@drawable/tick_circle"
+                app:layout_constraintTop_toBottomOf="@id/paginationProgressBar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:id="@+id/text_tick"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/flashcard_detail_desc"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                android:lineHeight="23sp"
+                android:textAlignment="center"
+                app:layout_constraintTop_toBottomOf="@id/icon_tick"/>
+
+            <com.home.lexa.ui.components.IconButton
+                android:id="@+id/startBtn2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                app:layout_constraintTop_toBottomOf="@id/text_tick"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.home.lexa.ui.components.CircleButton
+        android:id="@+id/vocabularyIconBtn"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

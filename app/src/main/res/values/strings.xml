@@ -1,3 +1,406 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">My Application</string>
+
+    <string name="continue_process">Continue</string>
+    <string name="toast_please_enter_all_information">Please enter all the information</string>
+    <string name="save_changes_successfully">Save changes successfully</string>
+
+    <string name="login_title">Welcome back</string>
+    <string name="login_desc">Log in to continue learning with us</string>
+    <string name="remember_me">Remember me</string>
+    <string name="forgot_password">Forgot password ?</string>
+    <string name="or_continue_with">Or continue with</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="signup_title">Create a new account</string>
+    <string name="signup_desc">Join the Lexa learning community today</string>
+    <string name="student">Student</string>
+    <string name="teacher">Teacher</string>
+    <string name="register_linked_account">Register linked account</string>
+    <string name="enter_information">Or enter information</string>
+    <string name="name">Name</string>
+    <string name="example_name">Nguyen Van A</string>
+    <string name="birth_date">Date of birth</string>
+    <string name="address">Address</string>
+    <string name="enter_your_address">Enter your address</string>
+    <string name="login">Log in</string>
+    <string name="login_with_google">" Login with Google"</string>
+    <string name="register">Register</string>
+    <string name="dont_have_account">Don\'t have an account ?</string>
+    <string name="title_footer">Developed by HCMUS \@ 2024</string>
+    <string name="register_now">Register now</string>
+    <string name="already_have_account">Already have an account</string>
+    <string name="toast_login_successfully">Login successfully</string>
+    <string name="toast_login_google_successfully">Login with Google successfully</string>
+    <string name="toast_login_google_failed">Login with Google failed</string>
+    <string name="toast_wrong_email_or_password">Incorrect email or password</string>
+    <string name="toast_error_occured">An error occured</string>
+    <string name="toast_change_email_successfully">Update email successfully</string>
+    <string name="toast_change_email_failed">Update email failed</string>
+    <string name="toast_update_password_successfully">Update password successfully</string>
+    <string name="toast_update_password_failed">Update password failed</string>
+    <string name="toast_old_password_incorrect">Old password is incorrect</string>
+
+    <string name="forget_password">Forget password</string>
+    <string name="enter_email_to_reset">Enter your account email to receive an OTP code</string>
+    <string name="reset_password_title">Reset password</string>
+    <string name="enter_your_new_password">Enter new password for your account</string>
+    <string name="toast_account_not_registered">The account is not registered</string>
+    <string name="new_password">New password</string>
+    <string name="verify_new_password">Verify new password</string>
+    <string name="toast_reset_password_successfully">Reset password successfully</string>
+    <string name="toast_reset_password_fail">Reset password fail</string>
+
+    <string name="signup_teacher_title">Create <teache></teache>r account</string>
+    <string name="signup_teacher_desc">Join the teaching staff at Lexa</string>
+    <string name="signup">Sign up</string>
+    <string name="signup_with_google">" Signup with Google"</string>
+    <string name="certificate_language">Foreign language certificate</string>
+    <string name="certificate_degree">Teaching degree or related (recommended)</string>
+    <string name="authenticity_commitment">I guarantee that the degree is original and unedited. I take full responsibility for the authenticity of the documents.</string>
+    <string name="toast_wrong_email_format">Wrong email format</string>
+    <string name="toast_confirm_password_not_match">Verify password does not match</string>
+    <string name="toast_wrong_birthday_format">Wrong birthday format (dd/mm/yyyy)</string>
+    <string name="toast_please_provide_language_cert">Please provide your language certificate</string>
+    <string name="toast_email_already_used">Email has already been used</string>
+    <string name="toast_account_already_used">Account has already been used</string>
+    <string name="toast_signup_successfully">Signup successfully</string>
+    <string name="toast_signup_google_successfully">Signup with Google successfully</string>
+    <string name="toast_signup_google_failed">Signup with Google failed</string>
+    <string name="please_confirm_qualifications">Please confirm your qualifications</string>
+    <string name="open_media_library">Open media library</string>
+
+    <string name="otp_title">Enter OTP code</string>
+    <string name="otp_desc">Open your %1$s mailbox to get the code</string>
+    <string name="otp_confirm">Haven\'t received the code from your mailbox?</string>
+    <string name="otp_resend">Resend OTP</string>
+    <string name="otp_resend_enabled_after_seconds">Resend after %1$s seconds</string>
+    <string name="toast_otp_resent">The OTP code has been resent</string>
+    <string name="toast_otp_wrong_or_expired">OTP code is invalid or expired</string>
+    <string name="toast_verify_otp_successfully">Verify OTP successfully</string>
+    <string name="toast_verify_otp_failed">Verify OTP failed</string>
+
+    <string name="hello_user">Hello %1$s</string>
+    <string name="day">Day %1$s</string>
+    <string name="study_time">Study time</string>
+    <string name="this_week">This week</string>
+    <string name="this_month">This month</string>
+    <string name="featured_course">Featured courses</string>
+    <string name="see_all">See all</string>
+    <string name="studying">Currently studying</string>
+    <string name="your_favorite">Your favorites</string>
+    <string name="vocabulary">Vocabulary</string>
+    <string name="lesson">Lesson</string>
+    <string name="library">Library</string>
+    <string name="home">Home</string>
+    <string name="course">Course</string>
+    <string name="profile">Profile</string>
+
+    <string name="achievement">Achievements</string>
+    <string name="total_lesson">Total lessons taken</string>
+    <string name="favorite_vocabulary_set">Favorite vocabulary sets</string>
+
+    <string name="search_placeholder_favorite">Search for vocabulary sets, topics,&#8230;</string>
+    <string name="favorite">Favorite</string>
+    <string name="personal">Personal</string>
+
+    <string name="start_practice">Start practicing</string>
+    <string name="search_course">Search for courses,&#8230;</string>
+    <string name="word_list">Word list</string>
+    <string name="edit">Edit</string>
+    <string name="flashcard_detail_desc">You have viewed the entire list. Let\'s start practicing to memorize these words!</string>
+    <string name="start_practice_action">Start practicing</string>
+
+    <string name="edit_flashcard">Edit flashcard</string>
+    <string name="illustration_image">Illustration image</string>
+    <string name="pronunciation">Pronunciation</string>
+    <string name="word_type">Part of speech</string>
+    <string name="definition">Definition</string>
+    <string name="example_sentence">Example</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="stop">Stop</string>
+    <string name="practice_upper">PRACTICE</string>
+    <string name="not_memorized_upper">NOT MEMORIZED</string>
+    <string name="memorized_upper">MEMORIZED</string>
+    <string name="word">Word</string>
+    <string name="tap_to_go_back">Tap to go back</string>
+    <string name="tap_to_show_meaning">Tap to show meaning</string>
+
+    <string name="completed_upper">COMPLETED</string>
+    <string name="learned_words">%1$s words learned</string>
+    <string name="congratulation_title">Congratulations, your progress has increased by %1$s</string>
+    <string name="congratulation_desc">Keep up the good work</string>
+    <string name="practice_unmemorized_words">Practice unmemorized words</string>
+    <string name="practice_again">Practice again</string>
+    <string name="exit">Exit</string>
+
+    <string name="results_count">%1$s results</string>
+
+    <string name="teacher_upper">TEACHER</string>
+    <string name="student_upper">STUDENT</string>
+    <string name="favorite_upper">FAVORITE</string>
+    <string name="course_introduction">Course introduction</string>
+    <string name="learning_path">Learning path</string>
+    <string name="continue_learning_now">Continue learning now</string>
+
+    <string name="search_flashcard">Search for vocabulary,&#8230;</string>
+    <string name="flashcard_list">Flashcard list</string>
+    <string name="quick_learning_tips">Quick learning tips</string>
+    <string name="flashcard_note_desc">Tap the card to see the meaning and example. Don\'t forget to turn on the sound to hear the correct pronunciation.</string>
+
+    <string name="lesson_progress_upper">LESSON PROGRESS</string>
+    <string name="completed_percentage">Completed %1$s</string>
+    <string name="paragraph">Paragraph %1$s</string>
+    <string name="listen_sample">Listen to sample</string>
+    <string name="listen_again">Listen again</string>
+    <string name="tap_mic_to_speak">Tap the microphone to speak</string>
+
+    <string name="edit_course">Edit course</string>
+    <string name="course_name">Course name</string>
+    <string name="course_type">Course type</string>
+    <string name="lesson_path">Lesson path %1$s</string>
+
+    <string name="study_day_name">Study day name</string>
+    <string name="score">Score</string>
+    <string name="good">Good</string>
+    <string name="bad">Bad</string>
+    <string name="medium">Medium</string>
+    <string name="study_again">Study again</string>
+    <string name="return_to_course">Return to course</string>
+    <string name="listen_standard_pronunciation">Listen to standard pronunciation</string>
+    <string name="listen_my_audio_again">Listen to my audio again</string>
+
+    <string name="personal_profile">Profile</string>
+    <string name="study_statistics">STUDY STATISTICS</string>
+    <string name="studying_courses">Current course</string>
+    <string name="vocabulary_decks">Vocabulary deck</string>
+    <string name="weekly_study_time">Weekly study time</string>
+    <string name="total_amount">Total %1$s</string>
+    <string name="total_hours_minutes">Total: %1$d hours %2$d minutes</string>
+    <string name="total_minutes">Total: %1$d minutes</string>
+    <string name="streak_days">%1$d days 🔥</string>
+    <string name="account_and_security_upper">ACCOUNT AND SECURITY</string>
+    <string name="personal_information">Personal information</string>
+    <string name="change_password">Change password</string>
+    <string name="old_password">Old password</string>
+    <string name="enter_old_password">Enter old password</string>
+    <string name="enter_new_password">Enter new password</string>
+    <string name="enter_confirm_new_password">Verify new password</string>
+    <string name="change_email">Change email</string>
+    <string name="app_settings_upper">APP SETTINGS</string>
+    <string name="language">Language</string>
+    <string name="notification">Notifications</string>
+    <string name="logout">Log out</string>
+    <string name="full_name_upper">FULL NAME</string>
+    <string name="birth_date_upper">DATE OF BIRTH</string>
+    <string name="address_upper">ADDRESS</string>
+    <string name="save_changes">Save changes</string>
+    <string name="popup_warning_logout">"Unsaved data may be lost. Do you still want to log out?"</string>
+    <string name="tap_to_permit_statistics">Tap to grant permission to view statistics</string>
+    <string name="toast_unable_open_settings">Unable to open settings</string>
+    <string name="popup_remove_avatar">Remove avatar</string>
+    <string name="warning_remove_avatar">This action can not be undo. Do you still want to remove avatar?</string>
+    <string name="empty_avatar">No avatar yet</string>
+
+    <string name="streak_notification">Streak notification</string>
+    <string name="streak_notification_desc">A reminder to maintain your daily study streak</string>
+    <string name="study_time_notification">Study time notification</string>
+    <string name="study_time_notification_desc">A reminder notification before your scheduled study time.</string>
+    <string name="set_reminder_time">Set reminder time</string>
+    <string name="this_noti_happens_after_10_secs">This notification will execute after 10 seconds</string>
+    <string name="set_schedule_at_hours_minutes">Set schedule at %1$d:%2$d</string>
+    <string name="hour">Hour</string>
+    <string name="minute">Minute</string>
+    <string name="noti_study_time">Study time!</string>
+    <string name="noti_study_time_desc">Join Lexa and continue your learning streak now!</string>
+    <string name="home_screen">Home Screen</string>
+
+    <string name="creat_new_deck">Create new deck</string>
+    <string name="create">Create</string>
+    <string name="favorite_deck">FAVORITE DECK</string>
+    <string name="do_you_want_create_your">Do you want create your?</string>
+    <string name="content_create_your">" Switch to the Personal tab to begin building your own deck."</string>
+    <string name="go_to_personal_tab">Go to personal tab</string>
+    <string name="example">Example</string>
+    <string name="enter_defination">Enter defination&#8230;</string>
+    <string name="enter_example">Enter example&#8230;</string>
+
+
+    <string name="pos_noun">Noun</string>
+    <string name="pos_verb">Verb</string>
+    <string name="pos_adjective">Adjective</string>
+    <string name="pos_adverb">Adverb</string>
+    <string name="pos_none">None</string>
+
+    <string name="level">Level</string>
+
+    <string name="level_none">None</string>
+    <string name="level_a1">A1</string>
+    <string name="level_a2">A2</string>
+    <string name="level_b1">B1</string>
+    <string name="level_b2">B2</string>
+    <string name="level_c1">C1</string>
+    <string name="level_c2">C2</string>
+    <string name="content_toast_enter_flashcard">Please enter vocabulary and definitions so the AI has context.</string>
+    <string name="enter_vocabulary">Please enter vocabulary</string>
+    <string name="enter_vocabulary_defination">Please enter vocabulary and definitions.</string>
+    <string name="saving">Saving&#8230;</string>
+    <string name="save_successfully">Saved successfully!</string>
+    <string name="error_retry">An error occurred, please try again.</string>
+    <string name="illustrative_image">Illustrative image</string>
+    <string name="preview">Preview</string>
+    <string name="phonetic">Phonetic</string>
+    <string name="suggestion">Suggestion</string>
+    <string name="defination">Defination</string>
+    <string name="suggestion_gemini">Suggestion with GEMINI ( ExYou must fill in the correct vocabulary, definition, and part of speech)</string>
+    <string name="ai_thinking">AI is thingking&#8230;</string>
+    <string name="create_flashcard">Create flashcard</string>
+    <string name="enter_word_to_preview">Enter vocabulary words to see a preview!</string>
+    <string name="stop_practice">Stop practice</string>
+    <string name="message_stop_practice">Are you sure you want to stop practicing? Your current progress will be saved</string>
+    <string name="quit">Quit</string>
+    <string name="progress">Progress</string>
+    <string name="practice">Practice</string>
+    <string name="words_memorized">words memorized</string>
+    <string name="title_practice_again">Start practicing from scratch?</string>
+    <string name="message_practice_again">Your progress on this vocabulary set will be reset to 0%. Are you sure?</string>
+    <string name="accept">Accept</string>
+    <string name="save_and_quit">Save and quit</string>
+    <string name="message_save_quit">Do you want to save your practice progress?</string>
+    <string name="quit_not_save">Quit and not save</string>
+    <string name="stop_upper">STOP</string>
+    <string name="topic">Topic</string>
+    <string name="delete_vocabulary">Delete this vocabulary</string>
+    <string name="delete">Delete</string>
+    <string name="delete_flashcard_subtitle">Are you sure you want to delete \'%1$s\'?</string>
+    <string name="enter_name_deck">Please enter the name of the deck.</string>
+    <string name="enter_name_deck_input">Enter the name of the deck&#8230;</string>
+
+    <!-- Course Detail Strings -->
+    <string name="create_new_course">Create new course</string>
+    <string name="course_detail">Course detail</string>
+    <string name="speaking">Speaking</string>
+    <string name="vocabulary_tab">Vocabulary</string>
+    <string name="saving_information">Saving information&#8230;</string>
+    <string name="please_fill_all_information">Please fill in all information!</string>
+    <string name="course_data_not_found">Course data not found</string>
+    <string name="lesson_count">%1$d Lessons</string>
+    <string name="create_course_success">Course created successfully!</string>
+    <string name="save_information">Save information</string>
+    <string name="status_public">Public</string>
+    <string name="title_label">Title</string>
+    <string name="enter_study_day_title">Enter study day title&#8230;</string>
+    <string name="create_new_study_day">Create new study day</string>
+    <string name="create_now">Create now</string>
+    <string name="delete_vocabulary_confirm">Are you sure you want to delete the word \'%1$s\'? Deleted data cannot be recovered.</string>
+    <string name="update_success">Update successful!</string>
+    <string name="add_data_success">Data added successfully!</string>
+    <string name="no_lessons_available">No lessons available yet!</string>
+    <string name="update_error">Update error</string>
+    <string name="error_message">Error: %1$s</string>
+    <string name="paragraph_count">%1$d paragraphs</string>
+    <string name="speaking_day_list_title">Speaking Day List</string>
+    <string name="enter_course_name">Enter course name</string>
+    <string name="select_course_type">Select course type</string>
+    <string name="course_description_label">Course description</string>
+    <string name="enter_course_description">Enter course description</string>
+    <string name="create_course_first_notice">Save information to CREATE a new course before creating speaking or vocabulary sets</string>
+
+
+    <!-- Student Course List -->
+    <string name="my_courses">My courses</string>
+    <string name="all_courses">All courses</string>
+    <string name="favorite_courses">Favorite courses</string>
+    <string name="learning_courses">Learning courses</string>
+    <string name="finished_courses">Finished courses</string>
+    <string name="all">All</string>
+    <string name="learning">Learning</string>
+    <string name="finished">Finished</string>
+    <string name="all_count">%1$d total</string>
+
+    <!-- Speaking Practice -->
+    <string name="speaking_day_order">Day %1$d</string>
+    <string name="delete_speaking_day_title">Delete study day</string>
+    <string name="delete_speaking_day_msg">Are you sure you want to delete this entire study day? All paragraphs inside will also be lost.</string>
+    <string name="delete_all">Delete all</string>
+    <string name="save_info">Save information</string>
+    <string name="save_new_order">Save new order</string>
+    <string name="update_title_success">Title updated successfully!</string>
+    <string name="update_paragraph_success">Paragraph updated successfully!</string>
+    <string name="add_paragraph_success">New paragraph added successfully!</string>
+    <string name="delete_paragraph_success">Paragraph deleted successfully!</string>
+    <string name="delete_day_success">Study day deleted successfully!</string>
+    <string name="save_order_success">Order saved successfully!</string>
+    <string name="paragraph_content_label">Paragraph content</string>
+    <string name="edit_paragraph">Edit paragraph</string>
+    <string name="update">Update</string>
+    <string name="confirm_delete">Confirm delete</string>
+    <string name="delete_paragraph_msg">Are you sure you want to delete this paragraph? This action cannot be undone.</string>
+    <string name="delete_now">Delete now</string>
+    <string name="enter_new_paragraph">Enter new paragraph&#8230;</string>
+    <string name="create_new_paragraph">Create new paragraph</string>
+    <string name="recording_permission_msg">Record audio permission is required to perform the exercise</string>
+    <string name="please_record_first">Please record audio before continuing</string>
+    <string name="recording_msg">Recording&#8230; Tap again to stop</string>
+    <string name="analyzing_voice">Analyzing voice&#8230;</string>
+    <string name="mic_not_clear">Could not hear clearly, please try again!</string>
+    <string name="recorded_msg">Recorded! Tap the microphone to speak again</string>
+    <string name="not_recorded_yet">You haven\'t recorded this paragraph yet</string>
+    <string name="playing_recording">Playing recording back</string>
+    <string name="paragraph_progress_count">Paragraph %1$d/%2$d</string>
+    <string name="progress_saved">Progress saved</string>
+    <string name="save_error_msg">Error while saving: %1$s</string>
+    <string name="continue_lesson_title">Continue lesson</string>
+    <string name="continue_lesson_msg">You have previous study progress. Do you want to continue or start over?</string>
+    <string name="continue_action">Continue</string>
+    <string name="start_over">Start over</string>
+    <string name="pause_lesson_title">Do you want to pause the lesson?</string>
+    <string name="save_progress_action">Save progress</string>
+    <string name="exit_without_saving">Exit without saving</string>
+    <string name="enter_study_day_name_hint">Enter study day name</string>
+    <string name="paragraph_list_title">Paragraph list</string>
+    <string name="swipe_instruction_msg">Swipe left to edit, Swipe right to delete paragraph</string>
+    <string name="completed_percent">Completed %1$d%%</string>
+
+    <!-- Daily Result -->
+    <string name="completed_exclamation">Completed!</string>
+    <string name="status_good">Good</string>
+    <string name="status_accepted">Accepted</string>
+    <string name="status_bad">Bad</string>
+    <string name="record_not_found">Recording does not exist or has been deleted</string>
+    <string name="lesson_id_not_found">Error: Lesson ID not found</string>
+    <string name="save_result_success">Result saved successfully!</string>
+    <string name="save_result_error">Error saving result to server</string>
+
+    <!-- Home -->
+    <string name="teaching_achievements_upper">TEACHING ACHIEVEMENTS</string>
+    <string name="total_studied">Total student studied</string>
+    <string name="count_course_favorited">Course favorited</string>
+    <string name="most_studied">Most studied</string>
+    <string name="study_time_upper">STUDY TIME</string>
+    <string name="streak_days_count">%1$d days</string>
+    <string name="hours_short">%1$.1f h</string>
+    <string name="favorite_success">Favorite successfully</string>
+    <string name="unfavorite_success">Unfavorited successfully</string>
+    <string name="system_error">System error</string>
+    <string name="time_to_learn">It\'s time for learning!</string>
+    <string name="notification_streak">Please keep your streak!</string>
+    <string name="order_by">Order by</string>
+    <string name="creation_date">Creation date</string>
+    <string name="title">Title</string>
+    <string name="order">Order</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
+    <string name="copy_deck_success">Vocabulary set has been copied.</string>
+    <string name="copy_deck_error">Copy deck failure.</string>
+    <string name="copying_deck_background">Copying Deck.</string>
+    <string name="copy_deck_title">Duplicate vocabulary deck</string>
+    <string name="copy_deck_desc">You want to duplicate this vocabulary deck to your Personal Deck?</string>
+    <string name="clone">Copy</string>
+    <string name="empty_speaking_day">This speaking day is not available to study yet</string>
+
+
 </resources>
