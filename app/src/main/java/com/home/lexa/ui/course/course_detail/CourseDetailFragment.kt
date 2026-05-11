@@ -83,12 +83,14 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
             activityBinding.appBarLayout.apply {
                 setText(getString(R.string.create_new_course))
                 setBackButtonVisible(true)
+                setOnClickBack()
             }
             viewModel.loadTopics()
         } else {
             activityBinding.appBarLayout.apply {
                 setText(getString(R.string.course_detail))
                 setBackButtonVisible(true)
+                setOnClickBack()
             }
             viewModel.loadCourseDetail(courseId)
         }
@@ -426,14 +428,16 @@ class CourseDetailFragment : BaseFragment<FragmentCourseDetailBinding>(FragmentC
                 binding.paginationProgressBar.visibility = View.VISIBLE
             }
 
-            binding.root.post {
-                binding.vocabularyGrid.removeAllViews()
-                binding.vocabularyGrid2.removeAllViews()
-                handler?.bindFlashcardData(flashcards)
-                
-                // Ẩn progress bar sau khi đã vẽ xong toàn bộ View mới
-                if (!isSpeakingMode) {
-                    binding.paginationProgressBar.visibility = View.GONE
+            if (binding != null) {
+                binding.root.post {
+                    binding.vocabularyGrid.removeAllViews()
+                    binding.vocabularyGrid2.removeAllViews()
+                    handler?.bindFlashcardData(flashcards)
+
+                    // Ẩn progress bar sau khi đã vẽ xong toàn bộ View mới
+                    if (!isSpeakingMode) {
+                        binding.paginationProgressBar.visibility = View.GONE
+                    }
                 }
             }
         }

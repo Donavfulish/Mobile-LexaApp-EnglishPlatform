@@ -52,7 +52,10 @@ class DailyResultFragment : BaseFragment<FragmentDailyResultBinding>(FragmentDai
         val cacheSnapshot = sharedViewModel.sessionCache.values.toList()
         expectingRemoteSummary = cacheSnapshot.isEmpty() && speakingDayId != -1L
         when {
-            cacheSnapshot.isNotEmpty() -> summaryFromCache(cacheSnapshot)?.let(::displayDailySummary)
+            cacheSnapshot.isNotEmpty() -> {
+                summaryFromCache(cacheSnapshot)?.let(::displayDailySummary)
+                binding.layoutResultScreen.visibility = View.VISIBLE
+            }
             speakingDayId != -1L -> dailyResultViewModel.loadDailyResult(speakingDayId)
             else -> Toast.makeText(requireContext(), getString(R.string.lesson_id_not_found), Toast.LENGTH_SHORT).show()
         }
@@ -79,7 +82,7 @@ class DailyResultFragment : BaseFragment<FragmentDailyResultBinding>(FragmentDai
             if (sharedViewModel.sessionCache.isNotEmpty()) {
                 saveCacheToDatabase()
             } else {
-                findNavController().popBackStack()
+                findNavController().popBackStack(R.id.courseDetailFragment, false)
             }
         }
     }
@@ -120,6 +123,7 @@ class DailyResultFragment : BaseFragment<FragmentDailyResultBinding>(FragmentDai
     }
 
     private fun displayDailySummary(summary: DailyResultSummary) {
+        println("summary: $summary")
         val totalWords = summary.totalGood + summary.totalAccepted + summary.totalBad
         val progress = if (totalWords > 0) {
             ((summary.totalGood + summary.totalAccepted).toFloat() / totalWords * 100).toInt()
@@ -173,7 +177,7 @@ class DailyResultFragment : BaseFragment<FragmentDailyResultBinding>(FragmentDai
             if (isSuccess == true) {
                 sharedViewModel.clearCache()
                 Toast.makeText(requireContext(), getString(R.string.save_result_success), Toast.LENGTH_SHORT).show()
-                findNavController().popBackStack(R.id.courseFragment, false)
+                findNavController().popBackStack(R.id.courseDetailFragment, false)
             } else if (isSuccess == false) {
                 Toast.makeText(requireContext(), getString(R.string.save_result_error), Toast.LENGTH_SHORT).show()
             }
